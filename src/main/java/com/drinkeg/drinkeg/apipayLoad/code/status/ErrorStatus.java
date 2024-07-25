@@ -8,7 +8,11 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public class ErrorStatus implements BaseCode {
+public enum ErrorStatus implements BaseCode {
+
+    // Wine Error
+    Wine_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE4001", "와인이 없습니다.");
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
