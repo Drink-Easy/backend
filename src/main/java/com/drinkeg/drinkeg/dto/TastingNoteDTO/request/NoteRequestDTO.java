@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.TastingNoteDTO;
+package com.drinkeg.drinkeg.dto.TastingNoteDTO.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

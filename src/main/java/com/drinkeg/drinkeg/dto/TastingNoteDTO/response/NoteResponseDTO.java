@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.TastingNoteDTO;
+package com.drinkeg.drinkeg.dto.TastingNoteDTO.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

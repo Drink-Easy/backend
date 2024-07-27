@@ -1,9 +1,7 @@
 package com.drinkeg.drinkeg.service.wineService;
 
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.NoteRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.NoteResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.NoteWineRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.NoteWineResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteWineResponseDTO;
 
 import java.util.List;
 

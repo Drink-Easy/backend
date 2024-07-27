@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.converter;
 
 import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.NoteWineResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteWineResponseDTO;
 
 public class WineConverter {
 

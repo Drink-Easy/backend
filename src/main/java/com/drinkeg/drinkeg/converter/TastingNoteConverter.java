@@ -2,12 +2,14 @@ package com.drinkeg.drinkeg.converter;
 
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.NoteRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.NoteResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import jakarta.validation.constraints.NotNull;
 
 public class TastingNoteConverter {
 
+    // NoteRequestDTO를 TastingNote Entity로 변환
     public static TastingNote toTastingNoteEntity(NoteRequestDTO noteRequestDTO, @NotNull Wine wine) {
         return TastingNote.builder()
                 .wine(wine)
@@ -28,6 +30,7 @@ public class TastingNoteConverter {
                 .build();
     }
 
+    // TastingNote Entity를 NoteResponseDTO로 변환
     public static NoteResponseDTO toTastingNoteResponseDTO(TastingNote tastingNote) {
         return NoteResponseDTO.builder()
                 .wineId(tastingNote.getWine().getId())
@@ -48,6 +51,14 @@ public class TastingNoteConverter {
 
                 .satisfaction(tastingNote.getSatisfaction())
                 .memo(tastingNote.getMemo())
+                .build();
+    }
+
+    // TastingNote Entity를 NotePriviewResponseDTO로 변환
+    public static NotePriviewResponseDTO toTastingNotePreviewDTO(TastingNote tastingNote) {
+        return NotePriviewResponseDTO.builder()
+                .name(tastingNote.getWine().getName())
+                .picture(tastingNote.getWine().getPicture())
                 .build();
     }
 
