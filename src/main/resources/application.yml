@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:3306/kakao?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: root
+    password: rootroot
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -35,8 +35,8 @@ spring:
                 - email
             kakao:
               client-name: kakao
-              client-id: ${{ secrets.KAKAO_CLIENT_ID }}
-              client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+              client-id: 72aa5cf8dbb5cd6bde5c6f2688102e11
+              client-secret: kyVzkmy67yga9Nczh5P3JbrhFEHJ6J7O
               redirect-uri: http://localhost:8080/login/oauth2/code/kakao
               authorization-grant-type: authorization_code
               scope: profile_nickname
@@ -49,6 +49,6 @@ spring:
               user-name-attribute: response
             kakao:
               authorization-uri: https://kauth.kakao.com/oauth/authorize
-              token-uri: https://kauth.kakao.com/oaeuth/token
+              token-uri: https://kauth.kakao.com/oauth/token
               user-info-uri: https://kapi.kakao.com/v2/user/me
               user-name-attribute: id
