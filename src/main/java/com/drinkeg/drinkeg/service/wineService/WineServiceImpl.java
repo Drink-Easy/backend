@@ -1,9 +1,11 @@
 package com.drinkeg.drinkeg.service.wineService;
 
+import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineConverter;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteWineResponseDTO;
+import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,6 @@ import java.util.stream.Collectors;
 public class WineServiceImpl implements WineService {
 
     private final WineRepository wineRepository;
-    private final TastingNoteRepository tastingNoteRepository;
 
     @Override
     public List<NoteWineResponseDTO> searchWinesByName(NoteWineRequestDTO noteWineRequestDTO) {
@@ -45,5 +46,13 @@ public class WineServiceImpl implements WineService {
                 WineConverter.toNoteSearchWineDTO(wine)).collect(Collectors.toList());
 
         return collectWines;
+    }
+
+    @Override
+    public Wine findWineById(Long wineId) {
+
+        return wineRepository.findById(wineId).orElseThrow(()
+                    -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
+
     }
 }

@@ -49,7 +49,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // noteId로 TastingNote를 찾는다.
         TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> {
-                    throw new GeneralException(ErrorStatus.TASTINGNOTE_NOT_FOUND);
+                    throw new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND);
                 }
         );
 

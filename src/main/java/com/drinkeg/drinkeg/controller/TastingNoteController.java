@@ -26,7 +26,7 @@ public class TastingNoteController {
 
     // 새 노트 작성
     @PostMapping("/new-note")
-    public ApiResponse<String> saveNote(NoteRequestDTO noteRequestDTO) {
+    public ApiResponse<String> saveNote(@RequestBody NoteRequestDTO noteRequestDTO) {
 
         tastingNoteService.saveNote(noteRequestDTO);
         return ApiResponse.onSuccess("노트 작성 완료");
@@ -34,7 +34,7 @@ public class TastingNoteController {
 
     // 새 노트 작성 시 와인 검색
     @PostMapping("/wine")
-    public ApiResponse<List<NoteWineResponseDTO>> saveNote(NoteWineRequestDTO noteWineRequestDTO) {
+    public ApiResponse<List<NoteWineResponseDTO>> saveNote(@RequestBody NoteWineRequestDTO noteWineRequestDTO) {
 
         List<NoteWineResponseDTO> noteWineResponseDTOS = wineService.searchWinesByName(noteWineRequestDTO);
         return ApiResponse.onSuccess(noteWineResponseDTOS);
