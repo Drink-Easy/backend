@@ -26,12 +26,12 @@ public class WineNote {
     @JoinColumn(name = "wine_id")
     private Wine wine;
 
-    // 점수 1 ~ 5
-    private int sugarContent;
-    private int acidity;
-    private int tannin;
-    private int body;
-    private int alcohol;
+    // 점수 평균 0 ~ 5
+    private float sugarContent;
+    private float acidity;
+    private float tannin;
+    private float body;
+    private float alcohol;
 
     // 향 여러개를 ", "로 구분해서 List 로 저장.
     @Convert(converter = StringListConverter.class)
@@ -44,19 +44,19 @@ public class WineNote {
     private List<String> scentFinish = new ArrayList<>();
 
     // 맛 업데이트
-    public void updateSugarContent(int sugarContent) {
+    public void updateSugarContent(float sugarContent) {
         this.sugarContent = sugarContent;
     }
-    public void updateAcidity(int acidity) {
+    public void updateAcidity(float acidity) {
         this.acidity = acidity;
     }
-    public void updateTannin(int tannin) {
+    public void updateTannin(float tannin) {
         this.tannin = tannin;
     }
-    public void updateBody(int body) {
+    public void updateBody(float body) {
         this.body = body;
     }
-    public void updateAlcohol(int alcohol) {
+    public void updateAlcohol(float alcohol) {
         this.alcohol = alcohol;
     }
 

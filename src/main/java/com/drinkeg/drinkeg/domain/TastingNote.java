@@ -33,7 +33,7 @@ public class TastingNote {
 
     private String color;
 
-    // 점수 1 ~ 5
+    // 점수 0 ~ 5
     private int sugarContent;
     private int acidity;
     private int tannin;
@@ -50,7 +50,8 @@ public class TastingNote {
     @Convert(converter = StringListConverter.class)
     private List<String> scentFinish = new ArrayList<>();
 
-    private int satisfaction;
+    // 만족도 0 ~ 5, 소수점 가능
+    private float satisfaction;
 
     private String memo;
 }

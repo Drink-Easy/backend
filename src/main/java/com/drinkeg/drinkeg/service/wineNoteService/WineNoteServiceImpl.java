@@ -30,18 +30,18 @@ public class WineNoteServiceImpl implements WineNoteService {
         List<TastingNote> allTastingNotes = tastingNoteRepository.findAllByWine(wineNote.getWine());
 
         // 맛 점수 합
-        int totalSugarContent = allTastingNotes.stream().mapToInt(TastingNote::getSugarContent).sum();
-        int totalAcidity = allTastingNotes.stream().mapToInt(TastingNote::getAcidity).sum();
-        int totalTannin = allTastingNotes.stream().mapToInt(TastingNote::getTannin).sum();
-        int totalBody = allTastingNotes.stream().mapToInt(TastingNote::getBody).sum();
-        int totalAlcohol = allTastingNotes.stream().mapToInt(TastingNote::getAlcohol).sum();
+        float totalSugarContent = allTastingNotes.stream().mapToInt(TastingNote::getSugarContent).sum();
+        float totalAcidity = allTastingNotes.stream().mapToInt(TastingNote::getAcidity).sum();
+        float totalTannin = allTastingNotes.stream().mapToInt(TastingNote::getTannin).sum();
+        float totalBody = allTastingNotes.stream().mapToInt(TastingNote::getBody).sum();
+        float totalAlcohol = allTastingNotes.stream().mapToInt(TastingNote::getAlcohol).sum();
 
         // 맛 점수 평균
-        int avgSugarContent = totalSugarContent / allTastingNotes.size();
-        int avgAcidity = totalAcidity / allTastingNotes.size();
-        int avgTannin = totalTannin / allTastingNotes.size();
-        int avgBody = totalBody / allTastingNotes.size();
-        int avgAlcohol = totalAlcohol / allTastingNotes.size();
+        float avgSugarContent = totalSugarContent / allTastingNotes.size();
+        float avgAcidity = totalAcidity / allTastingNotes.size();
+        float avgTannin = totalTannin / allTastingNotes.size();
+        float avgBody = totalBody / allTastingNotes.size();
+        float avgAlcohol = totalAlcohol / allTastingNotes.size();
 
         // 맛 평균 없데이트
         wineNote.updateSugarContent(avgSugarContent);
