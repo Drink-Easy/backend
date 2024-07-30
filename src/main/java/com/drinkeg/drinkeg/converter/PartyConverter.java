@@ -1,0 +1,42 @@
+package com.drinkeg.drinkeg.converter;
+
+import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.domain.Party;
+import com.drinkeg.drinkeg.dto.PartyRequestDTO;
+import com.drinkeg.drinkeg.dto.PartyResponseDTO;
+import jakarta.persistence.Converter;
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class PartyConverter {
+
+    // RequestDTO를 엔티티로 변환
+    public Party fromRequest(PartyRequestDTO partyRequest, Member member) {
+        return Party.builder()
+                .member(member)
+                .name(partyRequest.getName())
+                .introduce(partyRequest.getIntroduce())
+                .limitMemberNum(partyRequest.getLimitMemberNum())
+                .partyDate(partyRequest.getPartyDate())
+                .admissionFee(partyRequest.getAdmissionFee())
+                .place(partyRequest.getPlace())
+                //.partyWine(partyRequest.getPartyWine())
+                .build();
+    }
+
+    // 엔티티를 ResponseDTO로 변환
+    public PartyResponseDTO toResponse(Party party) {
+        return PartyResponseDTO.builder()
+                .id(party.getId())
+                .hostId(party.getMember().getId())
+                .name(party.getName())
+                .introduce(party.getIntroduce())
+                .limitMemberNum(party.getLimitMemberNum())
+                .partyDate(party.getPartyDate())
+                .admissionFee(party.getAdmissionFee())
+                .place(party.getPlace())
+                //.partyWine(party.getPartyWine())
+                .build();
+    }
+}

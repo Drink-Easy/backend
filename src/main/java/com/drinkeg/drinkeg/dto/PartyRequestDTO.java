@@ -1,7 +1,5 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.dto;
 
-
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,36 +7,37 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Entity
-@Getter
 @Builder
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-public class Party {
+@AllArgsConstructor
+public class PartyRequestDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    //개설 회원 id
+    private Long hostId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
+    //모임이름
     private String name;
 
+    //모임 한줄소개
     private String introduce;
 
+    //최대 인원
     private int limitMemberNum;
 
+    //참가한 인원
     private int participateMemberNum;
 
+    //모임 날짜
     private Date partyDate;
 
+    //예약금
     private int admissionFee;
 
+    //모임 장소
     private String place;
 
-    //private String partyWine;
-
-
+    //모임 와인  사진? url?
+    //private Long partyWine;
 }
+
