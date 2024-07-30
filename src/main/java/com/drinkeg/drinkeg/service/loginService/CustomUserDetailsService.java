@@ -2,6 +2,8 @@ package com.drinkeg.drinkeg.service.loginService;
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.CustomUserDetails;
+import com.drinkeg.drinkeg.dto.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.UserDTO;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,9 +22,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Member userData = memberRepository.findByUsername(username);
 
-        if (userData != null) {
+        UserDTO userDTO = UserDTO.builder()
+                .username(userData.getUsername())
+                .password(userData.getPassword())
+                .role(userData.getRole())
+                .build();
 
-            return new CustomUserDetails(userData);
+        if (userDTO != null) {
+
+            return new PrincipalDetail(userDTO);
         }
 
         return null;

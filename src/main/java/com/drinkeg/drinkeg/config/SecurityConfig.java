@@ -35,7 +35,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
             web.ignoring()
-                    .requestMatchers("/join", "/login"); // 필터를 타면 안되는 경로
+                    .requestMatchers("/join"); // 필터를 타면 안되는 경로
         };
     }
 
@@ -68,7 +68,7 @@ public class SecurityConfig {
 
         //JWT 필터 추가
         http
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);

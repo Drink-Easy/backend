@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.oauth2;
 
 
 import com.drinkeg.drinkeg.dto.CustomOAuth2User;
+import com.drinkeg.drinkeg.dto.PrincipalDetail;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -33,9 +34,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         //OAuth2User
-        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+        PrincipalDetail principalDetail = (PrincipalDetail) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
+        String username = principalDetail.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();

@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.jwt;
 
 import com.drinkeg.drinkeg.dto.CustomOAuth2User;
+import com.drinkeg.drinkeg.dto.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.UserDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -83,17 +84,18 @@ public class JWTFilter extends OncePerRequestFilter {
 
 
         //userDTO를 생성하여 값 set
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(username);
-        userDTO.setRole(role);
+        UserDTO userDTO = UserDTO.builder()
+                .username(username)
+                .role(role)
+                .build();
 
         System.out.println(userDTO);
 
         //UserDetails에 회원 정보 객체 담기
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
+        PrincipalDetail principalDetail = new PrincipalDetail(userDTO);
 
         //스프링 시큐리티 인증 토큰 생성
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
+        Authentication authToken = new UsernamePasswordAuthenticationToken(principalDetail, null, principalDetail.getAuthorities());
 
         System.out.println("authToken "+ authToken);
         //세션에 사용자 등록
