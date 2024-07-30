@@ -30,7 +30,7 @@ public class JoinService {
 
         data.setUsername(username);
         data.setPassword(bCryptPasswordEncoder.encode(password));
-        data.setRole("GENERAL");
+        data.setRole("ROLE_USER");
 
         memberRepository.save(data);
     }
