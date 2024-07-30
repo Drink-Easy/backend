@@ -54,4 +54,54 @@ public class TastingNote {
     private float satisfaction;
 
     private String memo;
+
+
+    // 와인 업데이트
+    public void updateWine(Wine wine) {
+        this.wine = wine;
+    }
+    // 색상 업데이트
+    public void updateColor(String color) {
+        this.color = color;
+    }
+
+    // 맛 업데이트
+    public void updateSugarContent(int sugarContent) {
+        this.sugarContent = sugarContent;
+    }
+    public void updateAcidity(int acidity) {
+        this.acidity = acidity;
+    }
+    public void updateTannin(int tannin) {
+        this.tannin = tannin;
+    }
+    public void updateBody(int body) {
+        this.body = body;
+    }
+    public void updateAlcohol(int alcohol) {
+        this.alcohol = alcohol;
+    }
+
+    // 향 업데이트
+    public void updateScentAroma(List<String> scentAroma) {
+        this.scentAroma = scentAroma;
+    }
+    public void updateScentTaste(List<String> scentTaste) {
+        this.scentTaste = scentTaste;
+    }
+    public void updateScentFinish(List<String> scentFinish) {
+        this.scentFinish = scentFinish;
+    }
+
+    // 만족도 업데이트
+    public void updateSatisfaction(float satisfaction) {
+        this.satisfaction = satisfaction;
+    }
+    // 메모 업데이트
+    public void updateMemo(String memo) {
+        this.memo = memo;
+    }
+
+
+
 }

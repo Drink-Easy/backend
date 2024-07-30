@@ -5,6 +5,7 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.domain.WineNote;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
@@ -31,7 +32,7 @@ public class TastingNoteController {
     // 새 노트 작성
     @PostMapping("/new-note")
     public ApiResponse<String> saveNote(@RequestBody @Valid NoteRequestDTO noteRequestDTO) {
-        System.out.println("saveNote 시작");
+
         tastingNoteService.saveNote(noteRequestDTO);
         return ApiResponse.onSuccess("노트 작성 완료");
     }
@@ -62,5 +63,14 @@ public class TastingNoteController {
         return ApiResponse.onSuccess(allNoteByMember);
     }
 
+    @PatchMapping("/{noteId}")
+    public ApiResponse<String> updateTastingNote(@PathVariable("noteId") Long noteId, @RequestBody @Valid NoteUpdateRequestDTO noteUpdateRequestDTO) {
+
+        System.out.println("noteUpdateRequestDTO = " + noteUpdateRequestDTO.getScentTaste());
+        System.out.println("noteUpdateRequestDTO = " + noteUpdateRequestDTO.getScentFinish());
+
+        tastingNoteService.updateTastingNote(noteId, noteUpdateRequestDTO);
+        return ApiResponse.onSuccess("노트 수정 완료");
+    }
 
 }

@@ -18,11 +18,6 @@ public enum ErrorStatus implements BaseCode {
 
     // Note Error
     TASTING_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTE4001", "테이스팅 노트가 없습니다."),
-    INVALID_SUGAR_CONTENT(HttpStatus.BAD_REQUEST, "NOTE4001", "당도가 범위 밖입니다."),
-    INVALID_ACIDITY(HttpStatus.BAD_REQUEST, "NOTE4001", "산도가 범위 밖입니다."),
-    INVALID_TANNIN(HttpStatus.BAD_REQUEST, "NOTE4001", "타닌이 범위 밖입니다."),
-    INVALID_BODY(HttpStatus.BAD_REQUEST, "NOTE4001", "바디가 범위 밖입니다."),
-    INVALID_ALCOHOL(HttpStatus.BAD_REQUEST, "NOTE4001", "알코올이 범위 밖입니다."),
 
     // WineNote Error
     WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),
