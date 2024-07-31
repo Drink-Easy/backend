@@ -2,18 +2,14 @@ package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.domain.WineNote;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteWineResponseDTO;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.tastingNoteService.TastingNoteService;
-import com.drinkeg.drinkeg.service.wineNoteService.WineNoteService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
