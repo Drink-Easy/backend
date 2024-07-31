@@ -1,9 +1,18 @@
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: 'jdbc:mysql://127.0.0.1:3306/drinkEG?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul'
+    username: 'root'
+    password: '0000'
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
