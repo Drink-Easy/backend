@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public class ErrorStatus implements BaseCode {
+public enum ErrorStatus implements BaseCode {
+    WINENEWS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENEWS4001", "와인 뉴스가 없습니다.");
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
