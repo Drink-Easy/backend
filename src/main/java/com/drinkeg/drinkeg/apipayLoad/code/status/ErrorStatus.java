@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public class ErrorStatus implements BaseCode {
+public enum ErrorStatus implements BaseCode {
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
