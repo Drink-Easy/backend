@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/wineclass")
+@RequestMapping("/wine-class")
 public class WineClassController {
 
     private final WineClassService wineClassService;
