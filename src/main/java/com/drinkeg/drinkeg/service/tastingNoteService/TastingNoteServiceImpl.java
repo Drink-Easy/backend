@@ -8,6 +8,7 @@ import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
@@ -59,20 +60,17 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public AllNoteResponseDTO findAllNoteByMember(Member member) {
+    public List<NotePriviewResponseDTO> findAllNoteByMember(Member member) {
 
         // Member의 TastingNote를 찾는다.
         List<TastingNote> foundNotes = member.getTastingNotes();
 
         // TastingNote를 NotePreviewDTO로 변환한 후 AllNoteResponseDTO로 변환한다.
-        AllNoteResponseDTO allNoteResponseDTO = AllNoteResponseDTO.builder()
-                .allNote(
-                        foundNotes.stream().map(foundNote ->
-                                TastingNoteConverter.toTastingNotePreviewDTO(foundNote)).toList())
+        List<NotePriviewResponseDTO> notePriviewResponseDTOs = foundNotes.stream().map(foundNote ->
+                TastingNoteConverter.toTastingNotePreviewDTO(foundNote)).toList();
 
-                .build();
 
-        return allNoteResponseDTO;
+        return notePriviewResponseDTOs;
     }
 
     @Override
@@ -130,5 +128,18 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         }
 
         tastingNoteRepository.save(foundNote);
+    }
+
+    @Override
+    public void deleteTastingNote(Long noteId) {
+
+        // noteId로 TastingNote를 찾는다.
+        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> {
+                    throw new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND);
+                }
+        );
+
+        // TastingNote를 삭제한다.
+        tastingNoteRepository.delete(foundNote);
     }
 }

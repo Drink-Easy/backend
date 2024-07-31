@@ -7,6 +7,7 @@ import com.drinkeg.drinkeg.domain.WineNote;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteWineResponseDTO;
@@ -55,22 +56,26 @@ public class TastingNoteController {
 
     // 전체 노트 보기
     @GetMapping("/all-note/{memberId}")
-    public ApiResponse<AllNoteResponseDTO> showAllNote(@PathVariable("memberId") Long memberId) {
+    public ApiResponse<List<NotePriviewResponseDTO>> showAllNote(@PathVariable("memberId") Long memberId) {
 
         Member foundMember = memberService.findMemberById(memberId);
 
-        AllNoteResponseDTO allNoteByMember = tastingNoteService.findAllNoteByMember(foundMember);
+        List<NotePriviewResponseDTO> allNoteByMember = tastingNoteService.findAllNoteByMember(foundMember);
         return ApiResponse.onSuccess(allNoteByMember);
     }
 
     @PatchMapping("/{noteId}")
     public ApiResponse<String> updateTastingNote(@PathVariable("noteId") Long noteId, @RequestBody @Valid NoteUpdateRequestDTO noteUpdateRequestDTO) {
 
-        System.out.println("noteUpdateRequestDTO = " + noteUpdateRequestDTO.getScentTaste());
-        System.out.println("noteUpdateRequestDTO = " + noteUpdateRequestDTO.getScentFinish());
-
         tastingNoteService.updateTastingNote(noteId, noteUpdateRequestDTO);
         return ApiResponse.onSuccess("노트 수정 완료");
+    }
+
+    @DeleteMapping("/{noteId}")
+    public ApiResponse<String> deleteTastingNote(@PathVariable("noteId") Long noteId) {
+
+        tastingNoteService.deleteTastingNote(noteId);
+        return ApiResponse.onSuccess("노트 삭제 완료");
     }
 
 }

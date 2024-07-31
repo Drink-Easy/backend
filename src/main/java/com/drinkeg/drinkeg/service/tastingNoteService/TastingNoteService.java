@@ -16,8 +16,10 @@ public interface TastingNoteService {
 
     public NoteResponseDTO showNoteById(Long noteId);
 
-    public AllNoteResponseDTO findAllNoteByMember(Member member);
+    public List<NotePriviewResponseDTO> findAllNoteByMember(Member member);
 
     public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO);
+
+    public void deleteTastingNote(Long noteId);
 
 }
