@@ -23,6 +23,7 @@ public enum ErrorStatus implements BaseCode {
     WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),
     NOT_INVALID_SCENT(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "해당 이름의 향이 없습니다.");
 
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
