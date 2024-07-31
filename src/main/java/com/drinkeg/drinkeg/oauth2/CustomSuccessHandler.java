@@ -1,8 +1,10 @@
 package com.drinkeg.drinkeg.oauth2;
 
 
+import com.drinkeg.drinkeg.domain.RefreshToken;
 import com.drinkeg.drinkeg.dto.CustomOAuth2User;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
+import com.drinkeg.drinkeg.repository.RefreshRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,12 +20,15 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 @Component
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
     private final JWTUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
 
     // CustomSuccessHandler(JWTUtil jwtUtil) {
 
@@ -43,6 +48,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
+        // 토큰 생성
         String accessToken = jwtUtil.createJwt("access",username, role, 600000L);
         String refreshToken = jwtUtil.createJwt("refresh",username,role,86400000L);
 
@@ -51,10 +57,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         System.out.println("accessToken  ===  " + accessToken);
         System.out.println("refreshToken == " + refreshToken);
 
+
+
+        // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
         response.addCookie(createCookie("accessToken", accessToken));
         response.addCookie(createCookie("refreshToken", refreshToken));
         response.setStatus(HttpStatus.OK.value());
 
+        // refresh 토큰 저장
+        addRefreshToken(username, refreshToken, 86400000L);
 
         response.sendRedirect("http://localhost:8080/main");
     }
@@ -68,5 +79,17 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         cookie.setHttpOnly(true);
 
         return cookie;
+    }
+
+    private void addRefreshToken(String username, String refresh, Long expiredMs) {
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setUsername(username);
+        refreshToken.setRefresh(refresh);
+        refreshToken.setExpiration(date.toString());
+
+        refreshRepository.save(refreshToken);
     }
 }
