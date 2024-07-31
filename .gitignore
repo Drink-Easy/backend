@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### my private file ###
+application.yml
+build.gradle
