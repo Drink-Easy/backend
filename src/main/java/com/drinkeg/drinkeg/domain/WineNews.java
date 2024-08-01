@@ -23,4 +23,13 @@ public class WineNews {
     private String title;
 
     private String cardNewsImg;
+
+    public WineNews updateTitle(String title) {
+        this.title = title;
+        return this;
+    }
+    public WineNews updateCardNewsImg(String cardNewsImg) {
+        this.cardNewsImg = cardNewsImg;
+        return this;
+    }
 }

@@ -1,13 +1,15 @@
 package com.drinkeg.drinkeg.dto;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
     private String role;
     private String name;
     private String username;
+    private String password;
 }

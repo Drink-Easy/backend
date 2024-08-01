@@ -15,6 +15,9 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
     @Override
     public String convertToDatabaseColumn(List<String> dataList) {
         try {
+            if(dataList == null) {
+                return null;
+            }
             return mapper.writeValueAsString(dataList);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -24,6 +27,9 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
     @Override
     public List<String> convertToEntityAttribute(String data) {
         try {
+            if (data == null || data.isEmpty()) {
+                return List.of(); // 비어있는 List 반환
+            }
             return mapper.readValue(data, List.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

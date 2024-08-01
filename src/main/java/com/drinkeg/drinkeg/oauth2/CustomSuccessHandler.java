@@ -3,8 +3,11 @@ package com.drinkeg.drinkeg.oauth2;
 
 import com.drinkeg.drinkeg.domain.RefreshToken;
 import com.drinkeg.drinkeg.dto.CustomOAuth2User;
+import com.drinkeg.drinkeg.dto.LoginResponse;
+import com.drinkeg.drinkeg.dto.PrincipalDetail;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.repository.RefreshRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,9 +42,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         //OAuth2User
-        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+        PrincipalDetail principalDetail = (PrincipalDetail) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
+        String username = principalDetail.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -67,7 +70,23 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // refresh 토큰 저장
         addRefreshToken(username, refreshToken, 86400000L);
 
-        response.sendRedirect("http://localhost:8080/main");
+
+        response.sendRedirect("http://localhost:8080/maindy");
+
+//        LoginResponse loginResponse = LoginResponse.builder()
+//                .username(username)
+//                .role(role)
+//                .accessToken(token)
+//                .build();
+//
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.writeValue(response.getWriter(), loginResponse);
+
+//        System.out.println("token  ===  " +token);
+         response.sendRedirect("http://localhost:8080/main");
     }
 
     private Cookie createCookie(String key, String value) {
