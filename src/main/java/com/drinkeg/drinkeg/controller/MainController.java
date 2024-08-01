@@ -16,6 +16,7 @@ public class MainController {
         return "main route";
 
     }
+
     @GetMapping("/main")
     public ApiResponse<?> mainP() {
         return ApiResponse.onSuccess("하윙");
