@@ -1,15 +1,21 @@
 spring:
   datasource:
-    url:
-    username:
-    password:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
 
   jwt:
-    secret:
+    secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
 
   security:
     oauth2:
@@ -17,8 +23,8 @@ spring:
         registration:
           naver:
             client-name: naver
-            client-id:  ${{ secrets.NAVER_CLIENT_ID }}
-            client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
+            client-id: kMLcNxi3X_gxn568SeyQ
+            client-secret: 0_rLxjgrcO
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope:
@@ -26,8 +32,8 @@ spring:
               - email
           google:
             client-name: google
-            client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
-            client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+            client-id: 918889002997-dmmmks0gpnt14fdoab074eqjcjovl2hn.apps.googleusercontent.com
+            client-secret: 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
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             authorization-grant-type: authorization_code
             scope:
@@ -35,9 +41,9 @@ spring:
               - email
           kakao:
             client-name: kakao
-            client-id:
-            client-secret:
-            redirect-uri:
+            client-id: 72aa5cf8dbb5cd6bde5c6f2688102e11
+            client-secret: kyVzkmy67yga9Nczh5P3JbrhFEHJ6J7O
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             scope: profile_nickname
             client-authentication-method: client_secret_post
@@ -49,6 +55,11 @@ spring:
             user-name-attribute: response
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
+            token-uri: https://kauth.kakao.com/oaeuth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
