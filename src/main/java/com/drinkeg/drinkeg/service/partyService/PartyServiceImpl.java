@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.service.partyService;
 
+import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.PartyConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Party;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PartyServiceImpl implements PartyService{
+public class PartyServiceImpl implements PartyService {
 
     private final PartyRepository partyRepository;
     private final MemberRepository memberRepository;
@@ -25,10 +26,9 @@ public class PartyServiceImpl implements PartyService{
 
     @Override
     public PartyResponseDTO createParty(PartyRequestDTO partyRequest) {
-
         // 호스트 멤버 id 검증
         Member member = memberRepository.findById(partyRequest.getHostId())
-                .orElseThrow(() -> new EntityNotFoundException("Member not found"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorStatus.MEMBER_NOT_FOUND.getMessage()));
 
         // entity 저장
         Party party = partyConverter.fromRequest(partyRequest, member);
@@ -39,10 +39,9 @@ public class PartyServiceImpl implements PartyService{
 
     @Override
     public PartyResponseDTO getParty(Long id) {
-
-        //entity 조회
+        // entity 조회
         Party party = partyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Party not found"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorStatus.PARTY_NOT_FOUND.getMessage()));
 
         return partyConverter.toResponse(party);
     }
@@ -53,42 +52,24 @@ public class PartyServiceImpl implements PartyService{
         return parties.stream().map(partyConverter::toResponse).collect(Collectors.toList());
     }
 
-
     @Override
     public PartyResponseDTO updateParty(Long id, PartyRequestDTO partyRequest) {
-
+        // 기존 모임 조회
         Party existingParty = partyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Party not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException(ErrorStatus.PARTY_NOT_FOUND.getMessage()));
 
-        Party updatedParty = Party.builder()
-                .id(existingParty.getId()) // 기존 ID 유지
-                .member(existingParty.getMember()) // 기존 Member 유지
-                .name(partyRequest.getName())
-                .introduce(partyRequest.getIntroduce())
-                .limitMemberNum(partyRequest.getLimitMemberNum())
-                .participateMemberNum(partyRequest.getParticipateMemberNum())
-                .partyDate(partyRequest.getPartyDate())
-                .admissionFee(partyRequest.getAdmissionFee())
-                .place(partyRequest.getPlace())
-                //.partyWine(partyRequest.getPartyWine())
-                .build();
-
-
+        // 업데이트된 엔티티 생성
+        Party updatedParty = partyConverter.updatePartyFromRequest(existingParty, partyRequest);
         Party savedParty = partyRepository.save(updatedParty);
-
 
         return partyConverter.toResponse(savedParty);
     }
 
-
-
-
-
     @Override
     public void deleteParty(Long id) {
-        if (!partyRepository.existsById(id)) {
-            throw new RuntimeException("Party not found with id: " + id); // 예외 처리 추가 가능
-        }
-        partyRepository.deleteById(id);
+        Party party = partyRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorStatus.PARTY_NOT_FOUND.getMessage()));
+        partyRepository.delete(party);
     }
+
 }

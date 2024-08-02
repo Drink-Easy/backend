@@ -39,4 +39,19 @@ public class PartyConverter {
                 //.partyWine(party.getPartyWine())
                 .build();
     }
+
+    // 기존 엔티티를 업데이트된 정보로 변환
+    public Party updatePartyFromRequest(Party existingParty, PartyRequestDTO partyRequest) {
+        return Party.builder()
+                .id(existingParty.getId()) // 기존 ID
+                .member(existingParty.getMember()) // 기존 Member
+                .name(partyRequest.getName())
+                .introduce(partyRequest.getIntroduce())
+                .limitMemberNum(partyRequest.getLimitMemberNum())
+                .partyDate(partyRequest.getPartyDate())
+                .admissionFee(partyRequest.getAdmissionFee())
+                .place(partyRequest.getPlace())
+                //.partyWine(partyRequest.getPartyWine())
+                .build();
+    }
 }

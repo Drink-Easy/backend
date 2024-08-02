@@ -23,16 +23,16 @@ public class PartyRequestDTO {
     private String introduce;
 
     //최대 인원
-    private int limitMemberNum;
+    private Integer limitMemberNum;
 
     //참가한 인원
-    private int participateMemberNum;
+    private Integer participateMemberNum;
 
     //모임 날짜
     private Date partyDate;
 
     //예약금
-    private int admissionFee;
+    private Integer admissionFee;
 
     //모임 장소
     private String place;
