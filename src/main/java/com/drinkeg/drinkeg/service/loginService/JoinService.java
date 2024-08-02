@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.service.loginService;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.JoinDTO;
+import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.JoinDTO;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

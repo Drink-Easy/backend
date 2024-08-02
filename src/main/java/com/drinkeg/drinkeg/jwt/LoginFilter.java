@@ -1,14 +1,14 @@
 package com.drinkeg.drinkeg.jwt;
 
-import com.drinkeg.drinkeg.dto.CustomUserDetails;
-import com.drinkeg.drinkeg.dto.LoginResponse;
-import com.drinkeg.drinkeg.dto.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.securityDTO.oauth2DTO.LoginResponse;
+import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.service.loginService.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +27,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final TokenService tokenService;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -68,11 +69,26 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt("access",username, role, 60*60*10L);
+        String accessToken = jwtUtil.createJwt("access",username, role, 600000L);
+        String refreshToken = jwtUtil.createJwt("refresh",username,role,86400000L);
 
-        // response.addCookie(createCookie("Authorization", token));
+        System.out.println("---------------LoginFilter------------------");
 
-        LoginResponse loginResponse = LoginResponse.builder()
+        System.out.println("accessToken  ===  " + accessToken);
+        System.out.println("refreshToken == " + refreshToken);
+
+        // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
+        response.addCookie(tokenService.createCookie("accessToken", accessToken));
+        response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
+        response.setStatus(HttpStatus.OK.value());
+
+        // refresh 토큰 저장
+        tokenService.addRefreshToken(username, refreshToken, 86400000L);
+
+
+        response.sendRedirect("http://localhost:8080/maindy");
+
+        /*LoginResponse loginResponse = LoginResponse.builder()
                 .username(username)
                 .role(role)
                 .accessToken(token)
@@ -84,7 +100,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getWriter(), loginResponse);
 
-        System.out.println("token  ===  " +token);
+        System.out.println("token  ===  " +token);*/
         // response.sendRedirect("http://localhost:8080/main");
     }
 

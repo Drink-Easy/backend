@@ -1,8 +1,7 @@
 package com.drinkeg.drinkeg.jwt;
 
-import com.drinkeg.drinkeg.dto.CustomOAuth2User;
-import com.drinkeg.drinkeg.dto.PrincipalDetail;
-import com.drinkeg.drinkeg.dto.UserDTO;
+import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.securityDTO.oauth2DTO.UserDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -14,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class JWTFilter extends OncePerRequestFilter {
 

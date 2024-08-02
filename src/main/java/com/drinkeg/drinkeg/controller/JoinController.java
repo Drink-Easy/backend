@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.dto.JoinDTO;
+import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.JoinDTO;
 import com.drinkeg.drinkeg.service.loginService.JoinService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
