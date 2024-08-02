@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -56,7 +57,7 @@ public class SecurityConfig {
 
         //csrf disable
         http
-                .csrf((auth) -> auth.disable());
+                .csrf(AbstractHttpConfigurer::disable);
 
         //From 로그인 방식 disable
         http
@@ -85,8 +86,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         //.requestMatchers("/my").authenticated()
-                        .requestMatchers("/", "/join", "/login").permitAll()
+                        .requestMatchers("/", "/join", "/login","/reissue").permitAll()
                         .anyRequest().authenticated());
+
 
         //세션 설정 : STATELESS
         http

@@ -1,10 +1,13 @@
 package com.drinkeg.drinkeg.oauth2;
 
 
+import com.drinkeg.drinkeg.domain.RefreshToken;
 import com.drinkeg.drinkeg.dto.CustomOAuth2User;
 import com.drinkeg.drinkeg.dto.LoginResponse;
 import com.drinkeg.drinkeg.dto.PrincipalDetail;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
+import com.drinkeg.drinkeg.repository.RefreshRepository;
+import com.drinkeg.drinkeg.service.loginService.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -20,12 +24,15 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 @Component
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
     private final JWTUtil jwtUtil;
+    private final TokenService tokenService;
 
     // CustomSuccessHandler(JWTUtil jwtUtil) {
 
@@ -45,34 +52,43 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, role, 60*60*60L);
+        // 토큰 생성
+        String accessToken = jwtUtil.createJwt("access",username, role, 600000L);
+        String refreshToken = jwtUtil.createJwt("refresh",username,role,86400000L);
 
-        // response.addCookie(createCookie("Authorization", token));
+        System.out.println("---------------customSuccessHandler------------------");
 
-        LoginResponse loginResponse = LoginResponse.builder()
-                .username(username)
-                .role(role)
-                .accessToken(token)
-                .build();
+        System.out.println("accessToken  ===  " + accessToken);
+        System.out.println("refreshToken == " + refreshToken);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getWriter(), loginResponse);
 
-        System.out.println("token  ===  " +token);
-        // response.sendRedirect("http://localhost:8080/main");
+        // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
+        response.addCookie(tokenService.createCookie("accessToken", accessToken));
+        response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
+        response.setStatus(HttpStatus.OK.value());
+
+        // refresh 토큰 저장
+        tokenService.addRefreshToken(username, refreshToken, 86400000L);
+
+
+        response.sendRedirect("http://localhost:8080/maindy");
+
+//        LoginResponse loginResponse = LoginResponse.builder()
+//                .username(username)
+//                .role(role)
+//                .accessToken(token)
+//                .build();
+//
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.writeValue(response.getWriter(), loginResponse);
+
+//        System.out.println("token  ===  " +token);
     }
 
-    private Cookie createCookie(String key, String value) {
 
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60*60*60);
-        //cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
 
-        return cookie;
-    }
 }
