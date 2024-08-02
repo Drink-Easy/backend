@@ -1,9 +1,11 @@
 package com.drinkeg.drinkeg.config;
 
+import com.drinkeg.drinkeg.jwt.CustomLogoutFilter;
 import com.drinkeg.drinkeg.jwt.JWTFilter;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.jwt.LoginFilter;
 import com.drinkeg.drinkeg.oauth2.CustomSuccessHandler;
+import com.drinkeg.drinkeg.repository.RefreshRepository;
 import com.drinkeg.drinkeg.service.loginService.CustomOAuth2UserService;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +33,7 @@ public class SecurityConfig {
     private final CustomSuccessHandler customSuccessHandler;
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
+    private final RefreshRepository refreshRepository;
 
     // AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -75,6 +79,9 @@ public class SecurityConfig {
 
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, tokenService), UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
         //oauth2
         http
