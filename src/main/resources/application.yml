@@ -17,6 +17,9 @@ spring:
 
   jwt:
     secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
+    redis:
+      host: localhost
+      port: 6379
 
   security:
     oauth2:

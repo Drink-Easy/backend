@@ -4,6 +4,7 @@ package com.drinkeg.drinkeg.controller;
 import com.drinkeg.drinkeg.domain.RefreshToken;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.repository.RefreshRepository;
+import com.drinkeg.drinkeg.service.loginService.TokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ public class ReissueController {
 
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final TokenService tokenService;
 
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
@@ -86,35 +88,14 @@ public class ReissueController {
 
         //Refresh 토큰 저장하고 기존의 Refresh 토큰 삭제 후에 새 refresh 토큰 저장
         refreshRepository.deleteByRefresh(refresh);
-        addRefreshToken(username, newRefresh, 86400000L);
+        tokenService.addRefreshToken(username, newRefresh, 86400000L);
 
         //response
         response.setHeader("access", newAccess);
-        response.addCookie(createCookie("refreshToken", newRefresh));
+        response.addCookie(tokenService.createCookie("refreshToken", newRefresh));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private Cookie createCookie(String key, String value) {
 
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true); //https를 사용할 경우
-        cookie.setPath("/"); // 쿠키가 적용될 경로
-        cookie.setHttpOnly(true);
-
-        return cookie;
-    }
-
-    private void addRefreshToken(String username, String refresh, Long expiredMs) {
-
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setUsername(username);
-        refreshToken.setRefresh(refresh);
-        refreshToken.setExpiration(date.toString());
-
-        refreshRepository.save(refreshToken);
-    }
 }
