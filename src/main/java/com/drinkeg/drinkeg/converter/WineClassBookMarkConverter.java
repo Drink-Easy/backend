@@ -3,7 +3,6 @@ package com.drinkeg.drinkeg.converter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.WineClass;
 import com.drinkeg.drinkeg.domain.WineClassBookMark;
-import com.drinkeg.drinkeg.dto.WineClassBookMarkDTO.request.WineClassBookMarkRequestDTO;
 import com.drinkeg.drinkeg.dto.WineClassBookMarkDTO.response.WineClassBookMarkResponseDTO;
 
 public class WineClassBookMarkConverter {
