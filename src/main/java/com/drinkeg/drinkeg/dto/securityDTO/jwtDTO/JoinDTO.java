@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto;
+package com.drinkeg.drinkeg.dto.securityDTO.jwtDTO;
 
 import lombok.Getter;
 import lombok.Setter;

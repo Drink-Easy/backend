@@ -1,20 +1,12 @@
 package com.drinkeg.drinkeg.oauth2;
 
 
-import com.drinkeg.drinkeg.domain.RefreshToken;
-import com.drinkeg.drinkeg.dto.CustomOAuth2User;
-import com.drinkeg.drinkeg.dto.LoginResponse;
-import com.drinkeg.drinkeg.dto.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
-import com.drinkeg.drinkeg.repository.RefreshRepository;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -24,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 
 @Component
