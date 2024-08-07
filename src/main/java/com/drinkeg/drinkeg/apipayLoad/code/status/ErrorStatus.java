@@ -28,7 +28,13 @@ public enum ErrorStatus implements BaseCode {
 
 
     // Party Error
-    PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTY4001", "모임이 없습니다."); // 추가된 부분
+    PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTY4001", "모임이 없습니다."),
+
+    // Comment Error
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "댓글이 없습니다."),
+    COMMENT_HAS_RECOMMENTS(HttpStatus.BAD_REQUEST, "COMMENT4002", "대댓글이 있는 댓글은 삭제할 수 없습니다."),
+    COMMENT_HAS_NO_RECOMMENTS(HttpStatus.BAD_REQUEST, "COMMENT4003", "대댓글이 없는 댓글입니다."),
+    RECOMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECOMMENT4001", "대댓글을 찾을 수 없습니다.");
 
 
     private final HttpStatus httpStatus;

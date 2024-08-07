@@ -56,7 +56,7 @@ public class PartyServiceImpl implements PartyService {
     public PartyResponseDTO updateParty(Long id, PartyRequestDTO partyRequest) {
         // 기존 모임 조회
         Party existingParty = partyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(ErrorStatus.PARTY_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorStatus.PARTY_NOT_FOUND.getMessage()));
 
         // 업데이트된 엔티티 생성
         Party updatedParty = partyConverter.updatePartyFromRequest(existingParty, partyRequest);

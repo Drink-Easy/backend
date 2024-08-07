@@ -9,7 +9,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class PartyController {
     private final PartyService partyService;
 
 
-
+    // 모임 생성
     @PostMapping
     public ResponseEntity<ApiResponse<PartyResponseDTO>> createParty(@RequestBody PartyRequestDTO partyRequest) {
         try {

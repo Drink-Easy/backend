@@ -16,7 +16,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id")
@@ -27,4 +27,6 @@ public class Comment {
     private Member member;
 
     private String content;
+
+    private boolean isDeleted = false;
 }
