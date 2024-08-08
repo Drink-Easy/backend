@@ -18,6 +18,10 @@ public enum ErrorStatus implements BaseCode {
     WINE_CLASS_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_CLASS_BOOKMARK4001", "와인 클래스 북마크가 없습니다."),
     WINE_CLASS_BOOKMARK_DUPLICATED(HttpStatus.BAD_REQUEST, "WINE_CLASS_BOOKMARK4002", "이미 존재하는 북마크입니다."),
 
+    // WineNewsBookMark Error
+    WINE_NEWS_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENWSBOOKMARK4001", "와인 뉴스 북마크가 없습니다."),
+    WINE_NEWS_BOOKMARK_DUPLICATED(HttpStatus.BAD_REQUEST, "WINENWSBOOKMARK4002", "이미 존재하는 북마크입니다."),
+
     // Member Error
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "회원이 없습니다."),
 
