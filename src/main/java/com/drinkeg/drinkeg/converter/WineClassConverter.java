@@ -16,6 +16,7 @@ public class WineClassConverter {
                 .id(wineClass.getId())
                 .title(wineClass.getTitle())
                 .video(wineClass.getVideo())
+                .description(wineClass.getDescription())
                 .build();
     }
 
@@ -24,6 +25,7 @@ public class WineClassConverter {
         return WineClass.builder()
                 .title(wineClassRequestDTO.getTitle())
                 .video(wineClassRequestDTO.getVideo())
+                .description(wineClassRequestDTO.getDescription())
                 .build();
     }
 }

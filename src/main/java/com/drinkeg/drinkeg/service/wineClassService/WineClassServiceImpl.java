@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class WineClassServiceImpl implements WineClassService{
+public class WineClassServiceImpl implements WineClassService {
     private final WineClassRepository wineClassRepository;
 
     @Override
@@ -46,7 +46,8 @@ public class WineClassServiceImpl implements WineClassService{
                 wineClassRepository.findById(wineClassId)
                         .orElseThrow(() -> new GeneralException(ErrorStatus.WINECLASS_NOT_FOUND))
                         .updateTitle(wineClassRequestDTO.getTitle())
-                        .updateVideo(wineClassRequestDTO.getVideo()));
+                        .updateVideo(wineClassRequestDTO.getVideo())
+                        .updateDescription(wineClassRequestDTO.getDescription()));
     }
 
     @Override
