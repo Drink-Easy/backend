@@ -44,8 +44,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = auth.getAuthority();
 
         // 토큰 생성
-        String accessToken = jwtUtil.createJwt("access",username, role, 600000L);
-        String refreshToken = jwtUtil.createJwt("refresh",username,role,86400000L);
+        String accessToken = jwtUtil.createJwt("access",username, role, 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
+        String refreshToken = jwtUtil.createJwt("refresh",username,role,864000000L);
 
         System.out.println("---------------customSuccessHandler------------------");
 
