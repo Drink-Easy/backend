@@ -13,4 +13,5 @@ public class WineClassResponseDTO {
     private Long id;
     private String title;
     private String video;
+    private String description;
 }
