@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Repository
-public interface RefreshRepository extends CrudRepository<RefreshToken,Long> {
+public interface RefreshRepository extends JpaRepository<RefreshToken, Long> {
 
 
     Boolean existsByRefresh(String refresh);

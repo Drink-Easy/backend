@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.controller;
 
 
-import com.drinkeg.drinkeg.domain.RefreshToken;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.repository.RefreshRepository;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
@@ -13,11 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Date;
 
 @Controller
 @ResponseBody
