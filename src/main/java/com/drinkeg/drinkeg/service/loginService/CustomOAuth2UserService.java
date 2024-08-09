@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -53,9 +55,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         //추후 작성
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
-        Member existData = userRepository.findByUsername(username);
+        Optional<Member> existData = userRepository.findByUsername(username);
 
-        if (existData == null){
+        if (existData.isEmpty()){
+
             Member userEntity = new Member();
             userEntity.setUsername(username);
             userEntity.setEmail(oAuth2Response.getEmail());
@@ -74,15 +77,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         else{
 
-            existData.setEmail(oAuth2Response.getEmail());
-            existData.setName(oAuth2Response.getName());
+            Member userEntity = existData.get();
 
-            userRepository.save(existData);
+            userEntity.setEmail(oAuth2Response.getEmail());
+            userEntity.setName(oAuth2Response.getName());
+
+            userRepository.save(userEntity);
 
             UserDTO userDTO = UserDTO.builder()
-                    .username(existData.getUsername())
-                    .name(existData.getName())
-                    .role(existData.getRole())
+                    .username(userEntity.getUsername())
+                    .name(userEntity.getName())
+                    .role(userEntity.getRole())
                     .build();
 
             return new PrincipalDetail(userDTO);
