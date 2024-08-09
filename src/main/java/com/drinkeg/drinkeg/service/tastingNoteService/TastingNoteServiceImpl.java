@@ -29,7 +29,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     private final MemberRepository memberRepository;
 
     @Override
-    public void saveNote(NoteRequestDTO noteRequestDTO) {
+    public void saveNote(NoteRequestDTO noteRequestDTO, Member member) {
 
         // 와인을 찾는다.
         Long wineId = noteRequestDTO.getWineId();
@@ -39,7 +39,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         );
 
         // TastingNote를 저장한다.
-        TastingNote tastingNoteEntity = TastingNoteConverter.toTastingNoteEntity(noteRequestDTO, wine);
+        TastingNote tastingNoteEntity = TastingNoteConverter.toTastingNoteEntity(noteRequestDTO, member, wine);
         TastingNote savedNote = tastingNoteRepository.save(tastingNoteEntity);
     }
 
@@ -73,13 +73,18 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO) {
+    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, Member member) {
 
         // noteId로 TastingNote를 찾는다.
         TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> {
                     throw new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND);
                 }
         );
+
+        // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
+        if(!foundNote.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+        }
 
         // TastingNote를 업데이트한다.
         if(noteUpdateRequestDTO.getWineId() != null) {
@@ -130,13 +135,18 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void deleteTastingNote(Long noteId) {
+    public void deleteTastingNote(Long noteId, Member member) {
 
         // noteId로 TastingNote를 찾는다.
         TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> {
                     throw new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND);
                 }
         );
+
+        // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
+        if(!foundNote.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+        }
 
         // TastingNote를 삭제한다.
         tastingNoteRepository.delete(foundNote);
