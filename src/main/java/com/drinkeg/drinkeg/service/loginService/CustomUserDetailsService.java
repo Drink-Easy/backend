@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.service.loginService;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.dto.securityDTO.oauth2DTO.UserDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.UserDTO;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

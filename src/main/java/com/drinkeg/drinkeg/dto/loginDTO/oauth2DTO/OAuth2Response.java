@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.securityDTO.oauth2DTO;
+package com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO;
 
 public interface OAuth2Response {
 
