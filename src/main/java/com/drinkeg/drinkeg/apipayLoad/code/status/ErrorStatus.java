@@ -34,7 +34,15 @@ public enum ErrorStatus implements BaseCode {
 
     // WineNote Error
     WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),
-    NOT_INVALID_SCENT(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "해당 이름의 향이 없습니다.");
+    NOT_INVALID_SCENT(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "해당 이름의 향이 없습니다."),
+
+    // Member Error
+    REFRESH_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "REFRESH_TOKEN4001", "리프레쉬 토큰이 없습니다."),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "REFRESH_TOKEN4001", "리프레쉬 토큰이 만료되었습니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "REFRESH_TOKEN4001", "유효하지 않은 리프레쉬 토큰입니다."),
+
+    // Redis Error
+    REDIS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REDIS4001", "Redis 설정에 오류가 발생했습니다.");
 
 
     private final HttpStatus httpStatus;

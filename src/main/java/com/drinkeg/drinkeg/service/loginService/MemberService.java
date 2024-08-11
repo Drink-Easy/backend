@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class JoinService {
+public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void joinProcess(JoinDTO joinDTO) {
+    public void join(JoinDTO joinDTO) {
 
         String username = joinDTO.getUsername();
         String password = joinDTO.getPassword();
