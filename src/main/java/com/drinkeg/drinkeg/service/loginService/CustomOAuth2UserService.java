@@ -54,10 +54,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        //추후 작성
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
         Optional<Member> existData = userRepository.findByUsername(username);
-
         if (existData.isEmpty()){
 
             Member userEntity = new Member();

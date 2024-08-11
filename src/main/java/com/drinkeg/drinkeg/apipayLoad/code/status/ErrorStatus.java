@@ -34,7 +34,13 @@ public enum ErrorStatus implements BaseCode {
 
     // WineNote Error
     WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),
-    NOT_INVALID_SCENT(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "해당 이름의 향이 없습니다.");
+    NOT_INVALID_SCENT(HttpStatus.BAD_REQUEST, "WINE_NOTE4002", "해당 이름의 향이 없습니다."),
+
+    //Login Error
+    ACCESS_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "LOGIN4001", "Access Token이 없습니다");
+
+
+
 
 
     private final HttpStatus httpStatus;
