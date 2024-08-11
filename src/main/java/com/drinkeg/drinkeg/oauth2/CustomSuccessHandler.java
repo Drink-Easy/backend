@@ -60,7 +60,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setStatus(HttpStatus.OK.value());
 
         // refresh 토큰 저장
-        tokenService.addRefreshToken(username, refreshToken, 86400000L);
+        tokenService.addRefreshToken(username, refreshToken, 864000000L);
 
 
         response.sendRedirect("http://localhost:8080/maindy");
