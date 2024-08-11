@@ -26,8 +26,7 @@ public class JoinService {
         Boolean isExist = memberRepository.existsByUsername(username);
 
         if (isExist) {
-
-            return;
+            throw new GeneralException(ErrorStatus.MEMBER_ALREADY_EXIST);
         }
 
         Member data = new Member();
