@@ -98,12 +98,20 @@ public class SecurityConfig {
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/", "/join", "/login").permitAll()
 
+                        // tasting note 인가
+                        .requestMatchers("tasting-note/**").hasRole("USER")
+
+                        // wine note 인가
+                        .requestMatchers(HttpMethod.GET, "wine-note/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "wine-note/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "wine-note/**").hasRole("USER")
+
                         // wine class 인가
                         .requestMatchers(HttpMethod.POST, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "wine-class/**").hasRole("ADMIN")
 
-                        .requestMatchers("/", "/join", "/login","/reissue").permitAll()
+                        .requestMatchers("/", "/join", "/login", "/reissue").permitAll()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
                         .anyRequest().authenticated());
 
