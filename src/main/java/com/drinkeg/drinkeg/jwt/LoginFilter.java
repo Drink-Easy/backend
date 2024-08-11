@@ -87,7 +87,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // redis에 refresh 토큰 저장
         redisClient.setValue(username, refreshToken, 864000000L);
 
-        response.sendRedirect("http://localhost:8080/maindy");
+        response.sendRedirect("https://drinkeg.com/maindy");
 
         /*LoginResponse loginResponse = LoginResponse.builder()
                 .username(username)
