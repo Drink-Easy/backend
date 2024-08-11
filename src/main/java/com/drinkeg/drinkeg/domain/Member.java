@@ -58,4 +58,11 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<OrderInfo> orderInfos = new ArrayList<>();
 
+
+    public void updateIsNewbie(Boolean isNewbie) { this.isNewbie = isNewbie; };
+    public void updateMonthPrice(Long monthPrice) { this.monthPrice = monthPrice; };
+    public void updateWineSort(List<String> wineSort) { this.wineSort = wineSort; };
+    public void updateWineVariety(List<String> wineVariety) { this.wineVariety = wineVariety; };
+    public void updateWineNation(List<String> wineNation) { this.wineNation = wineNation; };
+    public void updateRegion(String region) { this.region = region; };
 }

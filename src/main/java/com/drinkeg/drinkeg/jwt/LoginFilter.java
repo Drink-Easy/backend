@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.jwt;
 
-import com.drinkeg.drinkeg.dto.securityDTO.oauth2DTO.LoginResponse;
-import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,7 +86,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // redis에 refresh 토큰 저장
         redisClient.setValue(username, refreshToken, 864000000L);
 
-        response.sendRedirect("https://drinkeg.com/maindy");
+        // response.sendRedirect("https://drinkeg.com/maindy");
 
         /*LoginResponse loginResponse = LoginResponse.builder()
                 .username(username)
