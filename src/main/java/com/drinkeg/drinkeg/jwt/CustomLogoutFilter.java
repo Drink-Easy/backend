@@ -51,7 +51,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
 
-            if (cookie.getName().equals("refresh")) {
+            if (cookie.getName().equals("refreshToken")) {
 
                 refresh = cookie.getValue();
             }
@@ -99,7 +99,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         redisClient.deleteValue(username);
 
         // 쿠키에 저장되어 있는 Refresh 토큰 null값 처리
-        Cookie cookie = new Cookie("refresh", null);
+        Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
 
