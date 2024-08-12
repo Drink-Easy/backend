@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.config;
 
+import com.drinkeg.drinkeg.jwt.CustomLogoutFilter;
 import com.drinkeg.drinkeg.jwt.JWTFilter;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.jwt.LoginFilter;
