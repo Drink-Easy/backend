@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.config;
 
-import com.drinkeg.drinkeg.jwt.CustomLogoutFilter;
 import com.drinkeg.drinkeg.jwt.JWTFilter;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.jwt.LoginFilter;
@@ -127,6 +126,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/", "/join", "/login").permitAll()
+
+                        // wine News 인가
+                        .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
+
 
                         // tasting note 인가
                         .requestMatchers("tasting-note/**").hasRole("USER")
