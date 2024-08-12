@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.service.wineClassService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineClassConverter;
+import com.drinkeg.drinkeg.domain.WineClass;
 import com.drinkeg.drinkeg.dto.WineClassDTO.request.WineClassRequestDTO;
 import com.drinkeg.drinkeg.dto.WineClassDTO.response.WineClassResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
@@ -55,5 +56,11 @@ public class WineClassServiceImpl implements WineClassService {
         if (!wineClassRepository.existsById(wineClassId))
             throw new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND);
         wineClassRepository.deleteById(wineClassId);
+    }
+
+    @Override
+    public WineClass findWineClassById(Long wineClassId) {
+        return wineClassRepository.findById(wineClassId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
     }
 }
