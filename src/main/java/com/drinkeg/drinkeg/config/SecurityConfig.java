@@ -1,10 +1,11 @@
 package com.drinkeg.drinkeg.config;
 
+import com.drinkeg.drinkeg.jwt.CustomLogoutFilter;
 import com.drinkeg.drinkeg.jwt.JWTFilter;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.jwt.LoginFilter;
 import com.drinkeg.drinkeg.oauth2.CustomSuccessHandler;
-import com.drinkeg.drinkeg.repository.RefreshRepository;
+import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.CustomOAuth2UserService;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class SecurityConfig {
     private final CustomSuccessHandler customSuccessHandler;
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
-    private final RefreshRepository refreshRepository;
+    private final RedisClient redisClient;
 
     // AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -97,6 +98,14 @@ public class SecurityConfig {
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/", "/join", "/login").permitAll()
 
+                        // tasting note 인가
+                        .requestMatchers("tasting-note/**").hasRole("USER")
+
+                        // wine note 인가
+                        .requestMatchers(HttpMethod.GET, "wine-note/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "wine-note/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "wine-note/**").hasRole("USER")
+
                         // wine class 인가
                         .requestMatchers(HttpMethod.POST, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "wine-class/**").hasRole("ADMIN")
@@ -108,6 +117,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
 
                         .requestMatchers("/", "/join", "/login","/reissue").permitAll()
+                        .requestMatchers("/", "/join", "/login", "/reissue").permitAll()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
 
 

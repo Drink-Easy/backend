@@ -21,4 +21,11 @@ public class MemberServiceImpl implements MemberService{
         });
     }
 
+    @Override
+    public Member findMemberByUsername(String username) {
+        return memberRepository.findByUsername(username).orElseThrow(() -> {
+            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
+        });
+    }
+
 }

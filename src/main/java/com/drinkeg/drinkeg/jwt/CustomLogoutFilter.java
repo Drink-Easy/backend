@@ -1,6 +1,8 @@
 package com.drinkeg.drinkeg.jwt;
 
-import com.drinkeg.drinkeg.repository.RefreshRepository;
+import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.redis.RedisClient;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
@@ -18,7 +21,7 @@ import java.io.IOException;
 public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JWTUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
+    private final RedisClient redisClient;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -48,7 +51,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
 
-            if (cookie.getName().equals("refresh")) {
+            if (cookie.getName().equals("refreshToken")) {
 
                 refresh = cookie.getValue();
             }
@@ -81,21 +84,22 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
-        // 토큰이 DB에 저장되어 있는지 확인
-        Boolean isExist = refreshRepository.existsByRefresh(refresh);
-        if (!isExist) {
+        String username = jwtUtil.getUsername(refresh);
 
-            // response status code
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+        //DB에 저장되어 있는지 확인
+        String redisRefresh = redisClient.getValue(username);
+        if (StringUtils.isEmpty(redisRefresh) || !refresh.equals(redisRefresh)) {
+
+            //response body
+            throw new GeneralException(ErrorStatus.INVALID_REFRESH_TOKEN);
         }
 
         // 로그아웃 진행
         // Refresh 토큰 DB에서 제거
-        refreshRepository.deleteByRefresh(refresh);
+        redisClient.deleteValue(username);
 
         // 쿠키에 저장되어 있는 Refresh 토큰 null값 처리
-        Cookie cookie = new Cookie("refresh", null);
+        Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
 

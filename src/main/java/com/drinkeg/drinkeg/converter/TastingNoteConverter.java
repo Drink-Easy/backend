@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.converter;
 
+import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
@@ -10,8 +11,11 @@ import jakarta.validation.constraints.NotNull;
 public class TastingNoteConverter {
 
     // NoteRequestDTO를 TastingNote Entity로 변환
-    public static TastingNote toTastingNoteEntity(NoteRequestDTO noteRequestDTO, @NotNull Wine wine) {
+    // NotNull은 null이 아님을 보장하는 어노테이션
+    public static TastingNote toTastingNoteEntity(NoteRequestDTO noteRequestDTO, @NotNull Member member, @NotNull Wine wine) {
         return TastingNote.builder()
+                .member(member)
+
                 .wine(wine)
                 .color(noteRequestDTO.getColor())
 
@@ -58,6 +62,7 @@ public class TastingNoteConverter {
     // TastingNote Entity를 NotePriviewResponseDTO로 변환
     public static NotePriviewResponseDTO toTastingNotePreviewDTO(TastingNote tastingNote) {
         return NotePriviewResponseDTO.builder()
+                .noteId(tastingNote.getId())
                 .name(tastingNote.getWine().getName())
                 .picture(tastingNote.getWine().getPicture())
                 .build();

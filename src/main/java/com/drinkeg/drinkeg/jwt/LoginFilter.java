@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.jwt;
 
-import com.drinkeg.drinkeg.dto.securityDTO.oauth2DTO.LoginResponse;
-import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -28,6 +28,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
+    private final RedisClient redisClient;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -69,8 +70,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String accessToken = jwtUtil.createJwt("access",username, role, 600000L);
-        String refreshToken = jwtUtil.createJwt("refresh",username,role,86400000L);
+        String accessToken = jwtUtil.createJwt("access",username, role, 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
+        String refreshToken = jwtUtil.createJwt("refresh",username,role,864000000L);
 
         System.out.println("---------------LoginFilter------------------");
 
@@ -82,11 +83,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
         response.setStatus(HttpStatus.OK.value());
 
-        // refresh 토큰 저장
-        tokenService.addRefreshToken(username, refreshToken, 86400000L);
+        // redis에 refresh 토큰 저장
+        redisClient.setValue(username, refreshToken, 864000000L);
 
-
-        response.sendRedirect("http://localhost:8080/maindy");
+        // response.sendRedirect("https://drinkeg.com/maindy");
 
         /*LoginResponse loginResponse = LoginResponse.builder()
                 .username(username)
