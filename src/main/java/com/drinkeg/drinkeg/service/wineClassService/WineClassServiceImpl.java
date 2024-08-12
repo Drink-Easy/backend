@@ -52,6 +52,8 @@ public class WineClassServiceImpl implements WineClassService {
 
     @Override
     public void deleteWineClass(Long wineClassId) {
+        if (!wineClassRepository.existsById(wineClassId))
+            throw new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND);
         wineClassRepository.deleteById(wineClassId);
     }
 }
