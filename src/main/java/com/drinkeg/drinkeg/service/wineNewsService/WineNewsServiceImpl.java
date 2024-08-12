@@ -30,7 +30,7 @@ public class WineNewsServiceImpl implements WineNewsService {
     public WineNewsResponseDTO getWineNewsById(Long WineNewsId) {
         return WineNewsConverter.toWineNewsResponseDTO(
                 wineNewsRepository.findById(WineNewsId)
-                        .orElseThrow(() -> new GeneralException(ErrorStatus.WINENEWS_NOT_FOUND)));
+                        .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NEWS_NOT_FOUND)));
     }
 
     @Override
@@ -44,13 +44,15 @@ public class WineNewsServiceImpl implements WineNewsService {
     public WineNewsResponseDTO updateWineNews(Long WineNewsId, WineNewsRequestDTO WineNewsRequestDTO) {
         return WineNewsConverter.toWineNewsResponseDTO(
                 wineNewsRepository.findById(WineNewsId)
-                        .orElseThrow(() -> new GeneralException(ErrorStatus.WINENEWS_NOT_FOUND))
+                        .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NEWS_NOT_FOUND))
                         .updateTitle(WineNewsRequestDTO.getTitle())
                         .updateCardNewsImg(WineNewsRequestDTO.getCardNewsImg()));
     }
 
     @Override
     public void deleteWineNews(Long WineNewsId) {
+        if (!wineNewsRepository.existsById(WineNewsId))
+            throw new GeneralException(ErrorStatus.WINE_NEWS_NOT_FOUND);
         wineNewsRepository.deleteById(WineNewsId);
     }
 }
