@@ -25,5 +25,5 @@ public class WineClassBookMark {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "wine_class_id")
-    private WineNews wineClass;
+    private WineClass wineClass;
 }

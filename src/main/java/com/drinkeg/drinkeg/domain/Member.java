@@ -3,10 +3,7 @@ package com.drinkeg.drinkeg.domain;
 
 import com.drinkeg.drinkeg.converter.StringListConverter;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Member {
@@ -21,6 +19,12 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
+
+    private String email;
+
+    private String role;
 
     private String username;
 
@@ -45,12 +49,20 @@ public class Member {
 
     private boolean agreement;
 
-    private String name;
 
-    private String email;
+    // CascadeType.ALL: Member 엔티티가 삭제되면 연관된 TastingNote 엔티티도 삭제
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<TastingNote> tastingNotes = new ArrayList<>();
 
     // CascadeType.ALL: Member 엔티티가 삭제되면 연관된 OrderInfo 엔티티도 삭제
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<OrderInfo> orderInfos = new ArrayList<>();
 
+
+    public void updateIsNewbie(Boolean isNewbie) { this.isNewbie = isNewbie; };
+    public void updateMonthPrice(Long monthPrice) { this.monthPrice = monthPrice; };
+    public void updateWineSort(List<String> wineSort) { this.wineSort = wineSort; };
+    public void updateWineVariety(List<String> wineVariety) { this.wineVariety = wineVariety; };
+    public void updateWineNation(List<String> wineNation) { this.wineNation = wineNation; };
+    public void updateRegion(String region) { this.region = region; };
 }
