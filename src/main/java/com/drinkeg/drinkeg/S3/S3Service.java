@@ -32,7 +32,6 @@ public class S3Service {
 
         String pictureUrl = s3Manager.uploadFile(s3Manager.generateWineNewsKeyName(savedUuid), image);
 
-        System.out.println("pictureUrl: " + pictureUrl);
 
         return pictureUrl;
     }
