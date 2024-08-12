@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WineClassRequestDTO {
-    @NotNull
+    @NotNull(message = "제목은 필수입니다.")
     private String title;
-    @NotNull
+    @NotNull(message = "영상은 필수입니다.")
     private String video;
-    @NotNull
+    @NotNull(message = "설명은 필수입니다.")
     private String description;
 }
