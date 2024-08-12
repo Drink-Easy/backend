@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### drink-eg git convention ###
+application.yml
