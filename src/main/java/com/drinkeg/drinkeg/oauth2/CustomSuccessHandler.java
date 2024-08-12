@@ -51,9 +51,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         System.out.println("---------------customSuccessHandler------------------");
 
-        System.out.println("accessToken  ===  " + accessToken);
-        System.out.println("refreshToken == " + refreshToken);
-
 
 
         // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)

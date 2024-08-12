@@ -51,7 +51,6 @@ public class JWTFilter extends OncePerRequestFilter {
             if (cookie.getName().equals("accessToken")) {
 
                 accessToken = cookie.getValue();
-                System.out.println("accessToken: "+ accessToken);
             }
         }
 
@@ -85,7 +84,6 @@ public class JWTFilter extends OncePerRequestFilter {
         String username = jwtUtil.getUsername(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
-        System.out.println("jwt username = " + username);
 
         //userDTO를 생성하여 값 set
         UserDTO userDTO = UserDTO.builder()
@@ -99,7 +97,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(principalDetail, null, principalDetail.getAuthorities());
-        System.out.println("authToken "+ authToken);
 
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
