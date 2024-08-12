@@ -8,6 +8,7 @@ import com.drinkeg.drinkeg.oauth2.CustomSuccessHandler;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.CustomOAuth2UserService;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,12 @@ import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationF
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -66,6 +73,28 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable);
 
+        http
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+                        CorsConfiguration configuration = new CorsConfiguration();
+
+                        configuration.setAllowedOrigins(Collections.singletonList("*"));
+                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowCredentials(true);
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setMaxAge(3600L);
+
+                        // 쿠키를 반환하여 JWT를 전달하기 때문에 허용 필요
+                        configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+
+                        return configuration;
+                    }
+                }));
+
         //From 로그인 방식 disable
         http
                 .formLogin((auth) -> auth.disable());
@@ -79,10 +108,11 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, tokenService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, tokenService, redisClient),
+                        UsernamePasswordAuthenticationFilter.class);
 
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisClient), LogoutFilter.class);
 
         //oauth2
         http
@@ -98,6 +128,12 @@ public class SecurityConfig {
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/", "/join", "/login").permitAll()
 
+                        // wine News 인가
+                        .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
+
+
                         // tasting note 인가
                         .requestMatchers("tasting-note/**").hasRole("USER")
 
@@ -111,16 +147,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "wine-class/**").hasRole("ADMIN")
 
-                        // wine News 인가
-                        .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "wine-news/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
-
-                        .requestMatchers("/", "/join", "/login","/reissue").permitAll()
                         .requestMatchers("/", "/join", "/login", "/reissue").permitAll()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
-
-
                         .anyRequest().authenticated());
 
 

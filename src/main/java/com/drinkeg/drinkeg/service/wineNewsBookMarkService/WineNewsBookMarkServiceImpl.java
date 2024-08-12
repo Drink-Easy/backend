@@ -30,7 +30,7 @@ public class WineNewsBookMarkServiceImpl implements WineNewsBookMarkService{
             throw new GeneralException(ErrorStatus.WINE_NEWS_BOOKMARK_DUPLICATED);
 
         WineNews wineNews = wineNewsRepository.findById(wineNewsBookMarkRequestDTO.getWineNewsId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.WINENEWS_NOT_FOUND));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NEWS_NOT_FOUND));
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
