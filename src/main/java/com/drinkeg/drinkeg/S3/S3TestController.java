@@ -19,9 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class S3TestController {
 
+    private final S3Service s3Service;
+
     @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public ApiResponse<String> upload(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestPart(value = "request") S3TestUploadDTO testUploadDTO,
                                       @RequestPart(value = "picture", required = false) MultipartFile picture) {
+
+        String s = s3Service.SaveImage(picture);
         return ApiResponse.onSuccess("사진 저장 완료");
     }
 

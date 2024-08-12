@@ -21,6 +21,8 @@ public class S3Service {
 
     public String SaveImage(MultipartFile image){
 
+        System.out.println("------------------saveImage---------------");
+
         String uuid = UUID.randomUUID().toString();
         Uuid savedUuid = uuidRepository.save(Uuid.builder()
                 .uuid(uuid).build());
