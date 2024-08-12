@@ -1,13 +1,8 @@
 package com.drinkeg.drinkeg.jwt;
 
-<<<<<<< HEAD
+
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.UserDTO;
-=======
-import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.dto.securityDTO.oauth2DTO.UserDTO;
->>>>>>> feature/s3
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
