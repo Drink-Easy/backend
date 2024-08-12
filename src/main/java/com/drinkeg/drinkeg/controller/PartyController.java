@@ -96,4 +96,5 @@ public class PartyController {
     //모임 메인페이지 조회
 
     //모임 검색
+
 }

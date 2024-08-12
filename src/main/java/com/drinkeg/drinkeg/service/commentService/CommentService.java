@@ -5,6 +5,8 @@ import com.drinkeg.drinkeg.dto.CommentResponseDTO;
 import com.drinkeg.drinkeg.dto.RecommentRequestDTO;
 import com.drinkeg.drinkeg.dto.RecommentResponseDTO;
 
+import java.util.List;
+
 public interface CommentService {
     CommentResponseDTO createComment(CommentRequestDTO commentRequest);
 
@@ -15,5 +17,7 @@ public interface CommentService {
     void updateCommentStatus(Long commentId);
 
     void deleteRecomment(Long commentId, Long recommentId);
+
+    List<CommentResponseDTO> getCommentsByPartyId(Long partyId) ;
 
 }

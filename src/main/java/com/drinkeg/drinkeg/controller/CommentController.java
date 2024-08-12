@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/comments")
@@ -20,7 +22,15 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    //@GetMapping
+
+    // 특정 모임의 댓글 및 대댓글 조회
+    @GetMapping("/{partyId}")
+    public ResponseEntity<ApiResponse<List<CommentResponseDTO>>> getCommentsByPartyId(@PathVariable("partyId") Long partyId) {
+        List<CommentResponseDTO> comments = commentService.getCommentsByPartyId(partyId);
+        ApiResponse<List<CommentResponseDTO>> response = ApiResponse.onSuccess(comments);
+        return ResponseEntity.ok(response);
+    }
+
 
     // 모임 댓글 생성
     @PostMapping

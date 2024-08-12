@@ -19,6 +19,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -29,6 +32,39 @@ public class CommentServiceImpl implements CommentService {
     private final CommentConverter commentConverter;
     private final RecommentConverter recommentConverter;
     private final RecommentRepository recommentRepository;
+
+    @Override
+    // 특정 모임에 대한 모든 댓글 및 대댓글 조회
+    public List<CommentResponseDTO> getCommentsByPartyId(Long partyId) {
+        // 특정 모임의 댓글 조회
+        List<Comment> comments = commentRepository.findByPartyId(partyId);
+
+        // 댓글을 DTO로 변환하면서 대댓글도 함께 처리
+        List<CommentResponseDTO> commentResponseDTOs = comments.stream().map(comment -> {
+            // 댓글에 연결된 대댓글들 조회
+            List<Recomment> recomments = recommentRepository.findByCommentId(comment.getId());
+
+            // 대댓글들을 DTO로 변환
+            List<RecommentResponseDTO> recommentResponseDTOs = recomments.stream()
+                    .map(recommentConverter::toResponse)
+                    .collect(Collectors.toList());
+
+            // 댓글 DTO 변환
+            CommentResponseDTO commentDTO = commentConverter.toResponse(comment);
+
+            // 만약 댓글이 삭제되었고, 대댓글이 존재한다면 프론트에 전달할 메시지 설정
+            if (comment.isDeleted() && !recommentResponseDTOs.isEmpty()) {
+                commentDTO.setContent("삭제된 댓글입니다.");
+            }
+
+            // DTO에 대댓글 리스트 추가
+            commentDTO.setRecomments(recommentResponseDTOs);
+            return commentDTO;
+        }).collect(Collectors.toList());
+
+        return commentResponseDTOs;
+    }
+
 
     @Override
     public CommentResponseDTO createComment(CommentRequestDTO commentRequest) {
