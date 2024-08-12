@@ -8,6 +8,7 @@ import com.drinkeg.drinkeg.service.loginService.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -87,6 +88,10 @@ public class SecurityConfig {
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/", "/join", "/login").permitAll()
 
+                        // wine News 인가
+                        .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated());
 
