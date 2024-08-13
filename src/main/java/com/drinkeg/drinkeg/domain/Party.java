@@ -38,6 +38,7 @@ public class Party {
 
     private String place;
 
+    private Long hostId;
     //private String partyWine;
 
 

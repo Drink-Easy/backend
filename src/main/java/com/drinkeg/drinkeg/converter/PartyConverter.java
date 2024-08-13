@@ -21,6 +21,7 @@ public class PartyConverter {
                 .partyDate(partyRequest.getPartyDate())
                 .admissionFee(partyRequest.getAdmissionFee())
                 .place(partyRequest.getPlace())
+                .hostId(member.getId())
                 //.partyWine(partyRequest.getPartyWine())
                 .build();
     }
@@ -29,7 +30,7 @@ public class PartyConverter {
     public PartyResponseDTO toResponse(Party party) {
         return PartyResponseDTO.builder()
                 .id(party.getId())
-                .hostId(party.getMember().getId())
+                .hostId(party.getHostId())
                 .name(party.getName())
                 .introduce(party.getIntroduce())
                 .limitMemberNum(party.getLimitMemberNum())
@@ -51,6 +52,7 @@ public class PartyConverter {
                 .partyDate(partyRequest.getPartyDate())
                 .admissionFee(partyRequest.getAdmissionFee())
                 .place(partyRequest.getPlace())
+                .hostId(existingParty.getHostId()) // 기존 host
                 //.partyWine(partyRequest.getPartyWine())
                 .build();
     }

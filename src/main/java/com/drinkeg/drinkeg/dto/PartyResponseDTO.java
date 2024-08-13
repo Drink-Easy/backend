@@ -25,7 +25,7 @@ public class PartyResponseDTO {
 
     private Integer participateMemberNum;
 
-    private Date partyDate;//검증을 위해 잠시 변경 -> 원래 Date
+    private Date partyDate;
 
     private Integer admissionFee;
 

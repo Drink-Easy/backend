@@ -15,6 +15,7 @@ public enum ErrorStatus implements BaseCode {
 
     // Note Error
     TASTING_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTE4001", "테이스팅 노트가 없습니다."),
+    NOT_YOUR_NOTE(HttpStatus.BAD_REQUEST, "NOTE4002", "본인의 노트가 아닙니다."),
 
     // WineNote Error
     WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),
@@ -23,6 +24,8 @@ public enum ErrorStatus implements BaseCode {
 
     // Party Error
     PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTY4001", "모임이 없습니다."),
+    INVALID_PARTY_REQUEST(HttpStatus.BAD_REQUEST, "PARTY4002", "모든 모임 정보가 입력되지 않았습니다."),
+    NOT_YOUR_PARTY(HttpStatus.BAD_REQUEST, "PARTY4003", "모임 개설자가 아닙니다."),
 
     // Comment Error
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "댓글이 없습니다."),

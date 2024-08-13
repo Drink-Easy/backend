@@ -2,13 +2,18 @@ package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.PartyRequestDTO;
 import com.drinkeg.drinkeg.dto.PartyResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.service.commentService.CommentService;
+import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.partyService.PartyService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,73 +25,62 @@ public class PartyController {
 
 
     private final PartyService partyService;
-
+    private final MemberService memberService;
 
     // 모임 생성
     @PostMapping
-    public ResponseEntity<ApiResponse<PartyResponseDTO>> createParty(@RequestBody PartyRequestDTO partyRequest) {
-        try {
-            PartyResponseDTO createdParty = partyService.createParty(partyRequest);
-            ApiResponse<PartyResponseDTO> response = ApiResponse.onSuccess(createdParty);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (EntityNotFoundException ex) {
-            ErrorStatus errorStatus = ErrorStatus.MEMBER_NOT_FOUND;
-            ApiResponse<PartyResponseDTO> response = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), null);
-            return ResponseEntity.status(errorStatus.getHttpStatus()).body(response);
-        }
+    public ApiResponse<String> createParty(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody PartyRequestDTO partyRequestDTO) {
+
+        // 현재 로그인한 사용자 정보 가져오기
+        String username = principalDetail.getUsername();
+        Member foundMember = memberService.findMemberByUsername(username);
+
+        partyService.createParty(partyRequestDTO, foundMember);
+        return ApiResponse.onSuccess("파티 생성 완료");
     }
 
 
     // 모임 전체조회
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PartyResponseDTO>>> getAllParties() {
-        List<PartyResponseDTO> parties = partyService.getAllParties();
-        ApiResponse<List<PartyResponseDTO>> response = ApiResponse.onSuccess(parties);
-        return ResponseEntity.ok(response);
+    public ApiResponse<List<PartyResponseDTO>> getAllParties() {
+        List<PartyResponseDTO> partyResponseDTOS = partyService.getAllParties();
+        return ApiResponse.onSuccess(partyResponseDTOS);
     }
 
     // 모임 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<PartyResponseDTO>> getParty(@PathVariable("id") Long id) {
-        try {
-            PartyResponseDTO party = partyService.getParty(id);
-            ApiResponse<PartyResponseDTO> response = ApiResponse.onSuccess(party);
-            return ResponseEntity.ok(response);
-        } catch (EntityNotFoundException ex) {
-            ErrorStatus errorStatus = ErrorStatus.PARTY_NOT_FOUND;
-            ApiResponse<PartyResponseDTO> response = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), null);
-            return ResponseEntity.status(errorStatus.getHttpStatus()).body(response);
-        }
+    public ApiResponse<PartyResponseDTO> getParty(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("id") Long id) {
+        String username = principalDetail.getUsername();
+        Member foundMember = memberService.findMemberByUsername(username);
+
+        PartyResponseDTO partyResponseDTO = partyService.getParty(id);
+        return ApiResponse.onSuccess(partyResponseDTO);
     }
 
     // 모임 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<PartyResponseDTO>> updateParty(
+    public ApiResponse<String> updateParty(
             @PathVariable("id") Long id,
-            @RequestBody PartyRequestDTO partyRequest) {
-        try {
-            PartyResponseDTO updatedParty = partyService.updateParty(id, partyRequest);
-            ApiResponse<PartyResponseDTO> response = ApiResponse.onSuccess(updatedParty);
-            return ResponseEntity.ok(response);
-        } catch (EntityNotFoundException ex) {
-            ErrorStatus errorStatus = ErrorStatus.PARTY_NOT_FOUND;
-            ApiResponse<PartyResponseDTO> response = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), null);
-            return ResponseEntity.status(errorStatus.getHttpStatus()).body(response);
-        }
+            @RequestBody PartyRequestDTO partyRequestDTO,
+            @AuthenticationPrincipal PrincipalDetail principalDetail) {
+
+        // 서비스로 모임 수정 요청을 보냄
+        String memberName = principalDetail.getUsername();
+        Long memberId = memberService.findMemberByUsername(memberName).getId();
+
+        partyService.updateParty(id, partyRequestDTO, memberId);
+        return ApiResponse.onSuccess("모임 수정 완료");
     }
+
 
     // 모임 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteParty(@PathVariable("id") Long id) {
-        try {
-            partyService.deleteParty(id);
-            ApiResponse<Void> response = ApiResponse.onSuccess(null);
-            return ResponseEntity.ok(response);
-        } catch (EntityNotFoundException ex) {
-            ErrorStatus errorStatus = ErrorStatus.PARTY_NOT_FOUND;
-            ApiResponse<Void> response = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), null);
-            return ResponseEntity.status(errorStatus.getHttpStatus()).body(response);
-        }
+    public ApiResponse<String> deleteParty(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("id") Long id) {
+        String username = principalDetail.getUsername();
+        Long foundMemberId = memberService.findMemberByUsername(username).getId();
+
+        partyService.deleteParty(id, foundMemberId);
+        return ApiResponse.onSuccess("모임 삭제 완료");
     }
 
 
