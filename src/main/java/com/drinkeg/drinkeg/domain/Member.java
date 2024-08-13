@@ -34,8 +34,8 @@ public class Member {
 
     private Boolean isNewbie;
 
-    // 월 평균 와인 소비가
-    private Long monthPrice;
+    // 월 평균 와인 소비가의 범위중 최댓값
+    private Long monthPriceMax;
 
     // 선호 종류, 품종, 국가
     @Convert(converter = StringListConverter.class)
@@ -58,4 +58,12 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<OrderInfo> orderInfos = new ArrayList<>();
 
+
+    public void updateName(String name) { this.name = name; };
+    public void updateIsNewbie(Boolean isNewbie) { this.isNewbie = isNewbie; };
+    public void updateMonthPriceMax(Long monthPrice) { this.monthPriceMax = monthPrice; };
+    public void updateWineSort(List<String> wineSort) { this.wineSort = wineSort; };
+    public void updateWineVariety(List<String> wineVariety) { this.wineVariety = wineVariety; };
+    public void updateWineNation(List<String> wineNation) { this.wineNation = wineNation; };
+    public void updateRegion(String region) { this.region = region; };
 }

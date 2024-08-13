@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.jwt;
 
-import com.drinkeg.drinkeg.dto.CustomOAuth2User;
-import com.drinkeg.drinkeg.dto.PrincipalDetail;
-import com.drinkeg.drinkeg.dto.UserDTO;
+
+import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.UserDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -31,7 +30,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         System.out.println("-------------------------JWT FILTER------------------------");
         String requestUri = request.getRequestURI();
-
 
         if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
 
@@ -53,31 +51,23 @@ public class JWTFilter extends OncePerRequestFilter {
             if (cookie.getName().equals("accessToken")) {
 
                 accessToken = cookie.getValue();
-                System.out.println("accessToken: "+ accessToken);
             }
         }
 
 
-
         //Authorization 헤더 검증
         if (accessToken == null) {
-
-            System.out.println("token null");
             filterChain.doFilter(request, response);
-
             //조건이 해당되면 메소드 종료 (필수)
-            return;
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return ;
         }
 
-        //토큰
-        String token = accessToken;
-
         //토큰 소멸 시간 검증
-        if (jwtUtil.isExpired(token)) {
+        if (jwtUtil.isExpired(accessToken)) {
 
             System.out.println("token expired");
             filterChain.doFilter(request, response);
-
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             //조건이 해당되면 메소드 종료 (필수)
             return;
@@ -85,21 +75,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //토큰이 access 토큰인지 확인
         String category = jwtUtil.getCategory(accessToken);
-
         if(!category.equals("access")){
-
-            System.out.println("is not access token");
-
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
         //토큰에서 username과 role 획득
-        String username = jwtUtil.getUsername(token);
-        String role = jwtUtil.getRole(token);
-
-        System.out.println("---------------------------JWT FIlter 2________________________");
-        System.out.println("jwt username = " + username);
+        String username = jwtUtil.getUsername(accessToken);
+        String role = jwtUtil.getRole(accessToken);
 
 
         //userDTO를 생성하여 값 set
@@ -109,17 +92,14 @@ public class JWTFilter extends OncePerRequestFilter {
                 .build();
 
         System.out.println(userDTO);
-
         //UserDetails에 회원 정보 객체 담기
         PrincipalDetail principalDetail = new PrincipalDetail(userDTO);
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(principalDetail, null, principalDetail.getAuthorities());
 
-        System.out.println("authToken "+ authToken);
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
-
         filterChain.doFilter(request, response);
     }
 }

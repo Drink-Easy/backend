@@ -11,14 +11,14 @@ import java.util.List;
 
 public interface TastingNoteService {
 
-    public void saveNote(NoteRequestDTO noteRequestDTO);
+    public void saveNote(NoteRequestDTO noteRequestDTO, Member member);
 
     public NoteResponseDTO showNoteById(Long noteId);
 
     public List<NotePriviewResponseDTO> findAllNoteByMember(Member member);
 
-    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO);
+    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, Member member);
 
-    public void deleteTastingNote(Long noteId);
+    public void deleteTastingNote(Long noteId, Member member);
 
 }

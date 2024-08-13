@@ -1,7 +1,8 @@
 package com.drinkeg.drinkeg.service.loginService;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.*;
+import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.*;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -53,10 +54,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        //추후 작성
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
         Optional<Member> existData = userRepository.findByUsername(username);
-
         if (existData.isEmpty()){
 
             Member userEntity = new Member();

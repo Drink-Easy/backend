@@ -1,8 +1,8 @@
-package com.drinkeg.drinkeg.dto;
+package com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO;
 
 import java.util.Map;
 
-public class KakaoResponse implements OAuth2Response{
+public class KakaoResponse implements OAuth2Response {
 
     private final Map<String, Object> attribute;
 

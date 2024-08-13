@@ -24,12 +24,19 @@ public class WineClass {
 
     private String video;
 
+    private String description;
+
     public WineClass updateTitle(String title) {
         this.title = title;
         return this;
     }
     public WineClass updateVideo(String video) {
         this.video = video;
+        return this;
+    }
+
+    public WineClass updateDescription(String description) {
+        this.description = description;
         return this;
     }
 }

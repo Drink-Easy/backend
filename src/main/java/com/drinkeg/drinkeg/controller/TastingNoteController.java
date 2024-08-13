@@ -8,11 +8,13 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteWineResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.tastingNoteService.TastingNoteService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,9 +30,13 @@ public class TastingNoteController {
 
     // 새 노트 작성
     @PostMapping("/new-note")
-    public ApiResponse<String> saveNote(@RequestBody @Valid NoteRequestDTO noteRequestDTO) {
+    public ApiResponse<String> saveNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody @Valid NoteRequestDTO noteRequestDTO) {
 
-        tastingNoteService.saveNote(noteRequestDTO);
+        // 현재 로그인한 사용자 정보 가져오기
+        String username = principalDetail.getUsername();
+        Member foundMember = memberService.findMemberByUsername(username);
+
+        tastingNoteService.saveNote(noteRequestDTO, foundMember);
         return ApiResponse.onSuccess("노트 작성 완료");
     }
 
@@ -44,33 +50,47 @@ public class TastingNoteController {
 
     // 선택한 노트 보기
     @GetMapping("/{noteId}")
-    public ApiResponse<NoteResponseDTO> showNote(@PathVariable("noteId") Long noteId) {
+    public ApiResponse<NoteResponseDTO> showNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId) {
+
+        // 현재 로그인한 사용자 정보 가져오기
+        String username = principalDetail.getUsername();
+        Member foundMember = memberService.findMemberByUsername(username);
 
         NoteResponseDTO noteResponseDTO = tastingNoteService.showNoteById(noteId);
         return ApiResponse.onSuccess(noteResponseDTO);
     }
 
     // 전체 노트 보기
-    @GetMapping("/all-note/{memberId}")
-    public ApiResponse<List<NotePriviewResponseDTO>> showAllNote(@PathVariable("memberId") Long memberId) {
+    @GetMapping("/all-note")
+    public ApiResponse<List<NotePriviewResponseDTO>> showAllNote(@AuthenticationPrincipal PrincipalDetail principalDetail) {
 
-        Member foundMember = memberService.findMemberById(memberId);
+        // 현재 로그인한 사용자 정보 가져오기
+        String username = principalDetail.getUsername();
+        Member foundMember = memberService.findMemberByUsername(username);
 
         List<NotePriviewResponseDTO> allNoteByMember = tastingNoteService.findAllNoteByMember(foundMember);
         return ApiResponse.onSuccess(allNoteByMember);
     }
 
     @PatchMapping("/{noteId}")
-    public ApiResponse<String> updateTastingNote(@PathVariable("noteId") Long noteId, @RequestBody @Valid NoteUpdateRequestDTO noteUpdateRequestDTO) {
+    public ApiResponse<String> updateTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId, @RequestBody @Valid NoteUpdateRequestDTO noteUpdateRequestDTO) {
 
-        tastingNoteService.updateTastingNote(noteId, noteUpdateRequestDTO);
+        // 현재 로그인한 사용자 정보 가져오기
+        String username = principalDetail.getUsername();
+        Member foundMember = memberService.findMemberByUsername(username);
+
+        tastingNoteService.updateTastingNote(noteId, noteUpdateRequestDTO, foundMember);
         return ApiResponse.onSuccess("노트 수정 완료");
     }
 
     @DeleteMapping("/{noteId}")
-    public ApiResponse<String> deleteTastingNote(@PathVariable("noteId") Long noteId) {
+    public ApiResponse<String> deleteTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId) {
 
-        tastingNoteService.deleteTastingNote(noteId);
+        // 현재 로그인한 사용자 정보 가져오기
+        String username = principalDetail.getUsername();
+        Member foundMember = memberService.findMemberByUsername(username);
+
+        tastingNoteService.deleteTastingNote(noteId, foundMember);
         return ApiResponse.onSuccess("노트 삭제 완료");
     }
 
