@@ -34,6 +34,7 @@ public class JoinService {
         data.setUsername(username);
         data.setPassword(bCryptPasswordEncoder.encode(password));
         data.setRole("ROLE_USER");
+        data.setIsFirst(true);
 
         memberRepository.save(data);
     }
@@ -65,6 +66,9 @@ public class JoinService {
             member.updateRegion(memberRequestDTO.getRegion());
         }
 
+        // 회원 가입을 한 유저로 변경
+        member.updateIsFirst();
+
         memberRepository.save(member);
 
         MemberResponseDTO memberResponseDTO = MemberResponseDTO.builder()
@@ -73,6 +77,7 @@ public class JoinService {
                 .username(member.getUsername())
                 .role(member.getRole())
                 .isNewbie(member.getIsNewbie())
+                .isFirst(member.getIsFirst())
                 .monthPriceMax(member.getMonthPriceMax())
                 .wineSort(member.getWineSort())
                 .wineArea(member.getWineArea())

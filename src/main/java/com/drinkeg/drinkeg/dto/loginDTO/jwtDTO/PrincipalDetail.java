@@ -53,6 +53,8 @@ public class PrincipalDetail implements UserDetails, OAuth2User {
         return userDTO.getUsername();
     }
 
+    public Boolean getIsFirst() { return userDTO.getIsFirst(); }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
