@@ -40,7 +40,7 @@ public class TastingNoteConverter {
                 .noteId(tastingNote.getId())
                 .wineId(tastingNote.getWine().getId())
                 .name(tastingNote.getWine().getName())
-                .picture(tastingNote.getWine().getPicture())
+                .picture(tastingNote.getWine().getImageUrl())
 
                 .color(tastingNote.getColor())
 
@@ -64,7 +64,7 @@ public class TastingNoteConverter {
         return NotePriviewResponseDTO.builder()
                 .noteId(tastingNote.getId())
                 .name(tastingNote.getWine().getName())
-                .picture(tastingNote.getWine().getPicture())
+                .picture(tastingNote.getWine().getImageUrl())
                 .build();
     }
 
