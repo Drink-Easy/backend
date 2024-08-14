@@ -1,6 +1,8 @@
 package com.drinkeg.drinkeg.jwt;
 
+import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +31,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
     private final RedisClient redisClient;
+    private final Member member;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -86,12 +89,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // redis에 refresh 토큰 저장
         redisClient.setValue(username, refreshToken, 864000000L);
 
-        // response.sendRedirect("https://drinkeg.com/maindy");
 
-        /*LoginResponse loginResponse = LoginResponse.builder()
+        LoginResponse loginResponse = LoginResponse.builder()
                 .username(username)
                 .role(role)
-                .accessToken(token)
+                .IsFirst(member.getIsFirst())
                 .build();
 
         response.setContentType("application/json");
@@ -100,8 +102,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getWriter(), loginResponse);
 
-        System.out.println("token  ===  " +token);*/
-        // response.sendRedirect("http://localhost:8080/main");
     }
 
     // 로그인 실패시 실행하는 메서드

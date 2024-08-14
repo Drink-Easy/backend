@@ -65,6 +65,9 @@ public class JoinService {
             member.updateRegion(memberRequestDTO.getRegion());
         }
 
+        // 회원 가입을 한 유저로 변경
+        member.updateIsFirst();
+
         memberRepository.save(member);
 
         MemberResponseDTO memberResponseDTO = MemberResponseDTO.builder()

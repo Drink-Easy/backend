@@ -34,6 +34,9 @@ public class Member {
 
     private Boolean isNewbie;
 
+    // 처음 회원가입 한 사용자면 true이다가 회원 가입하면 false로 변함
+    private Boolean isFirst = true;
+
     // 월 평균 와인 소비가의 범위중 최댓값
     private Long monthPriceMax;
 
@@ -66,4 +69,5 @@ public class Member {
     public void updateWineVariety(List<String> wineVariety) { this.wineVariety = wineVariety; };
     public void updateWineNation(List<String> wineArea) { this.wineArea = wineArea; };
     public void updateRegion(String region) { this.region = region; };
+    public void updateIsFirst(){ this.isFirst = false;};
 }
