@@ -24,4 +24,19 @@ public class WineStore {
     private String name;
 
     private String address;
+
+    public WineStore updateOwner(Member Owner) {
+        this.Owner = Owner;
+        return this;
+    }
+
+    public WineStore updateName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public WineStore updateAddress(String address) {
+        this.address = address;
+        return this;
+    }
 }
