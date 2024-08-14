@@ -3,8 +3,8 @@ package com.drinkeg.drinkeg.converter;
 import com.drinkeg.drinkeg.domain.Comment;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Party;
-import com.drinkeg.drinkeg.dto.CommentRequestDTO;
-import com.drinkeg.drinkeg.dto.CommentResponseDTO;
+import com.drinkeg.drinkeg.dto.CommentDTO.CommentRequestDTO;
+import com.drinkeg.drinkeg.dto.CommentDTO.CommentResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +23,7 @@ public class CommentConverter {
         return CommentResponseDTO.builder()
                 .id(comment.getId())
                 .partyId(comment.getParty().getId())
-                .memberId(comment.getMember().getId())
+                .memberName(comment.getMember().getUsername())
                 .content(comment.getContent())
                 .isDeleted(comment.isDeleted())
                 .build();

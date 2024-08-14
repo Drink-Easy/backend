@@ -1,18 +1,13 @@
 package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.PartyRequestDTO;
-import com.drinkeg.drinkeg.dto.PartyResponseDTO;
+import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
+import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.service.commentService.CommentService;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.partyService.PartyService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

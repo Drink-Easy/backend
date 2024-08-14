@@ -4,13 +4,12 @@ import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.PartyConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Party;
-import com.drinkeg.drinkeg.dto.PartyRequestDTO;
-import com.drinkeg.drinkeg.dto.PartyResponseDTO;
+import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
+import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 
 import java.util.List;
@@ -72,7 +71,7 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    //@PreAuthorize("@partyServiceImpl.isPartyOwner(#id, #memberId)")
+    //@PreAuthorize("@partyServiceImpl.isHost(#id, #memberId)")
     public void deleteParty(Long id, Long memberId) {
         Party party = partyRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));

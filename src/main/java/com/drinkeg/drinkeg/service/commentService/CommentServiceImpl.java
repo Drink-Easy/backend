@@ -7,15 +7,15 @@ import com.drinkeg.drinkeg.domain.Comment;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Party;
 import com.drinkeg.drinkeg.domain.Recomment;
-import com.drinkeg.drinkeg.dto.CommentRequestDTO;
-import com.drinkeg.drinkeg.dto.CommentResponseDTO;
-import com.drinkeg.drinkeg.dto.RecommentRequestDTO;
-import com.drinkeg.drinkeg.dto.RecommentResponseDTO;
+import com.drinkeg.drinkeg.dto.CommentDTO.CommentRequestDTO;
+import com.drinkeg.drinkeg.dto.CommentDTO.CommentResponseDTO;
+import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
+import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentResponseDTO;
+import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.CommentRepository;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.PartyRepository;
 import com.drinkeg.drinkeg.repository.RecommentRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,15 +27,20 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PartyRepository partyRepository;
-    private final MemberRepository memberRepository;
     private final CommentConverter commentConverter;
     private final RecommentConverter recommentConverter;
     private final RecommentRepository recommentRepository;
+    // 검증을 위한 repository 접근
+    private final PartyRepository partyRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     // 특정 모임에 대한 모든 댓글 및 대댓글 조회
     public List<CommentResponseDTO> getCommentsByPartyId(Long partyId) {
+        // party 존재 여부 검증
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+
         // 특정 모임의 댓글 조회
         List<Comment> comments = commentRepository.findByPartyId(partyId);
 
@@ -67,57 +72,57 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public CommentResponseDTO createComment(CommentRequestDTO commentRequest) {
+    public void createComment(CommentRequestDTO commentRequest, Long memberId) {
 
         // Party와 Member 존재 여부 검증
         Party party = partyRepository.findById(commentRequest.getPartyId())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorStatus.PARTY_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
 
-        Member member = memberRepository.findById(commentRequest.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorStatus.MEMBER_NOT_FOUND.getMessage()));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // Comment 엔티티 생성
         Comment comment = commentConverter.toEntity(commentRequest, party, member);
 
         // 댓글 저장
         Comment savedComment = commentRepository.save(comment);
-
-        // CommentResponseDTO로 변환
-        return commentConverter.toResponse(savedComment);
     }
 
 
     @Override
-    public RecommentResponseDTO createRecomment(Long commentId, RecommentRequestDTO recommentRequest) {
+    public void createRecomment(Long commentId, RecommentRequestDTO recommentRequest, Member member) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorStatus.COMMENT_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
         // 회원 존재 여부 검증
-        Member member = memberRepository.findById(recommentRequest.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorStatus.MEMBER_NOT_FOUND.getMessage()));
+        Member foundMember = memberRepository.findById(member.getId())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 대댓글 엔티티 생성
-        Recomment recomment = recommentConverter.fromRequest(recommentRequest, comment, member);
+        Recomment recomment = recommentConverter.fromRequest(recommentRequest, comment, foundMember);
 
         // 대댓글 저장
         Recomment savedRecomment = recommentRepository.save(recomment);
 
-        // RecommentResponseDTO로 변환
-        return recommentConverter.toResponse(savedRecomment);
     }
 
     @Override
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long commentId, Member member) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+
+        // 현재 로그인 한 사용자가 작성자인지 확인
+        if(comment.getMember() == null || !comment.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
+        }
 
         // 대댓글 여부 확인
         boolean hasRecomments = recommentRepository.existsByCommentId(commentId);
 
         if (hasRecomments) {
-            throw new IllegalStateException("Cannot delete comment with recomments. Use updateCommentStatus instead.");
+            throw new GeneralException(ErrorStatus.COMMENT_HAS_RECOMMENTS);
         } else {
             // 대댓글이 없는 경우: 댓글 삭제
             commentRepository.delete(comment);
@@ -125,10 +130,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateCommentStatus(Long commentId) {
+    public void updateCommentStatus(Long commentId, Member member) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+
+        // 현재 로그인 한 사용자가 작성자인지 확인
+        if(comment.getMember() == null || !comment.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
+        }
 
         // 대댓글 여부 확인
         boolean hasRecomments = recommentRepository.existsByCommentId(commentId);
@@ -138,20 +148,25 @@ public class CommentServiceImpl implements CommentService {
             Comment updatedComment = commentConverter.setDeleted(comment);
             commentRepository.save(updatedComment);
         } else {
-            throw new IllegalStateException("No recomments to update");
+            throw new GeneralException(ErrorStatus.COMMENT_HAS_NO_RECOMMENTS);
         }
     }
 
 
     @Override
-    public void deleteRecomment(Long commentId, Long recommentId) {
+    public void deleteRecomment(Long commentId, Long recommentId, Member member) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
         // 대댓글 존재 여부 검증
-        Recomment recomment = recommentRepository.findByIdAndCommentId(recommentId, commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Recomment not found"));
+        Recomment recomment = recommentRepository.findById(recommentId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.RECOMMENT_NOT_FOUND));
+
+        // 현재 로그인 한 사용자가 작성자인지 확인
+        if(comment.getMember() == null || !comment.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
+        }
 
         // 대댓글 삭제
         recommentRepository.delete(recomment);

@@ -1,22 +1,22 @@
 package com.drinkeg.drinkeg.service.commentService;
 
-import com.drinkeg.drinkeg.dto.CommentRequestDTO;
-import com.drinkeg.drinkeg.dto.CommentResponseDTO;
-import com.drinkeg.drinkeg.dto.RecommentRequestDTO;
-import com.drinkeg.drinkeg.dto.RecommentResponseDTO;
+import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.dto.CommentDTO.CommentRequestDTO;
+import com.drinkeg.drinkeg.dto.CommentDTO.CommentResponseDTO;
+import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
 
 import java.util.List;
 
 public interface CommentService {
-    CommentResponseDTO createComment(CommentRequestDTO commentRequest);
+    void createComment(CommentRequestDTO commentRequest, Long memberId);
 
-    RecommentResponseDTO createRecomment(Long commentId, RecommentRequestDTO recommentRequest);
+    void createRecomment(Long commentId, RecommentRequestDTO recommentRequest, Member member);
 
-    void deleteComment(Long commentId);
+    void deleteComment(Long commentId, Member member);
 
-    void updateCommentStatus(Long commentId);
+    void updateCommentStatus(Long commentId, Member member);
 
-    void deleteRecomment(Long commentId, Long recommentId);
+    void deleteRecomment(Long commentId, Long recommentId, Member member);
 
     List<CommentResponseDTO> getCommentsByPartyId(Long partyId) ;
 
