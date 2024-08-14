@@ -10,6 +10,7 @@ import com.drinkeg.drinkeg.dto.WineStoreDTO.response.WineStoreResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineClassRepository;
 import com.drinkeg.drinkeg.repository.WineStoreRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,7 @@ public class WineStoreServiceImpl implements WineStoreService {
     }
 
     @Override
+    @Transactional
     public WineStoreResponseDTO updateWineStore(Long wineStoreId, WineStoreRequestDTO wineStoreRequestDTO, Member owner) {
         WineStore wineStore = wineStoreRepository.findById(wineStoreId)
                         .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_STORE_NOT_FOUND));

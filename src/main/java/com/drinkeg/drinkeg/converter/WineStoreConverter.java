@@ -8,6 +8,7 @@ import com.drinkeg.drinkeg.dto.WineStoreDTO.response.WineStoreResponseDTO;
 public class WineStoreConverter {
     public static WineStoreResponseDTO toWineStoreResponseDTO(WineStore wineStore) {
         return WineStoreResponseDTO.builder()
+                .id(wineStore.getId())
                 .name(wineStore.getName())
                 .address(wineStore.getAddress())
                 .build();
@@ -17,7 +18,7 @@ public class WineStoreConverter {
         return WineStore.builder()
                 .name(wineStoreRequestDTO.getName())
                 .address(wineStoreRequestDTO.getAddress())
-                .Owner(owner)
+                .owner(owner)
                 .build();
     }
 }

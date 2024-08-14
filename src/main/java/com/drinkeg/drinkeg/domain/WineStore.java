@@ -19,14 +19,14 @@ public class WineStore {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
-    private Member Owner;
+    private Member owner;
 
     private String name;
 
     private String address;
 
-    public WineStore updateOwner(Member Owner) {
-        this.Owner = Owner;
+    public WineStore updateOwner(Member owner) {
+        this.owner = owner;
         return this;
     }
 
