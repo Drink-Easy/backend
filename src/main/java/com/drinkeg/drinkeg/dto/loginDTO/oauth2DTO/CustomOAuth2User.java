@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO;
 
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

@@ -1,7 +1,8 @@
 package com.drinkeg.drinkeg.service.loginService;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.*;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.jwt;
 
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
@@ -35,9 +35,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         // 클라이언트 요청에서 username, password 추출
-        /*String username = obtainUsername(request);
-        String password = obtainPassword(request);*/
-
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> requestBody;
 

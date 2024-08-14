@@ -8,7 +8,7 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteWineResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.tastingNoteService.TastingNoteService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
