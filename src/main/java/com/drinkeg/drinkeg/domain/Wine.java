@@ -18,25 +18,24 @@ public class Wine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 엑셀에 있는 칼럼 추가 예시
-//    private String wine_nm;
-//    private String wine_area;
-//    private String wine_ctg;
-//    private String wine_prc;
-
     private String name;
 
-    private String picture;
+    private String imageUrl;
 
+    // 종 : 레드, 화이트 등등
     private String sort;
 
-    private String nation;
+    // 지역
+    private String area;
 
+    // 품종 : 카베르네소비뇽, 샤도네이 등등
     private String variety;
 
-    private String vivinoRate;
+    // wine.com 별점
+    private float rating;
 
-    private String userRate;
+    // 가격
+    private float price;
 
     // cascade = CascadeType.ALL : 와인이 저장될 때 같이 저장됨
     @OneToOne(mappedBy = "wine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

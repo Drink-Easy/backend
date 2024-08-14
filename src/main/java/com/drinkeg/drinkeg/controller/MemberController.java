@@ -40,7 +40,6 @@ public class MemberController {
 
     @PatchMapping("/member")
     public ApiResponse<MemberResponseDTO> addMemberDetail(@RequestBody MemberRequestDTO memberRequestDTO, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-
         return ApiResponse.onSuccess(joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername()));
     }
 }

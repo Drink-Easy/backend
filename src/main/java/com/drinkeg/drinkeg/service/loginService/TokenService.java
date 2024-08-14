@@ -41,10 +41,9 @@ public class TokenService {
 
             if (cookie.getName().equals("refreshToken")) {
 
-                System.out.println("--------reissue controller-------");
+                    System.out.println("--------reissue controller-------");
 
                 refresh = cookie.getValue();
-                System.out.println("ReissueToken: " +refresh);
             }
         }
 

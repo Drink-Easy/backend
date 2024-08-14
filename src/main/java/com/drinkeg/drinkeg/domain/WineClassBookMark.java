@@ -20,10 +20,10 @@ public class WineClassBookMark {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "wine_class_id")
+    @JoinColumn(name = "wine_class_id", nullable = false)
     private WineClass wineClass;
 }

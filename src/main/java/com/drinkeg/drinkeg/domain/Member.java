@@ -34,8 +34,11 @@ public class Member {
 
     private Boolean isNewbie;
 
-    // 월 평균 와인 소비가
-    private Long monthPrice;
+    // 처음 회원가입 한 사용자면 true이다가 회원 가입하면 false로 변함
+    private Boolean isFirst;
+
+    // 월 평균 와인 소비가의 범위중 최댓값
+    private Long monthPriceMax;
 
     // 선호 종류, 품종, 국가
     @Convert(converter = StringListConverter.class)
@@ -45,7 +48,7 @@ public class Member {
     private List<String> wineVariety = new ArrayList<>();
 
     @Convert(converter = StringListConverter.class)
-    private List<String> wineNation = new ArrayList<>();
+    private List<String> wineArea = new ArrayList<>();
 
     private boolean agreement;
 
@@ -59,10 +62,12 @@ public class Member {
     private List<OrderInfo> orderInfos = new ArrayList<>();
 
 
+    public void updateName(String name) { this.name = name; };
     public void updateIsNewbie(Boolean isNewbie) { this.isNewbie = isNewbie; };
-    public void updateMonthPrice(Long monthPrice) { this.monthPrice = monthPrice; };
+    public void updateMonthPriceMax(Long monthPrice) { this.monthPriceMax = monthPrice; };
     public void updateWineSort(List<String> wineSort) { this.wineSort = wineSort; };
     public void updateWineVariety(List<String> wineVariety) { this.wineVariety = wineVariety; };
-    public void updateWineNation(List<String> wineNation) { this.wineNation = wineNation; };
+    public void updateWineNation(List<String> wineArea) { this.wineArea = wineArea; };
     public void updateRegion(String region) { this.region = region; };
+    public void updateIsFirst(){ this.isFirst = false;};
 }

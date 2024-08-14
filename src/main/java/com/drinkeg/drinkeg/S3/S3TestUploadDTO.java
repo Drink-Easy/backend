@@ -1,17 +1,21 @@
-package com.drinkeg.drinkeg.dto.WineClassBookMarkDTO.request;
+package com.drinkeg.drinkeg.S3;
 
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WineClassBookMarkRequestDTO {
-    @NotNull(message="와인 클래스 ID는 필수입니다.")
-    private Long wineClassId;
+public class S3TestUploadDTO {
+
+    @NotBlank
+    String username;
+
 }

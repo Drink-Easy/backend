@@ -30,7 +30,7 @@ public class TastingNoteConverter {
                 .scentFinish(noteRequestDTO.getScentFinish())
 
                 .satisfaction(noteRequestDTO.getSatisfaction())
-                .memo(noteRequestDTO.getMemo())
+                .review(noteRequestDTO.getReview())
                 .build();
     }
 
@@ -40,7 +40,7 @@ public class TastingNoteConverter {
                 .noteId(tastingNote.getId())
                 .wineId(tastingNote.getWine().getId())
                 .name(tastingNote.getWine().getName())
-                .picture(tastingNote.getWine().getPicture())
+                .picture(tastingNote.getWine().getImageUrl())
 
                 .color(tastingNote.getColor())
 
@@ -55,7 +55,7 @@ public class TastingNoteConverter {
                 .scentFinish(tastingNote.getScentFinish())
 
                 .satisfaction(tastingNote.getSatisfaction())
-                .memo(tastingNote.getMemo())
+                .review(tastingNote.getReview())
                 .build();
     }
 
@@ -64,7 +64,7 @@ public class TastingNoteConverter {
         return NotePriviewResponseDTO.builder()
                 .noteId(tastingNote.getId())
                 .name(tastingNote.getWine().getName())
-                .picture(tastingNote.getWine().getPicture())
+                .imageUrl(tastingNote.getWine().getImageUrl())
                 .build();
     }
 

@@ -37,11 +37,13 @@ public enum ErrorStatus implements BaseCode {
     // Wine class Error
     WINE_CLASS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINECLASS4001", "와인 클래스가 없습니다."),
     // WineNews Error
-    WINENEWS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENEWS4001", "와인 뉴스가 없습니다."),
+    WINE_NEWS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENEWS4001", "와인 뉴스가 없습니다."),
 
     //WineClassBookMark Error
+    WINE_CLASS_BOOKMARK_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_CLASS_BOOKMARK4001", "권한이 없는 북마크입니다."),
     WINE_CLASS_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_CLASS_BOOKMARK4001", "와인 클래스 북마크가 없습니다."),
     WINE_CLASS_BOOKMARK_DUPLICATED(HttpStatus.BAD_REQUEST, "WINE_CLASS_BOOKMARK4002", "이미 존재하는 북마크입니다."),
+
 
     // WineNewsBookMark Error
     WINE_NEWS_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENWSBOOKMARK4001", "와인 뉴스 북마크가 없습니다."),
@@ -57,7 +59,11 @@ public enum ErrorStatus implements BaseCode {
     INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "REFRESH_TOKEN4001", "유효하지 않은 리프레쉬 토큰입니다."),
 
     // Redis Error
-    REDIS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REDIS4001", "Redis 설정에 오류가 발생했습니다.");
+    REDIS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REDIS4001", "Redis 설정에 오류가 발생했습니다."),
+
+    // WineStore Error
+    WINE_STORE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_STORE4001", "와인 스토어가 없습니다."),
+    WINE_STORE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_STORE4002", "권한이 없는 스토어입니다.");
 
 
     private final HttpStatus httpStatus;

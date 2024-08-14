@@ -128,6 +128,12 @@ public class SecurityConfig {
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/", "/join", "/login").permitAll()
 
+                        // wine News 인가
+                        .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
+
+
                         // tasting note 인가
                         .requestMatchers("tasting-note/**").hasRole("USER")
 

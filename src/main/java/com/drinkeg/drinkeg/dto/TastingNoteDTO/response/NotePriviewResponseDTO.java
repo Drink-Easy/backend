@@ -15,6 +15,6 @@ public class NotePriviewResponseDTO {
 
         private String name;
 
-        private String picture;
+        private String imageUrl;
 
 }
