@@ -20,6 +20,7 @@ public class MemberResponseDTO {
     private String role;
 
     private Boolean isNewbie;
+    private Boolean isFirst;
     private Long monthPriceMax;
 
     private List<String> wineSort = new ArrayList<>();

@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.jwt;
 
-import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
 import com.drinkeg.drinkeg.redis.RedisClient;
@@ -31,7 +30,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
     private final RedisClient redisClient;
-    private final Member member;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -89,11 +87,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // redis에 refresh 토큰 저장
         redisClient.setValue(username, refreshToken, 864000000L);
 
+        // 첫 로그인 여부 가져오기
+        Boolean isFirst = principalDetail.getIsFirst();
 
         LoginResponse loginResponse = LoginResponse.builder()
                 .username(username)
                 .role(role)
-                .IsFirst(member.getIsFirst())
+                .isFirst(isFirst)
                 .build();
 
         response.setContentType("application/json");

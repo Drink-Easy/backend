@@ -13,6 +13,6 @@ public class LoginResponse {
 
     private String username;
     private String role;
-    private boolean IsFirst;
+    private Boolean isFirst;
     // private String refreshToken
 }
