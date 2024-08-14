@@ -43,11 +43,14 @@ public class JoinService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.SESSION_UNAUTHORIZED));
 
+        if (memberRequestDTO.getName() != null) {
+            member.updateName(memberRequestDTO.getName());
+        }
         if (memberRequestDTO.getIsNewbie() != null) {
             member.updateIsNewbie(memberRequestDTO.getIsNewbie());
         }
         if (memberRequestDTO.getMonthPrice() != null) {
-            member.updateMonthPrice(memberRequestDTO.getMonthPrice());
+            member.updateMonthPriceMax(memberRequestDTO.getMonthPrice());
         }
         if (memberRequestDTO.getWineSort() != null) {
             member.updateWineSort(memberRequestDTO.getWineSort());
@@ -70,7 +73,7 @@ public class JoinService {
                 .username(member.getUsername())
                 .role(member.getRole())
                 .isNewbie(member.getIsNewbie())
-                .monthPrice(member.getMonthPrice())
+                .monthPriceMax(member.getMonthPriceMax())
                 .wineSort(member.getWineSort())
                 .wineNation(member.getWineNation())
                 .wineVariety(member.getWineVariety())
