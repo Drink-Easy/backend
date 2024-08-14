@@ -29,10 +29,10 @@ public class Wine {
     private String area;
 
     // wine.com 별점
-    private String rating;
+    private float rating;
 
     // 가격
-    private int price;
+    private float price;
 
     // cascade = CascadeType.ALL : 와인이 저장될 때 같이 저장됨
     @OneToOne(mappedBy = "wine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
