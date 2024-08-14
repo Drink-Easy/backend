@@ -19,6 +19,9 @@ import com.drinkeg.drinkeg.repository.RecommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +37,8 @@ public class CommentServiceImpl implements CommentService {
     private final PartyRepository partyRepository;
     private final MemberRepository memberRepository;
 
+
     @Override
-    // 특정 모임에 대한 모든 댓글 및 대댓글 조회
     public List<CommentResponseDTO> getCommentsByPartyId(Long partyId) {
         // party 존재 여부 검증
         Party party = partyRepository.findById(partyId)
@@ -45,30 +48,43 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> comments = commentRepository.findByPartyId(partyId);
 
         // 댓글을 DTO로 변환하면서 대댓글도 함께 처리
-        List<CommentResponseDTO> commentResponseDTOs = comments.stream().map(comment -> {
-            // 댓글에 연결된 대댓글들 조회
-            List<Recomment> recomments = recommentRepository.findByCommentId(comment.getId());
+        return comments.stream().map(comment -> {
 
-            // 대댓글들을 DTO로 변환
-            List<RecommentResponseDTO> recommentResponseDTOs = recomments.stream()
-                    .map(recommentConverter::toResponse)
-                    .collect(Collectors.toList());
-
-            // 댓글 DTO 변환
             CommentResponseDTO commentDTO = commentConverter.toResponse(comment);
 
-            // 만약 댓글이 삭제되었고, 대댓글이 존재한다면 프론트에 전달할 메시지 설정
-            if (comment.isDeleted() && !recommentResponseDTOs.isEmpty()) {
-                commentDTO.setContent("삭제된 댓글입니다.");
-            }
+            // 시간 계산하여 timeAgo 필드에 설정
+            String timeAgo = calculateTimeAgo(comment.getCreatedAt());
+            commentDTO.setTimeAgo(timeAgo);
+
+            // 작성일자 계산하여 createdDate 필드에 설정
+            String createdDate = calculateCreatedDate(comment.getCreatedAt());
+            commentDTO.setCreatedDate(createdDate);
+
+            // 대댓글 처리
+            List<Recomment> recomments = recommentRepository.findByCommentId(comment.getId());
+            List<RecommentResponseDTO> recommentDTOs = recomments.stream()
+                    .map(recomment -> {
+                        RecommentResponseDTO recommentDTO = recommentConverter.toResponse(recomment);
+
+                        // 시간 계산하여 timeAgo 필드에 설정
+                        String recommentTimeAgo = calculateTimeAgo(recomment.getCreatedAt());
+                        recommentDTO.setTimeAgo(recommentTimeAgo);
+
+                        // 작성일자 계산하여 createdDate 필드에 설정
+                        String recommentCreatedDate = calculateCreatedDate(recomment.getCreatedAt());
+                        recommentDTO.setCreatedDate(recommentCreatedDate);
+
+                        return recommentDTO; // 변환된 RecommentResponseDTO 반환
+                    })
+                    .collect(Collectors.toList());
 
             // DTO에 대댓글 리스트 추가
-            commentDTO.setRecomments(recommentResponseDTOs);
+            commentDTO.setRecomments(recommentDTOs);
+
             return commentDTO;
         }).collect(Collectors.toList());
-
-        return commentResponseDTOs;
     }
+
 
 
     @Override
@@ -172,4 +188,36 @@ public class CommentServiceImpl implements CommentService {
         recommentRepository.delete(recomment);
     }
 
+
+    // 시간 계산 메소드
+    public String calculateTimeAgo(LocalDateTime createdAt) {
+        // createdAt이 null인 경우 처리
+        if (createdAt == null) {
+            return null; // 또는 다른 적절한 기본 메시지
+        }
+
+        Duration duration = Duration.between(createdAt, LocalDateTime.now());
+        long minutes = duration.toMinutes();
+        if (minutes < 60) {
+            return minutes + "분 전";
+        }
+        long hours = duration.toHours();
+        if (hours < 24) {
+            return hours + "시간 전";
+        }
+        long days = duration.toDays();
+        return days + "일 전";
+    }
+
+    // 작성일자를 yyyy.MM.dd 형식으로 변환 메소드
+    public String calculateCreatedDate(LocalDateTime createdAt) {
+        // createdAt이 null인 경우 처리
+        if (createdAt == null) {
+            return "알 수 없음";
+        }
+
+        // 작성일자를 "yyyy.mm.dd" 형식으로 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        return createdAt.format(formatter);
+    }
 }

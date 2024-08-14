@@ -5,6 +5,7 @@ import com.drinkeg.drinkeg.dto.CommentDTO.CommentRequestDTO;
 import com.drinkeg.drinkeg.dto.CommentDTO.CommentResponseDTO;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CommentService {
@@ -20,4 +21,7 @@ public interface CommentService {
 
     List<CommentResponseDTO> getCommentsByPartyId(Long partyId) ;
 
+    String calculateTimeAgo(LocalDateTime createdAt);
+
+    String calculateCreatedDate(LocalDateTime createdAt);
 }

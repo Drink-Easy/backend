@@ -19,5 +19,7 @@ public class CommentResponseDTO {
     private String content;
     private boolean isDeleted;
     private List<RecommentResponseDTO> recomments;
-    //private LocalDateTime createdAt;
+    private String timeAgo;
+    private String createdDate;
+    //private String url;
 }
