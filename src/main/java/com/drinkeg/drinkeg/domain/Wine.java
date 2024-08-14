@@ -28,9 +28,6 @@ public class Wine {
     // 지역
     private String area;
 
-    // 품종
-    private String variety;
-
     // wine.com 별점
     private String rating;
 
