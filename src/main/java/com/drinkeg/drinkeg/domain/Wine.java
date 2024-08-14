@@ -22,11 +22,14 @@ public class Wine {
 
     private String imageUrl;
 
-    // 카테고리
-    private String category;
+    // 종 : 레드, 화이트 등등
+    private String sort;
 
     // 지역
     private String area;
+
+    // 품종 : 카베르네소비뇽, 샤도네이 등등
+    private String variety;
 
     // wine.com 별점
     private float rating;

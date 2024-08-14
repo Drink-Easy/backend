@@ -55,8 +55,8 @@ public class JoinService {
         if (memberRequestDTO.getWineSort() != null) {
             member.updateWineSort(memberRequestDTO.getWineSort());
         }
-        if (memberRequestDTO.getWineNation() != null) {
-            member.updateWineNation(memberRequestDTO.getWineNation());
+        if (memberRequestDTO.getWineArea() != null) {
+            member.updateWineNation(memberRequestDTO.getWineArea());
         }
         if (memberRequestDTO.getWineVariety() != null) {
             member.updateWineVariety(memberRequestDTO.getWineVariety());
@@ -75,7 +75,7 @@ public class JoinService {
                 .isNewbie(member.getIsNewbie())
                 .monthPriceMax(member.getMonthPriceMax())
                 .wineSort(member.getWineSort())
-                .wineNation(member.getWineNation())
+                .wineArea(member.getWineArea())
                 .wineVariety(member.getWineVariety())
                 .region(member.getRegion())
                 .build();

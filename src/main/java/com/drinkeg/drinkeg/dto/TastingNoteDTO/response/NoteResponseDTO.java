@@ -39,5 +39,5 @@ public class NoteResponseDTO {
 
     private float satisfaction;
 
-    private String memo;
+    private String review;
 }

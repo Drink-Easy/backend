@@ -23,7 +23,7 @@ public class MemberResponseDTO {
     private Long monthPriceMax;
 
     private List<String> wineSort = new ArrayList<>();
-    private List<String> wineNation = new ArrayList<>();
+    private List<String> wineArea = new ArrayList<>();
     private List<String> wineVariety = new ArrayList<>();
 
     private String region;

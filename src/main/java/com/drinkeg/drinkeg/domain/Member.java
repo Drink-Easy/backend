@@ -45,7 +45,7 @@ public class Member {
     private List<String> wineVariety = new ArrayList<>();
 
     @Convert(converter = StringListConverter.class)
-    private List<String> wineNation = new ArrayList<>();
+    private List<String> wineArea = new ArrayList<>();
 
     private boolean agreement;
 
@@ -64,6 +64,6 @@ public class Member {
     public void updateMonthPriceMax(Long monthPrice) { this.monthPriceMax = monthPrice; };
     public void updateWineSort(List<String> wineSort) { this.wineSort = wineSort; };
     public void updateWineVariety(List<String> wineVariety) { this.wineVariety = wineVariety; };
-    public void updateWineNation(List<String> wineNation) { this.wineNation = wineNation; };
+    public void updateWineNation(List<String> wineArea) { this.wineArea = wineArea; };
     public void updateRegion(String region) { this.region = region; };
 }
