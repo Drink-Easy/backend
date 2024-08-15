@@ -19,7 +19,7 @@ public class WineNoteController {
     private final WineService wineService;
 
     // 와인 평균 업데이트
-    @PostMapping("/{wineId}")
+    @PatchMapping("/{wineId}")
     public ApiResponse<String> updateWineNote(@PathVariable("wineId") Long wineId) {
 
         Wine foundWine = wineService.findWineById(wineId);

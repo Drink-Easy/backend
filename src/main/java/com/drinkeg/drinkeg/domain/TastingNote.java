@@ -17,7 +17,7 @@ import static jakarta.persistence.FetchType.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TastingNote {
+public class TastingNote extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

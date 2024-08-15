@@ -40,7 +40,7 @@ public class WineStoreController {
     @PreAuthorize("hasRole('ROLE_ADMIN')") // *추후에 ROLE_OWNER 추가 후 인증절차 필요.
     public ApiResponse<String> createWineStore(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody @Valid WineStoreRequestDTO wineStoreRequestDTO) {
         // 유저 정보 불러오기
-        Member owner = memberService.findMemberByUsername(principalDetail.getUsername());
+        Member owner = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         // 와인 스토어 저장
         wineStoreService.saveWineStore(wineStoreRequestDTO, owner);
@@ -52,7 +52,7 @@ public class WineStoreController {
     @PreAuthorize("hasRole('ROLE_ADMIN')") // *추후에 ROLE_OWNER 추가 후 인증절차 필요.
     public ApiResponse<WineStoreResponseDTO> updateWineStore(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable Long wineStoreId, @RequestBody @Valid WineStoreRequestDTO wineStoreRequestDTO) {
         // 유저 정보 불러오기
-        Member owner = memberService.findMemberByUsername(principalDetail.getUsername());
+        Member owner = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         WineStoreResponseDTO wineStoreResponseDTO = wineStoreService.updateWineStore(wineStoreId, wineStoreRequestDTO, owner);
         return ApiResponse.onSuccess(wineStoreResponseDTO);
@@ -62,7 +62,7 @@ public class WineStoreController {
     @PreAuthorize("hasRole('ROLE_ADMIN')") // *추후에 ROLE_OWNER 추가 후 인증절차 필요.
     public ApiResponse<String> deleteWineStore(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable Long wineStoreId) {
         // 유저 정보 불러오기
-        Member owner = memberService.findMemberByUsername(principalDetail.getUsername());
+        Member owner = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         wineStoreService.deleteWineStore(wineStoreId, owner);
         return ApiResponse.onSuccess("와인 스토어 삭제 완료");

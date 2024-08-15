@@ -36,9 +36,9 @@ public class CommentController {
     public ApiResponse<String> createComment(//필요한게
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestBody CommentRequestDTO commentRequest) {
+
         // 현재 로그인 한 사용자 정보 가져오기
-        String username = principalDetail.getUsername();
-        Member foundMember = memberService.findMemberByUsername(username);
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
         Long memberId = foundMember.getId();
 
         commentService.createComment(commentRequest, memberId);
@@ -54,8 +54,7 @@ public class CommentController {
             @PathVariable("commentId") Long commentId,
             @RequestBody RecommentRequestDTO recommentRequest) {
         // 현재 로그인한 사용자 정보 조회
-        String username = principalDetail.getUsername();
-        Member foundMember = memberService.findMemberByUsername(username);
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         commentService.createRecomment(commentId, recommentRequest, foundMember);
         return ApiResponse.onSuccess("대댓글 생성 완료");
@@ -69,8 +68,7 @@ public class CommentController {
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("commentId") Long commentId) {
         // 현재 로그인한 사용자 정보 가져오기
-        String username = principalDetail.getUsername();
-        Member foundMember = memberService.findMemberByUsername(username);
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         commentService.updateCommentStatus(commentId, foundMember);
         return ApiResponse.onSuccess("댓글 삭제 완료");
@@ -83,8 +81,7 @@ public class CommentController {
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("commentId") Long commentId) {
         // 현재 로그인한 사용자 정보 불러오기
-        String username = principalDetail.getUsername();
-        Member foundMember = memberService.findMemberByUsername(username);
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         commentService.deleteComment(commentId, foundMember);
         return ApiResponse.onSuccess("댓글 삭제 완료");
@@ -98,8 +95,7 @@ public class CommentController {
             @PathVariable("commentId") Long commentId,
             @PathVariable("recommentId") Long recommentId) {
         // 현재 로그인한 사용자 정보
-        String username = principalDetail.getUsername();
-        Member foundMember = memberService.findMemberByUsername(username);
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         commentService.deleteRecomment(commentId, recommentId, foundMember);
         return ApiResponse.onSuccess("댓글 삭제 완료");
