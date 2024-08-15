@@ -28,6 +28,7 @@ public enum ErrorStatus implements BaseCode {
     NOT_YOUR_PARTY(HttpStatus.BAD_REQUEST, "PARTY4003", "모임 개설자가 아닙니다."),
     EXIST_IN_PARTY(HttpStatus.BAD_REQUEST, "PARTY4004", "이미 참가한 모임입니다."),
     PARTY_FULL(HttpStatus.BAD_REQUEST, "PARTY4005", "모임 인원이 가득 찼습니다."),
+    INVALID_SORT_TYPE(HttpStatus.BAD_REQUEST, "PARTY4006", "정렬방식이 유효하지 않습니다."),
 
     // Comment Error
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "댓글이 없습니다."),

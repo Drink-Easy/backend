@@ -12,9 +12,12 @@ import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.PartyJoinMemberRepository;
 import com.drinkeg.drinkeg.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +41,30 @@ public class PartyServiceImpl implements PartyService {
         PartyJoinMember partyJoinMember = partyJoinMemberConverter.toEntity(member, savedParty, true);
         partyJoinMemberRepository.save(partyJoinMember);
 
+    }
+
+
+    @Override
+    public Page<PartyResponseDTO> getSortedParties(String sortType, Pageable pageable) {
+        Page<Party> parties = switch (sortType) {
+            case "recent" ->
+                // 최신순 정렬
+                    partyRepository.findAllByOrderByCreatedAtDesc(pageable);
+            case "deadline" ->
+                // 마감 임박순 정렬
+                    partyRepository.findAllByOrderByPartyDateAsc(pageable);
+            case "popular" ->
+                // 인원이 많이 모인 순 정렬
+                    partyRepository.findAllByOrderByParticipateMemberNumDesc(pageable);
+            case "price" ->
+                // 가격순 정렬 (낮은 가격 순)
+                    partyRepository.findAllByOrderByAdmissionFeeAsc(pageable);
+            //거리순 정렬 예정
+            default -> throw new GeneralException(ErrorStatus.INVALID_SORT_TYPE); // 유효하지 않은 정렬 기준일 경우 예외 처리
+        };
+
+        // Party 엔티티를 PartyResponseDTO로 변환
+        return parties.map(partyConverter::toResponse);
     }
 
     @Override

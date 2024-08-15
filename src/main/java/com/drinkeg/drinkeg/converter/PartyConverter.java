@@ -36,6 +36,8 @@ public class PartyConverter {
                 .partyDate(party.getPartyDate())
                 .admissionFee(party.getAdmissionFee())
                 .place(party.getPlace())
+                .participateMemberNum(party.getParticipateMemberNum())
+                .createdAt(party.getCreatedAt())
                 //.partyWine(party.getPartyWine())
                 .build();
     }

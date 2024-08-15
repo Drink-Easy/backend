@@ -8,9 +8,14 @@ import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.partyService.PartyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -39,6 +44,22 @@ public class PartyController {
     public ApiResponse<List<PartyResponseDTO>> getAllParties() {
         List<PartyResponseDTO> partyResponseDTOS = partyService.getAllParties();
         return ApiResponse.onSuccess(partyResponseDTOS);
+    }
+
+
+    // 정렬 기준에 따른 모임 조회
+    // 최신순 /parties?sortType=recent
+    // 마감 임박순 /parties?sortType=deadline
+    // 인원이 많이 모인 순 /parties?sortType=popular
+    // 가격순 /parties?sortType=price
+    @GetMapping
+    public ApiResponse<Page<PartyResponseDTO>> getSortedParties(
+            @RequestParam String sortType,
+            @PageableDefault(size = 5) Pageable pageable) {
+
+        // 서비스로 정렬방식 전달
+        Page<PartyResponseDTO> sortedParties = partyService.getSortedParties(sortType, pageable);
+        return ApiResponse.onSuccess(sortedParties);
     }
 
     // 모임 단건 조회
