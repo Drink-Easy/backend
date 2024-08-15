@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.WineStoreDTO.request.WineStoreRequestDTO;
 import com.drinkeg.drinkeg.dto.WineStoreDTO.response.WineStoreResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineStoreService.WineStoreService;
 import jakarta.transaction.Transactional;

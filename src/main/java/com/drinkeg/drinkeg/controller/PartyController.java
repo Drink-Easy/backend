@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.partyService.PartyService;
 import lombok.RequiredArgsConstructor;

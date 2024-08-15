@@ -5,7 +5,7 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.CommentDTO.CommentRequestDTO;
 import com.drinkeg.drinkeg.dto.CommentDTO.CommentResponseDTO;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.commentService.CommentService;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import lombok.RequiredArgsConstructor;
