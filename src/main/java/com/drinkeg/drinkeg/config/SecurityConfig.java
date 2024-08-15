@@ -138,12 +138,15 @@ public class SecurityConfig {
 
 
                         // tasting note 인가
-                        .requestMatchers("tasting-note/**").hasRole("USER")
+                        .requestMatchers("/tasting-note/**").hasRole("USER")
+
+                        // wine 인가
+                        .requestMatchers("/wine/**").hasRole("USER")
 
                         // wine note 인가
-                        .requestMatchers(HttpMethod.GET, "wine-note/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "wine-note/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "wine-note/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/wine-note/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/wine-note/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "/wine-note/**").hasRole("USER")
 
                         // wine class 인가
                         .requestMatchers(HttpMethod.POST, "wine-class/**").hasRole("ADMIN")

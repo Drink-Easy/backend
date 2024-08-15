@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto;
+package com.drinkeg.drinkeg.dto.WineDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,13 +7,18 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WineNoteResponseDTO {
+public class WineResponseDTO {
 
     private Long wineId;
+
+    private String name;
+
+    private String imageUrl;
 
     private float sugarContent;
     private float acidity;
@@ -25,4 +30,5 @@ public class WineNoteResponseDTO {
     private List<String> scentTaste = new ArrayList<>();
     private List<String> scentFinish = new ArrayList<>();
 
+    private float rating;
 }

@@ -39,13 +39,6 @@ public class TastingNoteController {
         return ApiResponse.onSuccess("노트 작성 완료");
     }
 
-    // 새 노트 작성 시 와인 검색
-    @GetMapping("/wine")
-    public ApiResponse<List<NoteWineResponseDTO>> saveNote(@RequestBody NoteWineRequestDTO noteWineRequestDTO) {
-
-        List<NoteWineResponseDTO> noteWineResponseDTOs = wineService.searchWinesByName(noteWineRequestDTO);
-        return ApiResponse.onSuccess(noteWineResponseDTOs);
-    }
 
     // 선택한 노트 보기
     @GetMapping("/{noteId}")

@@ -26,7 +26,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final TastingNoteRepository tastingNoteRepository;
     private final WineRepository wineRepository;
-    private final MemberRepository memberRepository;
 
     @Override
     public void saveNote(NoteRequestDTO noteRequestDTO, Member member) {
