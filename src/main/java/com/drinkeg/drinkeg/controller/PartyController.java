@@ -18,7 +18,6 @@ import java.util.List;
 @RequestMapping("/parties")
 public class PartyController {
 
-
     private final PartyService partyService;
     private final MemberService memberService;
 

@@ -2,11 +2,14 @@ package com.drinkeg.drinkeg.service.partyService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.PartyConverter;
+import com.drinkeg.drinkeg.converter.PartyJoinMemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Party;
+import com.drinkeg.drinkeg.domain.PartyJoinMember;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.repository.PartyJoinMemberRepository;
 import com.drinkeg.drinkeg.repository.PartyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,8 @@ public class PartyServiceImpl implements PartyService {
 
     private final PartyRepository partyRepository;
     private final PartyConverter partyConverter;
+    private final PartyJoinMemberConverter partyJoinMemberConverter;
+    private final PartyJoinMemberRepository partyJoinMemberRepository;
 
     @Override
     public void createParty(PartyRequestDTO partyRequest, Member member) {
@@ -29,7 +34,10 @@ public class PartyServiceImpl implements PartyService {
         Party party = partyConverter.fromRequest(partyRequest, member);
         Party savedParty = partyRepository.save(party);
 
-        //partyConverter.toResponse(savedParty);
+        // 파티 생성 후, 해당 멤버를 PartyJoinMember 테이블에 호스트로 등록
+        PartyJoinMember partyJoinMember = partyJoinMemberConverter.toEntity(member, savedParty, true);
+        partyJoinMemberRepository.save(partyJoinMember);
+
     }
 
     @Override
