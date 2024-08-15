@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Member {
@@ -62,6 +61,7 @@ public class Member {
     private List<OrderInfo> orderInfos = new ArrayList<>();
 
 
+    public void updateEmail(String email) { this.email = email; };
     public void updateName(String name) { this.name = name; };
     public void updateIsNewbie(Boolean isNewbie) { this.isNewbie = isNewbie; };
     public void updateMonthPriceMax(Long monthPrice) { this.monthPriceMax = monthPrice; };

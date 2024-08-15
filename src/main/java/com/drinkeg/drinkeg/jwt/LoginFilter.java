@@ -1,7 +1,9 @@
 package com.drinkeg.drinkeg.jwt;
 
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
+import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,8 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import static com.drinkeg.drinkeg.jwt.JWTException.*;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -35,9 +40,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         // 클라이언트 요청에서 username, password 추출
-        /*String username = obtainUsername(request);
-        String password = obtainPassword(request);*/
-
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> requestBody;
 
@@ -47,6 +49,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throw new AuthenticationServiceException("Failed to parse authentication request body", e);
         }
 
+        if (requestBody.get("username") == null) {
+            jwtExceptionHandler(response, ErrorStatus.USERNAME_NOT_FOUND);
+            return null;
+        }
+        if (requestBody.get("password") == null) {
+            jwtExceptionHandler(response, ErrorStatus.PASSWORD_NOT_FUND);
+            return null;
+        }
         String username = requestBody.get("username");
         String password = requestBody.get("password");
 
@@ -108,7 +118,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
 
-        response.setStatus(401);
-    }
+        response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 실패 시 상태 코드 설정
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("code", "MEMBER4001");
+        errorResponse.put("message", "로그인 과정에서 오류가 발생했습니다.");
+
+        try {
+            String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+            response.getWriter().write(jsonResponse);
+        } catch (IOException e) {
+            throw new AuthenticationServiceException("Failed to write authentication response body", e);
+        }
+    }
 }
