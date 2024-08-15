@@ -141,7 +141,7 @@ public class SecurityConfig {
                         .requestMatchers("/tasting-note/**").hasRole("USER")
 
                         // wine 인가
-                        .requestMatchers("/wine/**").hasRole("USER")
+                        .requestMatchers("/wine/**").permitAll()
 
                         // wine note 인가
                         .requestMatchers(HttpMethod.GET, "/wine-note/**").permitAll()
