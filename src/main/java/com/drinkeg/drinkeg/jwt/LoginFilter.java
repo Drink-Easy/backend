@@ -81,7 +81,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String accessToken = jwtUtil.createJwt("access",username, role, 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
+        String accessToken = jwtUtil.createJwt("access",username, role, 10000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
         String refreshToken = jwtUtil.createJwt("refresh",username,role,864000000L);
 
         System.out.println("---------------LoginFilter------------------");

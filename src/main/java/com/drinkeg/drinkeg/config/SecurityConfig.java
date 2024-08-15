@@ -1,9 +1,6 @@
 package com.drinkeg.drinkeg.config;
 
-import com.drinkeg.drinkeg.jwt.CustomLogoutFilter;
-import com.drinkeg.drinkeg.jwt.JWTFilter;
-import com.drinkeg.drinkeg.jwt.JWTUtil;
-import com.drinkeg.drinkeg.jwt.LoginFilter;
+import com.drinkeg.drinkeg.jwt.*;
 import com.drinkeg.drinkeg.oauth2.CustomSuccessHandler;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.CustomOAuth2UserService;
@@ -42,6 +39,7 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
     private final RedisClient redisClient;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     // AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -121,6 +119,9 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler)
 
                 );
+
+        http
+                .exceptionHandling(e -> e.authenticationEntryPoint(customAuthenticationEntryPoint));
 
         //경로별 인가 작업
         http
