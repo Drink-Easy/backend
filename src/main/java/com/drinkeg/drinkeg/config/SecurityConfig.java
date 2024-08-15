@@ -48,7 +48,8 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
             web.ignoring()
-                    .requestMatchers("/join"); // 필터를 타면 안되는 경로
+                    .requestMatchers("/join",
+                            "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**");// 필터를 타면 안되는 경로
         };
     }
 
@@ -127,7 +128,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         //.requestMatchers("/my").authenticated()
-                        .requestMatchers("/", "/join", "/login").permitAll()
+                        .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
+                        .requestMatchers("/", "/join", "/login", "/reissue").permitAll()
 
                         // wine News 인가
                         .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
@@ -160,8 +162,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "comments/**").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "comments/**").hasRole("USER")
 
-                        .requestMatchers("/", "/join", "/login", "/reissue").permitAll()
-                        .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
                         .anyRequest().authenticated());
 
 
