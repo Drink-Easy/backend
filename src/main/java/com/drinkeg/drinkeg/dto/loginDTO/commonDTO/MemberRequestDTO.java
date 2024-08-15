@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.loginDTO.jwtDTO;
+package com.drinkeg.drinkeg.dto.loginDTO.commonDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

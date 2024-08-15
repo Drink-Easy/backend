@@ -1,11 +1,10 @@
 package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.JoinDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.MemberRequestDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.MemberResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberRequestDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.loginService.JoinService;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
