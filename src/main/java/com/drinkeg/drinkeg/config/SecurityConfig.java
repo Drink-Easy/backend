@@ -147,6 +147,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "wine-class/**").hasRole("ADMIN")
 
+                        // Parties 인가
+                        .requestMatchers(HttpMethod.GET, "parties/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "parties/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "parties/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "parties/**").hasRole("USER")
+
+                        // comments 인가
+                        .requestMatchers(HttpMethod.GET, "comments/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "comments/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "comments/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "comments/**").hasRole("USER")
+
                         .requestMatchers("/", "/join", "/login", "/reissue").permitAll()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
                         .anyRequest().authenticated());
