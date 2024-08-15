@@ -44,4 +44,5 @@ public class MemberController {
         return ApiResponse.onSuccess(joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername()));
     }
 
+
 }
