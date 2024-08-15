@@ -28,17 +28,18 @@ public class Party {
 
     private String introduce;
 
-    private Long limitMemeberNum;
+    private int limitMemberNum;
+
+    private int participateMemberNum;
 
     private Date partyDate;
 
-    private Long addmissionFee;
+    private int admissionFee;
 
     private String place;
 
-    private String partyWine;
-
-
+    private Long hostId;
+    //private String partyWine;
 
 
 }

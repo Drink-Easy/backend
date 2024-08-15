@@ -9,6 +9,31 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorStatus implements BaseCode {
+
+    // Wine Error
+    WINE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE4001", "와인이 없습니다."),
+
+    // Note Error
+    TASTING_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTE4001", "테이스팅 노트가 없습니다."),
+    NOT_YOUR_NOTE(HttpStatus.BAD_REQUEST, "NOTE4002", "본인의 노트가 아닙니다."),
+
+    // WineNote Error
+    WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),
+    NOT_INVALID_SCENT(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "해당 이름의 향이 없습니다."),
+
+
+    // Party Error
+    PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTY4001", "모임이 없습니다."),
+    INVALID_PARTY_REQUEST(HttpStatus.BAD_REQUEST, "PARTY4002", "모든 모임 정보가 입력되지 않았습니다."),
+    NOT_YOUR_PARTY(HttpStatus.BAD_REQUEST, "PARTY4003", "모임 개설자가 아닙니다."),
+
+    // Comment Error
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "댓글이 없습니다."),
+    COMMENT_HAS_RECOMMENTS(HttpStatus.BAD_REQUEST, "COMMENT4002", "대댓글이 있는 댓글은 완전 삭제할 수 없습니다."),
+    COMMENT_HAS_NO_RECOMMENTS(HttpStatus.BAD_REQUEST, "COMMENT4003", "대댓글이 없는 댓글입니다."),
+    RECOMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECOMMENT4001", "대댓글을 찾을 수 없습니다."),
+    NOT_YOUR_COMMENT(HttpStatus.BAD_REQUEST,"COMMENT4004", "댓글 작성자가 아닙니다."), // 대댓글의 경우에도 사용
+
     // Wine class Error
     WINE_CLASS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINECLASS4001", "와인 클래스가 없습니다."),
     // WineNews Error
@@ -24,21 +49,9 @@ public enum ErrorStatus implements BaseCode {
     WINE_NEWS_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENWSBOOKMARK4001", "와인 뉴스 북마크가 없습니다."),
     WINE_NEWS_BOOKMARK_DUPLICATED(HttpStatus.BAD_REQUEST, "WINENWSBOOKMARK4002", "이미 존재하는 북마크입니다."),
 
+
     // Member Error
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "회원이 없습니다."),
-
-    // Wine Error
-    WINE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE4001", "와인이 없습니다."),
-
-    // Note Error
-    TASTING_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTE4001", "테이스팅 노트가 없습니다."),
-    NOT_YOUR_NOTE(HttpStatus.BAD_REQUEST, "NOTE4002", "본인의 노트가 아닙니다."),
-
-    // WineNote Error
-    WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),
-    NOT_INVALID_SCENT(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "해당 이름의 향이 없습니다."),
-
-    // Member Error
     LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "MEMBER4001", "로그인 과정에서 오류가 발생했습니다."),
     SESSION_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "MEMBER4001", "유효하지 않은 세션입니다."),
     AUTH_REQUEST_BODY_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "Authentication Request Body를 읽지 못했습니다."),
@@ -53,7 +66,11 @@ public enum ErrorStatus implements BaseCode {
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "유효하지 않은 리프레쉬 토큰입니다."),
 
     // Redis Error
-    REDIS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REDIS4001", "Redis 설정에 오류가 발생했습니다.");
+    REDIS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REDIS4001", "Redis 설정에 오류가 발생했습니다."),
+
+    // WineStore Error
+    WINE_STORE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_STORE4001", "와인 스토어가 없습니다."),
+    WINE_STORE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_STORE4002", "권한이 없는 스토어입니다.");
 
 
     private final HttpStatus httpStatus;

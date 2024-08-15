@@ -1,9 +1,6 @@
 package com.drinkeg.drinkeg.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +17,26 @@ public class WineStore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private Member owner;
 
-    public String address;
+    private String name;
+
+    private String address;
+
+    public WineStore updateOwner(Member owner) {
+        this.owner = owner;
+        return this;
+    }
+
+    public WineStore updateName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public WineStore updateAddress(String address) {
+        this.address = address;
+        return this;
+    }
 }

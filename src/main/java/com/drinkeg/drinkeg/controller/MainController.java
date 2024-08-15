@@ -1,6 +1,8 @@
 package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
+import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +21,13 @@ public class MainController {
 
     @GetMapping("/main")
     public ApiResponse<?> mainP() {
+        return ApiResponse.onSuccess("하윙");
+    }
+
+    @GetMapping("/home")
+    public ApiResponse<?> home(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+
+
         return ApiResponse.onSuccess("하윙");
     }
 }
