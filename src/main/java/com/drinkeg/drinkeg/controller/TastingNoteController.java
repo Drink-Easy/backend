@@ -6,12 +6,9 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteWineResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.tastingNoteService.TastingNoteService;
-import com.drinkeg.drinkeg.service.wineService.WineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +22,6 @@ import java.util.List;
 public class TastingNoteController {
 
     private final TastingNoteService tastingNoteService;
-    private final WineService wineService;
     private final MemberService memberService;
 
     // 새 노트 작성
