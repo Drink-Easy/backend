@@ -48,4 +48,8 @@ public class Wine {
     @JoinColumn(name = "wine_id")
     private List<TastingNote> tastingNoteList = new ArrayList<>();
 
+    public void updateImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
+    }
+
 }
