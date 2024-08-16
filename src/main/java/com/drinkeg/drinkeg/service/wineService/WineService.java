@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.service.wineService;
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Wine;
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 
@@ -14,7 +15,7 @@ public interface WineService {
 
     public Wine findWineById(Long wineId);
 
-    public List<RecommendWineDTO> recommendWine(Member member);
+    public HomeResponseDTO getHomeResponse(Member member);
 
     public void uploadWineImage() throws IOException;
 

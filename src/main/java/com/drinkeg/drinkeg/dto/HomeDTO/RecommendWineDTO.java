@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RecommendWineDTO {
 
+    private Long wineId;
+
     private String wineName;
 
-    private int year;
+    private String imageUrl;
 }
