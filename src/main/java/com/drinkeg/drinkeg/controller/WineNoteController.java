@@ -31,6 +31,7 @@ public class WineNoteController {
         return ApiResponse.onSuccess("와인 평균 노트 업데이트 완료");
     }
 
+    // 와인노트 (대표 테이스팅노트) 보기
     @GetMapping("/{wineId}")
     public ApiResponse<WineNoteResponseDTO> showWineNote(@PathVariable("wineId") Long wineId) {
 
