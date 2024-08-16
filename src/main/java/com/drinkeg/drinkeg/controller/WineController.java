@@ -5,10 +5,10 @@ import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.converter.WineConverter;
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.WineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.request.SearchWineRequestDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +24,9 @@ public class WineController {
 
 
     // 검색
-    @GetMapping("")
-    public ApiResponse<List<SearchWineResponseDTO>> searchWine(@RequestBody NoteWineRequestDTO noteWineRequestDTO) {
-        List<SearchWineResponseDTO> searchWineResponseDTOS = wineService.searchWinesByName(noteWineRequestDTO);
+    @GetMapping("/")
+    public ApiResponse<List<SearchWineResponseDTO>> searchWine(@RequestBody SearchWineRequestDTO searchWineRequestDTO) {
+        List<SearchWineResponseDTO> searchWineResponseDTOS = wineService.searchWinesByName(searchWineRequestDTO);
         return ApiResponse.onSuccess(searchWineResponseDTOS);
     }
 

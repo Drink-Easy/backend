@@ -141,7 +141,6 @@ public class SecurityConfig {
                         .requestMatchers("/tasting-note/**").hasRole("USER")
 
                         // wine 인가
-                        .requestMatchers("/wine").hasRole("USER")
                         .requestMatchers("/wine/**").hasRole("USER")
 
                         // wine note 인가

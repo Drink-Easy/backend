@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.WineDTO;
+package com.drinkeg.drinkeg.dto.WineDTO.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

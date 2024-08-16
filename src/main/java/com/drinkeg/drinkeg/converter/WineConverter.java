@@ -3,9 +3,9 @@ package com.drinkeg.drinkeg.converter;
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.domain.WineNote;
-import com.drinkeg.drinkeg.dto.WineDTO.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.WineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
 
 public class WineConverter {
 
@@ -51,6 +51,7 @@ public class WineConverter {
     public static WineReviewResponseDTO toWineReviewResPonseDTO(TastingNote tastingNote){
 
         return WineReviewResponseDTO.builder()
+                .name(tastingNote.getMember().getName())
                 .satisfaction(tastingNote.getSatisfaction())
                 .review(tastingNote.getReview())
                 .build();
