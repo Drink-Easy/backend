@@ -11,9 +11,6 @@ import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,33 +62,40 @@ public class WineServiceImpl implements WineService {
     public HomeResponseDTO getHomeResponse(Member member) {
 
         List<String> wineSortList = member.getWineSort();
-        int monthPriceMax = Math.toIntExact(member.getMonthPriceMax());
         List<String> wineAreaList = member.getWineArea();
+        int monthPriceMax = (int) ((member.getMonthPriceMax())/1300);
 
-        // 와인 종류로 검색한다.
-        Set<Wine> searchWines = new LinkedHashSet<>();
-        for(String wineSort : wineSortList) {
+        Map<Wine, Double> wineScoreMap = new HashMap<>();
+
+        // 와인 종류로 검색하여 가중치 부여
+        for (String wineSort : wineSortList) {
             List<Wine> sortContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineSort);
-            // 와인 이름이 포함된 와인을 추가한다.
-            if(!sortContainingWines.isEmpty()){
-                searchWines.addAll(sortContainingWines);
-            }
-        }
-        // 와인 생산지로 검색한다
-        for(String wineArea : wineAreaList) {
-            List<Wine> areaContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineArea);
-            // 와인 이름이 포함된 와인을 추가한다.
-            if(!areaContainingWines.isEmpty()){
-                searchWines.addAll(areaContainingWines);
+            for (Wine wine : sortContainingWines) {
+                // 가중치 0.2 부여
+                wineScoreMap.put(wine, wineScoreMap.getOrDefault(wine, 0.0) + 0.2);
             }
         }
 
-        // 가격으로 필터링 한 후 5개 추출
-        List<RecommendWineDTO> recommendWineDTOs = searchWines.stream()
-                .filter(wine -> wine.getPrice() <= monthPriceMax)
-                .map(WineConverter::toRecommendWineDTO)
+        // 와인 생산지로 검색하여 가중치 부여
+        for (String wineArea : wineAreaList) {
+            List<Wine> areaContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineArea);
+            for (Wine wine : areaContainingWines) {
+                // 가중치 0.2 부여
+                wineScoreMap.put(wine, wineScoreMap.getOrDefault(wine, 0.0) + 0.2);
+            }
+        }
+
+        // 와인 평점을 최종 가중치에 반영
+        wineScoreMap.replaceAll((wine, score) -> score + wine.getRating());
+
+        // 가격으로 필터링, 가중치로 정렬, 5개 추출
+        List<RecommendWineDTO> recommendWineDTOs = wineScoreMap.entrySet().stream()
+                .filter(entry -> entry.getKey().getPrice() <= monthPriceMax)
+                .sorted((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue()))  // 가중치로 정렬
+                .map(entry -> WineConverter.toRecommendWineDTO(entry.getKey()))
                 .limit(5)
                 .toList();
+
 
         return WineConverter.toHomeResponseDTO(member, recommendWineDTOs);
     }
