@@ -21,9 +21,13 @@ public class WineConverter {
                 .name(wine.getName())
                 .imageUrl(wine.getImageUrl())
 
+                .sort(wine.getSort())
+                .area(wine.getArea())
+
                 .price(((wine.getPrice() * 1300) / 1000) * 1000)
 
                 .rating(Math.max(wine.getRating(), wine.getWineNote().getRating()))
+
                 .build();
     }
 

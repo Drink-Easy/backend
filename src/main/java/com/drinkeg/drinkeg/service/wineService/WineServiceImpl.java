@@ -64,20 +64,34 @@ public class WineServiceImpl implements WineService {
     @Override
     public HomeResponseDTO getHomeResponse(Member member) {
 
-        List<String> wineSort = member.getWineSort();
-        Long monthPriceMax = member.getMonthPriceMax();
-        List<String> wineArea = member.getWineArea();
+        List<String> wineSortList = member.getWineSort();
+        int monthPriceMax = Math.toIntExact(member.getMonthPriceMax());
+        List<String> wineAreaList = member.getWineArea();
 
-        // 페이지네이션 설정: 최대 5개의 결과
-        Pageable pageable = PageRequest.of(0, 5);
+        // 와인 종류로 검색한다.
+        Set<Wine> searchWines = new LinkedHashSet<>();
+        for(String wineSort : wineSortList) {
+            List<Wine> sortContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineSort);
+            // 와인 이름이 포함된 와인을 추가한다.
+            if(!sortContainingWines.isEmpty()){
+                searchWines.addAll(sortContainingWines);
+            }
+        }
+        // 와인 생산지로 검색한다
+        for(String wineArea : wineAreaList) {
+            List<Wine> areaContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineArea);
+            // 와인 이름이 포함된 와인을 추가한다.
+            if(!areaContainingWines.isEmpty()){
+                searchWines.addAll(areaContainingWines);
+            }
+        }
 
-        // 추천 와인 조회
-        List<Wine> allRecommendedWines = wineRepository.findRecommendedWines(wineSort, wineArea, monthPriceMax);
-
-        // 결과 수를 최대 5개로 제한
-        List<RecommendWineDTO> recommendWineDTOs = allRecommendedWines.stream()
+        // 가격으로 필터링 한 후 5개 추출
+        List<RecommendWineDTO> recommendWineDTOs = searchWines.stream()
+                .filter(wine -> wine.getPrice() <= monthPriceMax)
+                .map(WineConverter::toRecommendWineDTO)
                 .limit(5)
-                .map(WineConverter::toRecommendWineDTO).toList();
+                .toList();
 
         return WineConverter.toHomeResponseDTO(member, recommendWineDTOs);
     }

@@ -17,12 +17,8 @@ public interface WineRepository extends JpaRepository<Wine, Long> {
     List<Wine> findAllByName(String name);
 
     // 추천 와인 조회를 위한 쿼리
-    @Query("SELECT w FROM Wine w WHERE " +
-            "(:wineSort IS NULL OR LOWER(w.sort) LIKE %:wineSort%) AND " +
-            "(:wineArea IS NULL OR EXISTS (SELECT 1 FROM w.area a WHERE LOWER(a) LIKE %:wineArea%)) AND " +
-            "(:monthPriceMax IS NULL OR w.price <= :monthPriceMax/1300)")
-    List<Wine> findRecommendedWines(@Param("wineSort") List<String> wineSort,
-                                    @Param("wineArea") List<String> wineArea,
-                                    @Param("monthPriceMax") Long monthPriceMax);
+    List<Wine> findAllBySortContainingIgnoreCase(String sort);
+    List<Wine> findAllByAreaContainingIgnoreCase(String area);
+    List<Wine> findAllByPriceIsLessThanEqual(int price);
 
 }
