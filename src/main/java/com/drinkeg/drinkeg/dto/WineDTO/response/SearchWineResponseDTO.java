@@ -17,4 +17,8 @@ public class SearchWineResponseDTO {
 
     private String imageUrl;
 
+    private float rating;
+
+    private int price;
+
 }

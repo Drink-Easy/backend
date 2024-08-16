@@ -20,6 +20,10 @@ public class WineResponseDTO {
 
     private String imageUrl;
 
+    private int price;
+    private String sort;
+    private String area;
+
     private float sugarContent;
     private float acidity;
     private float tannin;
@@ -31,4 +35,5 @@ public class WineResponseDTO {
     private List<String> scentFinish = new ArrayList<>();
 
     private float rating;
+
 }
