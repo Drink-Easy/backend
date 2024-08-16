@@ -43,7 +43,7 @@ public class TastingNoteController {
         // 현재 로그인한 사용자 정보 가져오기
         Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
 
-        NoteResponseDTO noteResponseDTO = tastingNoteService.showNoteById(noteId);
+        NoteResponseDTO noteResponseDTO = tastingNoteService.showNoteById(noteId, foundMember);
         return ApiResponse.onSuccess(noteResponseDTO);
     }
 
