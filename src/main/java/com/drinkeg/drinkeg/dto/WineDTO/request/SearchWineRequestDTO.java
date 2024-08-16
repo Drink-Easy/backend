@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.WineDTO;
+package com.drinkeg.drinkeg.dto.WineDTO.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchWineResponseDTO {
+public class SearchWineRequestDTO {
 
-    private Long wineId;
-
-    private String name;
-
-    private String imageUrl;
+    private String wineName;
 
 }
