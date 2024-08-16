@@ -1,11 +1,16 @@
 package com.drinkeg.drinkeg.converter;
 
+import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.domain.WineNote;
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
+import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
+
+import java.util.List;
 
 public class WineConverter {
 
@@ -49,6 +54,7 @@ public class WineConverter {
                 .build();
     }
 
+    // 와인에 대한 사용자 리뷰 DTO 로 변환
     public static WineReviewResponseDTO toWineReviewResPonseDTO(TastingNote tastingNote){
 
         return WineReviewResponseDTO.builder()
@@ -57,5 +63,24 @@ public class WineConverter {
                 .review(tastingNote.getReview())
                 .build();
 
+    }
+
+    // 홈화면 추천 와인 DTO 로 변환
+    public static RecommendWineDTO toRecommendWineDTO(Wine wine){
+
+        return RecommendWineDTO.builder()
+                .wineId(wine.getId())
+                .wineName(wine.getName())
+                .imageUrl(wine.getImageUrl())
+                .build();
+    }
+
+    // 홈화면 추천 와인 DTO 로 변환
+    public static HomeResponseDTO toHomeResponseDTO(Member member, List<RecommendWineDTO> recommendWineDTOs){
+
+        return HomeResponseDTO.builder()
+                .name(member.getName())
+                .recommendWineDTOs(recommendWineDTOs)
+                .build();
     }
 }

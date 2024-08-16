@@ -5,11 +5,15 @@ import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Wine;
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +28,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class WineServiceImpl implements WineService {
-
     private final WineRepository wineRepository;
     private final S3Service s3Service;
 
@@ -59,14 +62,24 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public List<RecommendWineDTO> recommendWine(Member member) {
+    public HomeResponseDTO getHomeResponse(Member member) {
 
         List<String> wineSort = member.getWineSort();
         Long monthPriceMax = member.getMonthPriceMax();
         List<String> wineArea = member.getWineArea();
-        List<String> wineVariety = member.getWineVariety();
 
-        return List.of();
+        // 페이지네이션 설정: 최대 5개의 결과
+        Pageable pageable = PageRequest.of(0, 5);
+
+        // 추천 와인 조회
+        List<Wine> allRecommendedWines = wineRepository.findRecommendedWines(wineSort, wineArea, monthPriceMax);
+
+        // 결과 수를 최대 5개로 제한
+        List<RecommendWineDTO> recommendWineDTOs = allRecommendedWines.stream()
+                .limit(5)
+                .map(WineConverter::toRecommendWineDTO).toList();
+
+        return WineConverter.toHomeResponseDTO(member, recommendWineDTOs);
     }
 
     @Override

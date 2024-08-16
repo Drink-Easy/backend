@@ -16,7 +16,7 @@ public class HomeResponseDTO {
 
     private String name;
 
-    private List<RecommendWineDTO> recommendWineDTOS = new ArrayList<>();
+    private List<RecommendWineDTO> recommendWineDTOs = new ArrayList<>();
 
 
 }

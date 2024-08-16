@@ -2,7 +2,9 @@ package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse; 
 import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MainController {
     private final MemberService memberService;
+    private final WineService wineService;
 
     @GetMapping("/maindy")
     @ResponseBody
@@ -38,8 +41,8 @@ public class MainController {
         // 로그인 멤버 불러오기
         Member loadMember = memberService.loadMemberByPrincipleDetail(principalDetail);
 
+        HomeResponseDTO homeResponseDTO = wineService.getHomeResponse(loadMember);
 
-
-        return ApiResponse.onSuccess("");
+        return ApiResponse.onSuccess(homeResponseDTO);
     }
 }
