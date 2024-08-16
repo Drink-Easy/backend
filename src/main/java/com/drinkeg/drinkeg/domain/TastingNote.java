@@ -53,7 +53,7 @@ public class TastingNote {
     // 만족도 0 ~ 5, 소수점 가능
     private float satisfaction;
 
-    private String memo;
+    private String review;
 
 
     // 와인 업데이트
@@ -98,8 +98,8 @@ public class TastingNote {
         this.satisfaction = satisfaction;
     }
     // 메모 업데이트
-    public void updateMemo(String memo) {
-        this.memo = memo;
+    public void updateMemo(String review) {
+        this.review = review;
     }
 
 

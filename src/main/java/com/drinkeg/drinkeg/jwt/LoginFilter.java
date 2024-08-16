@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.jwt;
 
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,8 +76,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         System.out.println("---------------LoginFilter------------------");
 
-        System.out.println("accessToken  ===  " + accessToken);
-        System.out.println("refreshToken == " + refreshToken);
 
         // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
         response.addCookie(tokenService.createCookie("accessToken", accessToken));
@@ -86,12 +85,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // redis에 refresh 토큰 저장
         redisClient.setValue(username, refreshToken, 864000000L);
 
-        // response.sendRedirect("https://drinkeg.com/maindy");
+        // 첫 로그인 여부 가져오기
+        Boolean isFirst = principalDetail.getIsFirst();
 
-        /*LoginResponse loginResponse = LoginResponse.builder()
+        LoginResponse loginResponse = LoginResponse.builder()
                 .username(username)
                 .role(role)
-                .accessToken(token)
+                .isFirst(isFirst)
                 .build();
 
         response.setContentType("application/json");
@@ -100,8 +100,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getWriter(), loginResponse);
 
-        System.out.println("token  ===  " +token);*/
-        // response.sendRedirect("http://localhost:8080/main");
     }
 
     // 로그인 실패시 실행하는 메서드

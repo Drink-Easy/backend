@@ -15,8 +15,10 @@ public enum ErrorStatus implements BaseCode {
     WINE_NEWS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENEWS4001", "와인 뉴스가 없습니다."),
 
     //WineClassBookMark Error
+    WINE_CLASS_BOOKMARK_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_CLASS_BOOKMARK4001", "권한이 없는 북마크입니다."),
     WINE_CLASS_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_CLASS_BOOKMARK4001", "와인 클래스 북마크가 없습니다."),
     WINE_CLASS_BOOKMARK_DUPLICATED(HttpStatus.BAD_REQUEST, "WINE_CLASS_BOOKMARK4002", "이미 존재하는 북마크입니다."),
+
 
     // WineNewsBookMark Error
     WINE_NEWS_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENWSBOOKMARK4001", "와인 뉴스 북마크가 없습니다."),
@@ -47,7 +49,13 @@ public enum ErrorStatus implements BaseCode {
     REDIS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REDIS4001", "Redis 설정에 오류가 발생했습니다."),
 
     // appleLogin Error
-    MATCH_PUBLIC_KEY_NOR_FOUND(HttpStatus.BAD_REQUEST, "APPLE4001", "일치하는 공개키를 찾을 수 없습니다");
+    MATCH_PUBLIC_KEY_NOR_FOUND(HttpStatus.BAD_REQUEST, "APPLE4001", "일치하는 공개키를 찾을 수 없습니다"),
+    IDENTITY_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLE4002", "아이덴티티 토큰을 찾을 수 없습니다."),
+
+    // WineStore Error
+    WINE_STORE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_STORE4001", "와인 스토어가 없습니다."),
+    WINE_STORE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_STORE4002", "권한이 없는 스토어입니다.");
+
 
 
     private final HttpStatus httpStatus;

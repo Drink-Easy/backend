@@ -10,7 +10,7 @@ public class WineConverter {
         return NoteWineResponseDTO.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())
-                .picture(wine.getPicture())
+                .picture(wine.getImageUrl())
                 .build();
     }
 }

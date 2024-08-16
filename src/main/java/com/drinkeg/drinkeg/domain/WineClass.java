@@ -1,13 +1,13 @@
 package com.drinkeg.drinkeg.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +25,9 @@ public class WineClass {
     private String video;
 
     private String description;
+
+    @OneToMany(mappedBy = "wineClass", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WineClassBookMark> bookmarks = new ArrayList<>();
 
     public WineClass updateTitle(String title) {
         this.title = title;

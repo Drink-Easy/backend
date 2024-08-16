@@ -28,6 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .username(userData.getUsername())
                 .password(userData.getPassword())
                 .role(userData.getRole())
+                .isFirst(userData.getIsFirst())
                 .build();
 
         if (userDTO != null) {

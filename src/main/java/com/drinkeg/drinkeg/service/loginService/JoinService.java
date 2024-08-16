@@ -34,6 +34,7 @@ public class JoinService {
         data.setUsername(username);
         data.setPassword(bCryptPasswordEncoder.encode(password));
         data.setRole("ROLE_USER");
+        data.setIsFirst(true);
 
         memberRepository.save(data);
     }
@@ -43,17 +44,20 @@ public class JoinService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.SESSION_UNAUTHORIZED));
 
+        if (memberRequestDTO.getName() != null) {
+            member.updateName(memberRequestDTO.getName());
+        }
         if (memberRequestDTO.getIsNewbie() != null) {
             member.updateIsNewbie(memberRequestDTO.getIsNewbie());
         }
         if (memberRequestDTO.getMonthPrice() != null) {
-            member.updateMonthPrice(memberRequestDTO.getMonthPrice());
+            member.updateMonthPriceMax(memberRequestDTO.getMonthPrice());
         }
         if (memberRequestDTO.getWineSort() != null) {
             member.updateWineSort(memberRequestDTO.getWineSort());
         }
-        if (memberRequestDTO.getWineNation() != null) {
-            member.updateWineNation(memberRequestDTO.getWineNation());
+        if (memberRequestDTO.getWineArea() != null) {
+            member.updateWineNation(memberRequestDTO.getWineArea());
         }
         if (memberRequestDTO.getWineVariety() != null) {
             member.updateWineVariety(memberRequestDTO.getWineVariety());
@@ -61,6 +65,9 @@ public class JoinService {
         if (memberRequestDTO.getRegion() != null) {
             member.updateRegion(memberRequestDTO.getRegion());
         }
+
+        // 회원 가입을 한 유저로 변경
+        member.updateIsFirst();
 
         memberRepository.save(member);
 
@@ -70,9 +77,10 @@ public class JoinService {
                 .username(member.getUsername())
                 .role(member.getRole())
                 .isNewbie(member.getIsNewbie())
-                .monthPrice(member.getMonthPrice())
+                .isFirst(member.getIsFirst())
+                .monthPriceMax(member.getMonthPriceMax())
                 .wineSort(member.getWineSort())
-                .wineNation(member.getWineNation())
+                .wineArea(member.getWineArea())
                 .wineVariety(member.getWineVariety())
                 .region(member.getRegion())
                 .build();

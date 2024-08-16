@@ -60,6 +60,6 @@ public class NoteRequestDTO {
     @Max(5)
     private float satisfaction;
 
-    private String memo;
+    private String review;
 
 }

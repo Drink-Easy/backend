@@ -2,9 +2,7 @@ package com.drinkeg.drinkeg.S3;
 
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
-import com.drinkeg.drinkeg.dto.securityDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
