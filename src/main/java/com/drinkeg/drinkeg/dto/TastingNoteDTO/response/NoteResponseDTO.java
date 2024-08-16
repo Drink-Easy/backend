@@ -17,10 +17,10 @@ public class NoteResponseDTO {
     private Long noteId;
 
     private Long wineId;
-
-    private String name;
-
-    private String picture;
+    private String wineName;
+    private String sort;
+    private String area;
+    private String imageUrl;
 
     private String color;
 
