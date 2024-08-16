@@ -12,6 +12,7 @@ import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -52,5 +53,16 @@ public class WineController {
                 .map(WineConverter::toWineReviewResPonseDTO).toList();
 
         return ApiResponse.onSuccess(wineReviewResponseDTOList);
+    }
+
+    // 와인 리뷰 보기
+    @PostMapping("/upload")
+    public ApiResponse<?> uploadWineImage() {
+        try {
+            wineService.uploadWineImage();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ApiResponse.onSuccess("업로드 성공");
     }
 }

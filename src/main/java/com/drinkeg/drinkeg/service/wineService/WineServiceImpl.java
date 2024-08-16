@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.service.wineService;
 
+import com.drinkeg.drinkeg.S3.S3Service;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineConverter;
 import com.drinkeg.drinkeg.domain.Member;
@@ -11,7 +12,11 @@ import com.drinkeg.drinkeg.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,6 +26,7 @@ import java.util.stream.Collectors;
 public class WineServiceImpl implements WineService {
 
     private final WineRepository wineRepository;
+    private final S3Service s3Service;
 
     @Override
     public List<SearchWineResponseDTO> searchWinesByName(String searchName) {
@@ -64,5 +70,24 @@ public class WineServiceImpl implements WineService {
         List<String> wineVariety = member.getWineVariety();
 
         return List.of();
+    }
+
+    @Override
+    public void uploadWineImage() throws IOException {
+        List<Wine> wines = wineRepository.findAll();
+        for (Wine wine : wines) {
+            if (wine.getImageUrl() == null) {
+                String imageName = wine.getName().toLowerCase().replace(' ', '_')
+                        .replace('/', '_') + ".jpg";
+                File imageFile = new File("/Users/yeon/drinkeg_data/wineSearch/resize_images/" + imageName);
+
+                if (imageFile.exists()) {
+                    MultipartFile multipartFile = new CustomMultipartFile(imageFile);
+                    String imageUrl = s3Service.SaveImage(multipartFile);
+                    wine.updateImageUrl(imageUrl);
+                    wineRepository.save(wine);
+                }
+            }
+        }
     }
 }
