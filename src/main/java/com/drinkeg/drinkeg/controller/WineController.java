@@ -42,14 +42,12 @@ public class WineController {
 
     // 와인 리뷰 보기
     @GetMapping("/review/{wineId}")
-    public ApiResponse<?> showWineReview(@PathVariable("wineId") Long wineId) {
+    public ApiResponse<List<WineReviewResponseDTO>> showWineReview(@PathVariable("wineId") Long wineId) {
 
         Wine foundWine = wineService.findWineById(wineId);
-        List<TastingNote> tastingNoteList = foundWine.getTastingNoteList();
-        if (tastingNoteList.isEmpty()){
-            return ApiResponse.onSuccess("리뷰가 없습니다.");
-        }
-        List<WineReviewResponseDTO> wineReviewResponseDTOList = tastingNoteList.stream()
+
+        List<WineReviewResponseDTO> wineReviewResponseDTOList = foundWine.getTastingNoteList()
+                .stream()
                 .map(WineConverter::toWineReviewResPonseDTO).toList();
 
         return ApiResponse.onSuccess(wineReviewResponseDTOList);
