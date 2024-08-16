@@ -15,24 +15,25 @@ public class WineConverter {
                 .wineId(wine.getId())
                 .name(wine.getName())
                 .imageUrl(wine.getImageUrl())
+
+                .price(wine.getPrice() * 1300 - wine.getPrice()%1000)
+
+                .rating(Math.max(wine.getRating(), wine.getWineNote().getRating()))
                 .build();
     }
 
     // 검색한 와인을 노트 와인 응답 DTO로 변환
     public static WineResponseDTO toWineResponseDTO(Wine wine) {
         WineNote wineNote = wine.getWineNote();
-        float rating;
-        if(wine.getRating() >= wineNote.getRating()){
-            rating = wine.getRating();
-        }
-        else {
-            rating = wineNote.getRating();
-        }
 
         return WineResponseDTO.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())
                 .imageUrl(wine.getImageUrl())
+
+                .price(wine.getPrice() * 1300 - wine.getPrice()%1000)
+                .sort(wine.getSort())
+                .area(wine.getArea())
 
                 .sugarContent(wineNote.getSugarContent())
                 .acidity(wineNote.getAcidity())
@@ -44,7 +45,7 @@ public class WineConverter {
                 .scentTaste(wineNote.getScentTaste())
                 .scentFinish(wineNote.getScentFinish())
 
-                .rating(rating)
+                .rating(Math.max(wine.getRating(), wineNote.getRating()))
                 .build();
     }
 
