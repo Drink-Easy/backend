@@ -57,9 +57,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         }
 
         // TastingNote를 DTO로 변환한다.
-        NoteResponseDTO tastingNoteResponseDTO = TastingNoteConverter.toTastingNoteResponseDTO(foundNote);
-
-        return tastingNoteResponseDTO;
+        return TastingNoteConverter.toTastingNoteResponseDTO(foundNote);
     }
 
     @Override

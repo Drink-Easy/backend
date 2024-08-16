@@ -131,17 +131,18 @@ public class SecurityConfig {
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
                         .requestMatchers("/", "/join", "/login", "/reissue").permitAll()
 
-                        // wine News 인가
-                        .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "wine-news/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
-
-
-                        // tasting note 인가
-                        .requestMatchers("/tasting-note/**").hasRole("USER")
+                        // home 인가
+                        .requestMatchers(HttpMethod.GET,"/home").hasRole("USER")
 
                         // wine 인가
-                        .requestMatchers("/wine/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET,"/wine/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST,"/wine/**").hasRole("USER")
+
+                        // tasting note 인가
+                        .requestMatchers(HttpMethod.GET, "/tasting-note/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/tasting-note/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "/tasting-note/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/tasting-note/**").hasRole("USER")
 
                         // wine note 인가
                         .requestMatchers(HttpMethod.GET, "/wine-note/**").permitAll()
@@ -152,6 +153,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "wine-class/**").hasRole("ADMIN")
+
+                        // wine News 인가
+                        .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
 
                         // Parties 인가
                         .requestMatchers(HttpMethod.GET, "parties/**").hasRole("USER")
