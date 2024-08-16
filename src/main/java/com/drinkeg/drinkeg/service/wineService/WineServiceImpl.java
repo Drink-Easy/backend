@@ -75,11 +75,11 @@ public class WineServiceImpl implements WineService {
     @Override
     public void uploadWineImage() throws IOException {
         List<Wine> wines = wineRepository.findAll();
+
         for (Wine wine : wines) {
             if (wine.getImageUrl() == null) {
-                String imageName = wine.getName().toLowerCase().replace(' ', '_')
-                        .replace('/', '_') + ".jpg";
-                File imageFile = new File("/Users/yeon/drinkeg_data/wineSearch/resize_images/" + imageName);
+                String imageName = wine.getName().toLowerCase().replace("'", "").replace(" ", "-") + ".jpg";
+                File imageFile = new File(System.getenv("IMAGE_PATH")+ imageName);
 
                 if (imageFile.exists()) {
                     MultipartFile multipartFile = new CustomMultipartFile(imageFile);
