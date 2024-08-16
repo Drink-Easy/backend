@@ -5,7 +5,6 @@ import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.converter.WineConverter;
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.dto.WineDTO.request.SearchWineRequestDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;

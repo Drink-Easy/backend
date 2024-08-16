@@ -5,7 +5,6 @@ import com.drinkeg.drinkeg.converter.WineConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.request.SearchWineRequestDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineRepository;
