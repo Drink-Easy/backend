@@ -55,7 +55,7 @@ public class WineController {
         return ApiResponse.onSuccess(wineReviewResponseDTOList);
     }
 
-    // 와인 리뷰 보기
+    // 와인 이미지 업로드
     @PostMapping("/upload")
     public ApiResponse<?> uploadWineImage() {
         try {

@@ -36,7 +36,7 @@ public class MainController {
     }
 
     @GetMapping("/home")
-    public ApiResponse<?> home(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+    public ApiResponse<HomeResponseDTO> home(@AuthenticationPrincipal PrincipalDetail principalDetail) {
 
         // 로그인 멤버 불러오기
         Member loadMember = memberService.loadMemberByPrincipleDetail(principalDetail);
