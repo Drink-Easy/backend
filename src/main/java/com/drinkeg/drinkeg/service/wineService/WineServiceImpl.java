@@ -47,10 +47,7 @@ public class WineServiceImpl implements WineService {
         }
 
         // 와인을 NoteWineResponseDTO로 변환한다.
-        List<SearchWineResponseDTO> collectWines = searchWines.stream().map(wine ->
-                WineConverter.toNoteSearchWineDTO(wine)).collect(Collectors.toList());
-
-        return collectWines;
+        return searchWines.stream().map(WineConverter::toSearchWineDTO).collect(Collectors.toList());
     }
 
     @Override

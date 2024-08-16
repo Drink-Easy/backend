@@ -10,13 +10,13 @@ import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
 public class WineConverter {
 
     // 검색한 와인을 노트 와인 응답 DTO로 변환
-    public static SearchWineResponseDTO toNoteSearchWineDTO(Wine wine) {
+    public static SearchWineResponseDTO toSearchWineDTO(Wine wine) {
         return SearchWineResponseDTO.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())
                 .imageUrl(wine.getImageUrl())
 
-                .price(wine.getPrice() * 1300 - wine.getPrice()%1000)
+                .price(((wine.getPrice() * 1300) / 1000) * 1000)
 
                 .rating(Math.max(wine.getRating(), wine.getWineNote().getRating()))
                 .build();
@@ -31,7 +31,7 @@ public class WineConverter {
                 .name(wine.getName())
                 .imageUrl(wine.getImageUrl())
 
-                .price(wine.getPrice() * 1300 - wine.getPrice()%1000)
+                .price(((wine.getPrice() * 1300) / 100) * 100)
                 .sort(wine.getSort())
                 .area(wine.getArea())
 
