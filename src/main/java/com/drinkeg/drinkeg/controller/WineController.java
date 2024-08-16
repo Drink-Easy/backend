@@ -25,8 +25,8 @@ public class WineController {
 
     // 검색
     @GetMapping
-    public ApiResponse<List<SearchWineResponseDTO>> searchWine(@RequestBody SearchWineRequestDTO searchWineRequestDTO) {
-        List<SearchWineResponseDTO> searchWineResponseDTOS = wineService.searchWinesByName(searchWineRequestDTO);
+    public ApiResponse<List<SearchWineResponseDTO>> searchWine(@RequestParam String searchName) {
+        List<SearchWineResponseDTO> searchWineResponseDTOS = wineService.searchWinesByName(searchName);
         return ApiResponse.onSuccess(searchWineResponseDTOS);
     }
 

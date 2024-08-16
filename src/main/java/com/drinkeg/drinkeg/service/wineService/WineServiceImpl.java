@@ -24,10 +24,9 @@ public class WineServiceImpl implements WineService {
     private final WineRepository wineRepository;
 
     @Override
-    public List<SearchWineResponseDTO> searchWinesByName(SearchWineRequestDTO searchWineRequestDTO) {
+    public List<SearchWineResponseDTO> searchWinesByName(String searchName) {
 
         // 와인 이름으로 와인을 검색한다.
-        String searchName = searchWineRequestDTO.getWineName();
         List<Wine> exactMatchWines = wineRepository.findAllByName(searchName);
 
         // 와인 이름을 공백으로 나누어 검색한다.
