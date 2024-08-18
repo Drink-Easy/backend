@@ -70,16 +70,7 @@ public class AppleLoginService {
 
             System.out.println("첫 로그인임");
 
-            String accessToken = jwtUtil.createJwt("access",member.getUsername(), member.getRole(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
-            String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole(),864000000L);
-
-            // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
-            response.addCookie(tokenService.createCookie("accessToken", accessToken));
-            response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
-            response.setStatus(HttpStatus.OK.value());
-
-            // redis에 refresh 토큰 저장
-            redisClient.setValue(username, refreshToken, 864000000L);
+            jwtProvider(member, response);
 
             return LoginResponse.builder()
                     .username(username)
@@ -96,16 +87,7 @@ public class AppleLoginService {
             System.out.println("첫 로그인아님");
             memberRepository.save(member);
 
-            String accessToken = jwtUtil.createJwt("access",member.getUsername(), member.getRole(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
-            String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole(),864000000L);
-
-            // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
-            response.addCookie(tokenService.createCookie("accessToken", accessToken));
-            response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
-            response.setStatus(HttpStatus.OK.value());
-
-            // redis에 refresh 토큰 저장
-            redisClient.setValue(username, refreshToken, 864000000L);
+            jwtProvider(member, response);
 
             return LoginResponse.builder()
                     .username(username)
@@ -113,8 +95,20 @@ public class AppleLoginService {
                     .isFirst(member.getIsFirst())
                     .build();
         }
+    }
 
+    public void jwtProvider(Member member, HttpServletResponse response) {
 
+        String accessToken = jwtUtil.createJwt("access",member.getUsername(), member.getRole(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
+        String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole(),864000000L);
+
+        // 토큰을 쿠키에 저장하여 응답
+        response.addCookie(tokenService.createCookie("accessToken", accessToken));
+        response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
+        response.setStatus(HttpStatus.OK.value());
+
+        // redis에 refresh 토큰 저장
+        redisClient.setValue(member.getUsername(), refreshToken, 864000000L);
     }
 
 }
