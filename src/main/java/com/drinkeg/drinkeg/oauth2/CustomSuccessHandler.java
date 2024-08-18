@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.oauth2;
 
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
-import com.drinkeg.drinkeg.redis.RedisClient;
+//import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
-    private final RedisClient redisClient;
+    //private final RedisClient redisClient;
 
     // CustomSuccessHandler(JWTUtil jwtUtil) {
 
@@ -59,7 +59,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setStatus(HttpStatus.OK.value());
 
         // redis에 refresh 토큰 저장
-        redisClient.setValue(username, refreshToken, 864000000L);
+        //redisClient.setValue(username, refreshToken, 864000000L);
 
         // response.sendRedirect("https://drinkeg.com/maindy");
 

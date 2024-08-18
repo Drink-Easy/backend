@@ -8,6 +8,7 @@ import lombok.Getter;
 import java.util.List;
 
 // 애플 서버에서 주는 공개키 (public key) DTO
+@Getter
 public class ApplePublicKeyResponseDTO {
 
     private List<ApplePublicKey> keys;

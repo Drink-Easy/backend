@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 // 공개키를 요청함
 // url은 https://appleid.apple.com/auth/keys
 
-@FeignClient(name= "appleAuthClient", url = "${apple.auth.public-key-url}")
+@FeignClient(name= "appleAuthClient", url = "https://appleid.apple.com/auth/keys")
 public interface AppleAuthClient {
     @GetMapping
     ApplePublicKeyResponseDTO getAppleAuthPublicKey();

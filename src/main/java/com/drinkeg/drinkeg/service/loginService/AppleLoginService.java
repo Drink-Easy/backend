@@ -34,6 +34,8 @@ public class AppleLoginService {
     public LoginResponse appleLogin(AppleLoginRequestDTO appleLoginRequestDTO)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
             JsonProcessingException {
 
+        System.out.println("--------------apple Login Start---------------");
+
         String identityToken = appleLoginRequestDTO.getIdentityToken();
 
         // identity Token에서 헤더 추출

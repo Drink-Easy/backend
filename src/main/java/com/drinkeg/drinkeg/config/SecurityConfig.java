@@ -5,7 +5,7 @@ import com.drinkeg.drinkeg.jwt.JWTFilter;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.jwt.LoginFilter;
 import com.drinkeg.drinkeg.oauth2.CustomSuccessHandler;
-import com.drinkeg.drinkeg.redis.RedisClient;
+//import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.CustomOAuth2UserService;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +41,7 @@ public class SecurityConfig {
     private final CustomSuccessHandler customSuccessHandler;
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
-    private final RedisClient redisClient;
+    //private final RedisClient redisClient;
 
     // AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -50,7 +50,8 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
             web.ignoring()
-                    .requestMatchers("/join"); // 필터를 타면 안되는 경로
+                    .requestMatchers("/join",
+                            "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**","/login/apple/**");// 필터를 타면 안되는 경로
         };
     }
 
@@ -108,11 +109,11 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, tokenService, redisClient),
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, tokenService),
                         UsernamePasswordAuthenticationFilter.class);
 
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisClient), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil), LogoutFilter.class);
 
         //oauth2
         http
@@ -126,7 +127,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         //.requestMatchers("/my").authenticated()
-                        .requestMatchers("/", "/join", "/login").permitAll()
+                        .requestMatchers("/", "/join", "/login","login/apple").permitAll()
 
                         // wine News 인가
                         .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
@@ -147,7 +148,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "wine-class/**").hasRole("ADMIN")
 
-                        .requestMatchers("/", "/join", "/login", "/reissue").permitAll()
+                        .requestMatchers("/", "/join", "/login", "/reissue","login/apple").permitAll()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
                         .anyRequest().authenticated());
 

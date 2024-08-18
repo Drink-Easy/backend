@@ -5,7 +5,7 @@ import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
-import com.drinkeg.drinkeg.redis.RedisClient;
+//import com.drinkeg.drinkeg.redis.RedisClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
@@ -27,7 +27,7 @@ import java.util.Map;
 public class TokenService {
 
     private final JWTUtil jwtUtil;
-    private final RedisClient redisClient;
+    //private final RedisClient redisClient;
 
     public Cookie createCookie(String key, String value) {
 
@@ -40,7 +40,7 @@ public class TokenService {
         return cookie;
     }
 
-    public void reissueRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+    /*public void reissueRefreshToken(HttpServletRequest request, HttpServletResponse response) {
 
         //get refresh token
         String refresh = null;
@@ -105,13 +105,15 @@ public class TokenService {
         response.addCookie(createCookie("accessToken", newAccess));
         response.addCookie(createCookie("refreshToken", newRefresh));
         response.setStatus(HttpStatus.OK.value());
-    }
+    } */
 
     public String decodeHeader(String token) {
+        System.out.println("====decodeHeader====");
         return new String(Base64.getDecoder().decode(token), StandardCharsets.UTF_8);
     }
     // Identity Token 헤더에서 Public Key 사용에 필요한 헤더 추출
     public Map<String, String> parseHeaders(String identityToken) throws JsonProcessingException {
+        System.out.println("====parseHeser====");
         String header = identityToken.split("\\.")[0];
         return new ObjectMapper().readValue(decodeHeader(header), Map.class);
     }

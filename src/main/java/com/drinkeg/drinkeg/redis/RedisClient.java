@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.redis;
+/*package com.drinkeg.drinkeg.redis;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.exception.GeneralException;
@@ -53,3 +53,4 @@ public class RedisClient {
     }
 }
 
+*/

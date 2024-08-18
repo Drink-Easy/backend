@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.jwt;
 
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
-import com.drinkeg.drinkeg.redis.RedisClient;
+//import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -29,7 +29,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
-    private final RedisClient redisClient;
+    //private final RedisClient redisClient;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -83,7 +83,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(HttpStatus.OK.value());
 
         // redis에 refresh 토큰 저장
-        redisClient.setValue(username, refreshToken, 864000000L);
+        //redisClient.setValue(username, refreshToken, 864000000L);
 
         // 첫 로그인 여부 가져오기
         Boolean isFirst = principalDetail.getIsFirst();
