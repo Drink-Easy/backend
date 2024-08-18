@@ -1,17 +1,23 @@
 package com.drinkeg.drinkeg.service.wineService;
 
+import com.drinkeg.drinkeg.S3.S3Service;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineConverter;
+import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteWineRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteWineResponseDTO;
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
+import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,14 +25,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class WineServiceImpl implements WineService {
-
     private final WineRepository wineRepository;
+    private final S3Service s3Service;
 
     @Override
-    public List<NoteWineResponseDTO> searchWinesByName(NoteWineRequestDTO noteWineRequestDTO) {
+    public List<SearchWineResponseDTO> searchWinesByName(String searchName) {
 
         // 와인 이름으로 와인을 검색한다.
-        String searchName = noteWineRequestDTO.getWineName();
         List<Wine> exactMatchWines = wineRepository.findAllByName(searchName);
 
         // 와인 이름을 공백으로 나누어 검색한다.
@@ -42,10 +47,7 @@ public class WineServiceImpl implements WineService {
         }
 
         // 와인을 NoteWineResponseDTO로 변환한다.
-        List<NoteWineResponseDTO> collectWines = searchWines.stream().map(wine ->
-                WineConverter.toNoteSearchWineDTO(wine)).collect(Collectors.toList());
-
-        return collectWines;
+        return searchWines.stream().map(WineConverter::toSearchWineDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -54,5 +56,66 @@ public class WineServiceImpl implements WineService {
         return wineRepository.findById(wineId).orElseThrow(()
                     -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
+    }
+
+    @Override
+    public HomeResponseDTO getHomeResponse(Member member) {
+
+        List<String> wineSortList = member.getWineSort();
+        List<String> wineAreaList = member.getWineArea();
+        int monthPriceMax = (int) ((member.getMonthPriceMax())/1300);
+
+        Map<Wine, Double> wineScoreMap = new HashMap<>();
+
+        // 와인 종류로 검색하여 가중치 부여
+        for (String wineSort : wineSortList) {
+            List<Wine> sortContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineSort);
+            for (Wine wine : sortContainingWines) {
+                // 가중치 0.2 부여
+                wineScoreMap.put(wine, wineScoreMap.getOrDefault(wine, 0.0) + 0.2);
+            }
+        }
+
+        // 와인 생산지로 검색하여 가중치 부여
+        for (String wineArea : wineAreaList) {
+            List<Wine> areaContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineArea);
+            for (Wine wine : areaContainingWines) {
+                // 가중치 0.2 부여
+                wineScoreMap.put(wine, wineScoreMap.getOrDefault(wine, 0.0) + 0.2);
+            }
+        }
+
+        // 와인 평점을 최종 가중치에 반영
+        wineScoreMap.replaceAll((wine, score) -> score + wine.getRating());
+
+        // 가격으로 필터링, 가중치로 정렬, 5개 추출
+        List<RecommendWineDTO> recommendWineDTOs = wineScoreMap.entrySet().stream()
+                .filter(entry -> entry.getKey().getPrice() <= monthPriceMax)
+                .sorted((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue()))  // 가중치로 정렬
+                .map(entry -> WineConverter.toRecommendWineDTO(entry.getKey()))
+                .limit(5)
+                .toList();
+
+
+        return WineConverter.toHomeResponseDTO(member, recommendWineDTOs);
+    }
+
+    @Override
+    public void uploadWineImage() throws IOException {
+        List<Wine> wines = wineRepository.findAll();
+
+        for (Wine wine : wines) {
+            if (wine.getImageUrl() == null) {
+                String imageName = wine.getName().toLowerCase().replace("'", "").replace(" ", "-") + ".jpg";
+                File imageFile = new File(System.getenv("IMAGE_PATH")+ imageName);
+
+                if (imageFile.exists()) {
+                    MultipartFile multipartFile = new CustomMultipartFile(imageFile);
+                    String imageUrl = s3Service.SaveImage(multipartFile);
+                    wine.updateImageUrl(imageUrl);
+                    wineRepository.save(wine);
+                }
+            }
+        }
     }
 }

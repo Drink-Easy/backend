@@ -55,6 +55,10 @@ public class WineNoteServiceImpl implements WineNoteService {
         wineNote.updateScentTaste(getTop3Scent(allTastingNotes, "taste"));
         wineNote.updateScentFinish(getTop3Scent(allTastingNotes, "finish"));
 
+        // 만족도 업데이트
+        float sumRating = (float) allTastingNotes.stream().mapToDouble(TastingNote::getSatisfaction).sum();
+        wineNote.updateRating(sumRating / allTastingNotes.size());
+
         wineNoteRepository.save(wineNote);
 
     }

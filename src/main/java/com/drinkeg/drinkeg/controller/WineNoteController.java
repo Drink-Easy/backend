@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.converter.WineNoteConverter;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.domain.WineNote;
-import com.drinkeg.drinkeg.dto.WineNoteResponseDTO;
+import com.drinkeg.drinkeg.dto.WineNoteDTO.WineNoteResponseDTO;
 import com.drinkeg.drinkeg.service.wineNoteService.WineNoteService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class WineNoteController {
     private final WineService wineService;
 
     // 와인 평균 업데이트
-    @PostMapping("/{wineId}")
+    @PatchMapping("/{wineId}")
     public ApiResponse<String> updateWineNote(@PathVariable("wineId") Long wineId) {
 
         Wine foundWine = wineService.findWineById(wineId);
@@ -31,6 +31,7 @@ public class WineNoteController {
         return ApiResponse.onSuccess("와인 평균 노트 업데이트 완료");
     }
 
+    // 와인노트 (대표 테이스팅노트) 보기
     @GetMapping("/{wineId}")
     public ApiResponse<WineNoteResponseDTO> showWineNote(@PathVariable("wineId") Long wineId) {
 

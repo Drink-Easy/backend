@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO;
+package com.drinkeg.drinkeg.dto.loginDTO.commonDTO;
 
 
 import lombok.*;

@@ -2,9 +2,7 @@ package com.drinkeg.drinkeg.service.loginService;
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.UserDTO;
 import com.drinkeg.drinkeg.fegin.AppleAuthClient;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.utils.ApplePublicKeyGenerator;
@@ -55,11 +53,11 @@ public class AppleLoginService {
 
         if (existData.isEmpty()){
 
-            Member member = new Member();
-            member.setUsername(username);
-            member.setEmail(claims.get("email", String.class));
-            member.setRole("ROLE_USER");
-
+            Member member = Member.builder()
+                    .username(username)
+                    .email(claims.get("email", String.class))
+                    .role("ROLE_USER")
+                    .build();
             memberRepository.save(member);
 
             System.out.println("첫 로그인임");
@@ -74,18 +72,18 @@ public class AppleLoginService {
         else{
 
             Member member = existData.get();
-            member.setUsername(username);
+            member.updateEmail(claims.get("email", String.class));
 
             System.out.println("첫 로그인아님");
-
             memberRepository.save(member);
+
+            return LoginResponse.builder()
+                    .username(username)
+                    .role(member.getRole())
+                    .isFirst(member.getIsFirst())
+                    .build();
         }
 
-        return LoginResponse.builder()
-                .username(username)
-                .role(existData.get().getRole())
-                .isFirst(existData.get().getIsFirst())
-                .build();
 
     }
 

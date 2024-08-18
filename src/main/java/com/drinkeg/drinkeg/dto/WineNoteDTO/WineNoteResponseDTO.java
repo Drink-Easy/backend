@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto;
+package com.drinkeg.drinkeg.dto.WineNoteDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

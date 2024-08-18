@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.jwt;
 
 
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.UserDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

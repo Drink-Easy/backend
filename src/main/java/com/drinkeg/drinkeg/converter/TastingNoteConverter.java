@@ -36,11 +36,15 @@ public class TastingNoteConverter {
 
     // TastingNote Entity를 NoteResponseDTO로 변환
     public static NoteResponseDTO toTastingNoteResponseDTO(TastingNote tastingNote) {
+        Wine wine = tastingNote.getWine();
+
         return NoteResponseDTO.builder()
                 .noteId(tastingNote.getId())
-                .wineId(tastingNote.getWine().getId())
-                .name(tastingNote.getWine().getName())
-                .picture(tastingNote.getWine().getImageUrl())
+                .wineId(wine.getId())
+                .wineName(wine.getName())
+                .sort(wine.getSort())
+                .area(wine.getArea())
+                .imageUrl(wine.getImageUrl())
 
                 .color(tastingNote.getColor())
 

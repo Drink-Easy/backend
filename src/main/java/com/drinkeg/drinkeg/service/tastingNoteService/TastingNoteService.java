@@ -13,7 +13,7 @@ public interface TastingNoteService {
 
     public void saveNote(NoteRequestDTO noteRequestDTO, Member member);
 
-    public NoteResponseDTO showNoteById(Long noteId);
+    public NoteResponseDTO showNoteById(Long noteId, Member member);
 
     public List<NotePriviewResponseDTO> findAllNoteByMember(Member member);
 

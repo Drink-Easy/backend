@@ -6,12 +6,12 @@ import com.drinkeg.drinkeg.apipayLoad.handler.TempHandler;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.JoinDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.MemberRequestDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.MemberResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.service.loginService.AppleLoginService;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberRequestDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.loginService.JoinService;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,12 +40,12 @@ public class MemberController {
         return ApiResponse.onSuccess("회원가입 성공");
     }
 
-    /*@PostMapping("/reissue")
+    @PostMapping("/reissue")
     public ApiResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
         tokenService.reissueRefreshToken(request, response);
         return ApiResponse.onSuccess("토큰 재발급 성공");
-    }*/
+    }
 
     @PatchMapping("/member")
     public ApiResponse<MemberResponseDTO> addMemberDetail(@RequestBody MemberRequestDTO memberRequestDTO, @AuthenticationPrincipal PrincipalDetail principalDetail) {

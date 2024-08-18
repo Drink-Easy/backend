@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.service.memberService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,16 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member findMemberByUsername(String username) {
+        return memberRepository.findByUsername(username).orElseThrow(() -> {
+            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
+        });
+    }
+
+    @Override
+    public Member loadMemberByPrincipleDetail(PrincipalDetail principalDetail) {
+        // 현재 로그인한 사용자 정보 가져오기
+        String username = principalDetail.getUsername();
+
         return memberRepository.findByUsername(username).orElseThrow(() -> {
             throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
         });
