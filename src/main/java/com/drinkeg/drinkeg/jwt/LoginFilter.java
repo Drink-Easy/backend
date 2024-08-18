@@ -93,7 +93,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(HttpStatus.OK.value());
 
         // redis에 refresh 토큰 저장
-        //redisClient.setValue(username, refreshToken, 864000000L);
+        redisClient.setValue(username, refreshToken, 864000000L);
 
         // 첫 로그인 여부 가져오기
         Boolean isFirst = principalDetail.getIsFirst();

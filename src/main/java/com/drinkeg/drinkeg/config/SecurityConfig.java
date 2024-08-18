@@ -49,8 +49,8 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
             web.ignoring()
-                    .requestMatchers("/join",
-                            "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**","/login/apple/**");// 필터를 타면 안되는 경로
+                    .requestMatchers("/join","/login/apple/**",
+                            "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**");// 필터를 타면 안되는 경로
         };
     }
 
@@ -108,11 +108,11 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, tokenService,redisClient),
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, tokenService, redisClient),
                         UsernamePasswordAuthenticationFilter.class);
 
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisClient), LogoutFilter.class);
 
         //oauth2
         http
@@ -154,6 +154,23 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "wine-class/**").hasRole("ADMIN")
+
+                        // wine News 인가
+                        .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "wine-news/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
+
+                        // Parties 인가
+                        .requestMatchers(HttpMethod.GET, "parties/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "parties/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "parties/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "parties/**").hasRole("USER")
+
+                        // comments 인가
+                        .requestMatchers(HttpMethod.GET, "comments/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "comments/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "comments/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "comments/**").hasRole("USER")
 
                         .anyRequest().authenticated());
 

@@ -34,7 +34,7 @@ public class Member {
     private Boolean isNewbie;
 
     // 처음 회원가입 한 사용자면 true이다가 회원 가입하면 false로 변함
-    private Boolean isFirst = true;
+    private Boolean isFirst;
 
     // 월 평균 와인 소비가의 범위중 최댓값
     private Long monthPriceMax;
