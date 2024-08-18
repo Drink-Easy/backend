@@ -92,6 +92,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 .build();
 
         System.out.println(userDTO);
+
         //UserDetails에 회원 정보 객체 담기
         PrincipalDetail principalDetail = new PrincipalDetail(userDTO);
 

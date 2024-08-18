@@ -28,8 +28,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
 
-        System.out.println("userAcctoken"+ userRequest.getAccessToken());
-
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
 
@@ -57,6 +55,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
         Optional<Member> existData = userRepository.findByUsername(username);
+
         if (existData.isEmpty()){
 
             Member userEntity = Member.builder()

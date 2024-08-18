@@ -2,10 +2,13 @@ package com.drinkeg.drinkeg.service.loginService;
 
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.redis.RedisClient;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;
+import java.util.Base64;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -90,12 +98,44 @@ public class TokenService {
         redisClient.deleteValue(username);
         redisClient.setValue(username, newRefresh, 864000000L);
 
-        // refreshRepository.deleteByRefresh(refresh);
-        // tokenService.addRefreshToken(username, newRefresh, 86400000L);
-
         //response
         response.addCookie(createCookie("accessToken", newAccess));
         response.addCookie(createCookie("refreshToken", newRefresh));
         response.setStatus(HttpStatus.OK.value());
     }
-}
+
+    public String decodeHeader(String token) {
+        System.out.println("====decodeHeader====");
+        return new String(Base64.getDecoder().decode(token), StandardCharsets.UTF_8);
+    }
+    // Identity Token 헤더에서 Public Key 사용에 필요한 헤더 추출
+    public Map<String, String> parseHeaders(String identityToken) throws JsonProcessingException {
+        System.out.println("====parseHeser====");
+        String header = identityToken.split("\\.")[0];
+        return new ObjectMapper().readValue(decodeHeader(header), Map.class);
+    }
+
+    public Claims getTokenClaims(final String token, final PublicKey publicKey) {
+        try{
+        return Jwts.parser()
+                .setSigningKey(publicKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        } catch (UnsupportedJwtException e) {
+            throw new UnsupportedJwtException("지원되지 않는 jwt 타입");
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("비어있는 jwt");
+        } catch (JwtException e) {
+            throw new JwtException("jwt 검증 or 분석 오류");
+        }
+    }
+
+
+    }
+
+
+
+
+
