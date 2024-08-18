@@ -62,11 +62,21 @@ public class AppleLoginService {
 
             memberRepository.save(member);
 
+            System.out.println("첫 로그인임");
+
+            return LoginResponse.builder()
+                    .username(username)
+                    .role(member.getRole())
+                    .isFirst(member.getIsFirst())
+                    .build();
+
         }
         else{
 
             Member member = existData.get();
             member.setUsername(username);
+
+            System.out.println("첫 로그인아님");
 
             memberRepository.save(member);
         }
