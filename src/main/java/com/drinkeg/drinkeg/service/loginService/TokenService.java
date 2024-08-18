@@ -98,9 +98,6 @@ public class TokenService {
         redisClient.deleteValue(username);
         redisClient.setValue(username, newRefresh, 864000000L);
 
-        // refreshRepository.deleteByRefresh(refresh);
-        // tokenService.addRefreshToken(username, newRefresh, 86400000L);
-
         //response
         response.addCookie(createCookie("accessToken", newAccess));
         response.addCookie(createCookie("refreshToken", newRefresh));

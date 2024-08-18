@@ -61,19 +61,7 @@ public class MemberController {
             throw new TempHandler(ErrorStatus.IDENTITY_TOKEN_NOT_FOUND);
         }
 
-        LoginResponse loginResponse = appleLoginService.appleLogin(appleLoginRequestDTO);
-
-        String accessToken = jwtUtil.createJwt("access", loginResponse.getUsername(), loginResponse.getRole(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
-        String refreshToken = jwtUtil.createJwt("refresh", loginResponse.getUsername(), loginResponse.getRole(), 864000000L);
-
-        response.addCookie(tokenService.createCookie("accessToken", accessToken));
-        response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
-        response.setStatus(HttpStatus.OK.value());
-
-        return ApiResponse.onSuccess(loginResponse);
-
-
-
+        return ApiResponse.onSuccess(appleLoginService.appleLogin(appleLoginRequestDTO, response));
     }
 
 

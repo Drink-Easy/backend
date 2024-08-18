@@ -4,12 +4,16 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
 import com.drinkeg.drinkeg.fegin.AppleAuthClient;
+import com.drinkeg.drinkeg.jwt.JWTUtil;
+import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.utils.ApplePublicKeyGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.core.ClaimAccessor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +33,10 @@ public class AppleLoginService {
     private final AppleAuthClient appleAuthClient;
     private final ApplePublicKeyGenerator applePublicKeyGenerator;
     private final MemberRepository memberRepository;
-    public LoginResponse appleLogin(AppleLoginRequestDTO appleLoginRequestDTO)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
+    private final RedisClient redisClient;
+    private final JWTUtil jwtUtil;
+
+    public LoginResponse appleLogin(AppleLoginRequestDTO appleLoginRequestDTO, HttpServletResponse response)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
             JsonProcessingException {
 
         System.out.println("--------------apple Login Start---------------");
@@ -57,10 +64,22 @@ public class AppleLoginService {
                     .username(username)
                     .email(claims.get("email", String.class))
                     .role("ROLE_USER")
+                    .isFirst(true)
                     .build();
             memberRepository.save(member);
 
             System.out.println("첫 로그인임");
+
+            String accessToken = jwtUtil.createJwt("access",member.getUsername(), member.getRole(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
+            String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole(),864000000L);
+
+            // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
+            response.addCookie(tokenService.createCookie("accessToken", accessToken));
+            response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
+            response.setStatus(HttpStatus.OK.value());
+
+            // redis에 refresh 토큰 저장
+            redisClient.setValue(username, refreshToken, 864000000L);
 
             return LoginResponse.builder()
                     .username(username)
@@ -76,6 +95,17 @@ public class AppleLoginService {
 
             System.out.println("첫 로그인아님");
             memberRepository.save(member);
+
+            String accessToken = jwtUtil.createJwt("access",member.getUsername(), member.getRole(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
+            String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole(),864000000L);
+
+            // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
+            response.addCookie(tokenService.createCookie("accessToken", accessToken));
+            response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
+            response.setStatus(HttpStatus.OK.value());
+
+            // redis에 refresh 토큰 저장
+            redisClient.setValue(username, refreshToken, 864000000L);
 
             return LoginResponse.builder()
                     .username(username)
