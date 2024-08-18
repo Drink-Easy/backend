@@ -27,11 +27,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final TokenService tokenService;
     private final RedisClient redisClient;
 
-    // CustomSuccessHandler(JWTUtil jwtUtil) {
-
-        //this.jwtUtil = jwtUtil;
-    //}
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 

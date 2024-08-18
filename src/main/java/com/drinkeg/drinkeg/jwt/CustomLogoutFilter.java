@@ -86,11 +86,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         String username = jwtUtil.getUsername(refresh);
 
-        //DB에 저장되어 있는지 확인
+        // DB에 저장되어 있는지 확인
         String redisRefresh = redisClient.getValue(username);
         if (StringUtils.isEmpty(redisRefresh) || !refresh.equals(redisRefresh)) {
 
-            //response body
+            // response body
             throw new GeneralException(ErrorStatus.INVALID_REFRESH_TOKEN);
         }
 

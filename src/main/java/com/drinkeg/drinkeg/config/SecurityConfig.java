@@ -41,6 +41,7 @@ public class SecurityConfig {
     private final RedisClient redisClient;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+
     // AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
 
@@ -48,7 +49,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
             web.ignoring()
-                    .requestMatchers("/join",
+                    .requestMatchers("/join","/login/apple/**",
                             "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**");// 필터를 타면 안되는 경로
         };
     }
@@ -129,7 +130,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
-                        .requestMatchers("/", "/join", "/login", "/reissue").permitAll()
+                        .requestMatchers("/", "/join", "/login", "/reissue","/login/apple").permitAll()
 
                         // home 인가
                         .requestMatchers(HttpMethod.GET,"/home").hasRole("USER")
