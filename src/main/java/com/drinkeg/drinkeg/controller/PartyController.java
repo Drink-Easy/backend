@@ -53,11 +53,13 @@ public class PartyController {
     // 가격순 /parties?sortType=price
     @GetMapping
     public ApiResponse<Page<PartyResponseDTO>> getSortedParties(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestParam String sortType,
             @PageableDefault(size = 5) Pageable pageable) {
 
+        String memberRegion = memberService.loadMemberByPrincipleDetail(principalDetail).getRegion();
         // 서비스로 정렬방식 전달
-        Page<PartyResponseDTO> sortedParties = partyService.getSortedParties(sortType, pageable);
+        Page<PartyResponseDTO> sortedParties = partyService.getSortedParties(sortType, memberRegion, pageable);
         return ApiResponse.onSuccess(sortedParties);
     }
 

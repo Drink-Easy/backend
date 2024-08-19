@@ -17,5 +17,5 @@ public interface PartyService {
     void deleteParty(Long id, Long memberId);
     //boolean isHost(Long partyId, Long memberId);
     void validatePartyRequest(PartyRequestDTO partyRequest);
-    Page<PartyResponseDTO> getSortedParties(String sortType, Pageable pageable);
+    Page<PartyResponseDTO> getSortedParties(String sortType, String memberRegion, Pageable pageable);
 }

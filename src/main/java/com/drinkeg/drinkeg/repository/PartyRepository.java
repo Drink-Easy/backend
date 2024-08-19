@@ -28,4 +28,7 @@ public interface PartyRepository extends JpaRepository<Party, Long> {
 
     // 가격순 정렬 (낮은 가격 순)
     Page<Party> findAllByOrderByAdmissionFeeAsc(Pageable pageable);
+
+    // 사용자 지역과 모임 장소가 같은 모임 조회 (가까운 모임 순)
+    Page<Party> findByPlaceAndRegion(String region, Pageable pageable);
 }

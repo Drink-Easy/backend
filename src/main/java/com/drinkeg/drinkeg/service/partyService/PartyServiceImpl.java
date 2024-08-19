@@ -45,7 +45,7 @@ public class PartyServiceImpl implements PartyService {
 
 
     @Override
-    public Page<PartyResponseDTO> getSortedParties(String sortType, Pageable pageable) {
+    public Page<PartyResponseDTO> getSortedParties(String sortType, String memberRegion, Pageable pageable) {
         Page<Party> parties = switch (sortType) {
             case "recent" ->
                 // 최신순 정렬
@@ -59,7 +59,9 @@ public class PartyServiceImpl implements PartyService {
             case "price" ->
                 // 가격순 정렬 (낮은 가격 순)
                     partyRepository.findAllByOrderByAdmissionFeeAsc(pageable);
-            //거리순 정렬 예정
+            case "distance" ->
+                // 가까운 모임 (사용자 region과 party place가 일치하는 모임만)
+                    partyRepository.findByPlaceAndRegion(memberRegion, pageable);
             default -> throw new GeneralException(ErrorStatus.INVALID_SORT_TYPE); // 유효하지 않은 정렬 기준일 경우 예외 처리
         };
 
