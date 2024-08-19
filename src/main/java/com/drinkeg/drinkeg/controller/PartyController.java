@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.partyService.PartyService;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +31,7 @@ public class PartyController {
     public ApiResponse<String> createParty(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody PartyRequestDTO partyRequestDTO) {
 
         // 현재 로그인한 사용자 정보 가져오기
-        String username = principalDetail.getUsername();
-        Member foundMember = memberService.findMemberByUsername(username);
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         partyService.createParty(partyRequestDTO, foundMember);
         return ApiResponse.onSuccess("파티 생성 완료");
@@ -65,8 +64,9 @@ public class PartyController {
     // 모임 단건 조회
     @GetMapping("/{id}")
     public ApiResponse<PartyResponseDTO> getParty(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("id") Long id) {
-        String username = principalDetail.getUsername();
-        Member foundMember = memberService.findMemberByUsername(username);
+
+        // 현재 로그인한 사용자 정보 가져오기
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         PartyResponseDTO partyResponseDTO = partyService.getParty(id);
         return ApiResponse.onSuccess(partyResponseDTO);
@@ -79,11 +79,12 @@ public class PartyController {
             @RequestBody PartyRequestDTO partyRequestDTO,
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
 
-        // 서비스로 모임 수정 요청을 보냄
-        String memberName = principalDetail.getUsername();
-        Long memberId = memberService.findMemberByUsername(memberName).getId();
+        // 현재 로그인한 사용자 정보 가져오기
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Long foundMemberId = foundMember.getId();
 
-        partyService.updateParty(id, partyRequestDTO, memberId);
+        // 서비스로 모임 수정 요청을 보냄
+        partyService.updateParty(id, partyRequestDTO, foundMemberId);
         return ApiResponse.onSuccess("모임 수정 완료");
     }
 
@@ -91,8 +92,10 @@ public class PartyController {
     // 모임 삭제
     @DeleteMapping("/{id}")
     public ApiResponse<String> deleteParty(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("id") Long id) {
-        String username = principalDetail.getUsername();
-        Long foundMemberId = memberService.findMemberByUsername(username).getId();
+
+        // 현재 로그인한 사용자 정보 가져오기
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Long foundMemberId = foundMember.getId();
 
         partyService.deleteParty(id, foundMemberId);
         return ApiResponse.onSuccess("모임 삭제 완료");

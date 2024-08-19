@@ -3,8 +3,8 @@ package com.drinkeg.drinkeg.service.loginService;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.JoinDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.MemberRequestDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.MemberResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberRequestDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,20 +23,18 @@ public class JoinService {
         String username = joinDTO.getUsername();
         String password = joinDTO.getPassword();
 
-        Boolean isExist = memberRepository.existsByUsername(username);
-
-        if (isExist) {
+        if (memberRepository.existsByUsername(username)) {
             throw new GeneralException(ErrorStatus.MEMBER_ALREADY_EXIST);
         }
 
-        Member data = new Member();
+        Member member = Member.builder()
+                .username(username)
+                .password(bCryptPasswordEncoder.encode(password))
+                .role("ROLE_USER")
+                .isFirst(true)
+                .build();
 
-        data.setUsername(username);
-        data.setPassword(bCryptPasswordEncoder.encode(password));
-        data.setRole("ROLE_USER");
-        data.setIsFirst(true);
-
-        memberRepository.save(data);
+        memberRepository.save(member);
     }
 
     public MemberResponseDTO addMemberDetail(MemberRequestDTO memberRequestDTO, String username) {

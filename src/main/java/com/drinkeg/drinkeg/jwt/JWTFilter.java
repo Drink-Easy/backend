@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.jwt;
 
 
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.UserDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -92,6 +92,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 .build();
 
         System.out.println(userDTO);
+
         //UserDetails에 회원 정보 객체 담기
         PrincipalDetail principalDetail = new PrincipalDetail(userDTO);
 

@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.oauth2;
 
 
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
@@ -26,11 +26,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
     private final RedisClient redisClient;
-
-    // CustomSuccessHandler(JWTUtil jwtUtil) {
-
-        //this.jwtUtil = jwtUtil;
-    //}
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

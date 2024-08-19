@@ -1,7 +1,8 @@
 package com.drinkeg.drinkeg.service.loginService;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.*;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-
-        System.out.println("userAcctoken"+ userRequest.getAccessToken());
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
@@ -56,13 +55,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
         Optional<Member> existData = userRepository.findByUsername(username);
+
         if (existData.isEmpty()){
 
-            Member userEntity = new Member();
-            userEntity.setUsername(username);
-            userEntity.setEmail(oAuth2Response.getEmail());
-            userEntity.setName(oAuth2Response.getName());
-            userEntity.setRole("ROLE_USER");
+            Member userEntity = Member.builder()
+                    .username(username)
+                    .email(oAuth2Response.getEmail())
+                    .name(oAuth2Response.getName())
+                    .role("ROLE_USER")
+                    .build();
 
             userRepository.save(userEntity);
 
@@ -78,8 +79,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             Member userEntity = existData.get();
 
-            userEntity.setEmail(oAuth2Response.getEmail());
-            userEntity.setName(oAuth2Response.getName());
+            userEntity.updateEmail(oAuth2Response.getEmail());
+            userEntity.updateName(oAuth2Response.getName());
 
             userRepository.save(userEntity);
 

@@ -55,18 +55,30 @@ public enum ErrorStatus implements BaseCode {
 
     // Member Error
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "회원이 없습니다."),
+    LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "MEMBER4001", "로그인 과정에서 오류가 발생했습니다."),
     SESSION_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "MEMBER4001", "유효하지 않은 세션입니다."),
+    AUTH_REQUEST_BODY_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "Authentication Request Body를 읽지 못했습니다."),
+    USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 아이디가 없습니다."),
+    PASSWORD_NOT_FUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 비밀번호가 없습니다."),
     MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 아이디입니다."),
-    REFRESH_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "REFRESH_TOKEN4001", "리프레쉬 토큰이 없습니다."),
-    REFRESH_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "REFRESH_TOKEN4001", "리프레쉬 토큰이 만료되었습니다."),
-    INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "REFRESH_TOKEN4001", "유효하지 않은 리프레쉬 토큰입니다."),
+
+    // Token Error
+    INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4001", "유효하지 않은 엑세스 토큰입니다."),
+    REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "리프레쉬 토큰이 없습니다."),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "리프레쉬 토큰이 만료되었습니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "유효하지 않은 리프레쉬 토큰입니다."),
 
     // Redis Error
     REDIS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REDIS4001", "Redis 설정에 오류가 발생했습니다."),
 
+    // appleLogin Error
+    MATCH_PUBLIC_KEY_NOR_FOUND(HttpStatus.BAD_REQUEST, "APPLE4001", "일치하는 공개키를 찾을 수 없습니다"),
+    IDENTITY_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLE4002", "아이덴티티 토큰을 찾을 수 없습니다."),
+
     // WineStore Error
     WINE_STORE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_STORE4001", "와인 스토어가 없습니다."),
     WINE_STORE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_STORE4002", "권한이 없는 스토어입니다.");
+
 
 
     private final HttpStatus httpStatus;

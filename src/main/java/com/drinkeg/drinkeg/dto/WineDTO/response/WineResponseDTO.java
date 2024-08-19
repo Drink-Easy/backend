@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.TastingNoteDTO.response;
+package com.drinkeg.drinkeg.dto.WineDTO.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,32 +12,28 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoteResponseDTO {
-
-    private Long noteId;
+public class WineResponseDTO {
 
     private Long wineId;
-    private String wineName;
-    private String sort;
-    private String area;
+
+    private String name;
+
     private String imageUrl;
 
-    private String color;
+    private int price;
+    private String sort;
+    private String area;
 
-    // 점수 0 ~ 5
-    private int sugarContent;
-    private int acidity;
-    private int tannin;
-    private int body;
-    private int alcohol;
+    private float sugarContent;
+    private float acidity;
+    private float tannin;
+    private float body;
+    private float alcohol;
 
     private List<String> scentAroma = new ArrayList<>();
-
     private List<String> scentTaste = new ArrayList<>();
-
     private List<String> scentFinish = new ArrayList<>();
 
-    private float satisfaction;
+    private float rating;
 
-    private String review;
 }

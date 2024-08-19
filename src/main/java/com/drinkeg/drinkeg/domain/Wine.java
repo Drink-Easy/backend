@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -35,10 +38,18 @@ public class Wine {
     private float rating;
 
     // 가격
-    private float price;
+    private int price;
 
     // cascade = CascadeType.ALL : 와인이 저장될 때 같이 저장됨
     @OneToOne(mappedBy = "wine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private WineNote wineNote;
+
+    @OneToMany
+    @JoinColumn(name = "wine_id")
+    private List<TastingNote> tastingNoteList = new ArrayList<>();
+
+    public void updateImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
+    }
 
 }

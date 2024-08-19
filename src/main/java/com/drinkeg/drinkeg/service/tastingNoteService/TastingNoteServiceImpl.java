@@ -26,7 +26,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final TastingNoteRepository tastingNoteRepository;
     private final WineRepository wineRepository;
-    private final MemberRepository memberRepository;
 
     @Override
     public void saveNote(NoteRequestDTO noteRequestDTO, Member member) {
@@ -44,18 +43,20 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public NoteResponseDTO showNoteById(Long noteId) {
+    public NoteResponseDTO showNoteById(Long noteId, Member member) {
 
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> {
-                    throw new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND);
-                }
+        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
+                -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
-        // TastingNote를 DTO로 변환한다.
-        NoteResponseDTO tastingNoteResponseDTO = TastingNoteConverter.toTastingNoteResponseDTO(foundNote);
+        // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
+        if(!foundNote.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+        }
 
-        return tastingNoteResponseDTO;
+        // TastingNote를 DTO로 변환한다.
+        return TastingNoteConverter.toTastingNoteResponseDTO(foundNote);
     }
 
     @Override

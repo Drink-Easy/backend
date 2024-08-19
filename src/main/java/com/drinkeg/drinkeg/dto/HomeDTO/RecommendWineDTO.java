@@ -1,4 +1,5 @@
-package com.drinkeg.drinkeg.dto.TastingNoteDTO.response;
+package com.drinkeg.drinkeg.dto.HomeDTO;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoteWineResponseDTO {
+public class RecommendWineDTO {
 
     private Long wineId;
 
-    private String name;
+    private String wineName;
 
-    private String picture;
-
+    private String imageUrl;
 }

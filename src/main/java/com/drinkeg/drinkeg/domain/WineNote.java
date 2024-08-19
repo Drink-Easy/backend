@@ -17,7 +17,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WineNote {
+public class WineNote extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,6 +42,8 @@ public class WineNote {
 
     @Convert(converter = StringListConverter.class)
     private List<String> scentFinish = new ArrayList<>();
+
+    private float rating;
 
     // 맛 업데이트
     public void updateSugarContent(float sugarContent) {
@@ -69,6 +71,11 @@ public class WineNote {
     }
     public void updateScentFinish(List<String> scentFinish) {
         this.scentFinish = scentFinish;
+    }
+
+    // 사용자 별점 업데이트
+    public void updateRating(float rating){
+        this.rating = rating;
     }
 
 }

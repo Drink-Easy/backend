@@ -1,6 +1,5 @@
-package com.drinkeg.drinkeg.dto.loginDTO.jwtDTO;
+package com.drinkeg.drinkeg.dto.loginDTO.commonDTO;
 
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
