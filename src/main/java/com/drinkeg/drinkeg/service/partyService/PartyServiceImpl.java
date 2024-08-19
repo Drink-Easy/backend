@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -118,6 +118,32 @@ public class PartyServiceImpl implements PartyService {
             throw new GeneralException(ErrorStatus.NOT_YOUR_PARTY); // 사용자가 호스트가 아닐 경우 예외 발생
         }
         partyRepository.delete(party);
+    }
+
+    @Override
+    public List<PartyResponseDTO> searchPartiesByName(String searchName) {
+
+        // 모임 제목이 정확히 일치하는 모임을 검색
+        List<Party> exactMatchParties = partyRepository.findAllByName(searchName);
+
+        // 모임 제목을 공백으로 나누어 키워드로 검색
+        String[] keywords = searchName.split(" ");
+        Set<Party> searchParties = new LinkedHashSet<>(exactMatchParties);
+
+        for (String keyword : keywords) {
+            // 키워드가 포함된 모임을 검색
+            List<Party> keywordContainingParties = partyRepository.findAllByNameContainingIgnoreCase(keyword);
+
+            // 모임 제목에 키워드가 포함된 모임을 결과에 추가
+            if (!keywordContainingParties.isEmpty()) {
+                searchParties.addAll(keywordContainingParties);
+            }
+        }
+
+        // 모임을 PartyResponseDTO로 변환하여 반환
+        return searchParties.stream()
+                .map(partyConverter::toResponse)
+                .collect(Collectors.toList());
     }
 
     // 모임 정보를 정상적으로 받아왔는지 확인하는 메소드

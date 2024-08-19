@@ -107,5 +107,11 @@ public class PartyController {
 
 
     //모임 검색
+    @GetMapping("/search")
+    public ApiResponse<List<PartyResponseDTO>> searchPartiesByName(@RequestParam String searchName) {
+        // 모임 제목으로 검색된 결과 리스트를 반환
+        List<PartyResponseDTO> searchPartyResponseDTOS = partyService.searchPartiesByName(searchName);
+        return ApiResponse.onSuccess(searchPartyResponseDTOS);
+    }
 
 }

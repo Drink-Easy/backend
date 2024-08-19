@@ -31,4 +31,10 @@ public interface PartyRepository extends JpaRepository<Party, Long> {
 
     // 사용자 지역과 모임 장소가 같은 모임 조회 (가까운 모임 순)
     Page<Party> findByPlaceAndRegion(String region, Pageable pageable);
+
+    // 검색한 모임 제목이 포함된 모든 모임 탐색 (대소문자 구분 없이)
+    List<Party> findAllByNameContainingIgnoreCase(String name);
+
+    // 검색한 모임 제목이 완전히 일치하는 모임 탐색
+    List<Party> findAllByName(String name);
 }
