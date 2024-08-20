@@ -22,7 +22,7 @@ public class WineClass {
 
     private String title;
 
-    private String video;
+    private String videoId;
 
     private String description;
 
