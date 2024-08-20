@@ -33,8 +33,8 @@ public class WineClass {
         this.title = title;
         return this;
     }
-    public WineClass updateVideo(String video) {
-        this.video = video;
+    public WineClass updateVideoId(String videoId) {
+        this.videoId = videoId;
         return this;
     }
 
