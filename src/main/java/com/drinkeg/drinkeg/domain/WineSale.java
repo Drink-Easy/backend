@@ -28,4 +28,19 @@ public class WineSale {
     private WineStore wineStore;
 
     private int price;
+
+    public WineSale updateWineStore(WineStore wineStore) {
+        this.wineStore = wineStore;
+        return this;
+    }
+
+    public WineSale updatePrice(int price) {
+        this.price = price;
+        return this;
+    }
+
+    public WineSale updateWine(Wine wine) {
+        this.wine = wine;
+        return this;
+    }
 }

@@ -88,14 +88,20 @@ public class WineServiceImpl implements WineService {
         // 와인 평점을 최종 가중치에 반영
         wineScoreMap.replaceAll((wine, score) -> score + wine.getRating());
 
-        // 가격으로 필터링, 가중치로 정렬, 5개 추출
-        List<RecommendWineDTO> recommendWineDTOs = wineScoreMap.entrySet().stream()
+        // 가격으로 필터링, 가중치로 정렬, 상위 20개 추출
+        List<Wine> topWines = new ArrayList<>(wineScoreMap.entrySet().stream()
                 .filter(entry -> entry.getKey().getPrice() <= monthPriceMax)
                 .sorted((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue()))  // 가중치로 정렬
-                .map(entry -> WineConverter.toRecommendWineDTO(entry.getKey()))
-                .limit(5)
-                .toList();
+                .map(Map.Entry::getKey)
+                .limit(10)
+                .toList());
 
+        // 상위 20개 중에서 랜덤으로 5개 선택
+        Collections.shuffle(topWines, new Random());
+        List<RecommendWineDTO> recommendWineDTOs = topWines.stream()
+                .limit(5)
+                .map(WineConverter::toRecommendWineDTO)
+                .toList();
 
         return WineConverter.toHomeResponseDTO(member, recommendWineDTOs);
     }

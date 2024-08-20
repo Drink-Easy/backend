@@ -76,6 +76,9 @@ public enum ErrorStatus implements BaseCode {
     WINE_STORE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_STORE4001", "와인 스토어가 없습니다."),
     WINE_STORE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_STORE4002", "권한이 없는 스토어입니다."),
 
+    // WineSale Error
+    WINE_SALE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_SALE4001", "와인 판매가 없습니다."),
+
     // WineWishlist Error
     WINE_WISHLIST_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_WISHLIST4001", "와인 위시리스트가 없습니다."),
     WINE_WISHLIST_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_WISHLIST4002", "권한이 없는 위시리스트입니다."),
