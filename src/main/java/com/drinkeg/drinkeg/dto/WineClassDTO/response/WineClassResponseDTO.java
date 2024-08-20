@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class WineClassResponseDTO {
     private Long id;
     private String title;
-    private String video;
+    private String videoId;
     private String description;
 }
