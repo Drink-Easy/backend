@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.converter;
 
+import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
@@ -9,8 +10,10 @@ import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.exception.GeneralException;
 
 import java.util.List;
+import java.util.Optional;
 
 public class WineConverter {
 
@@ -26,8 +29,9 @@ public class WineConverter {
 
                 .price(((wine.getPrice() * 1300) / 1000) * 1000)
 
-                .rating(Math.max(wine.getRating(), wine.getWineNote().getRating()))
-
+                // wine 기본 평점과, 사용자 평점 중 높은거로
+                .rating(Math.max(wine.getRating(),
+                        Optional.ofNullable(wine.getWineNote()).map(WineNote::getRating).orElse((float) 0)))
                 .build();
     }
 
