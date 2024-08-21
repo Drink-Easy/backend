@@ -7,10 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.partyJoinMemberService.PartyJoinMemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +21,7 @@ public class PartyJoinMemberController {
     @PostMapping("/{partyId}")
     public ApiResponse<String> participateInParty(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
-            @PathVariable Long partyId) {
+            @PathVariable("partyId") Long partyId) {
 
         // 현재 로그인한 사용자 정보 가져오기
         Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -33,5 +30,18 @@ public class PartyJoinMemberController {
         // 서비스에서 멤버의 모임 참가 처리
         partyJoinMemberService.participateInParty(memberId, partyId);
         return ApiResponse.onSuccess("참가 완료");
+    }
+
+    // 모임 참가 취소 API
+    @DeleteMapping("/partyJoin/{partyId}")
+    public ApiResponse<String> cancelPartyJoin(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @PathVariable("partyId") Long partyId) {
+
+        // 현재 로그인한 사용자 정보 가져오기
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Long memberId = foundMember.getId();
+        partyJoinMemberService.cancelPartyJoin(memberId, partyId);
+        return ApiResponse.onSuccess("모임 참가가 취소되었습니다.");
     }
 }

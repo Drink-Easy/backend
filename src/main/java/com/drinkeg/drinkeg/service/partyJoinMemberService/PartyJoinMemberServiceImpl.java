@@ -43,8 +43,35 @@ public class PartyJoinMemberServiceImpl implements PartyJoinMemberService{
         PartyJoinMember partyJoinMember = partyJoinMemberConverter.toEntity(member, party, false);
         partyJoinMemberRepository.save(partyJoinMember);
 
-        // 모임의 참가자 수 증가
-        party.setParticipateMemberNum(party.getParticipateMemberNum() + 1);
+        // 참가자 수를 partyJoinMember 테이블을 기반으로 갱신
+        long updatedParticipantCount = partyJoinMemberRepository.countByParty(party);
+        party.setParticipateMemberNum((int) updatedParticipantCount);  // 업데이트된 참가자 수를 설정
+        partyRepository.save(party);  // 업데이트된 참가자 수를 저장
+    }
+
+
+    public void cancelPartyJoin(Long memberId, Long partyId) {
+        // 멤버와 파티를 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+
+        // 사용자가 모임에 참가했는지 확인 (참가하지 않았으면 예외 발생)
+        PartyJoinMember partyJoinMember = partyJoinMemberRepository.findByMemberAndParty(member, party)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_FOUND_PARTY_JOIN));
+
+        // 사용자가 모임의 호스트인지 확인 (호스트는 참가 취소할 수 없음)
+        if (party.getHostId().equals(memberId)) {
+            throw new GeneralException(ErrorStatus.HOST_CANNOT_LEAVE);
+        }
+
+        // 모임 참가 기록 삭제
+        partyJoinMemberRepository.delete(partyJoinMember);
+
+        // 참가자 수를 partyJoinMember 테이블을 기반으로 갱신
+        long updatedParticipantCount = partyJoinMemberRepository.countByParty(party);
+        party.setParticipateMemberNum((int) updatedParticipantCount);  // 업데이트된 참가자 수를 설정
         partyRepository.save(party);  // 업데이트된 참가자 수를 저장
     }
 }

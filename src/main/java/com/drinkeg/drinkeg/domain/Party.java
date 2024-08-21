@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.domain.Auditable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +42,10 @@ public class Party extends BaseEntity{
 
     private Long hostId;
     //private String partyWine;
+
+    // BaseEntity 필드
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "party", cascade = CascadeType.ALL)
     private List<PartyJoinMember> participations = new ArrayList<>();

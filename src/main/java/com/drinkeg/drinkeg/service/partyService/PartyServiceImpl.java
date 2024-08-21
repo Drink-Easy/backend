@@ -37,10 +37,17 @@ public class PartyServiceImpl implements PartyService {
         Party party = partyConverter.fromRequest(partyRequest, member);
         Party savedParty = partyRepository.save(party);
 
+
         // 파티 생성 후, 해당 멤버를 PartyJoinMember 테이블에 호스트로 등록
         PartyJoinMember partyJoinMember = partyJoinMemberConverter.toEntity(member, savedParty, true);
         partyJoinMemberRepository.save(partyJoinMember);
 
+        // PartyJoinMember 테이블의 기록을 기반으로 참가자 수를 업데이트
+        long participantCount = partyJoinMemberRepository.countByParty(savedParty);
+
+        // 참가자 수(1명)를 party 엔티티의 participateMemberNum에 반영하여 업데이트
+        savedParty.setParticipateMemberNum((int) participantCount);
+        partyRepository.save(savedParty);  // 업데이트된 참가자 수를 저장
     }
 
 
@@ -61,7 +68,7 @@ public class PartyServiceImpl implements PartyService {
                     partyRepository.findAllByOrderByAdmissionFeeAsc(pageable);
             case "distance" ->
                 // 가까운 모임 (사용자 region과 party place가 일치하는 모임만)
-                    partyRepository.findByPlaceAndRegion(memberRegion, pageable);
+                    partyRepository.findByPlace(memberRegion, pageable);
             default -> throw new GeneralException(ErrorStatus.INVALID_SORT_TYPE); // 유효하지 않은 정렬 기준일 경우 예외 처리
         };
 
@@ -100,6 +107,12 @@ public class PartyServiceImpl implements PartyService {
         if (existingParty.getHostId() == null || !existingParty.getHostId().equals(memberId)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_PARTY); // 사용자가 호스트가 아닐 경우 예외 발생
         }
+
+        // 새로운 제한 인원이 기존 참가 인원보다 작은지 확인
+        if (partyRequest.getLimitMemberNum() < existingParty.getParticipateMemberNum()) {
+            throw new GeneralException(ErrorStatus.INVALID_PARTY_REQUEST_LIMITMEMBERNUM);
+        }
+
         // 업데이트된 엔티티 생성
         Party updatedParty = partyConverter.updatePartyFromRequest(existingParty, partyRequest);
         Party savedParty = partyRepository.save(updatedParty);

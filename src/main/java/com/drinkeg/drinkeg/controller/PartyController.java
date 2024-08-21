@@ -28,7 +28,9 @@ public class PartyController {
 
     // 모임 생성
     @PostMapping
-    public ApiResponse<String> createParty(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody PartyRequestDTO partyRequestDTO) {
+    public ApiResponse<String> createParty(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @RequestBody PartyRequestDTO partyRequestDTO) {
 
         // 현재 로그인한 사용자 정보 가져오기
         Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -47,14 +49,15 @@ public class PartyController {
 
 
     // 정렬 기준에 따른 모임 조회
-    // 최신순 /parties?sortType=recent
-    // 마감 임박순 /parties?sortType=deadline
-    // 인원이 많이 모인 순 /parties?sortType=popular
-    // 가격순 /parties?sortType=price
-    @GetMapping
+    // 최신순 /parties/sorted?sortType=recent
+    // 마감 임박순 /parties/sorted?sortType=deadline
+    // 인원이 많이 모인 순 /parties/sorted?sortType=popular
+    // 가격순 /parties/sorted?sortType=price
+    // 거리순 /parties/sorted?sortType=distance
+    @GetMapping("/sorted")
     public ApiResponse<Page<PartyResponseDTO>> getSortedParties(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
-            @RequestParam String sortType,
+            @RequestParam("sortType") String sortType,
             @PageableDefault(size = 5) Pageable pageable) {
 
         String memberRegion = memberService.loadMemberByPrincipleDetail(principalDetail).getRegion();
@@ -65,7 +68,9 @@ public class PartyController {
 
     // 모임 단건 조회
     @GetMapping("/{id}")
-    public ApiResponse<PartyResponseDTO> getParty(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("id") Long id) {
+    public ApiResponse<PartyResponseDTO> getParty(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @PathVariable("id") Long id) {
 
         // 현재 로그인한 사용자 정보 가져오기
         Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -93,7 +98,9 @@ public class PartyController {
 
     // 모임 삭제
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteParty(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("id") Long id) {
+    public ApiResponse<String> deleteParty(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @PathVariable("id") Long id) {
 
         // 현재 로그인한 사용자 정보 가져오기
         Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -108,7 +115,9 @@ public class PartyController {
 
     //모임 검색
     @GetMapping("/search")
-    public ApiResponse<List<PartyResponseDTO>> searchPartiesByName(@RequestParam String searchName) {
+    public ApiResponse<List<PartyResponseDTO>> searchPartiesByName(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @RequestParam("searchName") String searchName) {
         // 모임 제목으로 검색된 결과 리스트를 반환
         List<PartyResponseDTO> searchPartyResponseDTOS = partyService.searchPartiesByName(searchName);
         return ApiResponse.onSuccess(searchPartyResponseDTOS);

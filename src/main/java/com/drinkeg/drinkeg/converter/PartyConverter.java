@@ -54,6 +54,7 @@ public class PartyConverter {
                 .admissionFee(partyRequest.getAdmissionFee())
                 .place(partyRequest.getPlace())
                 .hostId(existingParty.getHostId()) // 기존 host
+                .createdAt(existingParty.getCreatedAt())
                 //.partyWine(partyRequest.getPartyWine())
                 .build();
     }
