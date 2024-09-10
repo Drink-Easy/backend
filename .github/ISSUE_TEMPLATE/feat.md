@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: Feat
 about: 새롭게 구현해야하는 기능
 title: 'Feat: 기능 이름'
 labels: "⚙️ Feature"
