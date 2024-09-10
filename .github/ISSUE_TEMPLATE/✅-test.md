@@ -1,9 +1,9 @@
 ---
-name: Fix
-about: 버그 수정
-title: 'Fix: '
-labels: "\U0001F6E0️ Fix"
-assignees: ''
+name: "✅ Test"
+about: 테스트코드 작성
+title: 'Test: '
+labels: "✅ Test"
+assignees: jeongyun1206
 
 ---
 
