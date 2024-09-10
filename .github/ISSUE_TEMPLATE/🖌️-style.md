@@ -1,7 +1,7 @@
 ---
 name: "\U0001F58C️ Style"
 about: 코드 스타일 변경
-title: 'Style: '
+title: "\U0001F58C️"
 labels: "✒️ Style"
 assignees: jeongyun1206
 
