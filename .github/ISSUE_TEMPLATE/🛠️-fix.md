@@ -1,8 +1,8 @@
 ---
-name: Feat
-about: 새롭게 구현해야하는 기능
-title: 'Feat: 기능 이름'
-labels: "⚙️ Feature"
+name: "\U0001F6E0️ Fix"
+about: 버그 수정
+title: 'Fix: '
+labels: "\U0001F6E0️ Fix"
 assignees: ''
 
 ---
@@ -12,9 +12,9 @@ assignees: ''
 
 
 ## 체크리스트
-- [ ] 구현할 기능1
-- [ ] 구현할 기능2
-- [ ] 구현할 기능3
+- [ ] 체크리스트 1
+- [ ] 체크리스트 2
+- [ ] 체크리스트 3
 
 ## 기한
 2024.00.00
