@@ -1,7 +1,7 @@
 ---
 name: "♻️ Refactor"
 about: 리팩토링
-title: 'Refactor: '
+title: "♻️"
 labels: "♻️ Refactor"
 assignees: jeongyun1206
 
