@@ -1,8 +1,8 @@
 ---
-name: Test
-about: 테스트코드 작성
-title: 'Test: '
-labels: "✅ Test"
+name: "♻️ Refactor"
+about: 리팩토링
+title: 'Refactor: '
+labels: "♻️ Refactor"
 assignees: jeongyun1206
 
 ---

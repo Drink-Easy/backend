@@ -1,8 +1,8 @@
 ---
-name: Refactor
-about: 리팩토링
-title: 'Refactor: '
-labels: "♻️ Refactor"
+name: "\b\U0001F4DD Docs"
+about: 문서화
+title: "\bDocs: "
+labels: "\U0001F4DD Docs"
 assignees: jeongyun1206
 
 ---

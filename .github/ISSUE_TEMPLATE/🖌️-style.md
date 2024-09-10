@@ -1,5 +1,5 @@
 ---
-name: Style
+name: "\U0001F58C️ Style"
 about: 코드 스타일 변경
 title: 'Style: '
 labels: "✒️ Style"
