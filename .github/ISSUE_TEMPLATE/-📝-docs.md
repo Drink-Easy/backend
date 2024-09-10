@@ -1,7 +1,7 @@
 ---
 name: "\b\U0001F4DD Docs"
 about: 문서화
-title: "\bDocs: "
+title: "\b\U0001F4DD"
 labels: "\U0001F4DD Docs"
 assignees: jeongyun1206
 
