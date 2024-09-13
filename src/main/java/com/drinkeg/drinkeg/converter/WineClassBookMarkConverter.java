@@ -10,7 +10,7 @@ public class WineClassBookMarkConverter {
         return WineClassBookMarkResponseDTO.builder()
                 .id(wineClassBookMark.getId())
                 .userId(wineClassBookMark.getMember().getId())
-                .wineClass(WineClassConverter.toWineClassResponseDTO(wineClassBookMark.getWineClass()))
+                .wineClass(WineClassConverter.toWineClassResponseDTO(wineClassBookMark.getWineClass(), true))
                 .build();
     }
 
