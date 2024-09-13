@@ -15,8 +15,8 @@ public class WineClassConverter {
         return WineClassResponseDTO.builder()
                 .id(wineClass.getId())
                 .title(wineClass.getTitle())
-                .video(wineClass.getVideoId())
-                .description(wineClass.getDescription())
+                .thumbnailUrl(wineClass.getThumbnailUrl())
+                .content(wineClass.getContent())
                 .build();
     }
 
@@ -24,8 +24,8 @@ public class WineClassConverter {
     public static WineClass toWineClass(WineClassRequestDTO wineClassRequestDTO) {
         return WineClass.builder()
                 .title(wineClassRequestDTO.getTitle())
-                .videoId(wineClassRequestDTO.getVideoId())
-                .description(wineClassRequestDTO.getDescription())
+                .thumbnailUrl(wineClassRequestDTO.getThumbnailUrl())
+                .content(wineClassRequestDTO.getContent())
                 .build();
     }
 }
