@@ -3,20 +3,19 @@ package com.drinkeg.drinkeg.service.wineClassService;
 import com.drinkeg.drinkeg.domain.WineClass;
 import com.drinkeg.drinkeg.dto.WineClassDTO.request.WineClassRequestDTO;
 import com.drinkeg.drinkeg.dto.WineClassDTO.response.WineClassResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
 import java.util.List;
 
 public interface WineClassService {
 
-    public List<WineClassResponseDTO> getAllWineClasses();
+    public List<WineClassResponseDTO> getAllWineClasses(PrincipalDetail principalDetail);
 
-    public WineClassResponseDTO getWineClassById(Long wineClassId);
+    public WineClassResponseDTO getWineClassById(Long wineClassId, PrincipalDetail principalDetail);
 
-    public void saveWineClass(WineClassRequestDTO wineClassRequestDTO);
+    public void saveWineClass(WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
 
-    public WineClassResponseDTO updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO);
+    public WineClassResponseDTO updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
 
-    public void deleteWineClass(Long wineClassId);
-
-    public WineClass findWineClassById(Long wineClassId);
+    public void deleteWineClass(Long wineClassId, PrincipalDetail principalDetail);
 }

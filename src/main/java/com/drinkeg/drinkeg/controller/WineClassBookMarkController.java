@@ -20,36 +20,22 @@ import java.util.List;
 @RequestMapping("wine-class/bookmark")
 public class WineClassBookMarkController {
     private final WineClassBookMarkService wineClassBookMarkService;
-    private final MemberService memberService;
-    private final WineClassService wineClassService;
 
     @PostMapping("/")
     public ApiResponse<WineClassBookMarkResponseDTO> createWineClassBookMark(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody WineClassBookMarkRequestDTO wineClassBookMarkRequestDTO) {
-        // 유저 정보 불러오기
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
-
-        // 와인 클래스 정보 불러오기
-        WineClass wineClass = wineClassService.findWineClassById(wineClassBookMarkRequestDTO.getWineClassId());
-
-        WineClassBookMarkResponseDTO wineClassBookMarkResponseDTO = wineClassBookMarkService.saveWineClassBookMark(member, wineClass);
+        WineClassBookMarkResponseDTO wineClassBookMarkResponseDTO = wineClassBookMarkService.saveWineClassBookMark(principalDetail, wineClassBookMarkRequestDTO);
         return ApiResponse.onSuccess(wineClassBookMarkResponseDTO);
     }
 
     @GetMapping("/")
     public ApiResponse<List<WineClassBookMarkResponseDTO>> getWineClassBookMarkByUserId(@AuthenticationPrincipal PrincipalDetail principalDetail) {
-        // 유저 정보 불러오기
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
-
-        List<WineClassBookMarkResponseDTO> wineClassBookMarkResponseDTOS = wineClassBookMarkService.getWineClassBookMarksByUserId(member);
+        List<WineClassBookMarkResponseDTO> wineClassBookMarkResponseDTOS = wineClassBookMarkService.getWineClassBookMarksByUserId(principalDetail);
         return ApiResponse.onSuccess(wineClassBookMarkResponseDTOS);
     }
 
     @DeleteMapping("/{wineClassBookMarkId}")
     public ApiResponse<String> deleteWineClassBookMark(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable Long wineClassBookMarkId) {
-        // 유저 정보 불러오기
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
-
-        wineClassBookMarkService.deleteWineClassBookMarkById(member, wineClassBookMarkId);
+        wineClassBookMarkService.deleteWineClassBookMarkById(principalDetail, wineClassBookMarkId);
         return ApiResponse.onSuccess("와인 클래스 북마크 삭제 완료.");
     }
 }

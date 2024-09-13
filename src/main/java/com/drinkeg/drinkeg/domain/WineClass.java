@@ -22,7 +22,7 @@ public class WineClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private Member author;
 
@@ -44,8 +44,13 @@ public class WineClass {
         return this;
     }
 
-    public WineClass updateContent(String description) {
+    public WineClass updateContent(String content) {
         this.content = content;
+        return this;
+    }
+
+    public WineClass updateAuthor(Member author) {
+        this.author = author;
         return this;
     }
 }
