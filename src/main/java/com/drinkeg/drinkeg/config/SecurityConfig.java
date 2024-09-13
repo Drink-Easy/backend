@@ -155,10 +155,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "wine-class/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "wine-class/**").hasRole("ADMIN")
 
-                        // wine News 인가
-                        .requestMatchers(HttpMethod.POST, "wine-news/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "wine-news/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "wine-news/**").hasRole("ADMIN")
 
                         // Parties 인가
                         .requestMatchers(HttpMethod.GET, "parties/**").hasRole("USER")

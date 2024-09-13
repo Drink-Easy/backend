@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 public class WineClassRequestDTO {
     @NotNull(message = "제목은 필수입니다.")
     private String title;
-    @NotNull(message = "영상은 필수입니다.")
-    private String videoId;
-    @NotNull(message = "설명은 필수입니다.")
-    private String description;
+    @NotNull(message = "썸네일은 필수입니다.")
+    private String thumbnailUrl;
+    @NotNull(message = "내용은 필수입니다.")
+    private String content;
 }
