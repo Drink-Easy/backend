@@ -34,6 +34,8 @@ public enum ErrorStatus implements BaseCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "댓글이 없습니다."),
     COMMENT_HAS_RECOMMENTS(HttpStatus.BAD_REQUEST, "COMMENT4002", "대댓글이 있는 댓글은 완전 삭제할 수 없습니다."),
     COMMENT_HAS_NO_RECOMMENTS(HttpStatus.BAD_REQUEST, "COMMENT4003", "대댓글이 없는 댓글입니다."),
+
+
     RECOMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECOMMENT4001", "대댓글을 찾을 수 없습니다."),
     NOT_YOUR_COMMENT(HttpStatus.BAD_REQUEST,"COMMENT4004", "댓글 작성자가 아닙니다."), // 대댓글의 경우에도 사용
 
@@ -46,18 +48,11 @@ public enum ErrorStatus implements BaseCode {
 
     // Wine class Error
     WINE_CLASS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINECLASS4001", "와인 클래스가 없습니다."),
-    // WineNews Error
-    WINE_NEWS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENEWS4001", "와인 뉴스가 없습니다."),
 
     //WineClassBookMark Error
     WINE_CLASS_BOOKMARK_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_CLASS_BOOKMARK4001", "권한이 없는 북마크입니다."),
     WINE_CLASS_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_CLASS_BOOKMARK4001", "와인 클래스 북마크가 없습니다."),
     WINE_CLASS_BOOKMARK_DUPLICATED(HttpStatus.BAD_REQUEST, "WINE_CLASS_BOOKMARK4002", "이미 존재하는 북마크입니다."),
-
-
-    // WineNewsBookMark Error
-    WINE_NEWS_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINENWSBOOKMARK4001", "와인 뉴스 북마크가 없습니다."),
-    WINE_NEWS_BOOKMARK_DUPLICATED(HttpStatus.BAD_REQUEST, "WINENWSBOOKMARK4002", "이미 존재하는 북마크입니다."),
 
 
     // Member Error
@@ -81,13 +76,6 @@ public enum ErrorStatus implements BaseCode {
     // appleLogin Error
     MATCH_PUBLIC_KEY_NOR_FOUND(HttpStatus.BAD_REQUEST, "APPLE4001", "일치하는 공개키를 찾을 수 없습니다"),
     IDENTITY_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLE4002", "아이덴티티 토큰을 찾을 수 없습니다."),
-
-    // WineStore Error
-    WINE_STORE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_STORE4001", "와인 스토어가 없습니다."),
-    WINE_STORE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_STORE4002", "권한이 없는 스토어입니다."),
-
-    // WineSale Error
-    WINE_SALE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_SALE4001", "와인 판매가 없습니다."),
 
     // WineWishlist Error
     WINE_WISHLIST_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_WISHLIST4001", "와인 위시리스트가 없습니다."),
