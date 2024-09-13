@@ -37,7 +37,8 @@ public enum ErrorStatus implements BaseCode {
     NOT_YOUR_COMMENT(HttpStatus.BAD_REQUEST,"COMMENT4004", "댓글 작성자가 아닙니다."), // 대댓글의 경우에도 사용
 
     // Wine class Error
-    WINE_CLASS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINECLASS4001", "와인 클래스가 없습니다."),
+    WINE_CLASS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_CLASS4001", "와인 클래스가 없습니다."),
+    WINE_CLASS_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_CLASS4002", "권한이 없는 와인클래스입니다."),
 
     //WineClassBookMark Error
     WINE_CLASS_BOOKMARK_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_CLASS_BOOKMARK4001", "권한이 없는 북마크입니다."),
