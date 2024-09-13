@@ -47,8 +47,8 @@ public class WineClassServiceImpl implements WineClassService {
                 wineClassRepository.findById(wineClassId)
                         .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND))
                         .updateTitle(wineClassRequestDTO.getTitle())
-                        .updateVideoId(wineClassRequestDTO.getVideoId())
-                        .updateDescription(wineClassRequestDTO.getDescription()));
+                        .updateThumbnail(wineClassRequestDTO.getThumbnailUrl())
+                        .updateContent(wineClassRequestDTO.getContent()));
     }
 
     @Override

@@ -56,11 +56,6 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<TastingNote> tastingNotes = new ArrayList<>();
 
-    // CascadeType.ALL: Member 엔티티가 삭제되면 연관된 OrderInfo 엔티티도 삭제
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<OrderInfo> orderInfos = new ArrayList<>();
-
-
     public void updateEmail(String email) { this.email = email; };
     public void updateName(String name) { this.name = name; };
     public void updateIsNewbie(Boolean isNewbie) { this.isNewbie = isNewbie; };
