@@ -2,8 +2,8 @@
 name: "\b\U0001F4DD Docs"
 about: 문서화
 title: "\b\U0001F4DD"
-labels: "\U0001F4DD Docs"
-assignees: jeongyun1206
+labels: "\U0001F4DD Docs, \U0001F6E0️ Fix"
+assignees: ''
 
 ---
 
