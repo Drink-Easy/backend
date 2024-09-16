@@ -22,16 +22,12 @@ import java.util.List;
 public class TastingNoteController {
 
     private final TastingNoteService tastingNoteService;
-    private final MemberService memberService;
 
     // 새 노트 작성
     @PostMapping("/new-note")
     public ApiResponse<String> saveNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody @Valid NoteRequestDTO noteRequestDTO) {
 
-        // 현재 로그인한 사용자 정보 가져오기
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
-
-        tastingNoteService.saveNote(noteRequestDTO, foundMember);
+        tastingNoteService.saveNote(noteRequestDTO, principalDetail);
         return ApiResponse.onSuccess("노트 작성 완료");
     }
 
@@ -40,10 +36,7 @@ public class TastingNoteController {
     @GetMapping("/{noteId}")
     public ApiResponse<NoteResponseDTO> showNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId) {
 
-        // 현재 로그인한 사용자 정보 가져오기
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
-
-        NoteResponseDTO noteResponseDTO = tastingNoteService.showNoteById(noteId, foundMember);
+        NoteResponseDTO noteResponseDTO = tastingNoteService.showNoteById(noteId, principalDetail);
         return ApiResponse.onSuccess(noteResponseDTO);
     }
 
@@ -51,30 +44,21 @@ public class TastingNoteController {
     @GetMapping("/all-note")
     public ApiResponse<List<NotePriviewResponseDTO>> showAllNote(@AuthenticationPrincipal PrincipalDetail principalDetail) {
 
-        // 현재 로그인한 사용자 정보 가져오기
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
-
-        List<NotePriviewResponseDTO> allNoteByMember = tastingNoteService.findAllNoteByMember(foundMember);
+        List<NotePriviewResponseDTO> allNoteByMember = tastingNoteService.findAllNote(principalDetail);
         return ApiResponse.onSuccess(allNoteByMember);
     }
 
     @PatchMapping("/{noteId}")
     public ApiResponse<String> updateTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId, @RequestBody @Valid NoteUpdateRequestDTO noteUpdateRequestDTO) {
 
-        // 현재 로그인한 사용자 정보 가져오기
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
-
-        tastingNoteService.updateTastingNote(noteId, noteUpdateRequestDTO, foundMember);
+        tastingNoteService.updateTastingNote(noteId, noteUpdateRequestDTO, principalDetail);
         return ApiResponse.onSuccess("노트 수정 완료");
     }
 
     @DeleteMapping("/{noteId}")
     public ApiResponse<String> deleteTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId) {
 
-        // 현재 로그인한 사용자 정보
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
-
-        tastingNoteService.deleteTastingNote(noteId, foundMember);
+        tastingNoteService.deleteTastingNote(noteId, principalDetail);
         return ApiResponse.onSuccess("노트 삭제 완료");
     }
 
