@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final JoinService joinService;
-    private final AppleLoginService appleLoginService;
 
     @PostMapping("/join")
     public ApiResponse<?> joinProcess(@RequestBody JoinDTO joinDTO) {
@@ -42,18 +41,6 @@ public class MemberController {
     @PatchMapping("/member")
     public ApiResponse<MemberResponseDTO> addMemberDetail(@RequestBody MemberRequestDTO memberRequestDTO, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         return ApiResponse.onSuccess(joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername()));
-    }
-
-    @PostMapping("/login/apple")
-    public ApiResponse<LoginResponse> appleLogin(@RequestBody AppleLoginRequestDTO appleLoginRequestDTO,HttpServletResponse response) throws Exception{
-
-        System.out.println("=========start apple login controller============");
-
-        if(appleLoginRequestDTO.getIdentityToken() == null){
-            throw new TempHandler(ErrorStatus.IDENTITY_TOKEN_NOT_FOUND);
-        }
-
-        return ApiResponse.onSuccess(appleLoginService.appleLogin(appleLoginRequestDTO, response));
     }
 
 

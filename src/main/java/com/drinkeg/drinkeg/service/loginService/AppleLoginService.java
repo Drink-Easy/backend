@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.service.loginService;
 
+import com.drinkeg.drinkeg.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
@@ -35,11 +36,13 @@ public class AppleLoginService {
     private final MemberRepository memberRepository;
     private final RedisClient redisClient;
     private final JWTUtil jwtUtil;
+    private final MemberConverter memberConverter;
 
     public LoginResponse appleLogin(AppleLoginRequestDTO appleLoginRequestDTO, HttpServletResponse response)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
             JsonProcessingException {
 
         System.out.println("--------------apple Login Start---------------");
+
 
         String identityToken = appleLoginRequestDTO.getIdentityToken();
 
@@ -60,12 +63,7 @@ public class AppleLoginService {
 
         if (existData.isEmpty()){
 
-            Member member = Member.builder()
-                    .username(username)
-                    .email(claims.get("email", String.class))
-                    .role("ROLE_USER")
-                    .isFirst(true)
-                    .build();
+            Member member = memberConverter.toMember(username, claims);
             memberRepository.save(member);
 
             System.out.println("첫 로그인임");
