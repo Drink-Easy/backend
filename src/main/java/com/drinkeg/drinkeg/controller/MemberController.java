@@ -29,9 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final JoinService joinService;
-    private final TokenService tokenService;
     private final AppleLoginService appleLoginService;
-    private final JWTUtil jwtUtil;
 
     @PostMapping("/join")
     public ApiResponse<?> joinProcess(@RequestBody JoinDTO joinDTO) {
@@ -40,12 +38,6 @@ public class MemberController {
         return ApiResponse.onSuccess("회원가입 성공");
     }
 
-    @PostMapping("/reissue")
-    public ApiResponse<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-
-        tokenService.reissueRefreshToken(request, response);
-        return ApiResponse.onSuccess("토큰 재발급 성공");
-    }
 
     @PatchMapping("/member")
     public ApiResponse<MemberResponseDTO> addMemberDetail(@RequestBody MemberRequestDTO memberRequestDTO, @AuthenticationPrincipal PrincipalDetail principalDetail) {
