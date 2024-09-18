@@ -11,6 +11,7 @@ import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.WineClassBookMarkRepository;
 import com.drinkeg.drinkeg.repository.WineClassRepository;
+import com.drinkeg.drinkeg.service.wineClassBookMarkService.WineClassBookMarkService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WineClassServiceImpl implements WineClassService {
     private final WineClassRepository wineClassRepository;
-    private final WineClassBookMarkRepository wineClassBookMarkRepository;
+    private final WineClassBookMarkService wineClassBookMarkService;
     private final MemberRepository memberRepository;
 
     @Override
