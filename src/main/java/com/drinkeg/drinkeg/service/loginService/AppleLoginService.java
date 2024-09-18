@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.service.loginService;
 
+import com.drinkeg.drinkeg.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
@@ -35,6 +36,7 @@ public class AppleLoginService {
     private final MemberRepository memberRepository;
     private final RedisClient redisClient;
     private final JWTUtil jwtUtil;
+    private final MemberConverter memberConverter;
 
     public LoginResponse appleLogin(AppleLoginRequestDTO appleLoginRequestDTO, HttpServletResponse response)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
             JsonProcessingException {
@@ -42,59 +44,33 @@ public class AppleLoginService {
         System.out.println("--------------apple Login Start---------------");
 
         String identityToken = appleLoginRequestDTO.getIdentityToken();
-
-        // identity Token에서 헤더 추출
-        final Map<String, String> appleTokenHeader = tokenService.parseHeaders(appleLoginRequestDTO.getIdentityToken());
-
-        // 애플 서버에서 publicKey 받아온 후에 identity 토큰의 헤더와 일치하는 publicKey 만들기
-        PublicKey publicKey = applePublicKeyGenerator.generatePublicKey(appleTokenHeader,
-                appleAuthClient.getAppleAuthPublicKey());
-
-        // identity Token에서 claims 추출
-        Claims claims = tokenService.getTokenClaims(identityToken, publicKey);
+        Claims claims = getClaimsFromIdentityToken(identityToken);
 
         // 회원 가입 된 사용자인지 확인하기
         String username = "apple "+ claims.getSubject();
         Optional<Member> existData = memberRepository.findByUsername(username);
 
+        Member member;
 
         if (existData.isEmpty()){
 
-            Member member = Member.builder()
-                    .username(username)
-                    .email(claims.get("email", String.class))
-                    .role("ROLE_USER")
-                    .isFirst(true)
-                    .build();
+            member = memberConverter.toMember(username, claims);
             memberRepository.save(member);
-
             System.out.println("첫 로그인임");
-
             jwtProvider(member, response);
-
-            return LoginResponse.builder()
-                    .username(username)
-                    .role(member.getRole())
-                    .isFirst(member.getIsFirst())
-                    .build();
 
         }
         else{
 
-            Member member = existData.get();
+            member = existData.get();
             member.updateEmail(claims.get("email", String.class));
-
             System.out.println("첫 로그인아님");
             memberRepository.save(member);
-
             jwtProvider(member, response);
 
-            return LoginResponse.builder()
-                    .username(username)
-                    .role(member.getRole())
-                    .isFirst(member.getIsFirst())
-                    .build();
         }
+
+        return buildLoginResponse(member);
     }
 
     public void jwtProvider(Member member, HttpServletResponse response) {
@@ -109,6 +85,32 @@ public class AppleLoginService {
 
         // redis에 refresh 토큰 저장
         redisClient.setValue(member.getUsername(), refreshToken, 864000000L);
+    }
+
+    private LoginResponse buildLoginResponse(Member member) {
+        return LoginResponse.builder()
+                .username(member.getUsername())
+                .role(member.getRole())
+                .isFirst(member.getIsFirst())
+                .build();
+
+    }
+
+    private Claims getClaimsFromIdentityToken(String identityToken) throws InvalidKeySpecException, JsonProcessingException,AuthenticationException, NoSuchAlgorithmException{
+
+        // identity Token에서 헤더 추출
+        Map<String, String> appleTokenHeader = tokenService.parseHeaders(identityToken);
+
+        // 애플 서버에서 publicKey 받아온 후에 identity 토큰의 헤더와 일치하는 publicKey 만들기
+        PublicKey publicKey = applePublicKeyGenerator.generatePublicKey(appleTokenHeader,
+                appleAuthClient.getAppleAuthPublicKey());
+
+        // identity Token에서 claims 추출
+        return tokenService.getTokenClaims(identityToken, publicKey);
+
+
+
+
     }
 
 }

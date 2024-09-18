@@ -41,7 +41,7 @@ public class AmazonS3Manager{
 
     // S3에 들어갈 KeyName 만들어주기 (어떤 디렉토리 안으로 들어갈지 반영)
     public String generateWineNewsKeyName(Uuid uuid) {
-        return s3Config.getWineNewsPaths() + '/' + uuid.getUuid();
+        return s3Config.getWineImagePaths() + '/' + uuid.getUuid();
     }
 
 
