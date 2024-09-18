@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.FetchType.LAZY;
-
 @Entity
 @Getter
 @Builder
@@ -22,13 +20,9 @@ public class WineClass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
-    private Member author;
-
     private String title;
 
-    private String content;
+    private String category;
 
     private String thumbnailUrl;
 
@@ -44,13 +38,9 @@ public class WineClass {
         return this;
     }
 
-    public WineClass updateContent(String content) {
-        this.content = content;
+    public WineClass updateCategory(String category) {
+        this.category = category;
         return this;
     }
 
-    public WineClass updateAuthor(Member author) {
-        this.author = author;
-        return this;
-    }
 }
