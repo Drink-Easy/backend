@@ -11,6 +11,7 @@ import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.WineClassBookMarkRepository;
 import com.drinkeg.drinkeg.repository.WineClassRepository;
+import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineClassBookMarkService.WineClassBookMarkService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,40 +25,33 @@ import java.util.stream.Collectors;
 public class WineClassServiceImpl implements WineClassService {
     private final WineClassRepository wineClassRepository;
     private final WineClassBookMarkService wineClassBookMarkService;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @Override
     public List<WineClassResponseDTO> getAllWineClasses(PrincipalDetail principalDetail) {
-        Member member = memberRepository.findByUsername(principalDetail.getUsername())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         List<WineClass> wineClasses = wineClassRepository.findAll();
 
         return wineClasses.stream()
-                .map(wineClass -> {
-                    boolean isLiked = wineClassBookMarkRepository.existsByMemberAndWineClass(member, wineClass);
-                    return WineClassConverter.toWineClassResponseDTO(wineClass, isLiked);
-                })
+                .map(wineClass -> WineClassConverter.toWineClassResponseDTO(wineClass, wineClassBookMarkService.isLiked(member, wineClass)))
                 .collect(Collectors.toList());
     }
 
     @Override
     public WineClassResponseDTO getWineClassById(Long wineClassId, PrincipalDetail principalDetail) {
-        Member member = memberRepository.findByUsername(principalDetail.getUsername())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         WineClass wineClass = wineClassRepository.findById(wineClassId)
                         .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
-        boolean isLiked = wineClassBookMarkRepository.existsByMemberAndWineClass(member, wineClass);
 
-        return WineClassConverter.toWineClassResponseDTO(wineClass, isLiked);
+        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassBookMarkService.isLiked(member, wineClass));
     }
 
     @Override
     public void saveWineClass(WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
-        Member member = memberRepository.findByUsername(principalDetail.getUsername())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         wineClassRepository.save(WineClassConverter.toWineClass(wineClassRequestDTO, member));
     }
@@ -65,8 +59,7 @@ public class WineClassServiceImpl implements WineClassService {
     @Override
     @Transactional
     public WineClassResponseDTO updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
-        Member member = memberRepository.findByUsername(principalDetail.getUsername())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         WineClass wineClass = wineClassRepository.findById(wineClassId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
@@ -88,6 +81,7 @@ public class WineClassServiceImpl implements WineClassService {
     public void deleteWineClass(Long wineClassId, PrincipalDetail principalDetail) {
         if (!wineClassRepository.existsById(wineClassId))
             throw new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND);
+
         wineClassRepository.deleteById(wineClassId);
     }
 }
