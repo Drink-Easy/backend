@@ -13,6 +13,6 @@ public class WineClassResponseDTO {
     private Long id;
     private String title;
     private String thumbnailUrl;
-    private String content;
+    private String category;
     private boolean isLiked;
 }
