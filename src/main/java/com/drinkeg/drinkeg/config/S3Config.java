@@ -32,8 +32,11 @@ public class S3Config {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.path.winenews}")
+    @Value("${cloud.aws.s3.path.wineNews}")
     private String wineNewsPaths;
+
+    @Value("${cloud.aws.s3.path.wines}")
+    private String wineImagePaths;
 
     @PostConstruct
     public void init() {

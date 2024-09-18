@@ -9,10 +9,12 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.repository.WineRepository;
+import com.drinkeg.drinkeg.service.memberService.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +29,13 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     private final TastingNoteRepository tastingNoteRepository;
     private final WineRepository wineRepository;
 
+    private final MemberService memberService;
+
     @Override
-    public void saveNote(NoteRequestDTO noteRequestDTO, Member member) {
+    public void saveNote(NoteRequestDTO noteRequestDTO,  PrincipalDetail principalDetail) {
+
+        // 회원을 조회한다.
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         // 와인을 찾는다.
         Long wineId = noteRequestDTO.getWineId();
@@ -43,7 +50,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public NoteResponseDTO showNoteById(Long noteId, Member member) {
+    public NoteResponseDTO showNoteById(Long noteId, PrincipalDetail principalDetail) {
+
+        // 회원을 조회한다.
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         // noteId로 TastingNote를 찾는다.
         TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
@@ -60,26 +70,28 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public List<NotePriviewResponseDTO> findAllNoteByMember(Member member) {
+    public List<NotePriviewResponseDTO> findAllNote(PrincipalDetail principalDetail) {
+
+        // 회원을 조회한다.
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         // Member의 TastingNote를 찾는다.
         List<TastingNote> foundNotes = member.getTastingNotes();
 
         // TastingNote를 NotePreviewDTO로 변환한 후 AllNoteResponseDTO로 변환한다.
-        List<NotePriviewResponseDTO> notePriviewResponseDTOs = foundNotes.stream().map(foundNote ->
-                TastingNoteConverter.toTastingNotePreviewDTO(foundNote)).toList();
 
-
-        return notePriviewResponseDTOs;
+        return foundNotes.stream().map(TastingNoteConverter::toTastingNotePreviewDTO).toList();
     }
 
     @Override
-    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, Member member) {
+    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, PrincipalDetail principalDetail) {
+
+        // 회원을 조회한다.
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> {
-                    throw new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND);
-                }
+        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
+                -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
@@ -89,9 +101,8 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // TastingNote를 업데이트한다.
         if(noteUpdateRequestDTO.getWineId() != null) {
-            Wine wine = wineRepository.findById(noteUpdateRequestDTO.getWineId()).orElseThrow(() -> {
-                        throw new GeneralException(ErrorStatus.WINE_NOT_FOUND);
-                    }
+            Wine wine = wineRepository.findById(noteUpdateRequestDTO.getWineId()).orElseThrow(()
+                    -> new GeneralException(ErrorStatus.WINE_NOT_FOUND)
             );
             foundNote.updateWine(wine);
         }
@@ -136,12 +147,13 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void deleteTastingNote(Long noteId, Member member) {
+    public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail) {
+
+        // 회원을 조회한다.
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> {
-                    throw new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND);
-                }
+        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.

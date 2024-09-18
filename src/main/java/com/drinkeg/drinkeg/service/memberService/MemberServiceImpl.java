@@ -34,9 +34,8 @@ public class MemberServiceImpl implements MemberService{
         // 현재 로그인한 사용자 정보 가져오기
         String username = principalDetail.getUsername();
 
-        return memberRepository.findByUsername(username).orElseThrow(() -> {
-            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
-        });
+        return memberRepository.findByUsername(username).orElseThrow(()
+                -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
 }
