@@ -64,17 +64,15 @@ public class WineClassServiceImpl implements WineClassService {
         WineClass wineClass = wineClassRepository.findById(wineClassId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
-        if (!wineClass.getAuthor().equals(member))
+        if (!wineClass.getAuthor().equals(member) && !member.getRole().equals("ROLE_ADMIN"))
             throw new GeneralException(ErrorStatus.WINE_CLASS_UNAUTHORIZED);
 
         wineClass
                 .updateTitle(wineClassRequestDTO.getTitle())
                 .updateThumbnail(wineClassRequestDTO.getThumbnailUrl())
-                .updateContent(wineClassRequestDTO.getContent());
+                .updateCategory(wineClassRequestDTO.getCategory());
 
-        boolean isLiked = wineClassBookMarkRepository.existsByMemberAndWineClass(member, wineClass);
-
-        return WineClassConverter.toWineClassResponseDTO(wineClass, isLiked);
+        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassBookMarkService.isLiked(member, wineClass));
     }
 
     @Override

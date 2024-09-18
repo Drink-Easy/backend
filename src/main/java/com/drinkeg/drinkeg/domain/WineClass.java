@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.FetchType.*;
+
 @Entity
 @Getter
 @Builder
@@ -26,6 +28,10 @@ public class WineClass {
 
     private String thumbnailUrl;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "author_id")
+    private Member author;
+
     @OneToMany(mappedBy = "wineClass", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WineClassBookMark> bookmarks = new ArrayList<>();
 
@@ -40,6 +46,11 @@ public class WineClass {
 
     public WineClass updateCategory(String category) {
         this.category = category;
+        return this;
+    }
+
+    public WineClass updateAuthor(Member author) {
+        this.author = author;
         return this;
     }
 
