@@ -14,7 +14,7 @@ public class WineClassConverter {
                 .id(wineClass.getId())
                 .title(wineClass.getTitle())
                 .thumbnailUrl(wineClass.getThumbnailUrl())
-                .content(wineClass.getCategory())
+                .category(wineClass.getCategory())
                 .isLiked(isLiked)
                 .build();
     }
@@ -25,7 +25,7 @@ public class WineClassConverter {
                 .author(author)
                 .title(wineClassRequestDTO.getTitle())
                 .thumbnailUrl(wineClassRequestDTO.getThumbnailUrl())
-                .content(wineClassRequestDTO.getContent())
+                .category(wineClassRequestDTO.getCategory())
                 .build();
     }
 }
