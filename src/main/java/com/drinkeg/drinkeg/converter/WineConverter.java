@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.converter;
 
-import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
@@ -10,7 +9,6 @@ import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
-import com.drinkeg.drinkeg.exception.GeneralException;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +16,7 @@ import java.util.Optional;
 public class WineConverter {
 
     // 검색한 와인을 노트 와인 응답 DTO로 변환
-    public static SearchWineResponseDTO toSearchWineDTO(Wine wine) {
+    public static SearchWineResponseDTO toSearchWineResponseDTO(Wine wine) {
         return SearchWineResponseDTO.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())

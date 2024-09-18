@@ -8,8 +8,11 @@ import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineRepository;
+import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.wineWishlistService.WineWishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +29,16 @@ import java.util.stream.Collectors;
 @Transactional
 public class WineServiceImpl implements WineService {
     private final WineRepository wineRepository;
+
+    private final MemberService memberService;
+    private final WineWishlistService wineWishlistService;
     private final S3Service s3Service;
 
     @Override
-    public List<SearchWineResponseDTO> searchWinesByName(String searchName) {
+    public List<SearchWineResponseDTO> searchWinesByName(PrincipalDetail principalDetail, String searchName) {
+
+        // 회원을 조회한다.
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         // 와인 이름으로 와인을 검색한다.
         List<Wine> exactMatchWines = wineRepository.findAllByName(searchName);
@@ -47,7 +56,15 @@ public class WineServiceImpl implements WineService {
         }
 
         // 와인을 NoteWineResponseDTO로 변환한다.
-        return searchWines.stream().map(WineConverter::toSearchWineDTO).collect(Collectors.toList());
+        return searchWines.stream()
+                .map(wine ->
+                {
+                    // Wine 을 SearchWineResponseDTO 로 변환 후 setter 를 이용해 isLiked 업데이트
+                    SearchWineResponseDTO searchWineResponseDTO = WineConverter.toSearchWineResponseDTO(wine);
+                    searchWineResponseDTO.setLiked(wineWishlistService.findWineWishByMemberAndWine(member, wine));
+                    return searchWineResponseDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
