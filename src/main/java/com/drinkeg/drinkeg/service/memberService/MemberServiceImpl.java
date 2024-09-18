@@ -17,16 +17,14 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member findMemberById(Long memberId) {
 
-        return memberRepository.findById(memberId).orElseThrow(() -> {
-            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
-        });
+        return memberRepository.findById(memberId).orElseThrow(()
+                -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
     @Override
     public Member findMemberByUsername(String username) {
-        return memberRepository.findByUsername(username).orElseThrow(() -> {
-            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
-        });
+        return memberRepository.findByUsername(username).orElseThrow(()
+                -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
     @Override

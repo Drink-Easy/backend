@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -39,9 +40,8 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // 와인을 찾는다.
         Long wineId = noteRequestDTO.getWineId();
-        Wine wine = wineRepository.findById(wineId).orElseThrow(()-> {
-                    throw new GeneralException(ErrorStatus.WINE_NOT_FOUND);
-                }
+        Wine wine = wineRepository.findById(wineId).orElseThrow(()
+                -> new GeneralException(ErrorStatus.WINE_NOT_FOUND)
         );
 
         // TastingNote를 저장한다.
@@ -78,9 +78,11 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         // Member의 TastingNote를 찾는다.
         List<TastingNote> foundNotes = member.getTastingNotes();
 
-        // TastingNote를 NotePreviewDTO로 변환한 후 AllNoteResponseDTO로 변환한다.
-
-        return foundNotes.stream().map(TastingNoteConverter::toTastingNotePreviewDTO).toList();
+        // TastingNote를 최신 생성 순으로 정렬한 후, TastingNotePreviewDTO로 변환한다
+        return foundNotes.stream()
+                .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
+                .map(TastingNoteConverter::toTastingNotePreviewDTO)
+                .toList();
     }
 
     @Override
@@ -108,6 +110,9 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         }
         if(noteUpdateRequestDTO.getColor() != null) {
             foundNote.updateColor(noteUpdateRequestDTO.getColor());
+        }
+        if(noteUpdateRequestDTO.getTastingDate() != null) {
+            foundNote.updatetasteDate(noteUpdateRequestDTO.getTastingDate());
         }
 
         if(noteUpdateRequestDTO.getSugarContent() != null) {
