@@ -28,7 +28,7 @@ public class WineClassServiceImpl implements WineClassService {
     private final MemberService memberService;
 
     @Override
-    public List<WineClassResponseDTO> getAllWineClasses(PrincipalDetail principalDetail) {
+    public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         List<WineClass> wineClasses = wineClassRepository.findAll();
@@ -39,7 +39,7 @@ public class WineClassServiceImpl implements WineClassService {
     }
 
     @Override
-    public WineClassResponseDTO getWineClassById(Long wineClassId, PrincipalDetail principalDetail) {
+    public WineClassResponseDTO showWineClassById(Long wineClassId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         WineClass wineClass = wineClassRepository.findById(wineClassId)
@@ -81,5 +81,16 @@ public class WineClassServiceImpl implements WineClassService {
             throw new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND);
 
         wineClassRepository.deleteById(wineClassId);
+    }
+
+    @Override
+    public List<WineClass> getAllWineClasses() {
+        return wineClassRepository.findAll();
+    }
+
+    @Override
+    public WineClass getWineClassById(Long wineClassId) {
+        return wineClassRepository.findById(wineClassId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
     }
 }

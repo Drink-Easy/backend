@@ -9,9 +9,12 @@ import java.util.List;
 
 public interface WineClassService {
     // WineClass CRUD
-    public List<WineClassResponseDTO> getAllWineClasses(PrincipalDetail principalDetail);
-    public WineClassResponseDTO getWineClassById(Long wineClassId, PrincipalDetail principalDetail);
+    public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail);
+    public WineClassResponseDTO showWineClassById(Long wineClassId, PrincipalDetail principalDetail);
     public void saveWineClass(WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
     public WineClassResponseDTO updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
     public void deleteWineClass(Long wineClassId, PrincipalDetail principalDetail);
+
+    public List<WineClass> getAllWineClasses();
+    public WineClass getWineClassById(Long wineClassId);
 }
