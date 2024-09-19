@@ -22,6 +22,7 @@ public class WineConverter {
                 .name(wine.getName())
                 .imageUrl(wine.getImageUrl())
 
+                .isLiked(isLiked)
                 .sort(wine.getSort())
                 .area(wine.getArea())
 

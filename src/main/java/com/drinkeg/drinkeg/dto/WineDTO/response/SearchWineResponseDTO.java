@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.dto.WineDTO.response;
 
 import lombok.*;
 
-@Setter
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
