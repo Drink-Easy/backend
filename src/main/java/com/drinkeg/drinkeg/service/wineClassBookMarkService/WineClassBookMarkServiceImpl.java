@@ -69,4 +69,9 @@ public class WineClassBookMarkServiceImpl implements WineClassBookMarkService{
 
         wineClassBookMarkRepository.deleteById(wineClassBookMarkId);
     }
+
+    @Override
+    public boolean isLiked(Member member, WineClass wineClass) {
+        return wineClassBookMarkRepository.existsByMemberAndWineClass(member, wineClass);
+    }
 }
