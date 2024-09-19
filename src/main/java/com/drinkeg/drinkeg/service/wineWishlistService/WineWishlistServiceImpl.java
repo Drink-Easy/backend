@@ -65,7 +65,7 @@ public class WineWishlistServiceImpl implements WineWishlistService{
     }
 
     @Override
-    public boolean findWineWishByMemberAndWine(Member member, Wine wine) {
+    public boolean isLiked(Member member, Wine wine) {
         return wineWishlistRepository.existsByMemberAndWine(member, wine);
     }
 }

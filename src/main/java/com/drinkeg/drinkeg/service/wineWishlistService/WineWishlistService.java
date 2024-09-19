@@ -14,5 +14,5 @@ public interface WineWishlistService {
 
     void deleteWineWishlistById(Long wineWishlistId, String username);
 
-    public boolean findWineWishByMemberAndWine(Member member, Wine wine);
+    public boolean isLiked(Member member, Wine wine);
 }

@@ -16,7 +16,7 @@ import java.util.Optional;
 public class WineConverter {
 
     // 검색한 와인을 노트 와인 응답 DTO로 변환
-    public static SearchWineResponseDTO toSearchWineResponseDTO(Wine wine) {
+    public static SearchWineResponseDTO toSearchWineResponseDTO(Wine wine, boolean isLiked) {
         return SearchWineResponseDTO.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())

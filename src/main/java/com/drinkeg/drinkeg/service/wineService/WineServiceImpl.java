@@ -52,18 +52,13 @@ public class WineServiceImpl implements WineService {
             if(!keywordContainingWines.isEmpty()){
                 searchWines.addAll(keywordContainingWines);
             }
-
         }
 
         // 와인을 NoteWineResponseDTO로 변환한다.
         return searchWines.stream()
-                .map(wine ->
-                {
-                    // Wine 을 SearchWineResponseDTO 로 변환 후 setter 를 이용해 isLiked 업데이트
-                    SearchWineResponseDTO searchWineResponseDTO = WineConverter.toSearchWineResponseDTO(wine);
-                    searchWineResponseDTO.setLiked(wineWishlistService.findWineWishByMemberAndWine(member, wine));
-                    return searchWineResponseDTO;
-                })
+                .map(wine -> WineConverter.toSearchWineResponseDTO(wine,
+                        wineWishlistService.isLiked(member, wine))
+                )
                 .collect(Collectors.toList());
     }
 
