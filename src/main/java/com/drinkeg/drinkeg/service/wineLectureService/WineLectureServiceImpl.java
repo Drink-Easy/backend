@@ -61,7 +61,9 @@ public class WineLectureServiceImpl implements WineLectureService {
     @Override
     public WineLectureResponseDTO saveWineLecture(WineLectureRequestDTO wineLectureRequestDTO, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
-        WineLecture wineLecture = WineLectureConverter.toWineLecture(wineLectureRequestDTO);
+        WineClass wineClass = wineClassService.getWineClassById(wineLectureRequestDTO.getWineClassId());
+
+        WineLecture wineLecture = WineLectureConverter.toWineLecture(wineLectureRequestDTO, wineClass, member);
 
         wineLectureRepository.save(wineLecture);
         return WineLectureConverter.toWineLectureResponseDTO(wineLecture);
@@ -74,8 +76,13 @@ public class WineLectureServiceImpl implements WineLectureService {
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
 
+        if (!member.getRole().equals("ROLE_ADMIN") && !wineLecture.getAuthor().equals(member))
+            throw new GeneralException(ErrorStatus.WINE_LECTURE_UNAUTHORIZED);
+
+        WineClass wineClass = wineClassService.getWineClassById(wineLectureRequestDTO.getWineClassId());
+
         wineLecture
-                .updateWineClass(wineLectureRequestDTO.getWineClass())
+                .updateWineClass(wineClass)
                 .updateTitle(wineLectureRequestDTO.getTitle())
                 .updateContent(wineLectureRequestDTO.getContent());
 
