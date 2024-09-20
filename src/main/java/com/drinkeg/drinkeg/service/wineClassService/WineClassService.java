@@ -8,14 +8,10 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import java.util.List;
 
 public interface WineClassService {
-
-    public List<WineClassResponseDTO> getAllWineClasses(PrincipalDetail principalDetail);
-
-    public WineClassResponseDTO getWineClassById(Long wineClassId, PrincipalDetail principalDetail);
-
+    // WineClass CRUD
+    public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail);
+    public WineClassResponseDTO showWineClassById(Long wineClassId, PrincipalDetail principalDetail);
     public void saveWineClass(WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
-
     public WineClassResponseDTO updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
-
     public void deleteWineClass(Long wineClassId, PrincipalDetail principalDetail);
 }

@@ -13,4 +13,6 @@ public interface WineClassBookMarkService {
     public WineClassBookMarkResponseDTO saveWineClassBookMark(PrincipalDetail principalDetail, WineClassBookMarkRequestDTO wineClassBookMarkRequestDTO);
     public List<WineClassBookMarkResponseDTO> getWineClassBookMarksByUserId(PrincipalDetail principalDetail);
     public void deleteWineClassBookMarkById(PrincipalDetail principalDetail, Long wineClassBookMarkId);
+
+    public boolean isLiked(Member member, WineClass wineClass);
 }

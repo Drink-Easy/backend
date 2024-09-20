@@ -40,6 +40,7 @@ public class WineServiceImpl implements WineService {
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
+
         // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').
         List<Wine> foundWines = wineRepository.findAllByNameContainingIgnoreCase(searchName);
 
@@ -79,7 +80,7 @@ public class WineServiceImpl implements WineService {
 
         // 와인 생산지로 검색하여 가중치 부여
         for (String wineArea : wineAreaList) {
-            List<Wine> areaContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineArea);
+            List<Wine> areaContainingWines = wineRepository.findAllByAreaContainingIgnoreCase(wineArea);
             for (Wine wine : areaContainingWines) {
                 // 가중치 0.2 부여
                 wineScoreMap.put(wine, wineScoreMap.getOrDefault(wine, 0.0) + 0.2);

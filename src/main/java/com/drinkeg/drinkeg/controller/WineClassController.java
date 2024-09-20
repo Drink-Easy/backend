@@ -21,13 +21,13 @@ public class WineClassController {
 
     @GetMapping("")
     public ApiResponse<List<WineClassResponseDTO>> getAllWineClasses(@AuthenticationPrincipal PrincipalDetail principalDetail) {
-        List<WineClassResponseDTO> wineClassResponseDTOS = wineClassService.getAllWineClasses(principalDetail);
+        List<WineClassResponseDTO> wineClassResponseDTOS = wineClassService.showAllWineClasses(principalDetail);
         return ApiResponse.onSuccess(wineClassResponseDTOS);
     }
 
     @GetMapping("/{wineClassId}")
     public ApiResponse<WineClassResponseDTO> getWineClassById(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable Long wineClassId) {
-        WineClassResponseDTO wineClassResponseDTO = wineClassService.getWineClassById(wineClassId, principalDetail);
+        WineClassResponseDTO wineClassResponseDTO = wineClassService.showWineClassById(wineClassId, principalDetail);
         return ApiResponse.onSuccess(wineClassResponseDTO);
     }
 
