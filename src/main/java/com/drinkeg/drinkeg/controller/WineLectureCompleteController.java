@@ -22,9 +22,9 @@ public class WineLectureCompleteController {
         return ApiResponse.onSuccess(wineLectureCompleteResponseDTOS);
     }
 
-    @PostMapping("/wine-class/{wineClassId}")
-    public ApiResponse<WineLectureCompleteResponseDTO> createWineLectureComplete(@PathVariable Long wineClassId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        WineLectureCompleteResponseDTO wineLectureCompleteResponseDTO = wineLectureCompleteService.saveWineLectureComplete(wineClassId, principalDetail);
+    @PostMapping("/wine-lecture/{wineLectureId}")
+    public ApiResponse<WineLectureCompleteResponseDTO> createWineLectureComplete(@PathVariable Long wineLectureId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        WineLectureCompleteResponseDTO wineLectureCompleteResponseDTO = wineLectureCompleteService.saveWineLectureComplete(wineLectureId, principalDetail);
         return ApiResponse.onSuccess(wineLectureCompleteResponseDTO);
     }
 

@@ -75,7 +75,13 @@ public enum ErrorStatus implements BaseCode {
 
     // WineLecture Error
     WINE_LECTURE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_LECTURE4001", "와인 강의가 없습니다."),
-    WINE_LECTURE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_LECTURE4002", "권한이 없는 강의입니다.");
+    WINE_LECTURE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_LECTURE4002", "권한이 없는 강의입니다."),
+
+    // WineLectureComplete Error
+    WINE_LECTURE_COMPLETE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_LECTURE_COMPLETE4001", "수강 이력이 없습니다."),
+    WINE_LECTURE_COMPLETE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "WINE_LECTURE_COMPLETE4002", "이미 수강 완료한 강의입니다."),
+    WINE_LECTURE_COMPLETE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_LECTURE_COMPLETE4003", "권한이 없는 강의 수강 이력입니다.");
+
 
 
 
