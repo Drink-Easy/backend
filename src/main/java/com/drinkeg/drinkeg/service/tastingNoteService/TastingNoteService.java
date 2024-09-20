@@ -5,20 +5,21 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
 import java.util.List;
 
 
 public interface TastingNoteService {
 
-    public void saveNote(NoteRequestDTO noteRequestDTO, Member member);
+    public void saveNote(NoteRequestDTO noteRequestDTO, PrincipalDetail principalDetail);
 
-    public NoteResponseDTO showNoteById(Long noteId, Member member);
+    public NoteResponseDTO showNoteById(Long noteId,PrincipalDetail principalDetail);
 
-    public List<NotePriviewResponseDTO> findAllNoteByMember(Member member);
+    public List<NotePriviewResponseDTO> findAllNote(PrincipalDetail principalDetail);
 
-    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, Member member);
+    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, PrincipalDetail principalDetail);
 
-    public void deleteTastingNote(Long noteId, Member member);
+    public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail);
 
 }

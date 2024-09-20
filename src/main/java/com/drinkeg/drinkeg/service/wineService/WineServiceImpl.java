@@ -31,23 +31,13 @@ public class WineServiceImpl implements WineService {
     @Override
     public List<SearchWineResponseDTO> searchWinesByName(String searchName) {
 
-        // 와인 이름으로 와인을 검색한다.
-        List<Wine> exactMatchWines = wineRepository.findAllByName(searchName);
+        // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').
+        List<Wine> foundWines = wineRepository.findAllByNameContainingIgnoreCase(searchName);
 
-        // 와인 이름을 공백으로 나누어 검색한다.
-        String[] keywords = searchName.split(" ");
-        Set<Wine> searchWines = new LinkedHashSet<>(exactMatchWines);
-        for(String keyword : keywords) {
-            List<Wine> keywordContainingWines = wineRepository.findAllByNameContainingIgnoreCase(keyword);
-            // 와인 이름이 포함된 와인을 추가한다.
-            if(!keywordContainingWines.isEmpty()){
-                searchWines.addAll(keywordContainingWines);
-            }
-
-        }
-
-        // 와인을 NoteWineResponseDTO로 변환한다.
-        return searchWines.stream().map(WineConverter::toSearchWineDTO).collect(Collectors.toList());
+        // 와인을 SearchWineResponseDTO로 변환하여 반환한다.
+        return foundWines.stream()
+                .map(WineConverter::toSearchWineDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -78,7 +68,7 @@ public class WineServiceImpl implements WineService {
 
         // 와인 생산지로 검색하여 가중치 부여
         for (String wineArea : wineAreaList) {
-            List<Wine> areaContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineArea);
+            List<Wine> areaContainingWines = wineRepository.findAllByAreaContainingIgnoreCase(wineArea);
             for (Wine wine : areaContainingWines) {
                 // 가중치 0.2 부여
                 wineScoreMap.put(wine, wineScoreMap.getOrDefault(wine, 0.0) + 0.2);
