@@ -32,7 +32,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
         List<WineLectureComplete> wineLectureCompletes = wineLectureCompleteRepository.findAllByMember(member);
 
         return wineLectureCompletes.stream()
-                .map(wineLectureComplete -> WineLectureCompleteConverter.toWineLectureCompleteResponseDTO(wineLectureComplete))
+                .map(WineLectureCompleteConverter::toWineLectureCompleteResponseDTO)
                 .collect(Collectors.toList());
     }
 
