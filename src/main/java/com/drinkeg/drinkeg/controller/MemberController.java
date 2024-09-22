@@ -6,7 +6,7 @@ import com.drinkeg.drinkeg.apipayLoad.handler.TempHandler;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.JoinDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
+import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponseDTO;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.service.loginService.AppleLoginService;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberRequestDTO;
