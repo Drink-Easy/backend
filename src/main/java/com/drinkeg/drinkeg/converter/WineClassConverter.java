@@ -6,9 +6,6 @@ import com.drinkeg.drinkeg.domain.WineClass;
 import com.drinkeg.drinkeg.dto.WineClassDTO.request.WineClassRequestDTO;
 import com.drinkeg.drinkeg.dto.WineClassDTO.response.WineClassResponseDTO;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class WineClassConverter {
 
     // WineCLass를 WineClassResponseDTO로 변환
@@ -17,7 +14,7 @@ public class WineClassConverter {
                 .id(wineClass.getId())
                 .title(wineClass.getTitle())
                 .thumbnailUrl(wineClass.getThumbnailUrl())
-                .content(wineClass.getContent())
+                .category(wineClass.getCategory())
                 .isLiked(isLiked)
                 .build();
     }
@@ -28,7 +25,7 @@ public class WineClassConverter {
                 .author(author)
                 .title(wineClassRequestDTO.getTitle())
                 .thumbnailUrl(wineClassRequestDTO.getThumbnailUrl())
-                .content(wineClassRequestDTO.getContent())
+                .category(wineClassRequestDTO.getCategory())
                 .build();
     }
 }
