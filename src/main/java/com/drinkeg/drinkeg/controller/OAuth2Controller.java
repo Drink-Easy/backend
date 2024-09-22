@@ -25,8 +25,6 @@ public class OAuth2Controller {
 
         System.out.println("=========start apple login controller============");
 
-        Optional.ofNullable(appleLoginRequestDTO.getIdentityToken())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.IDENTITY_TOKEN_NOT_FOUND));
 
         return ApiResponse.onSuccess(appleLoginService.appleLogin(appleLoginRequestDTO, response));
     }

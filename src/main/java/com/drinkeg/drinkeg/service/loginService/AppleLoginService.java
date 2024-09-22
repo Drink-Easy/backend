@@ -1,9 +1,11 @@
 package com.drinkeg.drinkeg.service.loginService;
 
+import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
+import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.fegin.AppleAuthClient;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.redis.RedisClient;
@@ -40,6 +42,10 @@ public class AppleLoginService {
 
     public LoginResponse appleLogin(AppleLoginRequestDTO appleLoginRequestDTO, HttpServletResponse response)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
             JsonProcessingException {
+
+        if(appleLoginRequestDTO.getIdentityToken() == null){
+            throw new GeneralException(ErrorStatus.IDENTITY_TOKEN_NOT_FOUND);
+        }
 
         System.out.println("--------------apple Login Start---------------");
 
