@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.service.loginService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.JoinDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberRequestDTO;
@@ -69,19 +70,7 @@ public class JoinService {
 
         memberRepository.save(member);
 
-        MemberResponseDTO memberResponseDTO = MemberResponseDTO.builder()
-                .id(member.getId())
-                .name(member.getName())
-                .username(member.getUsername())
-                .role(member.getRole())
-                .isNewbie(member.getIsNewbie())
-                .isFirst(member.getIsFirst())
-                .monthPriceMax(member.getMonthPriceMax())
-                .wineSort(member.getWineSort())
-                .wineArea(member.getWineArea())
-                .wineVariety(member.getWineVariety())
-                .region(member.getRegion())
-                .build();
+        MemberResponseDTO memberResponseDTO = MemberConverter.toMemberResponseDTO(member);
 
         return memberResponseDTO;
     }
