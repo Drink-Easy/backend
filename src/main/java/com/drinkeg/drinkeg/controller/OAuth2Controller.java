@@ -7,6 +7,7 @@ import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.service.loginService.AppleLoginService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+@Tag(name = "Authorization", description = "스프링 시큐리티 관련 API")
 @RestController
 @RequiredArgsConstructor
 public class OAuth2Controller {
