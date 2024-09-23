@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class NoteResponseDTO {
     private String imageUrl;
 
     private String color;
+    private LocalDate tasteDate;
 
     // 점수 0 ~ 5
     private int sugarContent;

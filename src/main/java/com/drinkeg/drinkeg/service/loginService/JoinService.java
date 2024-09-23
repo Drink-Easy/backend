@@ -18,22 +18,25 @@ public class JoinService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MemberConverter memberConverter;
 
     public void join(JoinDTO joinDTO) {
 
         String username = joinDTO.getUsername();
         String password = joinDTO.getPassword();
+        String rePassword = joinDTO.getRePassword();
 
         if (memberRepository.existsByUsername(username)) {
             throw new GeneralException(ErrorStatus.MEMBER_ALREADY_EXIST);
         }
+        if (!password.equals(rePassword)){
+            throw new GeneralException(ErrorStatus.PASSWORD_NOT_MATCH);
+        }
+        if(!isValidPassword(password)){
+            throw new GeneralException(ErrorStatus.PASSWORD_NOT_INVALID);
+        }
 
-        Member member = Member.builder()
-                .username(username)
-                .password(bCryptPasswordEncoder.encode(password))
-                .role("ROLE_USER")
-                .isFirst(true)
-                .build();
+        Member member = memberConverter.toMember(username,(bCryptPasswordEncoder.encode(password) ),true);
 
         memberRepository.save(member);
     }
@@ -73,5 +76,18 @@ public class JoinService {
         MemberResponseDTO memberResponseDTO = MemberConverter.toMemberResponseDTO(member);
 
         return memberResponseDTO;
+    }
+
+    public boolean isValidPassword(String password) {
+
+        // 영문자, 숫자, 특수문자 각각에 대한 패턴
+        String letterPattern = ".*[A-Za-z].*";
+        String digitPattern = ".*\\d.*";
+
+        boolean hasLetter = password.matches(letterPattern);
+        boolean hasDigit = password.matches(digitPattern);
+
+        // 세 가지 조건이 모두 충족되는지 확인
+        return hasLetter && hasDigit;
     }
 }

@@ -82,4 +82,15 @@ public class WineClassServiceImpl implements WineClassService {
 
         wineClassRepository.deleteById(wineClassId);
     }
+
+    @Override
+    public List<WineClass> getAllWineClasses() {
+        return wineClassRepository.findAll();
+    }
+
+    @Override
+    public WineClass getWineClassById(Long wineClassId) {
+        return wineClassRepository.findById(wineClassId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
+    }
 }

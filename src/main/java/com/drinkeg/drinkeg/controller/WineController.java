@@ -3,13 +3,14 @@ package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.converter.WineConverter;
-import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -25,8 +26,10 @@ public class WineController {
 
     // 검색
     @GetMapping
-    public ApiResponse<List<SearchWineResponseDTO>> searchWine(@RequestParam String searchName) {
-        List<SearchWineResponseDTO> searchWineResponseDTOS = wineService.searchWinesByName(searchName);
+    public ApiResponse<List<SearchWineResponseDTO>> searchWine(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                                               @RequestParam String searchName) {
+
+        List<SearchWineResponseDTO> searchWineResponseDTOS = wineService.searchWinesByName(principalDetail, searchName);
         return ApiResponse.onSuccess(searchWineResponseDTOS);
     }
 

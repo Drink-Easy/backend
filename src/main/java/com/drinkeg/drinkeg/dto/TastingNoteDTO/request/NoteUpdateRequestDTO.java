@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class NoteUpdateRequestDTO {
     private Long wineId;
 
     private String color;
+    private LocalDate tastingDate;
 
     @Min(value = 0, message = "당도는 0 이상 5 이하의 정수 값이어야 합니다.")
     @Max(value = 5, message = "당도는 0 이상 5 이하의 정수 값이어야 합니다.")
