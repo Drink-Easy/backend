@@ -8,8 +8,11 @@ import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineRepository;
+import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.wineWishlistService.WineWishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,17 +29,26 @@ import java.util.stream.Collectors;
 @Transactional
 public class WineServiceImpl implements WineService {
     private final WineRepository wineRepository;
+
+    private final MemberService memberService;
+    private final WineWishlistService wineWishlistService;
     private final S3Service s3Service;
 
     @Override
-    public List<SearchWineResponseDTO> searchWinesByName(String searchName) {
+    public List<SearchWineResponseDTO> searchWinesByName(PrincipalDetail principalDetail, String searchName) {
+
+        // 회원을 조회한다.
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+
 
         // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').
         List<Wine> foundWines = wineRepository.findAllByNameContainingIgnoreCase(searchName);
 
-        // 와인을 SearchWineResponseDTO로 변환하여 반환한다.
+        // 와인을 NoteWineResponseDTO로 변환한다.
         return foundWines.stream()
-                .map(WineConverter::toSearchWineDTO)
+                .map(wine -> WineConverter.toSearchWineResponseDTO(wine,
+                        wineWishlistService.isLiked(member, wine))
+                )
                 .collect(Collectors.toList());
     }
 

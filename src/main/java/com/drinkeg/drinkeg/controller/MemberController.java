@@ -3,17 +3,15 @@ package com.drinkeg.drinkeg.controller;
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.apipayLoad.handler.TempHandler;
-import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.JoinDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
+import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponseDTO;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.service.loginService.AppleLoginService;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.loginService.JoinService;
-import com.drinkeg.drinkeg.service.loginService.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +38,9 @@ public class MemberController {
 
     @PatchMapping("/member")
     public ApiResponse<MemberResponseDTO> addMemberDetail(@RequestBody MemberRequestDTO memberRequestDTO, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        return ApiResponse.onSuccess(joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername()));
+
+        MemberResponseDTO memberResponseDTO = joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername());
+        return ApiResponse.onSuccess(memberResponseDTO);
     }
 
 

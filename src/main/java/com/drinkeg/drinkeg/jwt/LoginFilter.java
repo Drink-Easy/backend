@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.jwt;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
+import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.service.loginService.TokenService;
@@ -98,7 +98,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 첫 로그인 여부 가져오기
         Boolean isFirst = principalDetail.getIsFirst();
 
-        LoginResponse loginResponse = LoginResponse.builder()
+        LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
                 .username(username)
                 .role(role)
                 .isFirst(isFirst)
@@ -108,7 +108,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setCharacterEncoding("UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getWriter(), loginResponse);
+        objectMapper.writeValue(response.getWriter(), loginResponseDTO);
 
     }
 

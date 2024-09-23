@@ -1,9 +1,11 @@
 package com.drinkeg.drinkeg.service.loginService;
 
+import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponse;
+import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponseDTO;
+import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.fegin.AppleAuthClient;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.redis.RedisClient;
@@ -38,8 +40,12 @@ public class AppleLoginService {
     private final JWTUtil jwtUtil;
     private final MemberConverter memberConverter;
 
-    public LoginResponse appleLogin(AppleLoginRequestDTO appleLoginRequestDTO, HttpServletResponse response)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
+    public LoginResponseDTO appleLogin(AppleLoginRequestDTO appleLoginRequestDTO, HttpServletResponse response)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
             JsonProcessingException {
+
+        if(appleLoginRequestDTO.getIdentityToken() == null){
+            throw new GeneralException(ErrorStatus.IDENTITY_TOKEN_NOT_FOUND);
+        }
 
         System.out.println("--------------apple Login Start---------------");
 
@@ -70,7 +76,7 @@ public class AppleLoginService {
 
         }
 
-        return buildLoginResponse(member);
+        return buildLoginResponseDTO(member);
     }
 
     public void jwtProvider(Member member, HttpServletResponse response) {
@@ -87,8 +93,8 @@ public class AppleLoginService {
         redisClient.setValue(member.getUsername(), refreshToken, 864000000L);
     }
 
-    private LoginResponse buildLoginResponse(Member member) {
-        return LoginResponse.builder()
+    private LoginResponseDTO buildLoginResponseDTO(Member member) {
+        return LoginResponseDTO.builder()
                 .username(member.getUsername())
                 .role(member.getRole())
                 .isFirst(member.getIsFirst())
@@ -107,7 +113,6 @@ public class AppleLoginService {
 
         // identity Token에서 claims 추출
         return tokenService.getTokenClaims(identityToken, publicKey);
-
 
 
 
