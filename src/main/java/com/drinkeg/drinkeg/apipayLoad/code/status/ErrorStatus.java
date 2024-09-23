@@ -54,6 +54,7 @@ public enum ErrorStatus implements BaseCode {
     USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 아이디가 없습니다."),
     PASSWORD_NOT_FUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 비밀번호가 없습니다."),
     MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 아이디입니다."),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "MEMBER4001", "접근 권한이 없습니다."),
 
     // Token Error
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4001", "유효하지 않은 엑세스 토큰입니다."),
