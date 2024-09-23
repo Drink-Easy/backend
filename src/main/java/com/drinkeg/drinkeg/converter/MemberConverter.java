@@ -9,7 +9,8 @@ import java.util.Map;
 
 @Component
 public class MemberConverter {
-    public Member toMember(String username, Map<String, Object> claims) {
+
+    public Member toAppleMember(String username, Map<String, Object> claims) {
         return Member.builder()
                 .username(username)
                 .email((String) claims.get("email"))  // email 값을 claims에서 추출
@@ -24,5 +25,13 @@ public class MemberConverter {
               .name(member.getName())
               .email(member.getEmail())
               .build();
+    }
+    public Member toMember(String username, String password, boolean isBoolean){
+        return Member.builder()
+                .username(username)
+                .password(password)
+                .role("ROLE_USER")
+                .isFirst(isBoolean)
+                .build();
     }
 }

@@ -60,7 +60,7 @@ public class AppleLoginService {
 
         if (existData.isEmpty()){
 
-            member = memberConverter.toMember(username, claims);
+            member = memberConverter.toAppleMember(username, claims);
             memberRepository.save(member);
             System.out.println("첫 로그인임");
             jwtProvider(member, response);
