@@ -3,7 +3,9 @@ package com.drinkeg.drinkeg.jwt;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.redis.RedisClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -16,6 +18,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+
+import static com.drinkeg.drinkeg.jwt.JWTException.*;
 
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
@@ -61,7 +65,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         if (refresh == null) {
 
             // response status code
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_NOT_FOUND);
             return;
         }
 
@@ -71,7 +75,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         } catch (ExpiredJwtException e) {
 
             // response status code
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_EXPIRED);
             return;
         }
 
@@ -80,7 +84,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         if (!category.equals("refresh")) {
 
             // response status code
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            jwtExceptionHandler(response, ErrorStatus.INVALID_REFRESH_TOKEN);
             return;
         }
 
@@ -105,5 +109,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         response.addCookie(cookie);
         response.setStatus(HttpServletResponse.SC_OK);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getWriter(), "로그아웃 성공");
     }
 }
