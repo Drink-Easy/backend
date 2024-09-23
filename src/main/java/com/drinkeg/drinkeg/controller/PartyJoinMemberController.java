@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class PartyJoinMemberController {
 
     private final PartyJoinMemberService partyJoinMemberService;
-    private final MemberService memberService;
 
     // 특정 멤버가 특정 모임에 참가하는 API
     @PostMapping("/{partyId}")
@@ -23,12 +22,9 @@ public class PartyJoinMemberController {
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("partyId") Long partyId) {
 
-        // 현재 로그인한 사용자 정보 가져오기
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
-        Long memberId = foundMember.getId();
-
         // 서비스에서 멤버의 모임 참가 처리
-        partyJoinMemberService.participateInParty(memberId, partyId);
+        partyJoinMemberService.participateInParty(principalDetail, partyId);
+
         return ApiResponse.onSuccess("참가 완료");
     }
 
@@ -38,10 +34,8 @@ public class PartyJoinMemberController {
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("partyId") Long partyId) {
 
-        // 현재 로그인한 사용자 정보 가져오기
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
-        Long memberId = foundMember.getId();
-        partyJoinMemberService.cancelPartyJoin(memberId, partyId);
+        partyJoinMemberService.cancelPartyJoin(principalDetail, partyId);
+
         return ApiResponse.onSuccess("모임 참가가 취소되었습니다.");
     }
 }

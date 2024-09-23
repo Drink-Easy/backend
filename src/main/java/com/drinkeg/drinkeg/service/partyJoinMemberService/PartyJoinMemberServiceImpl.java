@@ -5,10 +5,11 @@ import com.drinkeg.drinkeg.converter.PartyJoinMemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Party;
 import com.drinkeg.drinkeg.domain.PartyJoinMember;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.PartyJoinMemberRepository;
-import com.drinkeg.drinkeg.repository.PartyRepository;
+import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.partyService.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +18,26 @@ import org.springframework.stereotype.Service;
 public class PartyJoinMemberServiceImpl implements PartyJoinMemberService{
 
     private final PartyJoinMemberRepository partyJoinMemberRepository;
-    private final MemberRepository memberRepository;
-    private final PartyRepository partyRepository;
-    private final PartyJoinMemberConverter partyJoinMemberConverter; // Converter 주입
+    private final PartyJoinMemberConverter partyJoinMemberConverter;
+    private final MemberService memberService;
+    private final PartyService partyService;
+
+    @Override
+    public PartyJoinMember save(PartyJoinMember partyJoinMember) {
+        return partyJoinMemberRepository.save(partyJoinMember);
+    }
+
+    @Override
+    public long countByParty(Party party) {
+        return partyJoinMemberRepository.countByParty(party);
+    }
 
     // 멤버가 특정 모임에 참가하는 로직
-    public void participateInParty(Long memberId, Long partyId) {
+    @Override
+    public void participateInParty(PrincipalDetail principalDetail, Long partyId) {
         // 멤버와 파티를 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-        Party party = partyRepository.findById(partyId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Party party = partyService.findPartyById(partyId);
 
         // 이미 해당 모임에 참가했는지 확인
         if (partyJoinMemberRepository.existsByMemberAndParty(member, party)) {
@@ -46,19 +56,18 @@ public class PartyJoinMemberServiceImpl implements PartyJoinMemberService{
         // 참가자 수를 partyJoinMember 테이블을 기반으로 갱신
         long updatedParticipantCount = partyJoinMemberRepository.countByParty(party);
         party.setParticipateMemberNum((int) updatedParticipantCount);  // 업데이트된 참가자 수를 설정
-        partyRepository.save(party);  // 업데이트된 참가자 수를 저장
+        partyService.saveParty(party);
     }
 
-
-    public void cancelPartyJoin(Long memberId, Long partyId) {
+    @Override
+    public void cancelPartyJoin(PrincipalDetail principalDetail, Long partyId) {
         // 멤버와 파티를 조회
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-        Party party = partyRepository.findById(partyId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Long memberId = foundMember.getId();
+        Party party = partyService.findPartyById(partyId);
 
         // 사용자가 모임에 참가했는지 확인 (참가하지 않았으면 예외 발생)
-        PartyJoinMember partyJoinMember = partyJoinMemberRepository.findByMemberAndParty(member, party)
+        PartyJoinMember partyJoinMember = partyJoinMemberRepository.findByMemberAndParty(foundMember, party)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOT_FOUND_PARTY_JOIN));
 
         // 사용자가 모임의 호스트인지 확인 (호스트는 참가 취소할 수 없음)
@@ -72,6 +81,6 @@ public class PartyJoinMemberServiceImpl implements PartyJoinMemberService{
         // 참가자 수를 partyJoinMember 테이블을 기반으로 갱신
         long updatedParticipantCount = partyJoinMemberRepository.countByParty(party);
         party.setParticipateMemberNum((int) updatedParticipantCount);  // 업데이트된 참가자 수를 설정
-        partyRepository.save(party);  // 업데이트된 참가자 수를 저장
+        partyService.saveParty(party);
     }
 }
