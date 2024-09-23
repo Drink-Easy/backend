@@ -9,13 +9,13 @@ import com.drinkeg.drinkeg.domain.Party;
 import com.drinkeg.drinkeg.domain.Recomment;
 import com.drinkeg.drinkeg.dto.CommentDTO.CommentRequestDTO;
 import com.drinkeg.drinkeg.dto.CommentDTO.CommentResponseDTO;
-import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.CommentRepository;
-import com.drinkeg.drinkeg.repository.MemberRepository;
-import com.drinkeg.drinkeg.repository.PartyRepository;
-import com.drinkeg.drinkeg.repository.RecommentRepository;
+import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.partyService.PartyService;
+import com.drinkeg.drinkeg.service.recommentService.RecommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,18 +31,23 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentConverter commentConverter;
+
     private final RecommentConverter recommentConverter;
-    private final RecommentRepository recommentRepository;
-    // 검증을 위한 repository 접근
-    private final PartyRepository partyRepository;
-    private final MemberRepository memberRepository;
+    private final RecommentService recommentService;
+    private final PartyService partyService;
+    private final MemberService memberService;
+
+    @Override
+    public Comment findByIdOrThrow(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+    }
 
 
     @Override
     public List<CommentResponseDTO> getCommentsByPartyId(Long partyId) {
         // party 존재 여부 검증
-        Party party = partyRepository.findById(partyId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+        Party party = partyService.findPartyById(partyId);
 
         // 특정 모임의 댓글 조회
         List<Comment> comments = commentRepository.findByPartyId(partyId);
@@ -61,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
             commentDTO.setCreatedDate(createdDate);
 
             // 대댓글 처리
-            List<Recomment> recomments = recommentRepository.findByCommentId(comment.getId());
+            List<Recomment> recomments = recommentService.findByCommentId(comment.getId());
             List<RecommentResponseDTO> recommentDTOs = recomments.stream()
                     .map(recomment -> {
                         RecommentResponseDTO recommentDTO = recommentConverter.toResponse(recomment);
@@ -88,54 +93,36 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public void createComment(CommentRequestDTO commentRequest, Long memberId) {
+    public void createComment(CommentRequestDTO commentRequest, PrincipalDetail principalDetail) {
+
 
         // Party와 Member 존재 여부 검증
-        Party party = partyRepository.findById(commentRequest.getPartyId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Party party = partyService.findPartyById(commentRequest.getPartyId());
 
         // Comment 엔티티 생성
-        Comment comment = commentConverter.toEntity(commentRequest, party, member);
+        Comment comment = commentConverter.toEntity(commentRequest, party, foundMember);
 
         // 댓글 저장
         Comment savedComment = commentRepository.save(comment);
     }
 
 
-    @Override
-    public void createRecomment(Long commentId, RecommentRequestDTO recommentRequest, Member member) {
-        // 댓글 존재 여부 검증
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
-
-        // 회원 존재 여부 검증
-        Member foundMember = memberRepository.findById(member.getId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-
-        // 대댓글 엔티티 생성
-        Recomment recomment = recommentConverter.fromRequest(recommentRequest, comment, foundMember);
-
-        // 대댓글 저장
-        Recomment savedRecomment = recommentRepository.save(recomment);
-
-    }
 
     @Override
-    public void deleteComment(Long commentId, Member member) {
+    public void deleteComment(Long commentId, PrincipalDetail principalDetail) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
         // 현재 로그인 한 사용자가 작성자인지 확인
-        if(comment.getMember() == null || !comment.getMember().equals(member)) {
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        if(comment.getMember() == null || !comment.getMember().equals(foundMember)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }
 
         // 대댓글 여부 확인
-        boolean hasRecomments = recommentRepository.existsByCommentId(commentId);
+        boolean hasRecomments = recommentService.existsByCommentId(commentId);
 
         if (hasRecomments) {
             throw new GeneralException(ErrorStatus.COMMENT_HAS_RECOMMENTS);
@@ -146,18 +133,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateCommentStatus(Long commentId, Member member) {
+    public void updateCommentStatus(Long commentId, PrincipalDetail principalDetail) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
         // 현재 로그인 한 사용자가 작성자인지 확인
-        if(comment.getMember() == null || !comment.getMember().equals(member)) {
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        if(comment.getMember() == null || !comment.getMember().equals(foundMember)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }
 
         // 대댓글 여부 확인
-        boolean hasRecomments = recommentRepository.existsByCommentId(commentId);
+        boolean hasRecomments = recommentService.existsByCommentId(commentId);
 
         if (hasRecomments) {
             // 대댓글이 있는 경우: isDeleted 상태를 true로 설정
@@ -169,24 +157,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-    @Override
-    public void deleteRecomment(Long commentId, Long recommentId, Member member) {
-        // 댓글 존재 여부 검증
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
-
-        // 대댓글 존재 여부 검증
-        Recomment recomment = recommentRepository.findById(recommentId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.RECOMMENT_NOT_FOUND));
-
-        // 현재 로그인 한 사용자가 작성자인지 확인
-        if(comment.getMember() == null || !comment.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
-        }
-
-        // 대댓글 삭제
-        recommentRepository.delete(recomment);
-    }
 
 
     // 시간 계산 메소드
