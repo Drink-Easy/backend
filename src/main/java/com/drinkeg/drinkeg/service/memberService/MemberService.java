@@ -5,9 +5,9 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
 public interface MemberService {
 
-    public Member findMemberById(Long memberId);
+    public Member getMemberById(Long memberId);
 
-    public Member findMemberByUsername(String username);
+    public Member getMemberByUsername(String username);
 
     public Member loadMemberByPrincipleDetail(PrincipalDetail principalDetail);
 }

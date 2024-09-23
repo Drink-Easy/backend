@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +22,14 @@ public class NoteRequestDTO {
     @NotBlank(message = "색상 선택 필수입니다.")
     private String color;
 
+    @NotNull(message = "시음 날짜는 필수입니다")
+    private LocalDate tasteDate;
+
     @NotNull(message = "당도 선택은 필수입니다.")
     @Min(value = 0, message = "당도는 0 이상 10 이하의 정수 값이어야 합니다.")
     @Max(value = 10, message = "당도는 0 이상 10 이하의 정수 값이어야 합니다.")
     private int sugarContent;
+
 
     @NotNull(message = "산도 선택은 필수입니다.")
     @Min(value = 0, message = "산도는 0 이상 10 이하의 정수 값이어야 합니다.")

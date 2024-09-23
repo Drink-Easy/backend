@@ -15,18 +15,16 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
 
     @Override
-    public Member findMemberById(Long memberId) {
+    public Member getMemberById(Long memberId) {
 
-        return memberRepository.findById(memberId).orElseThrow(() -> {
-            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
-        });
+        return memberRepository.findById(memberId).orElseThrow(()
+                -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
     @Override
-    public Member findMemberByUsername(String username) {
-        return memberRepository.findByUsername(username).orElseThrow(() -> {
-            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
-        });
+    public Member getMemberByUsername(String username) {
+        return memberRepository.findByUsername(username).orElseThrow(()
+                -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
     @Override
