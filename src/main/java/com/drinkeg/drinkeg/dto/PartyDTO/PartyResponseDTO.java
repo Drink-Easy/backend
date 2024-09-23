@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder
@@ -31,5 +32,6 @@ public class PartyResponseDTO {
 
     private String place;
 
+    private LocalDateTime createdAt;
     //private  partyWine;
 }

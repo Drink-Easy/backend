@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface WineRepository extends JpaRepository<Wine, Long> {
 
     // 검색한 와인 이름이 포함된 모든 와인을 찾는다.
-    List<Wine> findAllByNameContainingIgnoreCase(String name);
+    List<Wine> findAllByNameContainingIgnoreCaseOrderByName(String name);
 
     // 추천 와인 조회를 위한 쿼리
     List<Wine> findAllBySortContainingIgnoreCase(String sort);

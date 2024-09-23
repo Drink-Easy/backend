@@ -5,13 +5,14 @@ import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface WineService {
 
-    public List<SearchWineResponseDTO> searchWinesByName(String searchName);
+    public List<SearchWineResponseDTO> searchWinesByName(PrincipalDetail principalDetail, String searchName);
 
     public Wine findWineById(Long wineId);
 

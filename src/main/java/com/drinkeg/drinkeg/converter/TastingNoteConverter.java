@@ -18,6 +18,7 @@ public class TastingNoteConverter {
 
                 .wine(wine)
                 .color(noteRequestDTO.getColor())
+                .tasteDate(noteRequestDTO.getTasteDate())
 
                 .sugarContent(noteRequestDTO.getSugarContent())
                 .acidity(noteRequestDTO.getAcidity())
@@ -47,6 +48,7 @@ public class TastingNoteConverter {
                 .imageUrl(wine.getImageUrl())
 
                 .color(tastingNote.getColor())
+                .tasteDate(tastingNote.getTasteDate())
 
                 .sugarContent(tastingNote.getSugarContent())
                 .acidity(tastingNote.getAcidity())

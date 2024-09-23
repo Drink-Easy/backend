@@ -9,7 +9,7 @@ public class WineWishlistConverter {
     public static WineWishlistResponseDTO toWineWishlistResponseDTO(WineWishlist wineWishlist) {
         return WineWishlistResponseDTO.builder()
                 .id(wineWishlist.getId())
-                .wine(WineConverter.toSearchWineDTO(wineWishlist.getWine()))
+                .wine(WineConverter.toSearchWineResponseDTO(wineWishlist.getWine()))
                 .build();
     }
 

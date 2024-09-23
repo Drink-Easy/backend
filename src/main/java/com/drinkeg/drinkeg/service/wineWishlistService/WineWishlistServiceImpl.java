@@ -63,4 +63,9 @@ public class WineWishlistServiceImpl implements WineWishlistService{
 
         wineWishlistRepository.deleteById(wineWishlistId);
     }
+
+    @Override
+    public boolean isLiked(Member member, Wine wine) {
+        return wineWishlistRepository.existsByMemberAndWine(member, wine);
+    }
 }
