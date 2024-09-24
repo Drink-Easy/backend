@@ -33,7 +33,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
         List<WineLecture> wineLectures = wineLectureRepository.findAll();
         return wineLectures.stream()
-                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture))
+                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, member))
                 .collect(Collectors.toList());
     }
 
@@ -45,7 +45,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
         List<WineLecture> wineLectures = wineLectureRepository.findByWineClass(wineClass);
         return wineLectures.stream()
-                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture))
+                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, member))
                 .collect(Collectors.toList());
     }
 
@@ -55,7 +55,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
-        return WineLectureConverter.toWineLectureResponseDTO(wineLecture);
+        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, member);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class WineLectureServiceImpl implements WineLectureService {
         WineLecture wineLecture = WineLectureConverter.toWineLecture(wineLectureRequestDTO, wineClass, member);
 
         wineLectureRepository.save(wineLecture);
-        return WineLectureConverter.toWineLectureResponseDTO(wineLecture);
+        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, member);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class WineLectureServiceImpl implements WineLectureService {
                 .updateTitle(wineLectureRequestDTO.getTitle())
                 .updateContent(wineLectureRequestDTO.getContent());
 
-        return WineLectureConverter.toWineLectureResponseDTO(wineLecture);
+        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, member);
     }
 
     @Override

@@ -8,8 +8,11 @@ import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineRepository;
+import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.wineWishlistService.WineWishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,28 +29,27 @@ import java.util.stream.Collectors;
 @Transactional
 public class WineServiceImpl implements WineService {
     private final WineRepository wineRepository;
+
+    private final MemberService memberService;
+    private final WineWishlistService wineWishlistService;
     private final S3Service s3Service;
 
     @Override
-    public List<SearchWineResponseDTO> searchWinesByName(String searchName) {
+    public List<SearchWineResponseDTO> searchWinesByName(PrincipalDetail principalDetail, String searchName) {
 
-        // 와인 이름으로 와인을 검색한다.
-        List<Wine> exactMatchWines = wineRepository.findAllByName(searchName);
+        // 회원을 조회한다.
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
-        // 와인 이름을 공백으로 나누어 검색한다.
-        String[] keywords = searchName.split(" ");
-        Set<Wine> searchWines = new LinkedHashSet<>(exactMatchWines);
-        for(String keyword : keywords) {
-            List<Wine> keywordContainingWines = wineRepository.findAllByNameContainingIgnoreCase(keyword);
-            // 와인 이름이 포함된 와인을 추가한다.
-            if(!keywordContainingWines.isEmpty()){
-                searchWines.addAll(keywordContainingWines);
-            }
 
-        }
+        // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').
+        List<Wine> foundWines = wineRepository.findAllByNameContainingIgnoreCase(searchName);
 
         // 와인을 NoteWineResponseDTO로 변환한다.
-        return searchWines.stream().map(WineConverter::toSearchWineDTO).collect(Collectors.toList());
+        return foundWines.stream()
+                .map(wine -> WineConverter.toSearchWineResponseDTO(wine,
+                        wineWishlistService.isLiked(member, wine))
+                )
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -78,7 +80,7 @@ public class WineServiceImpl implements WineService {
 
         // 와인 생산지로 검색하여 가중치 부여
         for (String wineArea : wineAreaList) {
-            List<Wine> areaContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineArea);
+            List<Wine> areaContainingWines = wineRepository.findAllByAreaContainingIgnoreCase(wineArea);
             for (Wine wine : areaContainingWines) {
                 // 가중치 0.2 부여
                 wineScoreMap.put(wine, wineScoreMap.getOrDefault(wine, 0.0) + 0.2);

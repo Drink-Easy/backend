@@ -25,7 +25,10 @@ public enum ErrorStatus implements BaseCode {
     // Party Error
     PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTY4001", "모임이 없습니다."),
     INVALID_PARTY_REQUEST(HttpStatus.BAD_REQUEST, "PARTY4002", "모든 모임 정보가 입력되지 않았습니다."),
-    NOT_YOUR_PARTY(HttpStatus.BAD_REQUEST, "PARTY4003", "모임 개설자가 아닙니다."),
+    INVALID_PARTY_REQUEST_LIMITMEMBERNUM(HttpStatus.BAD_REQUEST, "PARTY4003", "현재 참가자보다 적은 제한인원을 설정할 수 없습니다."),
+    NOT_YOUR_PARTY(HttpStatus.BAD_REQUEST, "PARTY4004", "모임 개설자가 아닙니다."),
+    PARTY_FULL(HttpStatus.BAD_REQUEST, "PARTY4006", "모임 인원이 가득 찼습니다."),
+    INVALID_SORT_TYPE(HttpStatus.BAD_REQUEST, "PARTY4007", "정렬방식이 유효하지 않습니다."),
 
     // Comment Error
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT4001", "댓글이 없습니다."),
@@ -35,6 +38,13 @@ public enum ErrorStatus implements BaseCode {
 
     RECOMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECOMMENT4001", "대댓글을 찾을 수 없습니다."),
     NOT_YOUR_COMMENT(HttpStatus.BAD_REQUEST,"COMMENT4004", "댓글 작성자가 아닙니다."), // 대댓글의 경우에도 사용
+
+    // PartyJoinMember Error
+    NOT_FOUND_PARTY_JOIN(HttpStatus.BAD_REQUEST, "JOIN4001", "모임에 참가한 기록이 없습니다."),
+    EXIST_IN_PARTY(HttpStatus.BAD_REQUEST, "JOIN4002", "이미 참가한 모임입니다."),
+    HOST_CANNOT_LEAVE(HttpStatus.BAD_REQUEST,"JOIN4003", "호스트는 모임을 탈퇴할 수 없습니다."),
+
+
 
     // Wine class Error
     WINE_CLASS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_CLASS4001", "와인 클래스가 없습니다."),
@@ -53,7 +63,10 @@ public enum ErrorStatus implements BaseCode {
     AUTH_REQUEST_BODY_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "Authentication Request Body를 읽지 못했습니다."),
     USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 아이디가 없습니다."),
     PASSWORD_NOT_FUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 비밀번호가 없습니다."),
+    PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST,"MEMBER4001","재입력한 비밀번호와 일치하지 않습니다."),
+    PASSWORD_NOT_INVALID(HttpStatus.BAD_REQUEST,"MEMBER4001","유효하지않은 비밀번호입니다"),
     MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 아이디입니다."),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "MEMBER4001", "접근 권한이 없습니다."),
 
     // Token Error
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4001", "유효하지 않은 엑세스 토큰입니다."),
@@ -81,8 +94,6 @@ public enum ErrorStatus implements BaseCode {
     WINE_LECTURE_COMPLETE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_LECTURE_COMPLETE4001", "수강 이력이 없습니다."),
     WINE_LECTURE_COMPLETE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "WINE_LECTURE_COMPLETE4002", "이미 수강 완료한 강의입니다."),
     WINE_LECTURE_COMPLETE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_LECTURE_COMPLETE4003", "권한이 없는 강의 수강 이력입니다.");
-
-
 
 
     private final HttpStatus httpStatus;
