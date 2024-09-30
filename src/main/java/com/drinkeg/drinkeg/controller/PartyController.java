@@ -77,9 +77,9 @@ public class PartyController {
     // 모임 수정
     @PutMapping("/{id}")
     public ApiResponse<String> updateParty(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("id") Long id,
-            @RequestBody PartyRequestDTO partyRequestDTO,
-            @AuthenticationPrincipal PrincipalDetail principalDetail) {
+            @RequestBody PartyRequestDTO partyRequestDTO) {
 
         // 서비스로 모임 수정 요청을 보냄
         partyService.updateParty(id, partyRequestDTO, principalDetail);

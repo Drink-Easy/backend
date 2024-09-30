@@ -26,7 +26,7 @@ public enum ErrorStatus implements BaseCode {
     PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTY4001", "모임이 없습니다."),
     INVALID_PARTY_REQUEST(HttpStatus.BAD_REQUEST, "PARTY4002", "모든 모임 정보가 입력되지 않았습니다."),
     INVALID_PARTY_REQUEST_LIMITMEMBERNUM(HttpStatus.BAD_REQUEST, "PARTY4003", "현재 참가자보다 적은 제한인원을 설정할 수 없습니다."),
-    NOT_YOUR_PARTY(HttpStatus.BAD_REQUEST, "PARTY4004", "모임 개설자가 아닙니다."),
+    NOT_YOUR_PARTY(HttpStatus.FORBIDDEN, "PARTY4003", "모임 개설자가 아닙니다."),
     PARTY_FULL(HttpStatus.BAD_REQUEST, "PARTY4006", "모임 인원이 가득 찼습니다."),
     INVALID_SORT_TYPE(HttpStatus.BAD_REQUEST, "PARTY4007", "정렬방식이 유효하지 않습니다."),
 
