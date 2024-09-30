@@ -43,6 +43,19 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
     }
 
+    @Override
+    public long countCommentsAndRecommentsByPartyId(Long partyId) {
+        // 파티에 속한 댓글 수를 조회 (Optional 처리)
+        long commentCount = commentRepository.countByPartyId(partyId).orElse(0L);
+
+        // 파티에 속한 댓글 각각의 대댓글 수를 합산
+        long recommentCount = commentRepository.findByPartyId(partyId).stream()
+                .map(comment -> recommentService.countByCommentId(comment.getId()))
+                .reduce(0L, Long::sum);
+
+        // 댓글 수와 대댓글 수를 합산하여 반환
+        return commentCount + recommentCount;
+    }
 
     @Override
     public List<CommentResponseDTO> getCommentsByPartyId(Long partyId) {

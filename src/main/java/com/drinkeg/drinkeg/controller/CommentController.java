@@ -31,6 +31,15 @@ public class CommentController {
     }
 
 
+    // 특정 모임의 댓글 및 대댓글 개수 조회
+    @GetMapping("/count/{partyId}")
+    public ApiResponse<Long> countCommentsAndRecomments(@PathVariable Long partyId) {
+
+        long count = commentService.countCommentsAndRecommentsByPartyId(partyId);
+
+        return ApiResponse.onSuccess(count); // 숫자를 반환하도록 수정
+    }
+
     // 모임 댓글 생성
     @PostMapping
     public ApiResponse<String> createComment(//필요한게

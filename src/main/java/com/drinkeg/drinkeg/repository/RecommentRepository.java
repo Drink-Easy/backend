@@ -10,6 +10,8 @@ public interface RecommentRepository extends JpaRepository<Recomment, Long> {
 
     boolean existsByCommentId(Long commentId);
 
+    Optional<Long> countByCommentId(Long commentId);
+
     Optional<Recomment> findByIdAndCommentId(Long recommentId, Long commentId);
 
     List<Recomment> findByCommentId(Long commentId);

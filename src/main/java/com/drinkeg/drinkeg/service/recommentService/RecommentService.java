@@ -13,5 +13,5 @@ public interface RecommentService {
     boolean existsByCommentId(Long commentId);
     void createRecomment(Long commentId, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail);
     void deleteRecomment(Long commentId, Long recommentId, PrincipalDetail principalDetail);
-
+    long countByCommentId(Long commentId);
 }

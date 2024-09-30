@@ -14,6 +14,8 @@ public interface CommentService {
 
     Comment findByIdOrThrow(Long commentId);
 
+    long countCommentsAndRecommentsByPartyId(Long partyId);
+
     void createComment(CommentRequestDTO commentRequest, PrincipalDetail principalDetail);
 
     void deleteComment(Long commentId, PrincipalDetail principalDetail);
