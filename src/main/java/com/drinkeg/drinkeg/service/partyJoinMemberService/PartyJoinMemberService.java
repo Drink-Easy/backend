@@ -1,7 +1,16 @@
 package com.drinkeg.drinkeg.service.partyJoinMemberService;
 
-public interface PartyJoinMemberService {
-    void participateInParty(Long memberId, Long partyId);
+import com.drinkeg.drinkeg.domain.Party;
+import com.drinkeg.drinkeg.domain.PartyJoinMember;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
-    void cancelPartyJoin(Long memberId, Long partyId);
+public interface PartyJoinMemberService {
+
+    PartyJoinMember save(PartyJoinMember partyJoinMember);
+
+    long countByParty(Party party);
+
+    void participateInParty(PrincipalDetail principalDetail, Long partyId);
+
+    void cancelPartyJoin(PrincipalDetail principalDetail, Long partyId);
 }
