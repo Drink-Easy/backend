@@ -8,9 +8,11 @@ import com.drinkeg.drinkeg.domain.Party;
 import com.drinkeg.drinkeg.domain.PartyJoinMember;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.PartyJoinMemberRepository;
 import com.drinkeg.drinkeg.repository.PartyRepository;
+import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.partyJoinMemberService.PartyJoinMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,24 +28,37 @@ import java.util.stream.Collectors;
 public class PartyServiceImpl implements PartyService {
 
     private final PartyRepository partyRepository;
+    private final PartyJoinMemberService partyJoinMemberService;
     private final PartyConverter partyConverter;
     private final PartyJoinMemberConverter partyJoinMemberConverter;
-    private final PartyJoinMemberRepository partyJoinMemberRepository;
+    private final MemberService memberService;
 
     @Override
-    public void createParty(PartyRequestDTO partyRequest, Member member) {
+    public Party findPartyById(Long partyId) {
+        return partyRepository.findById(partyId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+    }
+
+    @Override
+    public Party saveParty(Party party) {
+        return partyRepository.save(party);
+    }
+
+    @Override
+    public void createParty(PartyRequestDTO partyRequest, PrincipalDetail principalDetail) {
 
         // entity 저장
+        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
         Party party = partyConverter.fromRequest(partyRequest, member);
         Party savedParty = partyRepository.save(party);
 
 
         // 파티 생성 후, 해당 멤버를 PartyJoinMember 테이블에 호스트로 등록
         PartyJoinMember partyJoinMember = partyJoinMemberConverter.toEntity(member, savedParty, true);
-        partyJoinMemberRepository.save(partyJoinMember);
+        partyJoinMemberService.save(partyJoinMember);
 
         // PartyJoinMember 테이블의 기록을 기반으로 참가자 수를 업데이트
-        long participantCount = partyJoinMemberRepository.countByParty(savedParty);
+        long participantCount = partyJoinMemberService.countByParty(savedParty);
 
         // 참가자 수(1명)를 party 엔티티의 participateMemberNum에 반영하여 업데이트
         savedParty.setParticipateMemberNum((int) participantCount);
@@ -52,7 +67,9 @@ public class PartyServiceImpl implements PartyService {
 
 
     @Override
-    public Page<PartyResponseDTO> getSortedParties(String sortType, String memberRegion, Pageable pageable) {
+    public Page<PartyResponseDTO> getSortedParties(String sortType, PrincipalDetail principalDetail, Pageable pageable) {
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        String memberRegion = memberService.loadMemberByPrincipleDetail(principalDetail).getRegion();
         Page<Party> parties = switch (sortType) {
             case "recent" ->
                 // 최신순 정렬
@@ -94,8 +111,7 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    //@PreAuthorize("@partyServiceImpl.isHost(#id, #memberId)")
-    public PartyResponseDTO updateParty(Long id, PartyRequestDTO partyRequest, Long memberId) {
+    public PartyResponseDTO updateParty(Long id, PartyRequestDTO partyRequest, PrincipalDetail principalDetail) {
         // 필수 값 검증
         validatePartyRequest(partyRequest);
 
@@ -104,6 +120,8 @@ public class PartyServiceImpl implements PartyService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
 
         // hostId로 소유자 확인
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Long memberId = foundMember.getId();
         if (existingParty.getHostId() == null || !existingParty.getHostId().equals(memberId)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_PARTY); // 사용자가 호스트가 아닐 경우 예외 발생
         }
@@ -121,12 +139,12 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    //@PreAuthorize("@partyServiceImpl.isHost(#id, #memberId)")
-    public void deleteParty(Long id, Long memberId) {
+    public void deleteParty(Long id, PrincipalDetail principalDetail) {
         Party party = partyRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
 
-        // hostId로 소유자 확인
+        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Long memberId = foundMember.getId();
         if (party.getHostId() == null || !party.getHostId().equals(memberId)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_PARTY); // 사용자가 호스트가 아닐 경우 예외 발생
         }
@@ -181,16 +199,4 @@ public class PartyServiceImpl implements PartyService {
         }
     }
 
-    // 현재 사용자가 호스트인지 확인하는 메소드
-    /*public boolean isHost(Long partyId, Long memberId) {
-        Party party = partyRepository.findById(partyId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
-
-        // hostId로 소유자 확인
-        if (party.getHostId() == null || !party.getHostId().equals(memberId)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_PARTY); // 사용자가 호스트가 아닐 경우 예외 발생
-        }
-
-        return true; // 사용자가 호스트일 경우 true 반환
-    }*/
 }
