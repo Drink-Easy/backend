@@ -16,7 +16,7 @@ public interface TastingNoteService {
 
     public NoteResponseDTO showNoteById(Long noteId,PrincipalDetail principalDetail);
 
-    public List<NotePriviewResponseDTO> findAllNote(PrincipalDetail principalDetail);
+    public List<NotePriviewResponseDTO> findAllNote(PrincipalDetail principalDetail,String sort);
 
     public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, PrincipalDetail principalDetail);
 

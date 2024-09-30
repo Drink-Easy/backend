@@ -7,6 +7,7 @@ import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -70,7 +71,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public List<NotePriviewResponseDTO> findAllNote(PrincipalDetail principalDetail) {
+    public AllNoteResponseDTO findAllNote(PrincipalDetail principalDetail, String sort) {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -78,11 +79,26 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         // Member의 TastingNote를 찾는다.
         List<TastingNote> foundNotes = member.getTastingNotes();
 
+
+
+        int total = foundNotes.size();
+        int red = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("레드")).count();
+        int white = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("화이트")).count();
+        int sparkling = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("스파클링")).count();
+        int rose = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("로제")).count();
+        int etc = total - (red + white + sparkling + rose);
+
         // TastingNote를 최신 생성 순으로 정렬한 후, TastingNotePreviewDTO로 변환한다
-        return foundNotes.stream()
+        List<NotePriviewResponseDTO> notePriviewResponseDTOList = foundNotes.stream()
+                .filter((note) -> note.getWine().getSort().contains(sort))
                 .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
                 .map(TastingNoteConverter::toTastingNotePreviewDTO)
                 .toList();
+
+        AllNoteResponseDTO allNoteResponseDTO = TastingNoteConverter.
+
+
+        return allNoteResponseDTO;
     }
 
     @Override

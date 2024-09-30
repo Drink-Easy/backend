@@ -41,10 +41,10 @@ public class TastingNoteController {
     }
 
     // 전체 노트 보기
-    @GetMapping("/all-note")
-    public ApiResponse<List<NotePriviewResponseDTO>> showAllNote(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+    @GetMapping("/{sort}")
+    public ApiResponse<List<NotePriviewResponseDTO>> showAllNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("sort") String sort) {
 
-        List<NotePriviewResponseDTO> allNoteByMember = tastingNoteService.findAllNote(principalDetail);
+        List<NotePriviewResponseDTO> allNoteByMember = tastingNoteService.findAllNote(principalDetail, sort);
         return ApiResponse.onSuccess(allNoteByMember);
     }
 

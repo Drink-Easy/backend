@@ -4,9 +4,12 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 public class TastingNoteConverter {
 
@@ -73,5 +76,14 @@ public class TastingNoteConverter {
                 .imageUrl(tastingNote.getWine().getImageUrl())
                 .build();
     }
+
+    public static AllNoteResponseDTO toAllNoteResponseDTO(List<NotePriviewResponseDTO> notePriviewResponseDTOList){
+
+        return AllNoteResponseDTO.builder()
+                .NotePriviewList(notePriviewResponseDTOList)
+                .
+
+    }
+
 
 }
