@@ -13,6 +13,7 @@ import com.drinkeg.drinkeg.repository.RecommentRepository;
 import com.drinkeg.drinkeg.service.commentService.CommentService;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,6 @@ public class RecommentServiceImpl implements RecommentService{
     private final RecommentRepository recommentRepository;
     private final RecommentConverter recommentConverter;
     private final MemberService memberService;
-    private final CommentService commentService;
 
 
     // 댓글 ID로 대댓글을 조회하는 메서드
@@ -40,9 +40,7 @@ public class RecommentServiceImpl implements RecommentService{
     }
 
     @Override
-    public void createRecomment(Long commentId, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail) {
-        // 댓글 존재 여부 검증
-        Comment comment = commentService.findByIdOrThrow(commentId);
+    public void createRecomment(Comment comment, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail) {
 
         // 회원 존재 여부 검증
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -56,9 +54,7 @@ public class RecommentServiceImpl implements RecommentService{
     }
 
     @Override
-    public void deleteRecomment(Long commentId, Long recommentId, PrincipalDetail principalDetail) {
-        // 댓글 존재 여부 검증
-        Comment comment = commentService.findByIdOrThrow(commentId);
+    public void deleteRecomment(PrincipalDetail principalDetail, Long recommentId) {
 
         // 대댓글 존재 여부 검증
         Recomment recomment = recommentRepository.findById(recommentId)
@@ -66,7 +62,7 @@ public class RecommentServiceImpl implements RecommentService{
 
         // 현재 로그인 한 사용자가 작성자인지 확인
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
-        if(comment.getMember() == null || !comment.getMember().equals(member)) {
+        if(recomment.getMember() == null || !recomment.getMember().equals(member)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }
 
