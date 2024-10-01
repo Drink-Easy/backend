@@ -32,7 +32,7 @@ public class Party extends BaseEntity{
 
     private int limitMemberNum;
 
-    private int participateMemberNum;
+    private int participateMemberNum = 1;
 
     private Date partyDate;
 
