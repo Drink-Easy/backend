@@ -14,15 +14,16 @@ public interface CommentService {
 
     Comment findByIdOrThrow(Long commentId);
 
-    void createComment(CommentRequestDTO commentRequest, PrincipalDetail principalDetail);
+    void createComment(PrincipalDetail principalDetail, CommentRequestDTO commentRequest);
 
-    void deleteComment(Long commentId, PrincipalDetail principalDetail);
+    void deleteComment(PrincipalDetail principalDetail, Long commentId);
 
-    void updateCommentStatus(Long commentId, PrincipalDetail principalDetail);
+    void updateCommentStatus(PrincipalDetail principalDetail, Long commentId);
 
     List<CommentResponseDTO> getCommentsByPartyId(Long partyId) ;
 
     String calculateTimeAgo(LocalDateTime createdAt);
 
     String calculateCreatedDate(LocalDateTime createdAt);
+
 }
