@@ -62,15 +62,18 @@ public class WineNote extends BaseEntity {
         this.alcohol = alcohol;
     }
 
-    // 향 업데이트
+    // 향 업데이트 : 기존 내용을 지우고, 새 내용으로 덮어 쓰는 방식
     public void updateScentAroma(List<String> scentAroma) {
-//        this.scentAroma = scentAroma;
+        this.scentAroma.clear();
+        this.scentAroma.addAll(scentAroma);
     }
     public void updateScentTaste(List<String> scentTaste) {
-//        this.scentTaste = scentTaste;
+        this.scentTaste.clear();
+        this.scentTaste.addAll(scentTaste);
     }
     public void updateScentFinish(List<String> scentFinish) {
-//        this.scentFinish = scentFinish;
+        this.scentFinish.clear();
+        this.scentFinish.addAll(scentFinish);
     }
 
     // 사용자 별점 업데이트
