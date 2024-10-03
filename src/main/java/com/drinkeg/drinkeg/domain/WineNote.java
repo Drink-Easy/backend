@@ -35,13 +35,13 @@ public class WineNote extends BaseEntity {
 
     // 향 여러개를 ", "로 구분해서 List 로 저장.
     @Convert(converter = StringListConverter.class)
-    private List<String> scentAroma = new ArrayList<>();
+    private final List<String> scentAroma = new ArrayList<>();
 
     @Convert(converter = StringListConverter.class)
-    private List<String> scentTaste = new ArrayList<>();
+    private final List<String> scentTaste = new ArrayList<>();
 
     @Convert(converter = StringListConverter.class)
-    private List<String> scentFinish = new ArrayList<>();
+    private final List<String> scentFinish = new ArrayList<>();
 
     private float rating;
 
@@ -64,13 +64,13 @@ public class WineNote extends BaseEntity {
 
     // 향 업데이트
     public void updateScentAroma(List<String> scentAroma) {
-        this.scentAroma = scentAroma;
+//        this.scentAroma = scentAroma;
     }
     public void updateScentTaste(List<String> scentTaste) {
-        this.scentTaste = scentTaste;
+//        this.scentTaste = scentTaste;
     }
     public void updateScentFinish(List<String> scentFinish) {
-        this.scentFinish = scentFinish;
+//        this.scentFinish = scentFinish;
     }
 
     // 사용자 별점 업데이트
