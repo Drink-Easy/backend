@@ -11,7 +11,7 @@ public class WineLectureCompleteConverter {
     public static WineLectureCompleteResponseDTO toWineLectureCompleteResponseDTO(WineLectureComplete wineLectureComplete) {
         return WineLectureCompleteResponseDTO.builder()
                 .id(wineLectureComplete.getId())
-                .wineLectureResponseDTO(WineLectureConverter.toWineLectureResponseDTO(wineLectureComplete.getWineLecture()))
+                .wineLectureResponseDTO(WineLectureConverter.toWineLectureResponseDTO(wineLectureComplete.getWineLecture(), wineLectureComplete.getWineLecture().getAuthor()))
                 .build();
     }
 
