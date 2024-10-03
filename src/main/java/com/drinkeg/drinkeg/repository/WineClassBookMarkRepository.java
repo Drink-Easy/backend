@@ -5,7 +5,6 @@ import com.drinkeg.drinkeg.domain.WineClass;
 import com.drinkeg.drinkeg.domain.WineClassBookMark;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface WineClassBookMarkRepository extends JpaRepository<WineClassBookMark, Long> {

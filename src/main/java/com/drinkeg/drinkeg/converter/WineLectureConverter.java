@@ -8,6 +8,7 @@ import com.drinkeg.drinkeg.dto.WineLectureDTO.response.WineLectureResponseDTO;
 
 public class WineLectureConverter {
     public static WineLectureResponseDTO toWineLectureResponseDTO(WineLecture wineLecture, Member member) {
+
         return WineLectureResponseDTO.builder()
                 .id(wineLecture.getId())
                 .title(wineLecture.getTitle())

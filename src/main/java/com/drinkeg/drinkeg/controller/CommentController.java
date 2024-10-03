@@ -33,11 +33,11 @@ public class CommentController {
 
     // 모임 댓글 생성
     @PostMapping
-    public ApiResponse<String> createComment(//필요한게
+    public ApiResponse<String> createComment(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestBody CommentRequestDTO commentRequest) {
 
-        commentService.createComment(commentRequest, principalDetail);
+        commentService.createComment(principalDetail, commentRequest);
 
         return ApiResponse.onSuccess("댓글 생성 완료");
     }
@@ -51,7 +51,7 @@ public class CommentController {
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("commentId") Long commentId) {
 
-        commentService.updateCommentStatus(commentId, principalDetail);
+        commentService.updateCommentStatus(principalDetail, commentId);
 
         return ApiResponse.onSuccess("댓글 삭제 완료");
     }
@@ -63,7 +63,7 @@ public class CommentController {
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("commentId") Long commentId) {
 
-        commentService.deleteComment(commentId, principalDetail);
+        commentService.deleteComment(principalDetail, commentId);
 
         return ApiResponse.onSuccess("댓글 삭제 완료");
     }
