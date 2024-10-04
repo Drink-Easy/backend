@@ -14,4 +14,5 @@ public class WineLectureResponseDTO {
     private Long id;
     private String title;
     private String content;
+    private boolean isCompleted;
 }

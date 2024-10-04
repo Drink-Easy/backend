@@ -1,6 +1,8 @@
 package com.drinkeg.drinkeg.service.WineLectureCompleteService;
 
 
+import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.domain.WineLecture;
 import com.drinkeg.drinkeg.dto.WineLectureCompleteDTO.response.WineLectureCompleteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
@@ -10,4 +12,6 @@ public interface WineLectureCompleteService {
     List<WineLectureCompleteResponseDTO> showWineLectureCompleteByMember(PrincipalDetail principalDetail);
     WineLectureCompleteResponseDTO saveWineLectureComplete(Long wineClassId, PrincipalDetail principalDetail);
     void deleteWineLectureCompleteById(Long wineLectureCompleteId, PrincipalDetail principalDetail);
+
+    boolean isCompleted(WineLecture wineLecture , Member member);
 }

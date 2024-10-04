@@ -2,7 +2,6 @@ package com.drinkeg.drinkeg.service.WineLectureCompleteService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineLectureCompleteConverter;
-import com.drinkeg.drinkeg.converter.WineLectureConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.WineLecture;
 import com.drinkeg.drinkeg.domain.WineLectureComplete;
@@ -61,5 +60,10 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
             throw new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_UNAUTHORIZED);
 
         wineLectureCompleteRepository.delete(wineLectureComplete);
+    }
+
+    @Override
+    public boolean isCompleted(WineLecture wineLecture, Member member) {
+        return wineLectureCompleteRepository.existsByWineLectureAndMember(wineLecture, member);
     }
 }
