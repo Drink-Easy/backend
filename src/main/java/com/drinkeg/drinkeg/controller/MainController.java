@@ -5,6 +5,7 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,15 +23,9 @@ public class MainController {
     private final MemberService memberService;
     private final WineService wineService;
 
-    @GetMapping("/maindy")
-    @ResponseBody
-    public String mainAPI() {
-
-        return "main route";
-
-    }
 
     @GetMapping("/main")
+    @Operation(summary = "main", description = "로그인 권한 체크용.")
     public ApiResponse<?> mainP() {
         return ApiResponse.onSuccess("하윙");
     }
