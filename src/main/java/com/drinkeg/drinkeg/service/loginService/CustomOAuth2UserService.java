@@ -36,6 +36,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // token을 통해 응답받은 회원정보
         System.out.println("oAuth2User : " + oAuth2User);
 
+        // 카카오 소셜 로그인
         if (registrationId.equals("kakao")) {
             oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
         }
