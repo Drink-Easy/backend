@@ -37,14 +37,9 @@ public class NoteUpdateRequestDTO {
     @Max(value = 5, message = "알콜도는 0 이상 5 이하의 정수 값이어야 합니다.")
     private Integer alcohol;
 
-    @Builder.Default
-    private List<String> scentAroma = new ArrayList<>();
-
-    @Builder.Default
-    private List<String> scentTaste = new ArrayList<>();
-
-    @Builder.Default
-    private List<String> scentFinish = new ArrayList<>();
+    private final List<String> scentAroma = new ArrayList<>();
+    private final List<String> scentTaste = new ArrayList<>();
+    private final List<String> scentFinish = new ArrayList<>();
 
     @Min(0)
     @Max(5)
