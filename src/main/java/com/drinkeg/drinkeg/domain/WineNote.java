@@ -34,12 +34,15 @@ public class WineNote extends BaseEntity {
     private float alcohol;
 
     // 향 여러개를 ", "로 구분해서 List 로 저장.
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private final List<String> scentAroma = new ArrayList<>();
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private final List<String> scentTaste = new ArrayList<>();
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private final List<String> scentFinish = new ArrayList<>();
 
