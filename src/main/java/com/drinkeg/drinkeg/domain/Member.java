@@ -40,12 +40,15 @@ public class Member {
     private Long monthPriceMax;
 
     // 선호 종류, 품종, 국가
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> wineSort = new ArrayList<>();
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> wineVariety = new ArrayList<>();
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> wineArea = new ArrayList<>();
 
@@ -53,6 +56,7 @@ public class Member {
 
 
     // CascadeType.ALL: Member 엔티티가 삭제되면 연관된 TastingNote 엔티티도 삭제
+    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<TastingNote> tastingNotes = new ArrayList<>();
 
