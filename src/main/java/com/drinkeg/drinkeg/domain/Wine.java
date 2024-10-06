@@ -44,6 +44,7 @@ public class Wine {
     @OneToOne(mappedBy = "wine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private WineNote wineNote;
 
+    @Builder.Default
     @OneToMany
     @JoinColumn(name = "wine_id")
     private List<TastingNote> tastingNoteList = new ArrayList<>();

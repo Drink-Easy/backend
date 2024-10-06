@@ -21,8 +21,11 @@ public class WineNoteResponseDTO {
     private float body;
     private float alcohol;
 
+    @Builder.Default
     private List<String> scentAroma = new ArrayList<>();
+    @Builder.Default
     private List<String> scentTaste = new ArrayList<>();
+    @Builder.Default
     private List<String> scentFinish = new ArrayList<>();
 
 }
