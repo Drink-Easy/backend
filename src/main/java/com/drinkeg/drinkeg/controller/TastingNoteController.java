@@ -1,20 +1,16 @@
 package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.tastingNoteService.TastingNoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,11 +37,11 @@ public class TastingNoteController {
     }
 
     // 전체 노트 보기
-    @GetMapping("/all-note")
-    public ApiResponse<List<NotePriviewResponseDTO>> showAllNote(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+    @GetMapping("/{sort}")
+    public ApiResponse<AllNoteResponseDTO> showAllNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("sort") String sort) {
 
-        List<NotePriviewResponseDTO> allNoteByMember = tastingNoteService.findAllNote(principalDetail);
-        return ApiResponse.onSuccess(allNoteByMember);
+        AllNoteResponseDTO allTastingNote = tastingNoteService.findAllTastingNote(principalDetail, sort);
+        return ApiResponse.onSuccess(allTastingNote);
     }
 
     @PatchMapping("/{noteId}")
