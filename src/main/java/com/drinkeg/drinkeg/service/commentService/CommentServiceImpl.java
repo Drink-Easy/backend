@@ -93,7 +93,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public void createComment(CommentRequestDTO commentRequest, PrincipalDetail principalDetail) {
+    public void createComment(PrincipalDetail principalDetail, CommentRequestDTO commentRequest) {
 
 
         // Party와 Member 존재 여부 검증
@@ -110,7 +110,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public void deleteComment(Long commentId, PrincipalDetail principalDetail) {
+    public void deleteComment(PrincipalDetail principalDetail, Long commentId) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
@@ -133,7 +133,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateCommentStatus(Long commentId, PrincipalDetail principalDetail) {
+    public void updateCommentStatus(PrincipalDetail principalDetail, Long commentId) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));

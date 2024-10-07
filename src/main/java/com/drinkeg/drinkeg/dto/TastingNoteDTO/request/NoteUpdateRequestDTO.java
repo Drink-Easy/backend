@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.dto.TastingNoteDTO.request;
 
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,11 +37,9 @@ public class NoteUpdateRequestDTO {
     @Max(value = 5, message = "알콜도는 0 이상 5 이하의 정수 값이어야 합니다.")
     private Integer alcohol;
 
-    private List<String> scentAroma = new ArrayList<>();
-
-    private List<String> scentTaste = new ArrayList<>();
-
-    private List<String> scentFinish = new ArrayList<>();
+    private final List<String> scentAroma = new ArrayList<>();
+    private final List<String> scentTaste = new ArrayList<>();
+    private final List<String> scentFinish = new ArrayList<>();
 
     @Min(0)
     @Max(5)

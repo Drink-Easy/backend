@@ -12,7 +12,6 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.PartyRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.partyJoinMemberService.PartyJoinMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 public class PartyServiceImpl implements PartyService {
 
     private final PartyRepository partyRepository;
-    private final PartyJoinMemberService partyJoinMemberService;
     private final PartyConverter partyConverter;
     private final PartyJoinMemberConverter partyJoinMemberConverter;
     private final MemberService memberService;
@@ -55,14 +53,12 @@ public class PartyServiceImpl implements PartyService {
 
         // 파티 생성 후, 해당 멤버를 PartyJoinMember 테이블에 호스트로 등록
         PartyJoinMember partyJoinMember = partyJoinMemberConverter.toEntity(member, savedParty, true);
-        partyJoinMemberService.save(partyJoinMember);
 
-        // PartyJoinMember 테이블의 기록을 기반으로 참가자 수를 업데이트
-        long participantCount = partyJoinMemberService.countByParty(savedParty);
+        party.getParticipations().add(partyJoinMember);
+        // Party와 PartyJoinMember를 함께 저장 (CascadeType.ALL 덕분에 PartyJoinMember도 함께 저장됨)
+        partyRepository.save(party);
 
-        // 참가자 수(1명)를 party 엔티티의 participateMemberNum에 반영하여 업데이트
-        savedParty.setParticipateMemberNum((int) participantCount);
-        partyRepository.save(savedParty);  // 업데이트된 참가자 수를 저장
+
     }
 
 

@@ -45,12 +45,15 @@ public class TastingNote extends BaseEntity {
     private int alcohol;
 
     // 향 여러개를 ", "로 구분해서 List로 저장.
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> scentAroma = new ArrayList<>();
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> scentTaste = new ArrayList<>();
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> scentFinish = new ArrayList<>();
 

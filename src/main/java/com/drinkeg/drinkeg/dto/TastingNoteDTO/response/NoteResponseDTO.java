@@ -33,10 +33,11 @@ public class NoteResponseDTO {
     private int body;
     private int alcohol;
 
+    @Builder.Default
     private List<String> scentAroma = new ArrayList<>();
-
+    @Builder.Default
     private List<String> scentTaste = new ArrayList<>();
-
+    @Builder.Default
     private List<String> scentFinish = new ArrayList<>();
 
     private float satisfaction;

@@ -9,14 +9,15 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
 public interface TastingNoteService {
 
-    public void saveTastingNote(NoteRequestDTO noteRequestDTO, PrincipalDetail principalDetail);
 
-    public NoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail);
+    public void saveNote(PrincipalDetail principalDetail, NoteRequestDTO noteRequestDTO);
+
+    public NoteResponseDTO showNoteById(PrincipalDetail principalDetail, Long noteId);
 
     public AllNoteResponseDTO findAllTastingNote(PrincipalDetail principalDetail, String sort);
 
-    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, PrincipalDetail principalDetail);
+    public void updateTastingNote(PrincipalDetail principalDetail, Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO);
 
-    public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail);
+    public void deleteTastingNote(PrincipalDetail principalDetail, Long noteId);
 
 }

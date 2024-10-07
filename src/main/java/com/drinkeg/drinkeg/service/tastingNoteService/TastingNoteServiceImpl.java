@@ -33,7 +33,8 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     private final MemberService memberService;
 
     @Override
-    public void saveTastingNote(NoteRequestDTO noteRequestDTO, PrincipalDetail principalDetail) {
+
+    public void saveNote(PrincipalDetail principalDetail, NoteRequestDTO noteRequestDTO) {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -50,7 +51,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public NoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
+    public NoteResponseDTO showNoteById(PrincipalDetail principalDetail, Long noteId) {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -118,7 +119,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, PrincipalDetail principalDetail) {
+    public void updateTastingNote(PrincipalDetail principalDetail, Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO) {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -184,7 +185,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail) {
+    public void deleteTastingNote(PrincipalDetail principalDetail, Long noteId) {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);

@@ -32,7 +32,8 @@ public class Party extends BaseEntity{
 
     private int limitMemberNum;
 
-    private int participateMemberNum;
+    @Builder.Default
+    private int participateMemberNum = 1;
 
     private Date partyDate;
 
@@ -47,6 +48,7 @@ public class Party extends BaseEntity{
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "party", cascade = CascadeType.ALL)
     private List<PartyJoinMember> participations = new ArrayList<>();
 

@@ -51,12 +51,15 @@ public class NoteRequestDTO {
     @Max(value = 10, message = "알콜도는 0 이상 10 이하의 정수 값이어야 합니다.")
     private int alcohol;
 
+    @Builder.Default
     @NotEmpty(message = "아로마 향 선택은 필수입니다.")
     private List<String> scentAroma = new ArrayList<>();
 
+    @Builder.Default
     @NotEmpty(message = "테이스트 향 선택은 필수입니다.")
     private List<String> scentTaste = new ArrayList<>();
 
+    @Builder.Default
     @NotEmpty(message = "피니쉬 향 선택은 필수입니다.")
     private List<String> scentFinish = new ArrayList<>();
 
