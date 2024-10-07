@@ -8,11 +8,10 @@ import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePreviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.repository.WineRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
@@ -34,7 +33,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     private final MemberService memberService;
 
     @Override
-    public void saveNote(NoteRequestDTO noteRequestDTO,  PrincipalDetail principalDetail) {
+    public void saveTastingNote(NoteRequestDTO noteRequestDTO, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -51,7 +50,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public NoteResponseDTO showNoteById(Long noteId, PrincipalDetail principalDetail) {
+    public NoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
@@ -71,15 +70,13 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public AllNoteResponseDTO findAllNote(PrincipalDetail principalDetail, String sort) {
+    public AllNoteResponseDTO findAllTastingNote(PrincipalDetail principalDetail, String sort) {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
 
         // Member의 TastingNote를 찾는다.
         List<TastingNote> foundNotes = member.getTastingNotes();
-
-
 
         int total = foundNotes.size();
         int red = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("레드")).count();
@@ -88,17 +85,36 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         int rose = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("로제")).count();
         int etc = total - (red + white + sparkling + rose);
 
-        // TastingNote를 최신 생성 순으로 정렬한 후, TastingNotePreviewDTO로 변환한다
-        List<NotePriviewResponseDTO> notePriviewResponseDTOList = foundNotes.stream()
-                .filter((note) -> note.getWine().getSort().contains(sort))
+        // 필터링된 노트를 TastingNotePreviewDTO로 변환
+        List<NotePreviewResponseDTO> notePreviewResponseDTOList = foundNotes.stream()
+                .filter(note -> filterBySort(note, sort))
                 .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
                 .map(TastingNoteConverter::toTastingNotePreviewDTO)
                 .toList();
 
-        AllNoteResponseDTO allNoteResponseDTO = TastingNoteConverter.
+        return TastingNoteConverter
+                .toAllNoteResponseDTO(notePreviewResponseDTOList, total, red, white, sparkling, rose, etc);
+    }
 
+    // 와인 타입별 필터링 로직
+    private boolean filterBySort(TastingNote note, String sort) {
+        String wineSort = note.getWine().getSort();
 
-        return allNoteResponseDTO;
+        switch (sort) {
+            case "red":
+                return wineSort.contains("레드");
+            case "white":
+                return wineSort.contains("화이트");
+            case "sparkling":
+                return wineSort.contains("스파클링");
+            case "rose":
+                return wineSort.contains("로제");
+            case "all":
+                return true; // 전체 보기
+            default:
+                return !wineSort.contains("레드") && !wineSort.contains("화이트")
+                        && !wineSort.contains("스파클링") && !wineSort.contains("로제");
+        }
     }
 
     @Override

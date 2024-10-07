@@ -11,15 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 public class AllNoteResponseDTO {
 
-    countNotes{
-        int total;
+    int total;
 
-        int red;
-        int white;
-        int sparkling;
-        int rose;
-        int etc;
-    }
+    int red;
+    int white;
+    int sparkling;
+    int rose;
+    int etc;
 
-    List<NotePriviewResponseDTO> NotePriviewList;
+    List<NotePreviewResponseDTO> NotePriviewList;
 }

@@ -42,7 +42,7 @@ public class WineServiceImpl implements WineService {
 
 
         // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').
-        List<Wine> foundWines = wineRepository.findAllByNameContainingIgnoreCase(searchName);
+        List<Wine> foundWines = wineRepository.findAllByNameContainingIgnoreCaseOrderByName(searchName);
 
         // 와인을 NoteWineResponseDTO로 변환한다.
         return foundWines.stream()
