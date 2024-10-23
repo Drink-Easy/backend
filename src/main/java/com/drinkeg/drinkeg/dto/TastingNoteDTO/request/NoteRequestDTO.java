@@ -52,16 +52,13 @@ public class NoteRequestDTO {
     private int alcohol;
 
     @Builder.Default
-    @NotEmpty(message = "아로마 향 선택은 필수입니다.")
-    private List<String> scentAroma = new ArrayList<>();
+    @NotEmpty(message = "향 선택은 필수입니다.")
+    private List<String> nose = new ArrayList<>();
 
     @Builder.Default
-    @NotEmpty(message = "테이스트 향 선택은 필수입니다.")
-    private List<String> scentTaste = new ArrayList<>();
+    @NotEmpty(message = "맛 선택은 필수입니다.")
+    private List<String> palate = new ArrayList<>();
 
-    @Builder.Default
-    @NotEmpty(message = "피니쉬 향 선택은 필수입니다.")
-    private List<String> scentFinish = new ArrayList<>();
 
     @NotNull(message = "만족도 선택은 필수입니다.")
     @Min(0)

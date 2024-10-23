@@ -53,9 +53,8 @@ public class WineConverter {
                 .body(wineNote.getBody())
                 .alcohol(wineNote.getAlcohol())
 
-                .scentAroma(wineNote.getScentAroma())
-                .scentTaste(wineNote.getScentTaste())
-                .scentFinish(wineNote.getScentFinish())
+                .nose(wineNote.getNose())
+                .palate(wineNote.getPalate())
 
                 .rating(Math.max(wine.getRating(), wineNote.getRating()))
                 .build();
