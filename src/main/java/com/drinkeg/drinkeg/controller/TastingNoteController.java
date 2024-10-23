@@ -9,9 +9,11 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.tastingNoteService.TastingNoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tasting-note")
@@ -27,22 +29,22 @@ public class TastingNoteController {
         return ApiResponse.onSuccess("노트 작성 완료");
     }
 
+    // 전체 노트 보기
+    @GetMapping("/all")
+    public ApiResponse<AllNoteResponseDTO> showAllTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestParam("sort") String sort) {
+
+        AllNoteResponseDTO allTastingNote = tastingNoteService.findAllTastingNote(principalDetail, sort);
+        return ApiResponse.onSuccess(allTastingNote);
+    }
 
     // 선택한 노트 보기
     @GetMapping("/{noteId}")
-    public ApiResponse<NoteResponseDTO> showNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId) {
+    public ApiResponse<NoteResponseDTO> showTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId) {
 
         NoteResponseDTO noteResponseDTO = tastingNoteService.showNoteById(principalDetail, noteId);
         return ApiResponse.onSuccess(noteResponseDTO);
     }
 
-    // 전체 노트 보기
-    @GetMapping("/{sort}")
-    public ApiResponse<AllNoteResponseDTO> showAllNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("sort") String sort) {
-
-        AllNoteResponseDTO allTastingNote = tastingNoteService.findAllTastingNote(principalDetail, sort);
-        return ApiResponse.onSuccess(allTastingNote);
-    }
 
     @PatchMapping("/{noteId}")
     public ApiResponse<String> updateTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId, @RequestBody @Valid NoteUpdateRequestDTO noteUpdateRequestDTO) {

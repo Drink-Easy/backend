@@ -16,12 +16,14 @@ import com.drinkeg.drinkeg.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.repository.WineRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -75,9 +77,11 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        log.info("findAllTastingNote : member 조회 완료");
 
         // Member의 TastingNote를 찾는다.
         List<TastingNote> foundNotes = member.getTastingNotes();
+        log.info("findAllTastingNote : tastingNotes 조회 완료");
 
         int total = foundNotes.size();
         int red = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("레드")).count();
