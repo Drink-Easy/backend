@@ -10,10 +10,12 @@ import com.drinkeg.drinkeg.dto.WineLectureDTO.response.WineLectureResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineLectureRepository;
+import com.drinkeg.drinkeg.service.WineLectureCompleteService.WineLectureCompleteService;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineClassService.WineClassService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class WineLectureServiceImpl implements WineLectureService {
     private final WineLectureRepository wineLectureRepository;
+    private final WineLectureCompleteService wineLectureCompleteService;
     private final WineClassService wineClassService;
     private final MemberService memberService;
 
@@ -33,7 +36,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
         List<WineLecture> wineLectures = wineLectureRepository.findAll();
         return wineLectures.stream()
-                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, member))
+                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member)))
                 .collect(Collectors.toList());
     }
 
@@ -45,7 +48,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
         List<WineLecture> wineLectures = wineLectureRepository.findByWineClass(wineClass);
         return wineLectures.stream()
-                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, member))
+                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member)))
                 .collect(Collectors.toList());
     }
 
@@ -55,7 +58,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
-        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, member);
+        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member));
     }
 
     @Override
@@ -66,7 +69,7 @@ public class WineLectureServiceImpl implements WineLectureService {
         WineLecture wineLecture = WineLectureConverter.toWineLecture(wineLectureRequestDTO, wineClass, member);
 
         wineLectureRepository.save(wineLecture);
-        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, member);
+        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member));
     }
 
     @Override
@@ -86,7 +89,7 @@ public class WineLectureServiceImpl implements WineLectureService {
                 .updateTitle(wineLectureRequestDTO.getTitle())
                 .updateContent(wineLectureRequestDTO.getContent());
 
-        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, member);
+        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member));
     }
 
     @Override

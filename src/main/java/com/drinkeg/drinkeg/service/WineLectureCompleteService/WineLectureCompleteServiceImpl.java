@@ -2,7 +2,6 @@ package com.drinkeg.drinkeg.service.WineLectureCompleteService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineLectureCompleteConverter;
-import com.drinkeg.drinkeg.converter.WineLectureConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.WineLecture;
 import com.drinkeg.drinkeg.domain.WineLectureComplete;
@@ -10,6 +9,7 @@ import com.drinkeg.drinkeg.dto.WineLectureCompleteDTO.response.WineLectureComple
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineLectureCompleteRepository;
+import com.drinkeg.drinkeg.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineLectureService.WineLectureService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WineLectureCompleteServiceImpl implements WineLectureCompleteService {
     private final WineLectureCompleteRepository wineLectureCompleteRepository;
-    private final WineLectureService wineLectureService;
+    private final WineLectureRepository wineLectureRepository;
     private final MemberService memberService;
 
     @Override
@@ -39,7 +39,8 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
     @Override
     public WineLectureCompleteResponseDTO saveWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
-        WineLecture wineLecture = wineLectureService.getWineLectureById(wineLectureId);
+        WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
 
         if (wineLectureCompleteRepository.existsByWineLectureAndMember(wineLecture, member))
             throw new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_ALREADY_EXISTS);
@@ -61,5 +62,10 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
             throw new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_UNAUTHORIZED);
 
         wineLectureCompleteRepository.delete(wineLectureComplete);
+    }
+
+    @Override
+    public boolean isCompleted(WineLecture wineLecture, Member member) {
+        return wineLectureCompleteRepository.existsByWineLectureAndMember(wineLecture, member);
     }
 }
