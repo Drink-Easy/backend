@@ -15,9 +15,8 @@ public class WineNoteConverter {
                 .body(wineNote.getBody())
                 .alcohol(wineNote.getAlcohol())
 
-                .scentAroma(wineNote.getScentAroma())
-                .scentTaste(wineNote.getScentTaste())
-                .scentFinish(wineNote.getScentFinish())
+                .nose(wineNote.getNose())
+                .palate(wineNote.getPalate())
                 .build();
     }
 

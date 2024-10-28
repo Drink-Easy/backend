@@ -168,14 +168,11 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             foundNote.updateAlcohol(noteUpdateRequestDTO.getAlcohol());
         }
 
-        if(!noteUpdateRequestDTO.getScentAroma().isEmpty()) {
-            foundNote.updateScentAroma(noteUpdateRequestDTO.getScentAroma());
+        if(!noteUpdateRequestDTO.getNose().isEmpty()) {
+            foundNote.updateNose(noteUpdateRequestDTO.getNose());
         }
-        if(!noteUpdateRequestDTO.getScentTaste().isEmpty()) {
-            foundNote.updateScentTaste(noteUpdateRequestDTO.getScentTaste());
-        }
-        if(!noteUpdateRequestDTO.getScentFinish().isEmpty()) {
-            foundNote.updateScentFinish(noteUpdateRequestDTO.getScentFinish());
+        if(!noteUpdateRequestDTO.getPalate().isEmpty()) {
+            foundNote.updatePalete(noteUpdateRequestDTO.getPalate());
         }
 
         if(noteUpdateRequestDTO.getSatisfaction() != null) {

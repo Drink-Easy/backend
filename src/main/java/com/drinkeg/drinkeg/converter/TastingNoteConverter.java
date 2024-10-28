@@ -29,9 +29,8 @@ public class TastingNoteConverter {
                 .body(noteRequestDTO.getBody())
                 .alcohol(noteRequestDTO.getAlcohol())
 
-                .scentAroma(noteRequestDTO.getScentAroma())
-                .scentTaste(noteRequestDTO.getScentTaste())
-                .scentFinish(noteRequestDTO.getScentFinish())
+                .nose(noteRequestDTO.getNose())
+                .palate(noteRequestDTO.getPalate())
 
                 .satisfaction(noteRequestDTO.getSatisfaction())
                 .review(noteRequestDTO.getReview())
@@ -59,9 +58,8 @@ public class TastingNoteConverter {
                 .body(tastingNote.getBody())
                 .alcohol(tastingNote.getAlcohol())
 
-                .scentAroma(tastingNote.getScentAroma())
-                .scentTaste(tastingNote.getScentTaste())
-                .scentFinish(tastingNote.getScentFinish())
+                .nose(tastingNote.getNose())
+                .palate(tastingNote.getPalate())
 
                 .satisfaction(tastingNote.getSatisfaction())
                 .review(tastingNote.getReview())

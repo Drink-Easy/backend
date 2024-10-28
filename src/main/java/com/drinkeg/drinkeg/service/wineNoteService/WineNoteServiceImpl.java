@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -50,10 +49,9 @@ public class WineNoteServiceImpl implements WineNoteService {
         wineNote.updateBody(avgBody);
         wineNote.updateAlcohol(avgAlcohol);
 
-        // Top3 향으로 업데이트
-        wineNote.updateScentAroma(getTop3Scent(allTastingNotes, "aroma"));
-        wineNote.updateScentTaste(getTop3Scent(allTastingNotes, "taste"));
-        wineNote.updateScentFinish(getTop3Scent(allTastingNotes, "finish"));
+        // Top3 향/맛으로 업데이트
+        wineNote.updateNose(getTop3NoseAndPalate(allTastingNotes, "nose"));
+        wineNote.updatePalete(getTop3NoseAndPalate(allTastingNotes, "palate"));
 
         // 만족도 업데이트
         float sumRating = (float) allTastingNotes.stream().mapToDouble(TastingNote::getSatisfaction).sum();
@@ -63,19 +61,18 @@ public class WineNoteServiceImpl implements WineNoteService {
 
     }
 
-    // Top3 향 추출
-    private List<String> getTop3Scent(List<TastingNote> allTastingNotes, String scentName) {
-        List<String> scentList = allTastingNotes.stream()
-                .map(tastingNote -> switch (scentName) {
-                    case "aroma" -> tastingNote.getScentAroma();
-                    case "taste" -> tastingNote.getScentTaste();
-                    case "finish" -> tastingNote.getScentFinish();
-                    default -> throw new GeneralException(ErrorStatus.NOT_INVALID_SCENT);
+    // Top3 향/맛 추출
+    private List<String> getTop3NoseAndPalate(List<TastingNote> allTastingNotes, String sort) {
+        List<String> sortList = allTastingNotes.stream()
+                .map(tastingNote -> switch (sort) {
+                    case "nose" -> tastingNote.getNose();
+                    case "palate" -> tastingNote.getPalate();
+                    default -> throw new GeneralException(ErrorStatus.NOT_INVALID_SORT);
                 })
                 .flatMap(List::stream)
                 .toList();
 
-        Map<String, Long> countMap = scentList.stream()
+        Map<String, Long> countMap = sortList.stream()
                 // Function.identity()를 사용하여 각 향의 이름을 key 로 하는 Map 을 생성
                 // Collectors.counting()을 사용하여 각 향의 개수를 value 로 하는 Map 을 생성
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
