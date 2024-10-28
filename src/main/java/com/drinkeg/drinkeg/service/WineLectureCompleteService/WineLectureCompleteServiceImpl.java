@@ -9,6 +9,7 @@ import com.drinkeg.drinkeg.dto.WineLectureCompleteDTO.response.WineLectureComple
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineLectureCompleteRepository;
+import com.drinkeg.drinkeg.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineLectureService.WineLectureService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WineLectureCompleteServiceImpl implements WineLectureCompleteService {
     private final WineLectureCompleteRepository wineLectureCompleteRepository;
-    private final WineLectureService wineLectureService;
+    private final WineLectureRepository wineLectureRepository;
     private final MemberService memberService;
 
     @Override
@@ -38,7 +39,8 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
     @Override
     public WineLectureCompleteResponseDTO saveWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
-        WineLecture wineLecture = wineLectureService.getWineLectureById(wineLectureId);
+        WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
 
         if (wineLectureCompleteRepository.existsByWineLectureAndMember(wineLecture, member))
             throw new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_ALREADY_EXISTS);
