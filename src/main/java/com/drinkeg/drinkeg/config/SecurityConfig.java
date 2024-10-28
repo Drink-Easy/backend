@@ -39,7 +39,6 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
     private final RedisClient redisClient;
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
 
     // AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
@@ -123,7 +122,9 @@ public class SecurityConfig {
                 );
 
         http
-                .exceptionHandling(e -> e.authenticationEntryPoint(customAuthenticationEntryPoint));
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                        .accessDeniedHandler(new CustomAccessDeniedHandler()));
 
         //경로별 인가 작업
         http
@@ -167,6 +168,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "comments/**").hasRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "comments/**").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "comments/**").hasRole("USER")
+
+                        // PartyJoinMember 인가
+                        .requestMatchers(HttpMethod.POST, "partyJoin/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "partyJoin/**").hasRole("USER")
 
                         .anyRequest().authenticated());
 

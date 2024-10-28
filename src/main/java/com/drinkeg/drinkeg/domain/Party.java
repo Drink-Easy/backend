@@ -2,19 +2,21 @@ package com.drinkeg.drinkeg.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.domain.Auditable;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Party {
+public class Party extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +32,8 @@ public class Party {
 
     private int limitMemberNum;
 
-    private int participateMemberNum;
+    @Builder.Default
+    private int participateMemberNum = 1;
 
     private Date partyDate;
 
@@ -41,5 +44,15 @@ public class Party {
     private Long hostId;
     //private String partyWine;
 
+    // BaseEntity 필드
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "party", cascade = CascadeType.ALL)
+    private List<PartyJoinMember> participations = new ArrayList<>();
+
+    public void updateParticipateMemberNum(int participateMemberNum) {
+        this.participateMemberNum = participateMemberNum;
+    }
 }

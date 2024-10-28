@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.service.loginService;
 
+import com.drinkeg.drinkeg.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final MemberRepository userRepository;
+    private final MemberRepository memberRepository;
 
 
 
@@ -35,17 +36,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // token을 통해 응답받은 회원정보
         System.out.println("oAuth2User : " + oAuth2User);
 
-
-        if (registrationId.equals("naver")) {
-
-            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
-
-        }
-        else if (registrationId.equals("google")) {
-
-            oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("kakao")) {
+        // 카카오 소셜 로그인
+        if (registrationId.equals("kakao")) {
             oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
         }
         else {
@@ -54,24 +46,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
-        Optional<Member> existData = userRepository.findByUsername(username);
+        Optional<Member> existData = memberRepository.findByUsername(username);
 
         if (existData.isEmpty()){
 
-            Member userEntity = Member.builder()
-                    .username(username)
-                    .email(oAuth2Response.getEmail())
-                    .name(oAuth2Response.getName())
-                    .role("ROLE_USER")
-                    .build();
+            Member userEntity = MemberConverter.toOauth2Member(username, oAuth2Response);
 
-            userRepository.save(userEntity);
+            memberRepository.save(userEntity);
 
-            UserDTO userDTO = UserDTO.builder()
-                    .username(username)
-                    .name(oAuth2Response.getName())
-                    .role("ROLE_USER")
-                    .build();
+            UserDTO userDTO = MemberConverter.toUserDTO(userEntity);
 
             return new PrincipalDetail(userDTO);
         }
@@ -82,13 +65,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.updateEmail(oAuth2Response.getEmail());
             userEntity.updateName(oAuth2Response.getName());
 
-            userRepository.save(userEntity);
+            memberRepository.save(userEntity);
 
-            UserDTO userDTO = UserDTO.builder()
-                    .username(userEntity.getUsername())
-                    .name(userEntity.getName())
-                    .role(userEntity.getRole())
-                    .build();
+            UserDTO userDTO = MemberConverter.toUserDTO(userEntity);
 
             return new PrincipalDetail(userDTO);
 

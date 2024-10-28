@@ -1,24 +1,23 @@
 package com.drinkeg.drinkeg.service.tastingNoteService;
 
-import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
-
-import java.util.List;
+import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
 
 public interface TastingNoteService {
 
-    public void saveNote(NoteRequestDTO noteRequestDTO, Member member);
 
-    public NoteResponseDTO showNoteById(Long noteId, Member member);
+    public void saveNote(PrincipalDetail principalDetail, NoteRequestDTO noteRequestDTO);
 
-    public List<NotePriviewResponseDTO> findAllNoteByMember(Member member);
+    public NoteResponseDTO showNoteById(PrincipalDetail principalDetail, Long noteId);
 
-    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, Member member);
+    public AllNoteResponseDTO findAllTastingNote(PrincipalDetail principalDetail, String sort);
 
-    public void deleteTastingNote(Long noteId, Member member);
+    public void updateTastingNote(PrincipalDetail principalDetail, Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO);
+
+    public void deleteTastingNote(PrincipalDetail principalDetail, Long noteId);
 
 }

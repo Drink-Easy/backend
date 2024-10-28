@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.service.loginService;
 
+import com.drinkeg.drinkeg.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
@@ -24,12 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<Member> existData = memberRepository.findByUsername(username);
         Member userData = existData.get();
 
-        UserDTO userDTO = UserDTO.builder()
-                .username(userData.getUsername())
-                .password(userData.getPassword())
-                .role(userData.getRole())
-                .isFirst(userData.getIsFirst())
-                .build();
+        UserDTO userDTO = MemberConverter.toUserDTO(userData);
 
         if (userDTO != null) {
 

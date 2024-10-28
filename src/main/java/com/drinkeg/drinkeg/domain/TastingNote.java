@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,9 @@ public class TastingNote extends BaseEntity {
 
     private String color;
 
+    // 시음 날짜
+    private LocalDate tasteDate;
+
     // 점수 0 ~ 5
     private int sugarContent;
     private int acidity;
@@ -41,12 +45,15 @@ public class TastingNote extends BaseEntity {
     private int alcohol;
 
     // 향 여러개를 ", "로 구분해서 List로 저장.
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> scentAroma = new ArrayList<>();
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> scentTaste = new ArrayList<>();
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> scentFinish = new ArrayList<>();
 
@@ -63,6 +70,11 @@ public class TastingNote extends BaseEntity {
     // 색상 업데이트
     public void updateColor(String color) {
         this.color = color;
+    }
+
+    // 시음 날짜 업데이트
+    public void updatetasteDate(LocalDate tasteDate) {
+        this.tasteDate = tasteDate;
     }
 
     // 맛 업데이트

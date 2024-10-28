@@ -49,6 +49,7 @@ public class WineLectureServiceImpl implements WineLectureService {
         List<WineLecture> wineLectures = wineLectureRepository.findByWineClass(wineClass);
         return wineLectures.stream()
                 .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member)))
+                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, member))
                 .collect(Collectors.toList());
     }
 

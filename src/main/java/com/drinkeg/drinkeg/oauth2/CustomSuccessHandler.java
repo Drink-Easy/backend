@@ -58,7 +58,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // response.sendRedirect("https://drinkeg.com/maindy");
 
-//        LoginResponse loginResponse = LoginResponse.builder()
+//        LoginResponseDTO LoginResponseDTO = LoginResponseDTO.builder()
 //                .username(username)
 //                .role(role)
 //                .accessToken(token)
@@ -68,7 +68,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //        response.setCharacterEncoding("UTF-8");
 //
 //        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.writeValue(response.getWriter(), loginResponse);
+//        objectMapper.writeValue(response.getWriter(), LoginResponseDTO);
 
 //        System.out.println("token  ===  " +token);
     }

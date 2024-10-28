@@ -16,6 +16,7 @@ public class HomeResponseDTO {
 
     private String name;
 
+    @Builder.Default
     private List<RecommendWineDTO> recommendWineDTOs = new ArrayList<>();
 
 

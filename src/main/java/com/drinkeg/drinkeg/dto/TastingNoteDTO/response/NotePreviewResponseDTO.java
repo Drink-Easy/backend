@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotePriviewResponseDTO {
+public class NotePreviewResponseDTO {
 
         private Long noteId;
 

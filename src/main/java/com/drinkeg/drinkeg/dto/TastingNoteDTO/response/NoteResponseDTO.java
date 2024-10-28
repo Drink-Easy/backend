@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class NoteResponseDTO {
     private String imageUrl;
 
     private String color;
+    private LocalDate tasteDate;
 
     // 점수 0 ~ 5
     private int sugarContent;
@@ -31,10 +33,11 @@ public class NoteResponseDTO {
     private int body;
     private int alcohol;
 
+    @Builder.Default
     private List<String> scentAroma = new ArrayList<>();
-
+    @Builder.Default
     private List<String> scentTaste = new ArrayList<>();
-
+    @Builder.Default
     private List<String> scentFinish = new ArrayList<>();
 
     private float satisfaction;

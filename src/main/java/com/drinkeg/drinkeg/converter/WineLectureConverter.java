@@ -13,6 +13,7 @@ public class WineLectureConverter {
                 .title(wineLecture.getTitle())
                 .content(wineLecture.getContent())
                 .isCompleted(isCompleted)
+                .author(MemberConverter.toMemberBasicInfoResponseDTO(author))
                 .build();
     }
 
