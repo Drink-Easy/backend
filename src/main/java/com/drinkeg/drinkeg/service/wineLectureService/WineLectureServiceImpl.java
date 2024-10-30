@@ -15,7 +15,6 @@ import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineClassService.WineClassService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
     @Override
     public List<WineLectureResponseDTO> showAllWineLectures(PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         List<WineLecture> wineLectures = wineLectureRepository.findAll();
         return wineLectures.stream()
@@ -42,7 +41,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
     @Override
     public List<WineLectureResponseDTO> showAllWineLecturesByWineClass(Long wineClassId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineClass wineClass = wineClassService.getWineClassById(wineClassId);
 
@@ -54,7 +53,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
     @Override
     public WineLectureResponseDTO showWineLectureById(Long wineLectureId,PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
@@ -63,7 +62,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
     @Override
     public WineLectureResponseDTO saveWineLecture(WineLectureRequestDTO wineLectureRequestDTO, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
         WineClass wineClass = wineClassService.getWineClassById(wineLectureRequestDTO.getWineClassId());
 
         WineLecture wineLecture = WineLectureConverter.toWineLecture(wineLectureRequestDTO, wineClass, member);
@@ -74,7 +73,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
     @Override
     public WineLectureResponseDTO updateWineLecture(WineLectureRequestDTO wineLectureRequestDTO, Long wineLectureId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
@@ -94,7 +93,7 @@ public class WineLectureServiceImpl implements WineLectureService {
 
     @Override
     public void deleteWineLecture(Long wineLectureId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                         .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));

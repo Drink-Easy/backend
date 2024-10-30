@@ -9,5 +9,5 @@ public interface MemberService {
 
     public Member getMemberByUsername(String username);
 
-    public Member loadMemberByPrincipleDetail(PrincipalDetail principalDetail);
+    public Member loadMemberByPrincipalDetail(PrincipalDetail principalDetail);
 }

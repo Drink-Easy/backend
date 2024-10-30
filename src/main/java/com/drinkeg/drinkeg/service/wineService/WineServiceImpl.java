@@ -35,10 +35,10 @@ public class WineServiceImpl implements WineService {
     private final S3Service s3Service;
 
     @Override
-    public List<SearchWineResponseDTO> searchWinesByName(PrincipalDetail principalDetail, String searchName) {
+    public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
 
         // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').

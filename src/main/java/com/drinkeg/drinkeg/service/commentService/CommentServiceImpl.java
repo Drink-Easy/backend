@@ -97,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
 
 
         // Party와 Member 존재 여부 검증
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
         Party party = partyService.findPartyById(commentRequest.getPartyId());
 
         // Comment 엔티티 생성
@@ -116,7 +116,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
         // 현재 로그인 한 사용자가 작성자인지 확인
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
         if(comment.getMember() == null || !comment.getMember().equals(foundMember)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }
@@ -139,7 +139,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
         // 현재 로그인 한 사용자가 작성자인지 확인
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
         if(comment.getMember() == null || !comment.getMember().equals(foundMember)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }

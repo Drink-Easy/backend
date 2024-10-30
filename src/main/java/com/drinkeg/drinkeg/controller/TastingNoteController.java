@@ -23,9 +23,10 @@ public class TastingNoteController {
 
     // 새 노트 작성
     @PostMapping("/new-note")
-    public ApiResponse<String> saveTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody @Valid TastingNoteRequestDTO tastingNoteRequestDTO) {
+    public ApiResponse<String> saveTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                               @RequestBody @Valid TastingNoteRequestDTO tastingNoteRequestDTO) {
 
-        tastingNoteService.saveTastingNote(principalDetail, tastingNoteRequestDTO);
+        tastingNoteService.saveTastingNote(tastingNoteRequestDTO, principalDetail);
         return ApiResponse.onSuccess("노트 작성 완료");
     }
 
@@ -33,30 +34,34 @@ public class TastingNoteController {
     @GetMapping("/all-note")
     public ApiResponse<AllTastingNoteResponseDTO> showAllTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestParam("sort") String sort) {
 
-        AllTastingNoteResponseDTO allTastingNote = tastingNoteService.findAllTastingNote(principalDetail, sort);
+        AllTastingNoteResponseDTO allTastingNote = tastingNoteService.findAllTastingNote(sort, principalDetail);
         return ApiResponse.onSuccess(allTastingNote);
     }
 
     // 선택한 노트 보기
     @GetMapping("/{noteId}")
-    public ApiResponse<TastingNoteResponseDTO> showTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId) {
+    public ApiResponse<TastingNoteResponseDTO> showTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                                               @PathVariable("noteId") Long noteId) {
 
-        TastingNoteResponseDTO tastingNoteResponseDTO = tastingNoteService.showTastingNoteById(principalDetail, noteId);
+        TastingNoteResponseDTO tastingNoteResponseDTO = tastingNoteService.showTastingNoteById(noteId, principalDetail);
         return ApiResponse.onSuccess(tastingNoteResponseDTO);
     }
 
 
     @PatchMapping("/{noteId}")
-    public ApiResponse<String> updateTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId, @RequestBody @Valid TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO) {
+    public ApiResponse<String> updateTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                                 @PathVariable("noteId") Long noteId,
+                                                 @RequestBody @Valid TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO) {
 
-        tastingNoteService.updateTastingNote(principalDetail, noteId, tastingNoteUpdateRequestDTO);
+        tastingNoteService.updateTastingNote(noteId, tastingNoteUpdateRequestDTO, principalDetail);
         return ApiResponse.onSuccess("노트 수정 완료");
     }
 
     @DeleteMapping("/{noteId}")
-    public ApiResponse<String> deleteTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable("noteId") Long noteId) {
+    public ApiResponse<String> deleteTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                                 @PathVariable("noteId") Long noteId) {
 
-        tastingNoteService.deleteTastingNote(principalDetail, noteId);
+        tastingNoteService.deleteTastingNote(noteId, principalDetail);
         return ApiResponse.onSuccess("노트 삭제 완료");
     }
 
