@@ -12,7 +12,6 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
-import com.drinkeg.drinkeg.repository.WineRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineNoteService.WineNoteService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
@@ -67,7 +66,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
         // TastingNote를 DTO로 변환한다.
@@ -137,7 +136,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
         // TastingNote를 업데이트한다.
@@ -193,7 +192,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
         wineNoteService.updateWineNote(foundNote.getWine().getWineNote(), foundNote, false);
