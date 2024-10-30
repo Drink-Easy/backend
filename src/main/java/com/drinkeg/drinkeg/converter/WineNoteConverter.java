@@ -9,14 +9,14 @@ public class WineNoteConverter {
     public static WineNoteResponseDTO toWineNoteResponseDTO(WineNote wineNote) {
         return WineNoteResponseDTO.builder()
                 .wineId(wineNote.getWine().getId())
-                .sugarContent(wineNote.getSugarContent())
+                .sugarContent(wineNote.getTotalSugarContent())
                 .acidity(wineNote.getAcidity())
                 .tannin(wineNote.getTannin())
                 .body(wineNote.getBody())
                 .alcohol(wineNote.getAlcohol())
 
-                .nose(wineNote.getNose())
-                .palate(wineNote.getPalate())
+                .nose(wineNote.getTop3Nose())
+                .palate(wineNote.getTop3Palate())
                 .build();
     }
 

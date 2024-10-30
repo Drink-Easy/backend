@@ -3,13 +3,15 @@ package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.converter.WineConverter;
+import com.drinkeg.drinkeg.converter.WineNoteConverter;
 import com.drinkeg.drinkeg.domain.Wine;
+import com.drinkeg.drinkeg.domain.WineNote;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.dto.WineNoteDTO.WineNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.wineService.WineService;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +57,18 @@ public class WineController {
                 .map(WineConverter::toWineReviewResPonseDTO).toList();
 
         return ApiResponse.onSuccess(wineReviewResponseDTOList);
+    }
+
+    // 와인노트 (테이스팅노트 평균) 보기
+    @GetMapping("/note/{wineId}")
+    public ApiResponse<WineNoteResponseDTO> showWineNote(@PathVariable("wineId") Long wineId) {
+
+        Wine foundWine = wineService.findWineById(wineId);
+        WineNote wineNote = foundWine.getWineNote();
+
+        WineNoteResponseDTO wineNoteResponseDTO = WineNoteConverter.toWineNoteResponseDTO(wineNote);
+
+        return ApiResponse.onSuccess(wineNoteResponseDTO);
     }
 
     // 와인 이미지 업로드
