@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.service.wineNoteService;
 
 import com.drinkeg.drinkeg.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.domain.WineNote;
 import com.drinkeg.drinkeg.repository.WineNoteRepository;
 import jakarta.persistence.LockModeType;
@@ -18,18 +19,8 @@ public class WineNoteServiceImpl implements WineNoteService {
 
     @Override
     @Lock(LockModeType.PESSIMISTIC_READ) // 다른 트랜잭션에서 읽기만 가능, 수정 불가
-    public void updateWineNote(WineNote wineNote, TastingNote t, boolean add) {
+    public void updateWineNote(Wine wine) {
 
-        // 새로 테이스팅 노트 작성 시
-        if(add){
-            wineNote.addTastingNoteScores(t);
-        }
-        // 테이스팅 노트 삭제 시
-        else {
-            wineNote.removeTastingNoteScores(t);
-        }
-
-        wineNoteRepository.save(wineNote);
 
     }
 }

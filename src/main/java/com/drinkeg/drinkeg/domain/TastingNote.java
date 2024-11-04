@@ -108,6 +108,4 @@ public class TastingNote extends BaseEntity {
         this.review = review;
     }
 
-
-
 }

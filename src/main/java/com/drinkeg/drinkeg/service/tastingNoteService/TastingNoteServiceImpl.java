@@ -49,7 +49,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         com.drinkeg.drinkeg.domain.TastingNote tastingNote = tastingNoteRepository
                 .save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
 
-        wineNoteService.updateWineNote(wine.getWineNote(), tastingNote, true);
+        wineNoteService.updateWineNote(wine);
 
     }
 
@@ -195,7 +195,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
-        wineNoteService.updateWineNote(foundNote.getWine().getWineNote(), foundNote, false);
+        wineNoteService.updateWineNote(foundNote.getWine());
 
         // TastingNote를 삭제한다.
         tastingNoteRepository.delete(foundNote);
