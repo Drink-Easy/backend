@@ -13,7 +13,6 @@ import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.WineClassBookMarkRepository;
 import com.drinkeg.drinkeg.repository.WineClassRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class WineClassBookMarkServiceImpl implements WineClassBookMarkService{
 
         // 와인클래스 북마크 중복 확인
         if (wineClassBookMarkRepository.existsByMemberAndWineClass(member, wineClass))
-            throw new GeneralException(ErrorStatus.WINE_CLASS_BOOKMARK_DUPLICATED);
+            throw new GeneralException(ErrorStatus.WINE_CLASS_BOOKMARK_ALREADY_EXISTS);
 
         WineClassBookMark wineClassBookMark = WineClassBookMarkConverter.toWineClassBookMark(wineClass, member);
         wineClassBookMarkRepository.save(wineClassBookMark);
