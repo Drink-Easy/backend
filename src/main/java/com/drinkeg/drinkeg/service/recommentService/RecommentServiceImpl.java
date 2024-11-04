@@ -8,12 +8,9 @@ import com.drinkeg.drinkeg.domain.Recomment;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.CommentRepository;
 import com.drinkeg.drinkeg.repository.RecommentRepository;
-import com.drinkeg.drinkeg.service.commentService.CommentService;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,7 +40,7 @@ public class RecommentServiceImpl implements RecommentService{
     public void createRecomment(Comment comment, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail) {
 
         // 회원 존재 여부 검증
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // 대댓글 엔티티 생성
         Recomment recomment = recommentConverter.fromRequest(recommentRequest, comment, member);
@@ -61,7 +58,7 @@ public class RecommentServiceImpl implements RecommentService{
                 .orElseThrow(() -> new GeneralException(ErrorStatus.RECOMMENT_NOT_FOUND));
 
         // 현재 로그인 한 사용자가 작성자인지 확인
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
         if(recomment.getMember() == null || !recomment.getMember().equals(member)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }

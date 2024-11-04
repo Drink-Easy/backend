@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface WineService {
 
-    public List<SearchWineResponseDTO> searchWinesByName(PrincipalDetail principalDetail, String searchName);
+    public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail);
 
     public Wine findWineById(Long wineId);
 

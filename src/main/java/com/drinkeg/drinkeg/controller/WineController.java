@@ -34,7 +34,7 @@ public class WineController {
     public ApiResponse<List<SearchWineResponseDTO>> searchWine(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                                @RequestParam String searchName) {
 
-        List<SearchWineResponseDTO> searchWineResponseDTOS = wineService.searchWinesByName(principalDetail, searchName);
+        List<SearchWineResponseDTO> searchWineResponseDTOS = wineService.searchWinesByName(searchName, principalDetail);
         return ApiResponse.onSuccess(searchWineResponseDTOS);
     }
 
