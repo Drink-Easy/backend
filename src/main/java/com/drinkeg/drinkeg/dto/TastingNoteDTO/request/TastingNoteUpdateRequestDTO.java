@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class NoteUpdateRequestDTO {
-
-    private Long wineId;
+public class TastingNoteUpdateRequestDTO {
 
     private String color;
     private LocalDate tastingDate;
@@ -42,5 +40,5 @@ public class NoteUpdateRequestDTO {
     @Max(5)
     private Float satisfaction;
 
-    private String memo;
+    private String review;
 }

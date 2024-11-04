@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AllNoteResponseDTO {
+public class AllTastingNoteResponseDTO {
 
     int total;
 
@@ -19,5 +19,5 @@ public class AllNoteResponseDTO {
     int rose;
     int etc;
 
-    List<NotePreviewResponseDTO> NotePriviewList;
+    List<TastingNotePreviewResponseDTO> NotePriviewList;
 }

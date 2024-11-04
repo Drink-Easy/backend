@@ -1,12 +1,11 @@
 package com.drinkeg.drinkeg.converter;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePreviewResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllTastingNoteResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNotePreviewResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
@@ -15,33 +14,33 @@ public class TastingNoteConverter {
 
     // NoteRequestDTO를 TastingNote Entity로 변환
     // NotNull은 null이 아님을 보장하는 어노테이션
-    public static TastingNote toTastingNoteEntity(NoteRequestDTO noteRequestDTO, @NotNull Member member, @NotNull Wine wine) {
-        return TastingNote.builder()
+    public static com.drinkeg.drinkeg.domain.TastingNote toTastingNoteEntity(TastingNoteRequestDTO tastingNote, @NotNull Member member, @NotNull Wine wine) {
+        return com.drinkeg.drinkeg.domain.TastingNote.builder()
                 .member(member)
 
                 .wine(wine)
-                .color(noteRequestDTO.getColor())
-                .tasteDate(noteRequestDTO.getTasteDate())
+                .color(tastingNote.getColor())
+                .tasteDate(tastingNote.getTasteDate())
 
-                .sugarContent(noteRequestDTO.getSugarContent())
-                .acidity(noteRequestDTO.getAcidity())
-                .tannin(noteRequestDTO.getTannin())
-                .body(noteRequestDTO.getBody())
-                .alcohol(noteRequestDTO.getAlcohol())
+                .sugarContent(tastingNote.getSugarContent())
+                .acidity(tastingNote.getAcidity())
+                .tannin(tastingNote.getTannin())
+                .body(tastingNote.getBody())
+                .alcohol(tastingNote.getAlcohol())
 
-                .nose(noteRequestDTO.getNose())
-                .palate(noteRequestDTO.getPalate())
+                .nose(tastingNote.getNose())
+                .palate(tastingNote.getPalate())
 
-                .satisfaction(noteRequestDTO.getSatisfaction())
-                .review(noteRequestDTO.getReview())
+                .satisfaction(tastingNote.getSatisfaction())
+                .review(tastingNote.getReview())
                 .build();
     }
 
     // TastingNote Entity를 NoteResponseDTO로 변환
-    public static NoteResponseDTO toTastingNoteResponseDTO(TastingNote tastingNote) {
+    public static TastingNoteResponseDTO toTastingNoteResponseDTO(com.drinkeg.drinkeg.domain.TastingNote tastingNote) {
         Wine wine = tastingNote.getWine();
 
-        return NoteResponseDTO.builder()
+        return TastingNoteResponseDTO.builder()
                 .noteId(tastingNote.getId())
                 .wineId(wine.getId())
                 .wineName(wine.getName())
@@ -67,19 +66,19 @@ public class TastingNoteConverter {
     }
 
     // TastingNote Entity를 NotePriviewResponseDTO로 변환
-    public static NotePreviewResponseDTO toTastingNotePreviewDTO(TastingNote tastingNote) {
-        return NotePreviewResponseDTO.builder()
+    public static TastingNotePreviewResponseDTO toTastingNotePreviewDTO(com.drinkeg.drinkeg.domain.TastingNote tastingNote) {
+        return TastingNotePreviewResponseDTO.builder()
                 .noteId(tastingNote.getId())
                 .name(tastingNote.getWine().getName())
                 .imageUrl(tastingNote.getWine().getImageUrl())
                 .build();
     }
 
-    public static AllNoteResponseDTO toAllNoteResponseDTO(List<NotePreviewResponseDTO> notePreviewResponseDTOList,
-                                                          int total, int red, int white, int sparkling, int rose, int etc){
+    public static AllTastingNoteResponseDTO toAllNoteResponseDTO(List<TastingNotePreviewResponseDTO> tastingNotePreviewResponseDTOList,
+                                                                 int total, int red, int white, int sparkling, int rose, int etc){
 
-        return AllNoteResponseDTO.builder()
-                .NotePriviewList(notePreviewResponseDTOList)
+        return AllTastingNoteResponseDTO.builder()
+                .NotePriviewList(tastingNotePreviewResponseDTOList)
                 .total(total)
                 .red(red)
                 .white(white)
