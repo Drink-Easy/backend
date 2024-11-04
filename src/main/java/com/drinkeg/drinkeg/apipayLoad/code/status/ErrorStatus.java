@@ -13,14 +13,12 @@ public enum ErrorStatus implements BaseCode {
     // Wine Error
     WINE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE4001", "와인이 없습니다."),
 
-    // Note Error
+    // TastingNote Error
     TASTING_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTE4001", "테이스팅 노트가 없습니다."),
-    NOT_YOUR_NOTE(HttpStatus.BAD_REQUEST, "NOTE4002", "본인의 노트가 아닙니다."),
+    TASTING_NOTE_FORBIDDEN(HttpStatus.FORBIDDEN, "NOTE4002", "본인의 노트가 아닙니다."),
 
     // WineNote Error
     WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),
-    NOT_INVALID_SORT(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "해당 이름의 향/맛 항목이 없습니다."),
-
 
     // Party Error
     PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTY4001", "모임이 없습니다."),

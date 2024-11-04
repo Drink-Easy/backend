@@ -66,7 +66,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
         // TastingNote를 DTO로 변환한다.
@@ -136,7 +136,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
         // TastingNote를 업데이트한다.
@@ -192,7 +192,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
         wineNoteService.updateWineNote(foundNote.getWine().getWineNote(), foundNote, false);
