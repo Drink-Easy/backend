@@ -29,8 +29,8 @@ public class WineConverter {
                 .price(((wine.getPrice() * 1300) / 1000) * 1000)
 
                 // wine 기본 평점과, 사용자 평점 중 높은거로
-                .satisfaction(Math.max(wine.getSatisfaction(),
-                        Optional.ofNullable(wine.getWineNote()).map(WineNote::getSatisfaction).orElse((float) 0)))
+                .rating(Math.max(wine.getRating(),
+                        Optional.ofNullable(wine.getWineNote()).map(WineNote::getRating).orElse((float) 0)))
                 .build();
     }
 
@@ -53,10 +53,10 @@ public class WineConverter {
                 .body(wineNote.getBody())
                 .alcohol(wineNote.getAlcohol())
 
-                .nose(wineNote.getTop3Nose())
-                .palate(wineNote.getTop3Palate())
+                .nose(wineNote.getNose())
+                .palate(wineNote.getPalate())
 
-                .satisfaction(Math.max(wine.getSatisfaction(), wineNote.getSatisfaction()))
+                .rating(Math.max(wine.getRating(), wineNote.getRating()))
                 .build();
     }
 

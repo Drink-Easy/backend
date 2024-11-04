@@ -35,6 +35,6 @@ public class WineResponseDTO {
     @Builder.Default
     private List<String> palate = new ArrayList<>();
 
-    private float satisfaction;
+    private float rating;
 
 }

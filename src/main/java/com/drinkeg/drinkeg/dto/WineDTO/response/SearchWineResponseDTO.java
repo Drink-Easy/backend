@@ -15,7 +15,7 @@ public class SearchWineResponseDTO {
     private String sort;
     private String area;
 
-    private float satisfaction;
+    private float rating;
 
     private int price;
 

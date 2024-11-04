@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TastingNoteResponseDTO {
+public class NoteResponseDTO {
 
     private Long noteId;
 

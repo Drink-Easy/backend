@@ -88,7 +88,7 @@ public class WineServiceImpl implements WineService {
         }
 
         // 와인 평점을 최종 가중치에 반영
-        wineScoreMap.replaceAll((wine, score) -> score + wine.getSatisfaction());
+        wineScoreMap.replaceAll((wine, score) -> score + wine.getRating());
 
         // 가격으로 필터링, 가중치로 정렬, 상위 20개 추출
         List<Wine> topWines = new ArrayList<>(wineScoreMap.entrySet().stream()

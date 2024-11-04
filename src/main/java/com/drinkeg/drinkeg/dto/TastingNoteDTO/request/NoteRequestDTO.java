@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TastingNoteRequestDTO {
+public class NoteRequestDTO {
 
     @NotNull(message = "와인 ID는 필수입니다.")
     private Long wineId;
