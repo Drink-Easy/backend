@@ -37,7 +37,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final MemberService memberService;
     private final WineService wineService;
-    private final WineNoteService wineNoteService;
 
     @Override
     public void saveTastingNote(TastingNoteRequestDTO tastingNoteRequestDTO, PrincipalDetail principalDetail) {
