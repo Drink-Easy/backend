@@ -6,6 +6,6 @@ import com.drinkeg.drinkeg.domain.WineNote;
 
 public interface WineNoteService {
 
-    public void updateWineNote(Wine wine);
+    public void updateWineNote(Long wineId);
 
 }

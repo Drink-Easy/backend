@@ -18,9 +18,9 @@ public class WineNoteServiceImpl implements WineNoteService {
     private final WineNoteRepository wineNoteRepository;
 
     @Override
-    @Lock(LockModeType.PESSIMISTIC_READ) // 다른 트랜잭션에서 읽기만 가능, 수정 불가
-    public void updateWineNote(Wine wine) {
+    public void updateWineNote(Long wineId) {
 
+        wineNoteRepository.updateWineNoteStatistics(wineId);
 
     }
 }

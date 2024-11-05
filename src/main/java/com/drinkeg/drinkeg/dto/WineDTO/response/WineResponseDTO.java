@@ -1,5 +1,7 @@
 package com.drinkeg.drinkeg.dto.WineDTO.response;
 
+import com.drinkeg.drinkeg.domain.Nose;
+import com.drinkeg.drinkeg.domain.Palate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,10 +32,8 @@ public class WineResponseDTO {
     private float body;
     private float alcohol;
 
-    @Builder.Default
-    private List<String> nose = new ArrayList<>();
-    @Builder.Default
-    private List<String> palate = new ArrayList<>();
+    private Nose nose;
+    private Palate palate;
 
     private float satisfaction;
 

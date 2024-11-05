@@ -29,11 +29,11 @@ public class WineNote extends BaseEntity {
     private Wine wine;
 
     // 점수 평균
-    private float averageSugarContent;
-    private float averageAcidity;
-    private float averageTannin;
-    private float averageBody;
-    private float averageAlcohol;
+    private float avgSugarContent;
+    private float avgAcidity;
+    private float avgTannin;
+    private float avgBody;
+    private float avgAlcohol;
 
     @Embedded
     private Nose nose;
@@ -42,6 +42,6 @@ public class WineNote extends BaseEntity {
     private Palate palate;
 
     // 만족도 평균
-    private float averageSatisfaction;
+    private float avgSatisfaction;
 
 }

@@ -30,7 +30,7 @@ public class WineConverter {
 
                 // wine 기본 평점과, 사용자 평점 중 높은거로
                 .satisfaction(Math.max(wine.getSatisfaction(),
-                        Optional.ofNullable(wine.getWineNote()).map(WineNote::getSatisfaction).orElse((float) 0)))
+                        Optional.ofNullable(wine.getWineNote()).map(WineNote::getAvgSatisfaction).orElse((float) 0)))
                 .build();
     }
 
@@ -47,16 +47,16 @@ public class WineConverter {
                 .sort(wine.getSort())
                 .area(wine.getArea())
 
-                .sugarContent(wineNote.getSugarContent())
-                .acidity(wineNote.getAcidity())
-                .tannin(wineNote.getTannin())
-                .body(wineNote.getBody())
-                .alcohol(wineNote.getAlcohol())
+                .sugarContent(wineNote.getAvgSugarContent())
+                .acidity(wineNote.getAvgAcidity())
+                .tannin(wineNote.getAvgTannin())
+                .body(wineNote.getAvgBody())
+                .alcohol(wineNote.getAvgAlcohol())
 
-                .nose(wineNote.getTop3Nose())
-                .palate(wineNote.getTop3Palate())
+                .nose(wineNote.getNose())
+                .palate(wineNote.getPalate())
 
-                .satisfaction(Math.max(wine.getSatisfaction(), wineNote.getSatisfaction()))
+                .satisfaction(Math.max(wine.getSatisfaction(), wineNote.getAvgSatisfaction()))
                 .build();
     }
 

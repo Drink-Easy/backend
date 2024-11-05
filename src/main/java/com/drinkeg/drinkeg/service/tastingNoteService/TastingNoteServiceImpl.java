@@ -49,7 +49,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         com.drinkeg.drinkeg.domain.TastingNote tastingNote = tastingNoteRepository
                 .save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
 
-        wineNoteService.updateWineNote(wine);
+        wineNoteService.updateWineNote(wineId);
 
     }
 
@@ -178,6 +178,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         }
 
         tastingNoteRepository.save(foundNote);
+
     }
 
     @Override
@@ -187,7 +188,8 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // noteId로 TastingNote를 찾는다.
-        com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
+        com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
+                -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
@@ -195,9 +197,9 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
-        wineNoteService.updateWineNote(foundNote.getWine());
-
         // TastingNote를 삭제한다.
         tastingNoteRepository.delete(foundNote);
+
+        wineNoteService.updateWineNote(foundNote.getWine().getId());
     }
 }
