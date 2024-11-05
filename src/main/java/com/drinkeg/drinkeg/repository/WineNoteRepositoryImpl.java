@@ -6,6 +6,7 @@ import com.drinkeg.drinkeg.domain.TastingNote;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import static com.drinkeg.drinkeg.domain.QWineNote.wineNote;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;

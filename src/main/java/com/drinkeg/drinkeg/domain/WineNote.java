@@ -35,6 +35,8 @@ public class WineNote extends BaseEntity {
     private float avgBody;
     private float avgAlcohol;
 
+    // Getter 를 통해 Nose 와 Palate 를 얻을 수 있지만,
+    // 그 내부 필드 조회를 위해선 Nose, Palate 에도 각각 Getter 가 필요
     @Embedded
     private Nose nose;
 

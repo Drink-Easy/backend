@@ -9,6 +9,7 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteUpdateRequestDT
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNotePreviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
+import com.drinkeg.drinkeg.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
@@ -17,6 +18,7 @@ import com.drinkeg.drinkeg.service.wineNoteService.WineNoteService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,8 @@ import java.util.List;
 public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final TastingNoteRepository tastingNoteRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     private final MemberService memberService;
     private final WineService wineService;
@@ -49,8 +53,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         com.drinkeg.drinkeg.domain.TastingNote tastingNote = tastingNoteRepository
                 .save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
 
-        wineNoteService.updateWineNote(wineId);
-
+        eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
     }
 
     @Override
@@ -197,9 +200,11 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
+        Long wineId = foundNote.getWine().getId();
+
         // TastingNote를 삭제한다.
         tastingNoteRepository.delete(foundNote);
 
-        wineNoteService.updateWineNote(foundNote.getWine().getId());
+        eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
     }
 }

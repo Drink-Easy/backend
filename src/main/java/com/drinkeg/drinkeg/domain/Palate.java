@@ -1,8 +1,10 @@
 package com.drinkeg.drinkeg.domain;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
 @Embeddable
+@Getter
 public class Palate {
 
     private String palate1;
