@@ -4,6 +4,7 @@ import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineClassConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.WineClass;
+import com.drinkeg.drinkeg.domain.WineClassProgress;
 import com.drinkeg.drinkeg.dto.WineClassDTO.request.WineClassRequestDTO;
 import com.drinkeg.drinkeg.dto.WineClassDTO.response.WineClassResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -13,6 +14,7 @@ import com.drinkeg.drinkeg.repository.WineClassBookMarkRepository;
 import com.drinkeg.drinkeg.repository.WineClassRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineClassBookMarkService.WineClassBookMarkService;
+import com.drinkeg.drinkeg.service.wineClassProgressService.WineClassProgressService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ public class WineClassServiceImpl implements WineClassService {
     private final WineClassRepository wineClassRepository;
     private final WineClassBookMarkService wineClassBookMarkService;
     private final MemberService memberService;
+    private final WineClassProgressService wineClassProgressService;
 
     @Override
     public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail) {

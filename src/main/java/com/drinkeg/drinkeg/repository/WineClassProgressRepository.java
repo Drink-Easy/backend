@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface WineClassProgressRepository extends JpaRepository<WineClassProgress, Long> {
     Optional<WineClassProgress> findByMemberIdAndWineClassId(Long memberId, Long wineClassId);
-    List<WineClassProgress> findByMemberId(Long memberId);
+    WineClassProgress saveByMemberIdAndWineClassIdAndProgress(Long memberId, Long wineClassId, float progress);
 }

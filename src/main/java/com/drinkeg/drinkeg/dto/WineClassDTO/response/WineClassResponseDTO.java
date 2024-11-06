@@ -15,4 +15,5 @@ public class WineClassResponseDTO {
     private String title;
     private String thumbnailUrl;
     private boolean isLiked;
+    private float progress;
 }
