@@ -11,6 +11,7 @@ import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineLectureCompleteRepository;
 import com.drinkeg.drinkeg.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.wineClassProgressService.WineClassProgressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
     @Override
     public WineLectureCompleteResponseDTO saveWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
 
@@ -46,6 +48,8 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
         WineLectureComplete wineLectureComplete = WineLectureCompleteConverter.toWineLectureComplete(wineLecture, member);
         wineLectureCompleteRepository.save(wineLectureComplete);
+
+//        wineClassProgressService.updateProgress(wineLectureComplete.getWineLecture().getWineClass(), member); 추후에 이벤트 리스너로 구현
 
         return WineLectureCompleteConverter.toWineLectureCompleteResponseDTO(wineLectureComplete);
     }
@@ -59,6 +63,8 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
         if (!wineLectureComplete.getMember().equals(member) && !member.getRole().equals("ROLE_ADMIN"))
             throw new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_UNAUTHORIZED);
+
+//        wineClassProgressService.updateProgress(wineLectureComplete.getWineLecture().getWineClass(), member); 추후에 이벤트 리스너로 구현
 
         wineLectureCompleteRepository.delete(wineLectureComplete);
     }

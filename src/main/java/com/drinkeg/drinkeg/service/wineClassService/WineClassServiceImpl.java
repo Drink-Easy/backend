@@ -10,6 +10,7 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineClassRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.wineClassProgressService.WineClassProgressService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class WineClassServiceImpl implements WineClassService {
     private final WineClassRepository wineClassRepository;
     private final MemberService memberService;
+    private final WineClassProgressService wineClassProgressService;
 
     @Override
     public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail) {
@@ -30,7 +32,7 @@ public class WineClassServiceImpl implements WineClassService {
         List<WineClass> wineClasses = wineClassRepository.findAll();
 
         return wineClasses.stream()
-                .map(wineClass -> WineClassConverter.toWineClassResponseDTO(wineClass))
+                .map(wineClass -> WineClassConverter.toWineClassResponseDTO(wineClass, wineClassProgressService.getProgress(wineClass, member)))
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +44,7 @@ public class WineClassServiceImpl implements WineClassService {
                         .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
 
-        return WineClassConverter.toWineClassResponseDTO(wineClass);
+        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassProgressService.getProgress(wineClass, member));
     }
 
     @Override
@@ -68,7 +70,7 @@ public class WineClassServiceImpl implements WineClassService {
                 .updateThumbnail(wineClassRequestDTO.getThumbnailUrl())
                 .updateCategory(wineClassRequestDTO.getCategory());
 
-        return WineClassConverter.toWineClassResponseDTO(wineClass);
+        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassProgressService.getProgress(wineClass, member));
     }
 
     @Override

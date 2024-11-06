@@ -1,13 +1,10 @@
 package com.drinkeg.drinkeg.service.wineClassProgressService;
 
-import com.drinkeg.drinkeg.converter.WineClassConverter;
 import com.drinkeg.drinkeg.converter.WineClassProgressConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.WineClass;
 import com.drinkeg.drinkeg.domain.WineClassProgress;
 import com.drinkeg.drinkeg.repository.WineClassProgressRepository;
-import com.drinkeg.drinkeg.repository.WineLectureCompleteRepository;
-import com.drinkeg.drinkeg.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.service.WineLectureCompleteService.WineLectureCompleteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,18 +17,22 @@ public class WineClassProgressServiceImpl implements WineClassProgressService {
 
     @Override
     public float getProgress(WineClass wineClass, Member member) {
-        WineClassProgress wineClassProgress = wineClassProgressRepository.findByWineClassAndMember(wineClass, member)
-                .orElse(wineClassProgressRepository.save(WineClassProgressConverter.toWineClassProgress(wineClass, member, 0.0f)));
+        if (!wineClassProgressRepository.existsByWineClassAndMember(wineClass, member))
+            wineClassProgressRepository.save(WineClassProgressConverter.toWineClassProgress(wineClass, member, 0.0f));
+        WineClassProgress wineClassProgress = wineClassProgressRepository.findByWineClassAndMember(wineClass, member);
+
+        updateProgress(wineClass, member);
 
         return wineClassProgress.getProgress();
     }
 
     @Override
     public float updateProgress(WineClass wineClass, Member member) {
-        WineClassProgress wineClassProgress = wineClassProgressRepository.findByWineClassAndMember(wineClass, member)
-                .orElse(wineClassProgressRepository.save(WineClassProgressConverter.toWineClassProgress(wineClass, member, 0.0f)));
+        if (!wineClassProgressRepository.existsByWineClassAndMember(wineClass, member))
+            wineClassProgressRepository.save(WineClassProgressConverter.toWineClassProgress(wineClass, member, 0.0f));
+        WineClassProgress wineClassProgress = wineClassProgressRepository.findByWineClassAndMember(wineClass, member);
 
-        float wineLectureCount = (float)wineClass.getWineLectures().stream().count();
+        float wineLectureCount = (float)wineClass.getWineLectures().size();
         float wineLectureCompleteCount = (float)wineClass.getWineLectures().stream()
                 .filter(wineLecture -> wineLectureCompleteService.isCompleted(wineLecture, member)).count();
 

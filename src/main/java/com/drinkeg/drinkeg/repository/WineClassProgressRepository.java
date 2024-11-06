@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface WineClassProgressRepository extends JpaRepository<WineClassProgress, Long> {
-    Optional<WineClassProgress> findByWineClassAndMember(WineClass wineClass, Member member);
+    WineClassProgress findByWineClassAndMember(WineClass wineClass, Member member);
+    boolean existsByWineClassAndMember(WineClass wineClass, Member member);
 }

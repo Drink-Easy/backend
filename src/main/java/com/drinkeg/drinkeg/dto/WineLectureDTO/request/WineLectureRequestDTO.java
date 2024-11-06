@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WineLectureRequestDTO {
-    private Long id;
     private String title;
     private String content;
-    private Long WineClassId;
+    private Long wineClassId;
 }
