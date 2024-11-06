@@ -14,5 +14,4 @@ public class WineClassResponseDTO {
     private String category;
     private String title;
     private String thumbnailUrl;
-    private boolean isLiked;
 }

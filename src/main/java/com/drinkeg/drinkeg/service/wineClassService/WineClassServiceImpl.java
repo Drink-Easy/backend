@@ -10,7 +10,6 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineClassRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.wineClassBookMarkService.WineClassBookMarkService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WineClassServiceImpl implements WineClassService {
     private final WineClassRepository wineClassRepository;
-    private final WineClassBookMarkService wineClassBookMarkService;
     private final MemberService memberService;
 
     @Override
@@ -32,7 +30,7 @@ public class WineClassServiceImpl implements WineClassService {
         List<WineClass> wineClasses = wineClassRepository.findAll();
 
         return wineClasses.stream()
-                .map(wineClass -> WineClassConverter.toWineClassResponseDTO(wineClass, wineClassBookMarkService.isLiked(member, wineClass)))
+                .map(wineClass -> WineClassConverter.toWineClassResponseDTO(wineClass))
                 .collect(Collectors.toList());
     }
 
@@ -44,7 +42,7 @@ public class WineClassServiceImpl implements WineClassService {
                         .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
 
-        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassBookMarkService.isLiked(member, wineClass));
+        return WineClassConverter.toWineClassResponseDTO(wineClass);
     }
 
     @Override
@@ -70,7 +68,7 @@ public class WineClassServiceImpl implements WineClassService {
                 .updateThumbnail(wineClassRequestDTO.getThumbnailUrl())
                 .updateCategory(wineClassRequestDTO.getCategory());
 
-        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassBookMarkService.isLiked(member, wineClass));
+        return WineClassConverter.toWineClassResponseDTO(wineClass);
     }
 
     @Override
