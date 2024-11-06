@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.service.tastingNoteService;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.TastingNoteConverter;
 import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteUpdateRequestDTO;
@@ -12,9 +13,10 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.repository.TastingNoteNoseRepository;
+import com.drinkeg.drinkeg.repository.TastingNotePalateRepository;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.wineNoteService.WineNoteService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,8 @@ import java.util.List;
 public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final TastingNoteRepository tastingNoteRepository;
+    private final TastingNoteNoseRepository tastingNoteNoseRepository;
+    private final TastingNotePalateRepository tastingNotePalateRepository;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -56,13 +60,13 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
+    public  TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // noteId로 TastingNote를 찾는다.
-        com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
+        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
@@ -165,11 +169,32 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             foundNote.updateAlcohol(tastingNoteUpdateRequestDTO.getAlcohol());
         }
 
-        if(!tastingNoteUpdateRequestDTO.getNose().isEmpty()) {
-            foundNote.updateNose(tastingNoteUpdateRequestDTO.getNose());
+        List<String> addNoseList = tastingNoteUpdateRequestDTO.getAddNoseList();
+        if(!addNoseList.isEmpty()){
+            for(String addNose: addNoseList){
+                foundNote.addNoseElement(addNose);
+            }
         }
-        if(!tastingNoteUpdateRequestDTO.getPalate().isEmpty()) {
-            foundNote.updatePalete(tastingNoteUpdateRequestDTO.getPalate());
+
+        List<Long> removeNoseList = tastingNoteUpdateRequestDTO.getRemoveNoseList();
+        if(!removeNoseList.isEmpty()){
+            for(Long removeNoseId: removeNoseList){
+                removeNoseElement(removeNoseId);
+            }
+        }
+
+        List<String> addPalateList = tastingNoteUpdateRequestDTO.getAddPalateList();
+        if(!addPalateList.isEmpty()){
+            for(String addPalate: addPalateList){
+                foundNote.addPalateElement(addPalate);
+            }
+        }
+
+        List<Long> removePalateList = tastingNoteUpdateRequestDTO.getRemovePalateList();
+        if(!removePalateList.isEmpty()){
+            for(Long removePalateId: removePalateList){
+                removePalateElement(removePalateId);
+            }
         }
 
         if(tastingNoteUpdateRequestDTO.getSatisfaction() != null) {
@@ -205,5 +230,12 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         tastingNoteRepository.delete(foundNote);
 
         eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
+    }
+
+    private void removeNoseElement(Long noseElementId){
+        tastingNoteNoseRepository.deleteById(noseElementId);
+    }
+    private void removePalateElement(Long palateElementId){
+        tastingNotePalateRepository.deleteById(palateElementId);
     }
 }

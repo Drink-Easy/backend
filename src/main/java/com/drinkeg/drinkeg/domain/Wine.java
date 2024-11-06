@@ -40,7 +40,8 @@ public class Wine {
     private int price;
 
     // cascade = CascadeType.ALL : 와인이 저장될 때 같이 저장됨
-    @OneToOne(mappedBy = "wine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "wine_id")
     private WineNote wineNote;
 
     @Builder.Default

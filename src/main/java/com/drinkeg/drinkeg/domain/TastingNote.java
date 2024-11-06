@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.domain;
 
-import com.drinkeg.drinkeg.converter.StringListConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,14 +43,14 @@ public class TastingNote extends BaseEntity {
     private int body;
     private int alcohol;
 
-    // 향 여러개를 ", "로 구분해서 List로 저장.
+    // nose와 palate를 각각 OneToMany 관계로 설정
     @Builder.Default
-    @Convert(converter = StringListConverter.class)
-    private List<String> nose = new ArrayList<>();
+    @OneToMany(mappedBy = "tastingNote", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TastingNoteNose> noseList = new ArrayList<>();
 
     @Builder.Default
-    @Convert(converter = StringListConverter.class)
-    private List<String> palate = new ArrayList<>();
+    @OneToMany(mappedBy = "tastingNote", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TastingNotePalate> palateList = new ArrayList<>();
 
 
     // 만족도 0 ~ 5, 소수점 가능
@@ -91,12 +90,23 @@ public class TastingNote extends BaseEntity {
         this.alcohol = alcohol;
     }
 
-    // 향 업데이트
-    public void updateNose(List<String> nose) {
-        this.nose = nose;
+
+    // nose 요소 추가 메서드
+    public void addNoseElement(String noseElement) {
+        TastingNoteNose nose = TastingNoteNose.builder()
+                .tastingNote(this)
+                .noseElement(noseElement)
+                .build();
+        this.noseList.add(nose);
     }
-    public void updatePalete(List<String> palate) {
-        this.palate = palate;
+
+    // palate 요소 추가 메서드
+    public void addPalateElement(String palateElement) {
+        TastingNotePalate palate = TastingNotePalate.builder()
+                .tastingNote(this)
+                .palateElement(palateElement)
+                .build();
+        this.palateList.add(palate);
     }
 
     // 만족도 업데이트
