@@ -27,4 +27,9 @@ public class WineClassProgress {
     private WineClass wineClass;
 
     private float progress;
+
+    public WineClassProgress updateProgress(float progress) {
+        this.progress = progress;
+        return this;
+    }
 }

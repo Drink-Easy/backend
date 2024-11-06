@@ -119,6 +119,4 @@ public class WineLectureServiceImpl implements WineLectureService {
         return wineLectureRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
     }
-
-
 }
