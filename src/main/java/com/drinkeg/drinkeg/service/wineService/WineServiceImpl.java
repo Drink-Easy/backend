@@ -8,6 +8,8 @@ import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineRepository;
@@ -58,6 +60,15 @@ public class WineServiceImpl implements WineService {
         return wineRepository.findById(wineId).orElseThrow(()
                     -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
+    }
+
+    public WineResponseDTO getWineResponseByWineId(Long wineId){
+        return wineRepository.findWineResponseByWindId(wineId);
+    }
+
+    @Override
+    public List<WineReviewResponseDTO> getWineReviewsByWineId(Long wineId){
+        return wineRepository.findWineReviewsById(wineId);
     }
 
     @Override
