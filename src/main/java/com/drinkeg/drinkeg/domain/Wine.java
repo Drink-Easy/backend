@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @Builder
@@ -40,8 +42,7 @@ public class Wine {
     private int price;
 
     // cascade = CascadeType.ALL : 와인이 저장될 때 같이 저장됨
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "wine_id")
+    @OneToOne(mappedBy = "wine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private WineNote wineNote;
 
     @Builder.Default

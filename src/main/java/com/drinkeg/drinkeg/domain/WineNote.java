@@ -24,7 +24,8 @@ public class WineNote extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "wineNote")
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "wine_id")
     private Wine wine;
 
     // 점수 평균
