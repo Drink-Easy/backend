@@ -1,21 +1,20 @@
-package com.drinkeg.drinkeg.service.wineNoteService;
+package com.drinkeg.drinkeg.event.wineNoteEvent;
 
-import com.drinkeg.drinkeg.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.repository.WineNoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
 @Transactional
-public class WineNoteServiceImpl implements WineNoteService {
+@Component
+public class WineNoteEventHandler {
 
     private final WineNoteRepository wineNoteRepository;
 
     @EventListener
-    public void handleWineNoteEvent(WineNoteUpdateEvent event) {
+    public void handleWineNoteEvent(WineNoteUpdateEventDTO event) {
         wineNoteRepository.updateWineNoteStatistics(event.getWineId());
     }
 
