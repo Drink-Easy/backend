@@ -2,9 +2,10 @@ package com.drinkeg.drinkeg.repository;
 
 import com.drinkeg.drinkeg.domain.Nose;
 import com.drinkeg.drinkeg.domain.Palate;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,58 +14,59 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.QTastingNote.tastingNote;
+import static com.drinkeg.drinkeg.domain.QTastingNoteNose.tastingNoteNose;
+import static com.drinkeg.drinkeg.domain.QTastingNotePalate.tastingNotePalate;
 import static com.drinkeg.drinkeg.domain.QWineNote.wineNote;
 
 @Repository
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final EntityManager entityManager;
 
     // WineNote 업데이트 메서드
     public void updateWineNoteStatistics(Long wineId) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        // 평균 점수 한 번에 계산
-        var result = queryFactory
+        // 평균 점수 한 번에 계산 및 null 안전 처리
+        Tuple result = queryFactory
                 .select(
-                        tastingNote.sugarContent.avg(),
-                        tastingNote.acidity.avg(),
-                        tastingNote.tannin.avg(),
-                        tastingNote.body.avg(),
-                        tastingNote.alcohol.avg(),
-                        tastingNote.satisfaction.avg()
+                        // 평균 값이 NULL 인 경우 0.0을 반환
+                        tastingNote.sugarContent.avg().coalesce(0.0),
+                        tastingNote.acidity.avg().coalesce(0.0),
+                        tastingNote.tannin.avg().coalesce(0.0),
+                        tastingNote.body.avg().coalesce(0.0),
+                        tastingNote.alcohol.avg().coalesce(0.0),
+                        tastingNote.satisfaction.avg().coalesce(0.0)
                 )
                 .from(tastingNote)
                 .where(tastingNote.wine.id.eq(wineId))
                 .fetchOne();
 
-        // 결과가 null 인 경우 바로 반환
-        if (result == null) return;
+        if (result == null) {
+            log.info("No Tasting Notes found for wineId: {}", wineId);
+            return;
+        }
 
-        // 평균 점수 추출 및 null 처리
-        float avgSugarContent = Optional.ofNullable(result.get(0, Double.class)).orElse(0.0).floatValue();
-        float avgAcidity = Optional.ofNullable(result.get(1, Double.class)).orElse(0.0).floatValue();
-        float avgTannin = Optional.ofNullable(result.get(2, Double.class)).orElse(0.0).floatValue();
-        float avgBody = Optional.ofNullable(result.get(3, Double.class)).orElse(0.0).floatValue();
-        float avgAlcohol = Optional.ofNullable(result.get(4, Double.class)).orElse(0.0).floatValue();
-        float avgSatisfaction = Optional.ofNullable(result.get(5, Double.class)).orElse(0.0).floatValue();
+        float avgSugarContent = result.get(0, Double.class).floatValue();
+        float avgAcidity = result.get(1, Double.class).floatValue();
+        float avgTannin = result.get(2, Double.class).floatValue();
+        float avgBody = result.get(3, Double.class).floatValue();
+        float avgAlcohol = result.get(4, Double.class).floatValue();
+        float avgSatisfaction = result.get(5, Double.class).floatValue();
 
-        // 상위 nose 요소 추출 (JSON_TABLE 사용)
-// 상위 nose 요소 추출
-        List<String> topNoses = entityManager.createQuery("""
-        SELECT tn.noseElement 
-        FROM TastingNoteNose tn
-        WHERE tn.tastingNote.wine.id = :wineId
-        GROUP BY tn.noseElement
-        ORDER BY COUNT(tn.noseElement) DESC
-        """, String.class)
-                .setParameter("wineId", wineId)
-                .setMaxResults(3)
-                .getResultList();
+        // 상위 3개의 noseElement 추출
+        List<String> topNoses = queryFactory
+                .select(tastingNoteNose.noseElement)
+                .from(tastingNoteNose)
+                .where(tastingNoteNose.tastingNote.wine.id.eq(wineId))
+                .groupBy(tastingNoteNose.noseElement)
+                .orderBy(tastingNoteNose.noseElement.count().desc())
+                .limit(3)
+                .fetch();
 
         Nose nose = new Nose(
                 !topNoses.isEmpty() ? topNoses.get(0) : null,
@@ -72,17 +74,15 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
                 topNoses.size() > 2 ? topNoses.get(2) : null
         );
 
-        // 상위 palate 요소 추출 (JSON_TABLE 사용)
-        List<String> topPalates = entityManager.createQuery("""
-        SELECT tp.palateElement 
-        FROM TastingNotePalate tp
-        WHERE tp.tastingNote.wine.id = :wineId
-        GROUP BY tp.palateElement
-        ORDER BY COUNT(tp.palateElement) DESC
-        """, String.class)
-                .setParameter("wineId", wineId)
-                .setMaxResults(3)
-                .getResultList();
+        // 상위 3개의 palateElement 추출
+        List<String> topPalates = queryFactory
+                .select(tastingNotePalate.palateElement)
+                .from(tastingNotePalate)
+                .where(tastingNotePalate.tastingNote.wine.id.eq(wineId))
+                .groupBy(tastingNotePalate.palateElement)
+                .orderBy(tastingNotePalate.palateElement.count().desc())
+                .limit(3)
+                .fetch();
 
         Palate palate = new Palate(
                 !topPalates.isEmpty() ? topPalates.get(0) : null,
