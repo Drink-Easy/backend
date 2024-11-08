@@ -14,7 +14,7 @@ public class WineNoteEventHandler {
     private final WineNoteRepository wineNoteRepository;
 
     @EventListener
-    public void handleWineNoteEvent(WineNoteUpdateEventDTO event) {
+    public void handleWineNoteEvent(WineNoteUpdateEvent event) {
         wineNoteRepository.updateWineNoteStatistics(event.getWineId());
     }
 

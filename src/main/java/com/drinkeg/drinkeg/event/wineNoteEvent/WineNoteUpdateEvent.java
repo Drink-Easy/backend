@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class WineNoteUpdateEventDTO {
+public class WineNoteUpdateEvent {
     private final Long wineId;
 }

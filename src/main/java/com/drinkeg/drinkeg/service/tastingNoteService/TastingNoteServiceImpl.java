@@ -9,7 +9,7 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteUpdateRequestDT
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNotePreviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
-import com.drinkeg.drinkeg.event.wineNoteEvent.WineNoteUpdateEventDTO;
+import com.drinkeg.drinkeg.event.wineNoteEvent.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
@@ -51,7 +51,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         com.drinkeg.drinkeg.domain.TastingNote tastingNote = tastingNoteRepository
                 .save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
 
-        eventPublisher.publishEvent(new WineNoteUpdateEventDTO(wineId));
+        eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
     }
 
     @Override
@@ -203,6 +203,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         // TastingNote를 삭제한다.
         tastingNoteRepository.delete(foundNote);
 
-        eventPublisher.publishEvent(new WineNoteUpdateEventDTO(wineId));
+        eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
     }
 }
