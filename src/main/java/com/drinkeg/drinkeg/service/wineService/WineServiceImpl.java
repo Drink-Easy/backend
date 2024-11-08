@@ -63,7 +63,7 @@ public class WineServiceImpl implements WineService {
     }
 
     public WineResponseDTO getWineResponseByWineId(Long wineId){
-        return wineRepository.findWineResponseByWindId(wineId);
+        return wineRepository.findWineResponseByWineId(wineId);
     }
 
     @Override

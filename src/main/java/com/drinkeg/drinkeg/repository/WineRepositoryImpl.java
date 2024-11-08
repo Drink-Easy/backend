@@ -35,7 +35,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom{
     }
 
     @Override
-    public WineResponseDTO findWineResponseByWindId(Long wineId) {
+    public WineResponseDTO findWineResponseByWineId(Long wineId) {
         return queryFactory
                 .select(Projections.constructor(WineResponseDTO.class,
                         wine.id.as("wineId"),

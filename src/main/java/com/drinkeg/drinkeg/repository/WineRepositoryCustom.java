@@ -8,5 +8,5 @@ import java.util.List;
 public interface WineRepositoryCustom {
     List<WineReviewResponseDTO> findWineReviewsById(Long wineId);
 
-    WineResponseDTO findWineResponseByWindId(Long wineId);
+    WineResponseDTO findWineResponseByWineId(Long wineId);
 }
