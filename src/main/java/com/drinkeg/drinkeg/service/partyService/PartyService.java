@@ -24,4 +24,6 @@ public interface PartyService {
     void validatePartyRequest(PartyRequestDTO partyRequest);
     Page<PartyResponseDTO> getSortedParties(String sortType, PrincipalDetail principalDetail, Pageable pageable);
     List<PartyResponseDTO> searchPartiesByName(String searchName);
+    void increaseBookmarkCount(Long partyId);
+    void decreaseBookmarkCount(Long partyId);
 }

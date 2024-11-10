@@ -194,4 +194,25 @@ public class PartyServiceImpl implements PartyService {
         }
     }
 
+    // bookmarkCount 증가 메서드
+    public void increaseBookmarkCount(Long partyId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+
+        int updatedCount = party.getBookmarkCount() + 1;
+        party.updateBookmarkCount(updatedCount); // 커스텀 메서드 호출
+        partyRepository.save(party);
+    }
+
+    // bookmarkCount 감소 메서드
+    public void decreaseBookmarkCount(Long partyId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+
+        if (party.getBookmarkCount() > 0) {
+            int updatedCount = party.getBookmarkCount() - 1;
+            party.updateBookmarkCount(updatedCount); // 커스텀 메서드 호출
+            partyRepository.save(party);
+        }
+    }
 }
