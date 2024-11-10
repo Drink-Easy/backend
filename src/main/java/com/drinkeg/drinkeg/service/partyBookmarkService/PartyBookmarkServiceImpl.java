@@ -2,9 +2,11 @@ package com.drinkeg.drinkeg.service.partyBookmarkService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.PartyBookmarkConverter;
+import com.drinkeg.drinkeg.converter.PartyConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Party;
 import com.drinkeg.drinkeg.domain.PartyBookmark;
+import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.PartyBookmarkRepository;
@@ -13,6 +15,9 @@ import com.drinkeg.drinkeg.service.partyService.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PartyBookmarkServiceImpl implements PartyBookmarkService{
@@ -20,6 +25,8 @@ public class PartyBookmarkServiceImpl implements PartyBookmarkService{
     private final PartyBookmarkConverter partyBookmarkConverter;
     private final MemberService memberService;
     private final PartyService partyService;
+    private final PartyConverter partyConverter;
+
 
     // 북마크 생성
     public void createBookmark(PrincipalDetail principalDetail, Long partyId) {
@@ -53,5 +60,14 @@ public class PartyBookmarkServiceImpl implements PartyBookmarkService{
 
         // bookmarkCount 감소
         partyService.decreaseBookmarkCount(party.getId());
+    }
+
+    // 특정 멤버가 북마크한 파티들을 조회
+    public List<PartyResponseDTO> getMemberBookmarks(PrincipalDetail principalDetail) {
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+
+        return partyBookmarkRepository.findByMember(member).stream()
+                .map(partyBookmark -> partyConverter.toResponse(partyBookmark.getParty()))
+                .collect(Collectors.toList());
     }
 }
