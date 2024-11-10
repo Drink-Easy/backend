@@ -44,6 +44,9 @@ public class Party extends BaseEntity{
     private Long hostId;
     //private String partyWine;
 
+    @Builder.Default
+    private int bookmarkCount = 0;
+
     // BaseEntity 필드
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
