@@ -32,6 +32,8 @@ public class PartyResponseDTO {
 
     private String place;
 
+    private int bookmarkCount;
+
     private LocalDateTime createdAt;
     //private  partyWine;
 }

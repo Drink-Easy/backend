@@ -195,6 +195,7 @@ public class PartyServiceImpl implements PartyService {
     }
 
     // bookmarkCount 증가 메서드
+    @Override
     public void increaseBookmarkCount(Long partyId) {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
@@ -205,6 +206,7 @@ public class PartyServiceImpl implements PartyService {
     }
 
     // bookmarkCount 감소 메서드
+    @Override
     public void decreaseBookmarkCount(Long partyId) {
         Party party = partyRepository.findById(partyId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
