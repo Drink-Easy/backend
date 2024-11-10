@@ -58,4 +58,9 @@ public class Party extends BaseEntity{
     public void updateParticipateMemberNum(int participateMemberNum) {
         this.participateMemberNum = participateMemberNum;
     }
+
+    // bookmarkCount 업데이트 커스텀 메서드
+    public void updateBookmarkCount(int bookmarkCount) {
+        this.bookmarkCount = bookmarkCount;
+    }
 }
