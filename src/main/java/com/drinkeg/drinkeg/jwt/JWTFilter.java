@@ -45,15 +45,16 @@ public class JWTFilter extends OncePerRequestFilter {
         //cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
         String accessToken = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
 
-            System.out.println("cookie = " + cookie.getName()+"= "+cookie.getValue());
-            if (cookie.getName().equals("accessToken")) {
+                System.out.println("cookie = " + cookie.getName() + "= " + cookie.getValue());
+                if (cookie.getName().equals("accessToken")) {
 
-                accessToken = cookie.getValue();
+                    accessToken = cookie.getValue();
+                }
             }
         }
-
 
         //Authorization 헤더 검증
         if (accessToken == null) {

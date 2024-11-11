@@ -31,7 +31,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
     @Override
     public List<WineLectureCompleteResponseDTO> showWineLectureCompleteByMember(PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         List<WineLectureComplete> wineLectureCompletes = wineLectureCompleteRepository.findAllByMember(member);
 
@@ -42,7 +42,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
     @Override
     public WineLectureCompleteResponseDTO saveWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
 
@@ -59,7 +59,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
     @Override
     public void deleteWineLectureCompleteById(Long wineLectureCompleteId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineLectureComplete wineLectureComplete = wineLectureCompleteRepository.findById(wineLectureCompleteId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_NOT_FOUND));

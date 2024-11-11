@@ -28,7 +28,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public Member loadMemberByPrincipleDetail(PrincipalDetail principalDetail) {
+    public Member loadMemberByPrincipalDetail(PrincipalDetail principalDetail) {
         // 현재 로그인한 사용자 정보 가져오기
         String username = principalDetail.getUsername();
 

@@ -1,23 +1,23 @@
 package com.drinkeg.drinkeg.service.tastingNoteService;
 
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllNoteResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteUpdateRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllTastingNoteResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
 
 public interface TastingNoteService {
 
 
-    public void saveNote(PrincipalDetail principalDetail, NoteRequestDTO noteRequestDTO);
+    public void saveTastingNote(TastingNoteRequestDTO tastingNote, PrincipalDetail principalDetail);
 
-    public NoteResponseDTO showNoteById(PrincipalDetail principalDetail, Long noteId);
+    public TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail);
 
-    public AllNoteResponseDTO findAllTastingNote(PrincipalDetail principalDetail, String sort);
+    public AllTastingNoteResponseDTO findAllTastingNote(String sort, PrincipalDetail principalDetail);
 
-    public void updateTastingNote(PrincipalDetail principalDetail, Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO);
+    public void updateTastingNote(Long noteId, TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO, PrincipalDetail principalDetail);
 
-    public void deleteTastingNote(PrincipalDetail principalDetail, Long noteId);
+    public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail);
 
 }
