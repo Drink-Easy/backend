@@ -9,12 +9,13 @@ import com.drinkeg.drinkeg.dto.WineClassDTO.response.WineClassResponseDTO;
 public class WineClassConverter {
 
     // WineCLass를 WineClassResponseDTO로 변환
-    public static WineClassResponseDTO toWineClassResponseDTO(WineClass wineClass) {
+    public static WineClassResponseDTO toWineClassResponseDTO(WineClass wineClass, float progress) {
         return WineClassResponseDTO.builder()
                 .id(wineClass.getId())
                 .title(wineClass.getTitle())
                 .thumbnailUrl(wineClass.getThumbnailUrl())
                 .category(wineClass.getCategory())
+                .progress(progress)
                 .build();
     }
 
