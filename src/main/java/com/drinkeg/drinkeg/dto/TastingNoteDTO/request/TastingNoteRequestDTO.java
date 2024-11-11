@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoteRequestDTO {
+public class TastingNoteRequestDTO {
 
     @NotNull(message = "와인 ID는 필수입니다.")
     private Long wineId;
@@ -51,14 +51,14 @@ public class NoteRequestDTO {
     @Max(value = 10, message = "알콜도는 0 이상 10 이하의 정수 값이어야 합니다.")
     private int alcohol;
 
-    @NotEmpty(message = "아로마 향 선택은 필수입니다.")
-    private List<String> scentAroma = new ArrayList<>();
+    @Builder.Default
+    @NotEmpty(message = "향 선택은 필수입니다.")
+    private List<String> nose = new ArrayList<>();
 
-    @NotEmpty(message = "테이스트 향 선택은 필수입니다.")
-    private List<String> scentTaste = new ArrayList<>();
+    @Builder.Default
+    @NotEmpty(message = "맛 선택은 필수입니다.")
+    private List<String> palate = new ArrayList<>();
 
-    @NotEmpty(message = "피니쉬 향 선택은 필수입니다.")
-    private List<String> scentFinish = new ArrayList<>();
 
     @NotNull(message = "만족도 선택은 필수입니다.")
     @Min(0)

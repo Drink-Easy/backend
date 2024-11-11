@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +34,7 @@ public class Wine {
     private String variety;
 
     // wine.com 별점
-    private float rating;
+    private float satisfaction;
 
     // 가격
     private int price;
@@ -44,6 +43,7 @@ public class Wine {
     @OneToOne(mappedBy = "wine", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private WineNote wineNote;
 
+    @Builder.Default
     @OneToMany
     @JoinColumn(name = "wine_id")
     private List<TastingNote> tastingNoteList = new ArrayList<>();

@@ -12,14 +12,12 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.PartyRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.partyJoinMemberService.PartyJoinMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,7 +26,6 @@ import java.util.stream.Collectors;
 public class PartyServiceImpl implements PartyService {
 
     private final PartyRepository partyRepository;
-    private final PartyJoinMemberService partyJoinMemberService;
     private final PartyConverter partyConverter;
     private final PartyJoinMemberConverter partyJoinMemberConverter;
     private final MemberService memberService;
@@ -48,28 +45,26 @@ public class PartyServiceImpl implements PartyService {
     public void createParty(PartyRequestDTO partyRequest, PrincipalDetail principalDetail) {
 
         // entity 저장
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
         Party party = partyConverter.fromRequest(partyRequest, member);
         Party savedParty = partyRepository.save(party);
 
 
         // 파티 생성 후, 해당 멤버를 PartyJoinMember 테이블에 호스트로 등록
         PartyJoinMember partyJoinMember = partyJoinMemberConverter.toEntity(member, savedParty, true);
-        partyJoinMemberService.save(partyJoinMember);
 
-        // PartyJoinMember 테이블의 기록을 기반으로 참가자 수를 업데이트
-        long participantCount = partyJoinMemberService.countByParty(savedParty);
+        party.getParticipations().add(partyJoinMember);
+        // Party와 PartyJoinMember를 함께 저장 (CascadeType.ALL 덕분에 PartyJoinMember도 함께 저장됨)
+        partyRepository.save(party);
 
-        // 참가자 수(1명)를 party 엔티티의 participateMemberNum에 반영하여 업데이트
-        savedParty.setParticipateMemberNum((int) participantCount);
-        partyRepository.save(savedParty);  // 업데이트된 참가자 수를 저장
+
     }
 
 
     @Override
     public Page<PartyResponseDTO> getSortedParties(String sortType, PrincipalDetail principalDetail, Pageable pageable) {
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
-        String memberRegion = memberService.loadMemberByPrincipleDetail(principalDetail).getRegion();
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
+        String memberRegion = memberService.loadMemberByPrincipalDetail(principalDetail).getRegion();
         Page<Party> parties = switch (sortType) {
             case "recent" ->
                 // 최신순 정렬
@@ -120,7 +115,7 @@ public class PartyServiceImpl implements PartyService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
 
         // hostId로 소유자 확인
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
         Long memberId = foundMember.getId();
         if (existingParty.getHostId() == null || !existingParty.getHostId().equals(memberId)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_PARTY); // 사용자가 호스트가 아닐 경우 예외 발생
@@ -143,7 +138,7 @@ public class PartyServiceImpl implements PartyService {
         Party party = partyRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
 
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
         Long memberId = foundMember.getId();
         if (party.getHostId() == null || !party.getHostId().equals(memberId)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_PARTY); // 사용자가 호스트가 아닐 경우 예외 발생

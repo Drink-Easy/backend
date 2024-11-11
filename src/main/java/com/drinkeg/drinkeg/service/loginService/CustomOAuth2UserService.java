@@ -36,17 +36,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // token을 통해 응답받은 회원정보
         System.out.println("oAuth2User : " + oAuth2User);
 
-
-        if (registrationId.equals("naver")) {
-
-            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
-
-        }
-        else if (registrationId.equals("google")) {
-
-            oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("kakao")) {
+        // 카카오 소셜 로그인
+        if (registrationId.equals("kakao")) {
             oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
         }
         else {

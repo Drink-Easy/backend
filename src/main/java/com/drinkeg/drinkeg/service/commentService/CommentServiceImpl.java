@@ -106,11 +106,11 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public void createComment(CommentRequestDTO commentRequest, PrincipalDetail principalDetail) {
+    public void createComment(PrincipalDetail principalDetail, CommentRequestDTO commentRequest) {
 
 
         // Party와 Member 존재 여부 검증
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
         Party party = partyService.findPartyById(commentRequest.getPartyId());
 
         // Comment 엔티티 생성
@@ -123,13 +123,13 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public void deleteComment(Long commentId, PrincipalDetail principalDetail) {
+    public void deleteComment(PrincipalDetail principalDetail, Long commentId) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
         // 현재 로그인 한 사용자가 작성자인지 확인
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
         if(comment.getMember() == null || !comment.getMember().equals(foundMember)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }
@@ -146,13 +146,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateCommentStatus(Long commentId, PrincipalDetail principalDetail) {
+    public void updateCommentStatus(PrincipalDetail principalDetail, Long commentId) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
         // 현재 로그인 한 사용자가 작성자인지 확인
-        Member foundMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
         if(comment.getMember() == null || !comment.getMember().equals(foundMember)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }

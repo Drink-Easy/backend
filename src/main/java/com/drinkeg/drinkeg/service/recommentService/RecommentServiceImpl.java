@@ -8,9 +8,7 @@ import com.drinkeg.drinkeg.domain.Recomment;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.CommentRepository;
 import com.drinkeg.drinkeg.repository.RecommentRepository;
-import com.drinkeg.drinkeg.service.commentService.CommentService;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,6 @@ public class RecommentServiceImpl implements RecommentService{
     private final RecommentRepository recommentRepository;
     private final RecommentConverter recommentConverter;
     private final MemberService memberService;
-    private final CommentService commentService;
 
 
     // 댓글 ID로 대댓글을 조회하는 메서드
@@ -48,12 +45,10 @@ public class RecommentServiceImpl implements RecommentService{
 
 
     @Override
-    public void createRecomment(Long commentId, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail) {
-        // 댓글 존재 여부 검증
-        Comment comment = commentService.findByIdOrThrow(commentId);
+    public void createRecomment(Comment comment, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail) {
 
         // 회원 존재 여부 검증
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // 대댓글 엔티티 생성
         Recomment recomment = recommentConverter.fromRequest(recommentRequest, comment, member);
@@ -64,17 +59,15 @@ public class RecommentServiceImpl implements RecommentService{
     }
 
     @Override
-    public void deleteRecomment(Long commentId, Long recommentId, PrincipalDetail principalDetail) {
-        // 댓글 존재 여부 검증
-        Comment comment = commentService.findByIdOrThrow(commentId);
+    public void deleteRecomment(PrincipalDetail principalDetail, Long recommentId) {
 
         // 대댓글 존재 여부 검증
         Recomment recomment = recommentRepository.findById(recommentId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.RECOMMENT_NOT_FOUND));
 
         // 현재 로그인 한 사용자가 작성자인지 확인
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
-        if(comment.getMember() == null || !comment.getMember().equals(member)) {
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        if(recomment.getMember() == null || !recomment.getMember().equals(member)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }
 

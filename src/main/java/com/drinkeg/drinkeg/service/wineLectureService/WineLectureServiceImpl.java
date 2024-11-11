@@ -10,6 +10,7 @@ import com.drinkeg.drinkeg.dto.WineLectureDTO.response.WineLectureResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineLectureRepository;
+import com.drinkeg.drinkeg.service.WineLectureCompleteService.WineLectureCompleteService;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineClassService.WineClassService;
 import jakarta.transaction.Transactional;
@@ -24,54 +25,55 @@ import java.util.stream.Collectors;
 @Transactional
 public class WineLectureServiceImpl implements WineLectureService {
     private final WineLectureRepository wineLectureRepository;
+    private final WineLectureCompleteService wineLectureCompleteService;
     private final WineClassService wineClassService;
     private final MemberService memberService;
 
     @Override
     public List<WineLectureResponseDTO> showAllWineLectures(PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         List<WineLecture> wineLectures = wineLectureRepository.findAll();
         return wineLectures.stream()
-                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, member))
+                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member)))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<WineLectureResponseDTO> showAllWineLecturesByWineClass(Long wineClassId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineClass wineClass = wineClassService.getWineClassById(wineClassId);
 
         List<WineLecture> wineLectures = wineLectureRepository.findByWineClass(wineClass);
         return wineLectures.stream()
-                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, member))
+                .map(wineLecture -> WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member)))
                 .collect(Collectors.toList());
     }
 
     @Override
     public WineLectureResponseDTO showWineLectureById(Long wineLectureId,PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
-        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, member);
+        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member));
     }
 
     @Override
     public WineLectureResponseDTO saveWineLecture(WineLectureRequestDTO wineLectureRequestDTO, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
         WineClass wineClass = wineClassService.getWineClassById(wineLectureRequestDTO.getWineClassId());
 
         WineLecture wineLecture = WineLectureConverter.toWineLecture(wineLectureRequestDTO, wineClass, member);
 
         wineLectureRepository.save(wineLecture);
-        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, member);
+        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member));
     }
 
     @Override
     public WineLectureResponseDTO updateWineLecture(WineLectureRequestDTO wineLectureRequestDTO, Long wineLectureId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
@@ -86,12 +88,12 @@ public class WineLectureServiceImpl implements WineLectureService {
                 .updateTitle(wineLectureRequestDTO.getTitle())
                 .updateContent(wineLectureRequestDTO.getContent());
 
-        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, member);
+        return WineLectureConverter.toWineLectureResponseDTO(wineLecture, wineLectureCompleteService.isCompleted(wineLecture, member));
     }
 
     @Override
     public void deleteWineLecture(Long wineLectureId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                         .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));

@@ -3,66 +3,70 @@ package com.drinkeg.drinkeg.service.tastingNoteService;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.TastingNoteConverter;
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.NoteUpdateRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NotePriviewResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.NoteResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteUpdateRequestDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllTastingNoteResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNotePreviewResponseDTO;
+import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
-import com.drinkeg.drinkeg.repository.WineRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.wineNoteService.WineNoteService;
+import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final TastingNoteRepository tastingNoteRepository;
-    private final WineRepository wineRepository;
 
     private final MemberService memberService;
+    private final WineService wineService;
+    private final WineNoteService wineNoteService;
 
     @Override
-    public void saveNote(NoteRequestDTO noteRequestDTO,  PrincipalDetail principalDetail) {
+    public void saveTastingNote(TastingNoteRequestDTO tastingNoteRequestDTO, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // 와인을 찾는다.
-        Long wineId = noteRequestDTO.getWineId();
-        Wine wine = wineRepository.findById(wineId).orElseThrow(()
-                -> new GeneralException(ErrorStatus.WINE_NOT_FOUND)
-        );
+        Long wineId = tastingNoteRequestDTO.getWineId();
+        Wine wine = wineService.findWineById(wineId);
 
         // TastingNote를 저장한다.
-        TastingNote tastingNoteEntity = TastingNoteConverter.toTastingNoteEntity(noteRequestDTO, member, wine);
-        TastingNote savedNote = tastingNoteRepository.save(tastingNoteEntity);
+        com.drinkeg.drinkeg.domain.TastingNote tastingNote = tastingNoteRepository
+                .save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
+
+        wineNoteService.updateWineNote(wine.getWineNote(), tastingNote, true);
+
     }
 
     @Override
-    public NoteResponseDTO showNoteById(Long noteId, PrincipalDetail principalDetail) {
+    public TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
+        com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
         // TastingNote를 DTO로 변환한다.
@@ -70,82 +74,107 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public List<NotePriviewResponseDTO> findAllNote(PrincipalDetail principalDetail) {
+    public AllTastingNoteResponseDTO findAllTastingNote(String sort, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        log.info("findAllTastingNote : member 조회 완료");
 
         // Member의 TastingNote를 찾는다.
-        List<TastingNote> foundNotes = member.getTastingNotes();
+        List<com.drinkeg.drinkeg.domain.TastingNote> foundNotes = member.getTastingNotes();
+        log.info("findAllTastingNote : tastingNotes 조회 완료");
 
-        // TastingNote를 최신 생성 순으로 정렬한 후, TastingNotePreviewDTO로 변환한다
-        return foundNotes.stream()
-                .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
+        int total = foundNotes.size();
+        int red = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("레드")).count();
+        int white = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("화이트")).count();
+        int sparkling = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("스파클링")).count();
+        int rose = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("로제")).count();
+        int etc = total - (red + white + sparkling + rose);
+
+        // 필터링된 노트를 TastingNotePreviewDTO로 변환
+        List<TastingNotePreviewResponseDTO> tastingNotePreviewResponseDTOList = foundNotes.stream()
+                .filter(note -> filterBySort(note, sort))
+                .sorted(Comparator.comparing(com.drinkeg.drinkeg.domain.TastingNote::getCreatedAt).reversed())
                 .map(TastingNoteConverter::toTastingNotePreviewDTO)
                 .toList();
+
+        return TastingNoteConverter
+                .toAllNoteResponseDTO(tastingNotePreviewResponseDTOList, total, red, white, sparkling, rose, etc);
+    }
+
+    // 와인 타입별 필터링 로직
+    private boolean filterBySort(com.drinkeg.drinkeg.domain.TastingNote note, String sort) {
+        String wineSort = note.getWine().getSort();
+
+        switch (sort) {
+            case "red":
+                return wineSort.contains("레드");
+            case "white":
+                return wineSort.contains("화이트");
+            case "sparkling":
+                return wineSort.contains("스파클링");
+            case "rose":
+                return wineSort.contains("로제");
+            case "all":
+                return true; // 전체 보기
+            default:
+                return !wineSort.contains("레드") && !wineSort.contains("화이트")
+                        && !wineSort.contains("스파클링") && !wineSort.contains("로제");
+        }
     }
 
     @Override
-    public void updateTastingNote(Long noteId, NoteUpdateRequestDTO noteUpdateRequestDTO, PrincipalDetail principalDetail) {
+    public void updateTastingNote(Long noteId, TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
+        com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
         // TastingNote를 업데이트한다.
-        if(noteUpdateRequestDTO.getWineId() != null) {
-            Wine wine = wineRepository.findById(noteUpdateRequestDTO.getWineId()).orElseThrow(()
-                    -> new GeneralException(ErrorStatus.WINE_NOT_FOUND)
-            );
-            foundNote.updateWine(wine);
+        if(tastingNoteUpdateRequestDTO.getColor() != null) {
+            foundNote.updateColor(tastingNoteUpdateRequestDTO.getColor());
         }
-        if(noteUpdateRequestDTO.getColor() != null) {
-            foundNote.updateColor(noteUpdateRequestDTO.getColor());
-        }
-        if(noteUpdateRequestDTO.getTastingDate() != null) {
-            foundNote.updatetasteDate(noteUpdateRequestDTO.getTastingDate());
+        if(tastingNoteUpdateRequestDTO.getTastingDate() != null) {
+            foundNote.updatetasteDate(tastingNoteUpdateRequestDTO.getTastingDate());
         }
 
-        if(noteUpdateRequestDTO.getSugarContent() != null) {
-            foundNote.updateSugarContent(noteUpdateRequestDTO.getSugarContent());
+        if(tastingNoteUpdateRequestDTO.getSugarContent() != null) {
+            foundNote.updateSugarContent(tastingNoteUpdateRequestDTO.getSugarContent());
         }
-        if(noteUpdateRequestDTO.getAcidity() != null) {
-            foundNote.updateAcidity(noteUpdateRequestDTO.getAcidity());
+        if(tastingNoteUpdateRequestDTO.getAcidity() != null) {
+            foundNote.updateAcidity(tastingNoteUpdateRequestDTO.getAcidity());
         }
-        if(noteUpdateRequestDTO.getTannin() != null) {
-            foundNote.updateTannin(noteUpdateRequestDTO.getTannin());
+        if(tastingNoteUpdateRequestDTO.getTannin() != null) {
+            foundNote.updateTannin(tastingNoteUpdateRequestDTO.getTannin());
         }
-        if(noteUpdateRequestDTO.getBody() != null) {
-            foundNote.updateBody(noteUpdateRequestDTO.getBody());
+        if(tastingNoteUpdateRequestDTO.getBody() != null) {
+            foundNote.updateBody(tastingNoteUpdateRequestDTO.getBody());
         }
-        if(noteUpdateRequestDTO.getAlcohol() != null) {
-            foundNote.updateAlcohol(noteUpdateRequestDTO.getAlcohol());
-        }
-
-        if(!noteUpdateRequestDTO.getScentAroma().isEmpty()) {
-            foundNote.updateScentAroma(noteUpdateRequestDTO.getScentAroma());
-        }
-        if(!noteUpdateRequestDTO.getScentTaste().isEmpty()) {
-            foundNote.updateScentTaste(noteUpdateRequestDTO.getScentTaste());
-        }
-        if(!noteUpdateRequestDTO.getScentFinish().isEmpty()) {
-            foundNote.updateScentFinish(noteUpdateRequestDTO.getScentFinish());
+        if(tastingNoteUpdateRequestDTO.getAlcohol() != null) {
+            foundNote.updateAlcohol(tastingNoteUpdateRequestDTO.getAlcohol());
         }
 
-        if(noteUpdateRequestDTO.getSatisfaction() != null) {
-            foundNote.updateSatisfaction(noteUpdateRequestDTO.getSatisfaction());
+        if(!tastingNoteUpdateRequestDTO.getNose().isEmpty()) {
+            foundNote.updateNose(tastingNoteUpdateRequestDTO.getNose());
         }
-        if(noteUpdateRequestDTO.getMemo() != null) {
-            foundNote.updateMemo(noteUpdateRequestDTO.getMemo());
+        if(!tastingNoteUpdateRequestDTO.getPalate().isEmpty()) {
+            foundNote.updatePalete(tastingNoteUpdateRequestDTO.getPalate());
+        }
+
+        if(tastingNoteUpdateRequestDTO.getSatisfaction() != null) {
+            foundNote.updateSatisfaction(tastingNoteUpdateRequestDTO.getSatisfaction());
+        }
+        if(tastingNoteUpdateRequestDTO.getReview() != null) {
+            foundNote.updateMemo(tastingNoteUpdateRequestDTO.getReview());
         }
 
         tastingNoteRepository.save(foundNote);
@@ -155,16 +184,18 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
+        com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(() -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_NOTE);
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
+
+        wineNoteService.updateWineNote(foundNote.getWine().getWineNote(), foundNote, false);
 
         // TastingNote를 삭제한다.
         tastingNoteRepository.delete(foundNote);

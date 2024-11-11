@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoteResponseDTO {
+public class TastingNoteResponseDTO {
 
     private Long noteId;
 
@@ -33,11 +33,10 @@ public class NoteResponseDTO {
     private int body;
     private int alcohol;
 
-    private List<String> scentAroma = new ArrayList<>();
-
-    private List<String> scentTaste = new ArrayList<>();
-
-    private List<String> scentFinish = new ArrayList<>();
+    @Builder.Default
+    private List<String> nose = new ArrayList<>();
+    @Builder.Default
+    private List<String> palate = new ArrayList<>();
 
     private float satisfaction;
 

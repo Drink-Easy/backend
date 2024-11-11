@@ -45,14 +45,14 @@ public class TastingNote extends BaseEntity {
     private int alcohol;
 
     // 향 여러개를 ", "로 구분해서 List로 저장.
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
-    private List<String> scentAroma = new ArrayList<>();
+    private List<String> nose = new ArrayList<>();
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
-    private List<String> scentTaste = new ArrayList<>();
+    private List<String> palate = new ArrayList<>();
 
-    @Convert(converter = StringListConverter.class)
-    private List<String> scentFinish = new ArrayList<>();
 
     // 만족도 0 ~ 5, 소수점 가능
     private float satisfaction;
@@ -92,14 +92,11 @@ public class TastingNote extends BaseEntity {
     }
 
     // 향 업데이트
-    public void updateScentAroma(List<String> scentAroma) {
-        this.scentAroma = scentAroma;
+    public void updateNose(List<String> nose) {
+        this.nose = nose;
     }
-    public void updateScentTaste(List<String> scentTaste) {
-        this.scentTaste = scentTaste;
-    }
-    public void updateScentFinish(List<String> scentFinish) {
-        this.scentFinish = scentFinish;
+    public void updatePalete(List<String> palate) {
+        this.palate = palate;
     }
 
     // 만족도 업데이트

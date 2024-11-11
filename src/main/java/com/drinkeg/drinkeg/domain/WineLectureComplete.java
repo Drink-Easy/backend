@@ -6,24 +6,27 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static jakarta.persistence.FetchType.LAZY;
+import java.time.LocalDateTime;
+
+import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class WineClassBookMark {
-
+@AllArgsConstructor
+public class WineLectureComplete {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "wine_lecture_id", nullable = false)
+    private WineLecture wineLecture;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "wine_class_id", nullable = false)
-    private WineClass wineClass;
+    private LocalDateTime completeDate;
 }

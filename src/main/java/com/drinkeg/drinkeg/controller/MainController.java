@@ -5,13 +5,11 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 // 테스트용 컨드롤러
@@ -22,24 +20,19 @@ public class MainController {
     private final MemberService memberService;
     private final WineService wineService;
 
-    @GetMapping("/maindy")
-    @ResponseBody
-    public String mainAPI() {
-
-        return "main route";
-
-    }
 
     @GetMapping("/main")
+    @Operation(summary = "main", description = "로그인 권한 체크용.")
     public ApiResponse<?> mainP() {
         return ApiResponse.onSuccess("하윙");
     }
 
     @GetMapping("/home")
+    @Operation(summary = "홈화면 페이지", description = "사용자 이름과 추천 와인 List를 homeResponseDTO에 담아서 반환")
     public ApiResponse<HomeResponseDTO> home(@AuthenticationPrincipal PrincipalDetail principalDetail) {
 
         // 로그인 멤버 불러오기
-        Member loadMember = memberService.loadMemberByPrincipleDetail(principalDetail);
+        Member loadMember = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         HomeResponseDTO homeResponseDTO = wineService.getHomeResponse(loadMember);
 

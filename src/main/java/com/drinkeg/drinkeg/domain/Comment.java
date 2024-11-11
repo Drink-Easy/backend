@@ -28,5 +28,6 @@ public class Comment extends BaseEntity {
 
     private String content;
 
+    @Builder.Default
     private boolean isDeleted = false;
 }
