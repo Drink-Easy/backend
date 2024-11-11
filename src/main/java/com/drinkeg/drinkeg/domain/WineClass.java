@@ -34,7 +34,7 @@ public class WineClass {
 
     @Builder.Default
     @OneToMany(mappedBy = "wineClass", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WineClassBookMark> bookmarks = new ArrayList<>();
+    private List<WineLecture> wineLectures = new ArrayList<>();
 
     public WineClass updateTitle(String title) {
         this.title = title;

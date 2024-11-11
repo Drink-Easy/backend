@@ -91,7 +91,10 @@ public enum ErrorStatus implements BaseCode {
     // WineLectureComplete Error
     WINE_LECTURE_COMPLETE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_LECTURE_COMPLETE4001", "수강 이력이 없습니다."),
     WINE_LECTURE_COMPLETE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "WINE_LECTURE_COMPLETE4002", "이미 수강 완료한 강의입니다."),
-    WINE_LECTURE_COMPLETE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_LECTURE_COMPLETE4003", "권한이 없는 강의 수강 이력입니다.");
+    WINE_LECTURE_COMPLETE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_LECTURE_COMPLETE4003", "권한이 없는 강의 수강 이력입니다."),
+
+    // WineClassProgress Error
+    WINE_CLASS_PROGRESS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_CLASS_PROGRESS4001", "진행도가 없습니다.");
 
 
     private final HttpStatus httpStatus;

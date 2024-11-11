@@ -28,4 +28,15 @@ public class WineClassProgress extends BaseEntity{
 
     private float progress;
 
+    public void updateProgress(float progress) {
+        this.progress = progress;
+    }
+
+    public static WineClassProgress create(WineClass wineClass, Member member) {
+        return WineClassProgress.builder()
+                .member(member)
+                .wineClass(wineClass)
+                .progress(0.0f)
+                .build();
+    }
 }

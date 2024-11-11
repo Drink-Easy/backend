@@ -7,12 +7,15 @@ import com.drinkeg.drinkeg.domain.WineLecture;
 import com.drinkeg.drinkeg.domain.WineLectureComplete;
 import com.drinkeg.drinkeg.dto.WineLectureCompleteDTO.response.WineLectureCompleteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.event.wineClassEvent.WineLectureCompleteEvent;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineLectureCompleteRepository;
 import com.drinkeg.drinkeg.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.service.wineClassProgressService.WineClassProgressService;
 import com.drinkeg.drinkeg.service.wineLectureService.WineLectureService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +27,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
     private final WineLectureCompleteRepository wineLectureCompleteRepository;
     private final WineLectureRepository wineLectureRepository;
     private final MemberService memberService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public List<WineLectureCompleteResponseDTO> showWineLectureCompleteByMember(PrincipalDetail principalDetail) {
@@ -48,6 +52,8 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
         WineLectureComplete wineLectureComplete = WineLectureCompleteConverter.toWineLectureComplete(wineLecture, member);
         wineLectureCompleteRepository.save(wineLectureComplete);
 
+        eventPublisher.publishEvent(new WineLectureCompleteEvent(wineLecture.getWineClass().getId(), member.getId()));
+
         return WineLectureCompleteConverter.toWineLectureCompleteResponseDTO(wineLectureComplete);
     }
 
@@ -60,6 +66,8 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
         if (!wineLectureComplete.getMember().equals(member) && !member.getRole().equals("ROLE_ADMIN"))
             throw new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_UNAUTHORIZED);
+
+        eventPublisher.publishEvent(new WineLectureCompleteEvent(wineLectureComplete.getWineLecture().getWineClass().getId(), member.getId()));
 
         wineLectureCompleteRepository.delete(wineLectureComplete);
     }
