@@ -34,43 +34,6 @@ public class WineConverter {
                 .build();
     }
 
-    // 검색한 와인을 노트 와인 응답 DTO로 변환
-    public static WineResponseDTO toWineResponseDTO(Wine wine) {
-        WineNote wineNote = wine.getWineNote();
-
-        return WineResponseDTO.builder()
-                .wineId(wine.getId())
-                .name(wine.getName())
-                .imageUrl(wine.getImageUrl())
-
-                .price(((wine.getPrice() * 1300) / 100) * 100)
-                .sort(wine.getSort())
-                .area(wine.getArea())
-
-                .sugarContent(wineNote.getAvgSugarContent())
-                .acidity(wineNote.getAvgAcidity())
-                .tannin(wineNote.getAvgTannin())
-                .body(wineNote.getAvgBody())
-                .alcohol(wineNote.getAvgAlcohol())
-
-                .nose(wineNote.getNose())
-                .palate(wineNote.getPalate())
-
-                .satisfaction(Math.max(wine.getSatisfaction(), wineNote.getAvgSatisfaction()))
-                .build();
-    }
-
-    // 와인에 대한 사용자 리뷰 DTO 로 변환
-    public static WineReviewResponseDTO toWineReviewResPonseDTO(TastingNote tastingNote){
-
-        return WineReviewResponseDTO.builder()
-                .name(tastingNote.getMember().getName())
-                .satisfaction(tastingNote.getSatisfaction())
-                .review(tastingNote.getReview())
-                .build();
-
-    }
-
     // 홈화면 추천 와인 DTO 로 변환
     public static RecommendWineDTO toRecommendWineDTO(Wine wine){
 
