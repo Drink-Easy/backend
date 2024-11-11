@@ -15,6 +15,7 @@ public class WineClassConverter {
                 .title(wineClass.getTitle())
                 .thumbnailUrl(wineClass.getThumbnailUrl())
                 .category(wineClass.getCategory())
+                .progress(progress)
                 .build();
     }
 
