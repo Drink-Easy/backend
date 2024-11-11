@@ -3,7 +3,6 @@ package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.converter.WineConverter;
-import com.drinkeg.drinkeg.converter.WineNoteConverter;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.domain.WineNote;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
@@ -43,8 +42,7 @@ public class WineController {
     @Operation(summary = "선택 와인 정보 열람", description = "선택한 와인의 정보를 wineResponseDTO에 담아 반환")
     public ApiResponse<WineResponseDTO> showWine(@PathVariable("wineId") Long wineId) {
 
-        Wine foundWine = wineService.findWineById(wineId);
-        WineResponseDTO wineResponseDTO = WineConverter.toWineResponseDTO(foundWine);
+        WineResponseDTO wineResponseDTO = wineService.getWineResponseByWineId(wineId);
 
         return ApiResponse.onSuccess(wineResponseDTO);
     }
@@ -54,26 +52,9 @@ public class WineController {
     @Operation(summary = "선택 와인 리뷰 열람", description = "선택한 와인 리뷰를 List로 반환")
     public ApiResponse<List<WineReviewResponseDTO>> showWineReview(@PathVariable("wineId") Long wineId) {
 
-        Wine foundWine = wineService.findWineById(wineId);
+        List<WineReviewResponseDTO> wineReviews = wineService.getWineReviewsByWineId(wineId);
 
-        List<WineReviewResponseDTO> wineReviewResponseDTOList = foundWine.getTastingNoteList()
-                .stream()
-                .map(WineConverter::toWineReviewResPonseDTO).toList();
-
-        return ApiResponse.onSuccess(wineReviewResponseDTOList);
-    }
-
-    // 와인노트 (테이스팅노트 평균) 보기
-    @GetMapping("/note/{wineId}")
-    @Operation(summary = "와인노트 열람", description = "선택한 와인의 wineId로 와인노트 열람(백엔드 확인용, 프론트에서는 wine 검색 시 반영됨")
-    public ApiResponse<WineNoteResponseDTO> showWineNote(@PathVariable("wineId") Long wineId) {
-
-        Wine foundWine = wineService.findWineById(wineId);
-        WineNote wineNote = foundWine.getWineNote();
-
-        WineNoteResponseDTO wineNoteResponseDTO = WineNoteConverter.toWineNoteResponseDTO(wineNote);
-
-        return ApiResponse.onSuccess(wineNoteResponseDTO);
+        return ApiResponse.onSuccess(wineReviews);
     }
 
     // 와인 이미지 업로드

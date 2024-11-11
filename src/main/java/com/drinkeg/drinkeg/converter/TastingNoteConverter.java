@@ -1,39 +1,46 @@
 package com.drinkeg.drinkeg.converter;
 
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.Wine;
+import com.drinkeg.drinkeg.domain.*;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNotePreviewResponseDTO;
 import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TastingNoteConverter {
 
     // NoteRequestDTO를 TastingNote Entity로 변환
     // NotNull은 null이 아님을 보장하는 어노테이션
-    public static com.drinkeg.drinkeg.domain.TastingNote toTastingNoteEntity(TastingNoteRequestDTO tastingNote, @NotNull Member member, @NotNull Wine wine) {
-        return com.drinkeg.drinkeg.domain.TastingNote.builder()
+    public static com.drinkeg.drinkeg.domain.TastingNote toTastingNoteEntity(TastingNoteRequestDTO tastingNoteRequestDTO, @NotNull Member member, @NotNull Wine wine) {
+        TastingNote tastingNote = TastingNote.builder()
                 .member(member)
 
                 .wine(wine)
-                .color(tastingNote.getColor())
-                .tasteDate(tastingNote.getTasteDate())
+                .color(tastingNoteRequestDTO.getColor())
+                .tasteDate(tastingNoteRequestDTO.getTasteDate())
 
-                .sugarContent(tastingNote.getSugarContent())
-                .acidity(tastingNote.getAcidity())
-                .tannin(tastingNote.getTannin())
-                .body(tastingNote.getBody())
-                .alcohol(tastingNote.getAlcohol())
+                .sugarContent(tastingNoteRequestDTO.getSugarContent())
+                .acidity(tastingNoteRequestDTO.getAcidity())
+                .tannin(tastingNoteRequestDTO.getTannin())
+                .body(tastingNoteRequestDTO.getBody())
+                .alcohol(tastingNoteRequestDTO.getAlcohol())
 
-                .nose(tastingNote.getNose())
-                .palate(tastingNote.getPalate())
 
-                .satisfaction(tastingNote.getSatisfaction())
-                .review(tastingNote.getReview())
+                .satisfaction(tastingNoteRequestDTO.getSatisfaction())
+                .review(tastingNoteRequestDTO.getReview())
                 .build();
+        for(String noseElement : tastingNoteRequestDTO.getNose()){
+            tastingNote.addNoseElement(noseElement);
+        }
+        for(String palateElement : tastingNoteRequestDTO.getPalate()){
+            tastingNote.addPalateElement(palateElement);
+        }
+        return tastingNote;
     }
 
     // TastingNote Entity를 NoteResponseDTO로 변환
@@ -57,12 +64,25 @@ public class TastingNoteConverter {
                 .body(tastingNote.getBody())
                 .alcohol(tastingNote.getAlcohol())
 
-                .nose(tastingNote.getNose())
-                .palate(tastingNote.getPalate())
+                .noseList(tastingNote.getNoseList().stream()
+                        .map(nose -> {
+                            Map<Long, String> noseMap = new HashMap<>();
+                            noseMap.put(nose.getId(), nose.getNoseElement());
+                            return noseMap;
+                        })
+                        .collect(Collectors.toList()))
+                .palateList(tastingNote.getPalateList().stream()
+                        .map(palate -> {
+                            Map<Long, String> noseMap = new HashMap<>();
+                            noseMap.put(palate.getId(), palate.getPalateElement());
+                            return noseMap;
+                        })
+                        .collect(Collectors.toList()))
 
                 .satisfaction(tastingNote.getSatisfaction())
                 .review(tastingNote.getReview())
                 .build();
+
     }
 
     // TastingNote Entity를 NotePriviewResponseDTO로 변환
