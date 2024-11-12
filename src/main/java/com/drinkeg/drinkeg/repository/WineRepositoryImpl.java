@@ -50,7 +50,6 @@ public class WineRepositoryImpl implements WineRepositoryCustom{
                         wine.wineNote.avgBody.as("body"),
                         wine.wineNote.avgAlcohol.as("alcohol"),
                         wine.wineNote.nose,
-                        wine.wineNote.palate,
                         new CaseBuilder()
                                 .when(wine.wineNote.avgSatisfaction.eq(0.0F))
                                 .then(wine.satisfaction)

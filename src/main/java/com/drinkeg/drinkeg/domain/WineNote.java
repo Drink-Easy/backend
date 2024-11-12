@@ -7,11 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -35,13 +30,10 @@ public class WineNote extends BaseEntity {
     private float avgBody;
     private float avgAlcohol;
 
-    // Getter 를 통해 Nose 와 Palate 를 얻을 수 있지만,
-    // 그 내부 필드 조회를 위해선 Nose, Palate 에도 각각 Getter 가 필요
+    // Getter 를 통해 Nose 를 얻을 수 있지만,
+    // 그 내부 필드 조회를 위해선 Nose 에도 Getter 가 필요
     @Embedded
     private Nose nose;
-
-    @Embedded
-    private Palate palate;
 
     // 만족도 평균
     private float avgSatisfaction;

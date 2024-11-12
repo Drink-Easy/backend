@@ -36,8 +36,6 @@ public class TastingNoteUpdateRequestDTO {
 
     private final List<String> addNoseList = new ArrayList<>();
     private final List<Long> removeNoseList = new ArrayList<>();
-    private final List<String> addPalateList = new ArrayList<>();
-    private final List<Long> removePalateList = new ArrayList<>();
 
     @Min(0)
     @Max(5)

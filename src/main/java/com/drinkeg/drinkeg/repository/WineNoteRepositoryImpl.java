@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.repository;
 
 import com.drinkeg.drinkeg.domain.Nose;
-import com.drinkeg.drinkeg.domain.Palate;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.QTastingNoteNose.tastingNoteNose;
-import static com.drinkeg.drinkeg.domain.QTastingNotePalate.tastingNotePalate;
 import static com.drinkeg.drinkeg.domain.QWineNote.wineNote;
 
 @Repository
@@ -74,22 +72,6 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
                 topNoses.size() > 2 ? topNoses.get(2) : null
         );
 
-        // 상위 3개의 palateElement 추출
-        List<String> topPalates = queryFactory
-                .select(tastingNotePalate.palateElement)
-                .from(tastingNotePalate)
-                .where(tastingNotePalate.tastingNote.wine.id.eq(wineId))
-                .groupBy(tastingNotePalate.palateElement)
-                .orderBy(tastingNotePalate.palateElement.count().desc())
-                .limit(3)
-                .fetch();
-
-        Palate palate = new Palate(
-                !topPalates.isEmpty() ? topPalates.get(0) : null,
-                topPalates.size() > 1 ? topPalates.get(1) : null,
-                topPalates.size() > 2 ? topPalates.get(2) : null
-        );
-
         // WineNote 업데이트
         queryFactory.update(wineNote)
                 .where(wineNote.wine.id.eq(wineId))
@@ -100,7 +82,6 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
                 .set(wineNote.avgAlcohol, avgAlcohol)
                 .set(wineNote.avgSatisfaction, avgSatisfaction)
                 .set(wineNote.nose, nose)
-                .set(wineNote.palate, palate)
                 .execute();
 
         stopWatch.stop();

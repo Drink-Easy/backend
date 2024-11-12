@@ -37,9 +37,6 @@ public class TastingNoteConverter {
         for(String noseElement : tastingNoteRequestDTO.getNose()){
             tastingNote.addNoseElement(noseElement);
         }
-        for(String palateElement : tastingNoteRequestDTO.getPalate()){
-            tastingNote.addPalateElement(palateElement);
-        }
         return tastingNote;
     }
 
@@ -68,13 +65,6 @@ public class TastingNoteConverter {
                         .map(nose -> {
                             Map<Long, String> noseMap = new HashMap<>();
                             noseMap.put(nose.getId(), nose.getNoseElement());
-                            return noseMap;
-                        })
-                        .collect(Collectors.toList()))
-                .palateList(tastingNote.getPalateList().stream()
-                        .map(palate -> {
-                            Map<Long, String> noseMap = new HashMap<>();
-                            noseMap.put(palate.getId(), palate.getPalateElement());
                             return noseMap;
                         })
                         .collect(Collectors.toList()))

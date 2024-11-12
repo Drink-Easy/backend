@@ -36,8 +36,6 @@ public class TastingNoteResponseDTO {
 
     @Builder.Default
     private List<Map<Long, String>> noseList = new ArrayList<>();
-    @Builder.Default
-    private List<Map<Long, String>> palateList = new ArrayList<>();
 
     private float satisfaction;
 
