@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.event.wineNoteEvent;
 
-import com.drinkeg.drinkeg.repository.WineNoteRepository;
+import com.drinkeg.drinkeg.service.wineNoteService.WineNoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class WineNoteEventHandler {
 
-    private final WineNoteRepository wineNoteRepository;
+    private final WineNoteService wineNoteService;
 
     @EventListener
     public void handleWineNoteEvent(WineNoteUpdateEvent event) {
-        wineNoteRepository.updateWineNoteStatistics(event.getWineId());
+        wineNoteService.updateWineNoteStatistics(event.getWineId());
     }
 
 }
