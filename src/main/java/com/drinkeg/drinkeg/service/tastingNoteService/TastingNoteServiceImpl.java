@@ -46,15 +46,16 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public void saveTastingNote(TastingNoteRequestDTO tastingNoteRequestDTO, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
+        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
+        );
 
         // 와인을 찾는다.
         Long wineId = tastingNoteRequestDTO.getWineId();
         Wine wine = wineService.findWineById(wineId);
 
         // TastingNote를 저장한다.
-        com.drinkeg.drinkeg.domain.TastingNote tastingNote = tastingNoteRepository
-                .save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
+        tastingNoteRepository.save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
 
         eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
     }
@@ -128,7 +129,9 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public void updateTastingNote(Long noteId, TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
+        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
+        );
 
         // noteId로 TastingNote를 찾는다.
         com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
@@ -193,14 +196,16 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.getMemberByUsername(principalDetail.getUsername());
-
-        // noteId로 TastingNote를 찾는다.
-        com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
-                -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
+        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
         );
 
-        // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
+        // noteId로 TastingNote 를 찾는다.
+        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(
+                () -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
+        );
+
+        // TastingNote 의 Member 가 요청한 Member 와 같은지 확인한다.
         if(!foundNote.getMember().equals(member)) {
             throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
