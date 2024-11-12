@@ -64,7 +64,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
+        TastingNote foundNote = tastingNoteRepository.findByIdWithWineAndNose(noteId).orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
