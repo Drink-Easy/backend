@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -78,12 +77,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     @Override
     public AllTastingNoteResponseDTO findAllTastingNote(String sort, PrincipalDetail principalDetail) {
-
-        // 회원을 조회한다.
-        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
-
-        // Member의 TastingNote를 찾는다.
-        List<com.drinkeg.drinkeg.domain.TastingNote> foundNotes = member.getTastingNotes();
+        long startTime = System.currentTimeMillis();
+        // username 을 이용해서 TastingNotes 조회
+        // TastingNotes 조회 시 Wine, WineNose fetch join 하여 최적화
+        List<TastingNote> foundNotes= tastingNoteRepository.findTastingNotesWithWineAndNoseByUsername(principalDetail.getUsername());
 
         int total = foundNotes.size();
         int red = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("레드")).count();
@@ -98,6 +95,9 @@ public class TastingNoteServiceImpl implements TastingNoteService {
                 .sorted(Comparator.comparing(com.drinkeg.drinkeg.domain.TastingNote::getCreatedAt).reversed())
                 .map(TastingNoteConverter::toTastingNotePreviewDTO)
                 .toList();
+
+        long stopTime = System.currentTimeMillis();
+        System.out.println(stopTime - startTime);
 
         return TastingNoteConverter
                 .toAllNoteResponseDTO(tastingNotePreviewResponseDTOList, total, red, white, sparkling, rose, etc);
@@ -193,7 +193,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
+        Member member = memberService.getMemberByUsername(principalDetail.getUsername());
 
         // noteId로 TastingNote를 찾는다.
         com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()

@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
+import static com.drinkeg.drinkeg.domain.QMember.member;
 import static com.drinkeg.drinkeg.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.QTastingNoteNose.tastingNoteNose;
 import static com.drinkeg.drinkeg.domain.QWine.wine;
@@ -29,5 +31,15 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                         .where(tastingNote.id.eq(tastingNoteId))
                         .fetchOne()
         );
+    }
+
+    @Override
+    public List<TastingNote> findTastingNotesWithWineAndNoseByUsername(String username) {
+        return queryFactory.selectFrom(tastingNote)
+                .leftJoin(tastingNote.member, member).fetchJoin()
+                .leftJoin(tastingNote.wine, wine).fetchJoin()
+                .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
+                .where(member.username.eq(username))
+                .fetch();
     }
 }
