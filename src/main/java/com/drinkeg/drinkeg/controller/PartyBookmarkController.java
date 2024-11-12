@@ -31,7 +31,7 @@ public class PartyBookmarkController {
     @DeleteMapping("/{partyId}")
     public ApiResponse<String> cancelBookmark(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
-            @PathVariable Long partyId) {
+            @PathVariable("partyId") Long partyId) {
 
         partyBookmarkService.cancelBookmark(principalDetail, partyId);
         return ApiResponse.onSuccess("북마크 취소 완료");
