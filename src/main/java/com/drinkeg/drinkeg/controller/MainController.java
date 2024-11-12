@@ -32,7 +32,7 @@ public class MainController {
     public ApiResponse<HomeResponseDTO> home(@AuthenticationPrincipal PrincipalDetail principalDetail) {
 
         // 로그인 멤버 불러오기
-        Member loadMember = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member loadMember = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
 
         HomeResponseDTO homeResponseDTO = wineService.getHomeResponse(loadMember);
 

@@ -40,7 +40,7 @@ public class RecommentServiceImpl implements RecommentService{
     public void createRecomment(Comment comment, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail) {
 
         // 회원 존재 여부 검증
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
 
         // 대댓글 엔티티 생성
         Recomment recomment = recommentConverter.fromRequest(recommentRequest, comment, member);
@@ -58,7 +58,7 @@ public class RecommentServiceImpl implements RecommentService{
                 .orElseThrow(() -> new GeneralException(ErrorStatus.RECOMMENT_NOT_FOUND));
 
         // 현재 로그인 한 사용자가 작성자인지 확인
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
         if(recomment.getMember() == null || !recomment.getMember().equals(member)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }

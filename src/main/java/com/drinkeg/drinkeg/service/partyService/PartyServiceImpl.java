@@ -45,7 +45,7 @@ public class PartyServiceImpl implements PartyService {
     public void createParty(PartyRequestDTO partyRequest, PrincipalDetail principalDetail) {
 
         // entity 저장
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
         Party party = partyConverter.fromRequest(partyRequest, member);
         Party savedParty = partyRepository.save(party);
 
@@ -63,8 +63,8 @@ public class PartyServiceImpl implements PartyService {
 
     @Override
     public Page<PartyResponseDTO> getSortedParties(String sortType, PrincipalDetail principalDetail, Pageable pageable) {
-        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
-        String memberRegion = memberService.loadMemberByPrincipalDetail(principalDetail).getRegion();
+        Member foundMember = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
+        String memberRegion = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail).getRegion();
         Page<Party> parties = switch (sortType) {
             case "recent" ->
                 // 최신순 정렬
@@ -115,7 +115,7 @@ public class PartyServiceImpl implements PartyService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
 
         // hostId로 소유자 확인
-        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member foundMember = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
         Long memberId = foundMember.getId();
         if (existingParty.getHostId() == null || !existingParty.getHostId().equals(memberId)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_PARTY); // 사용자가 호스트가 아닐 경우 예외 발생
@@ -138,7 +138,7 @@ public class PartyServiceImpl implements PartyService {
         Party party = partyRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
 
-        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member foundMember = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
         Long memberId = foundMember.getId();
         if (party.getHostId() == null || !party.getHostId().equals(memberId)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_PARTY); // 사용자가 호스트가 아닐 경우 예외 발생

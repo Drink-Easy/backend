@@ -12,8 +12,6 @@ import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineLectureCompleteRepository;
 import com.drinkeg.drinkeg.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.wineClassProgressService.WineClassProgressService;
-import com.drinkeg.drinkeg.service.wineLectureService.WineLectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -31,7 +29,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
     @Override
     public List<WineLectureCompleteResponseDTO> showWineLectureCompleteByMember(PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
 
         List<WineLectureComplete> wineLectureCompletes = wineLectureCompleteRepository.findAllByMember(member);
 
@@ -42,7 +40,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
     @Override
     public WineLectureCompleteResponseDTO saveWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
 
@@ -59,7 +57,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
     @Override
     public void deleteWineLectureCompleteById(Long wineLectureCompleteId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
 
         WineLectureComplete wineLectureComplete = wineLectureCompleteRepository.findById(wineLectureCompleteId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_NOT_FOUND));

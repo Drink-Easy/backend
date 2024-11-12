@@ -36,7 +36,7 @@ public class PartyJoinMemberServiceImpl implements PartyJoinMemberService{
     @Override
     public void participateInParty(PrincipalDetail principalDetail, Long partyId) {
         // 멤버와 파티를 조회
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
         Party party = partyService.findPartyById(partyId);
 
         // 이미 해당 모임에 참가했는지 확인
@@ -62,7 +62,7 @@ public class PartyJoinMemberServiceImpl implements PartyJoinMemberService{
     @Override
     public void cancelPartyJoin(PrincipalDetail principalDetail, Long partyId) {
         // 멤버와 파티를 조회
-        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
+        Member foundMember = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
         Long memberId = foundMember.getId();
         Party party = partyService.findPartyById(partyId);
 
