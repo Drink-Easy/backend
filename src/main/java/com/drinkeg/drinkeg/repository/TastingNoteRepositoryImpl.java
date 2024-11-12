@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.repository;
 
+import com.drinkeg.drinkeg.domain.QMember;
 import com.drinkeg.drinkeg.domain.TastingNote;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +24,10 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     public Optional<TastingNote> findByIdWithWineAndNose(Long tastingNoteId) {
         return Optional.ofNullable(
                 queryFactory.selectFrom(tastingNote)
-                .leftJoin(tastingNote.wine, wine).fetchJoin()
-                .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
-                .where(tastingNote.id.eq(tastingNoteId))
-                .fetchOne()
+                        .leftJoin(tastingNote.wine, wine).fetchJoin()
+                        .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
+                        .where(tastingNote.id.eq(tastingNoteId))
+                        .fetchOne()
         );
     }
 }

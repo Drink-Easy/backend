@@ -24,7 +24,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
         return Optional.ofNullable(
                 queryFactory.selectFrom(QMember.member)
                         .leftJoin(QMember.member.tastingNotes, QTastingNote.tastingNote).fetchJoin()
-                        .leftJoin(QTastingNote.tastingNote.wine, QWine.wine).fetchJoin()
+                        // .leftJoin(QTastingNote.tastingNote.wine, QWine.wine).fetchJoin()
                         .where(QMember.member.username.eq(username))
                         .fetchOne()
         );

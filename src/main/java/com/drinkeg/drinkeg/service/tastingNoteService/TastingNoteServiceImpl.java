@@ -13,6 +13,7 @@ import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.event.wineNoteEvent.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.TastingNoteNoseRepository;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -39,6 +41,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final MemberService memberService;
     private final WineService wineService;
+    private final MemberRepository memberRepository;
 
     @Override
     public void saveTastingNote(TastingNoteRequestDTO tastingNoteRequestDTO, PrincipalDetail principalDetail) {
@@ -59,17 +62,13 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     @Override
     public  TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
-
-        // 회원을 조회한다.
-        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
-
         // noteId로 TastingNote를 찾는다.
         TastingNote foundNote = tastingNoteRepository.findByIdWithWineAndNose(noteId).orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
         // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
-        if(!foundNote.getMember().equals(member)) {
+        if(!foundNote.getMember().getUsername().equals(principalDetail.getUsername())) {
             throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
