@@ -9,5 +9,6 @@ public interface MemberService {
 
     public Member getMemberByUsername(String username);
 
-    public Member loadMemberWithTastingNoteByPrincipalDetail(PrincipalDetail principalDetail);
+    public Member loadMemberByPrincipalDetail(PrincipalDetail principalDetail);
+
 }

@@ -7,7 +7,9 @@ import java.util.Optional;
 
 public interface TastingNoteRepositoryCustom {
 
-    Optional<TastingNote> findByIdWithWineAndNose(Long tastingNoteId);
+    Optional<TastingNote> findTastingNoteWithWineAndNoseById(Long tastingNoteId);
+
+    Optional<TastingNote> findTastingNoteWithNoseById(Long tastingNoteId);
 
     List<TastingNote> findTastingNotesWithWineAndNoseByUsername(String username);
 }

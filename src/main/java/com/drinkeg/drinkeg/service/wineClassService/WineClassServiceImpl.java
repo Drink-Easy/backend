@@ -27,7 +27,7 @@ public class WineClassServiceImpl implements WineClassService {
 
     @Override
     public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         List<WineClass> wineClasses = wineClassRepository.findAll();
 
@@ -38,7 +38,7 @@ public class WineClassServiceImpl implements WineClassService {
 
     @Override
     public WineClassResponseDTO showWineClassById(Long wineClassId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineClass wineClass = wineClassRepository.findById(wineClassId)
                         .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
@@ -48,7 +48,7 @@ public class WineClassServiceImpl implements WineClassService {
 
     @Override
     public void saveWineClass(WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         wineClassRepository.save(WineClassConverter.toWineClass(wineClassRequestDTO, member));
     }
@@ -56,7 +56,7 @@ public class WineClassServiceImpl implements WineClassService {
     @Override
     @Transactional
     public WineClassResponseDTO updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberWithTastingNoteByPrincipalDetail(principalDetail);
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineClass wineClass = wineClassRepository.findById(wineClassId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));

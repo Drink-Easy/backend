@@ -16,7 +16,6 @@ import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.repository.TastingNoteNoseRepository;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    private final MemberService memberService;
     private final WineService wineService;
     private final MemberRepository memberRepository;
 
@@ -63,7 +61,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     @Override
     public  TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findByIdWithWineAndNose(noteId).orElseThrow(()
+        TastingNote foundNote = tastingNoteRepository.findTastingNoteWithWineAndNoseById(noteId).orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
@@ -78,7 +76,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     @Override
     public AllTastingNoteResponseDTO findAllTastingNote(String sort, PrincipalDetail principalDetail) {
-        long startTime = System.currentTimeMillis();
+
         // username 을 이용해서 TastingNotes 조회
         // TastingNotes 조회 시 Wine, WineNose fetch join 하여 최적화
         List<TastingNote> foundNotes= tastingNoteRepository.findTastingNotesWithWineAndNoseByUsername(principalDetail.getUsername());
@@ -96,9 +94,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
                 .sorted(Comparator.comparing(com.drinkeg.drinkeg.domain.TastingNote::getCreatedAt).reversed())
                 .map(TastingNoteConverter::toTastingNotePreviewDTO)
                 .toList();
-
-        long stopTime = System.currentTimeMillis();
-        System.out.println(stopTime - startTime);
 
         return TastingNoteConverter
                 .toAllNoteResponseDTO(tastingNotePreviewResponseDTOList, total, red, white, sparkling, rose, etc);
@@ -134,7 +129,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         );
 
         // noteId로 TastingNote를 찾는다.
-        com.drinkeg.drinkeg.domain.TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
+        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
@@ -201,7 +196,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         );
 
         // noteId로 TastingNote 를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(
+        TastingNote foundNote = tastingNoteRepository.findTastingNoteWithNoseById(noteId).orElseThrow(
                 () -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
