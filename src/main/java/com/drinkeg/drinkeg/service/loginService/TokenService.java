@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -29,16 +30,19 @@ public class TokenService {
     private final JWTUtil jwtUtil;
     private final RedisClient redisClient;
 
-    public Cookie createCookie(String key, String value) {
+    public void createCookie(HttpServletResponse response, String key, String value) {
 
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true); //https를 사용할 경우
-        cookie.setPath("/"); // 쿠키가 적용될 경로
-        cookie.setHttpOnly(true);
+        ResponseCookie cookie = ResponseCookie.from(key, value)
+                .httpOnly(true)
+                .secure(true) // HTTPS만 허용
+                .path("/")
+                .sameSite("Strict") // SameSite 설정
+                .maxAge(24 * 60 * 60) // 1일
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
 
-        return cookie;
     }
+
 
     public void reissueRefreshToken(HttpServletRequest request, HttpServletResponse response) {
 
@@ -99,8 +103,8 @@ public class TokenService {
         redisClient.setValue(username, newRefresh, 864000000L);
 
         //response
-        response.addCookie(createCookie("accessToken", newAccess));
-        response.addCookie(createCookie("refreshToken", newRefresh));
+        createCookie(response, "accessToken", newAccess); // Access Token 쿠키 추가
+        createCookie(response, "refreshToken", newRefresh); // refresh token 쿠키 추가
         response.setStatus(HttpStatus.OK.value());
     }
 
