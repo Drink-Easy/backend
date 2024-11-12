@@ -29,6 +29,7 @@ public class TastingNoteController {
                                                @RequestBody @Valid TastingNoteRequestDTO tastingNoteRequestDTO) {
 
         tastingNoteService.saveTastingNote(tastingNoteRequestDTO, principalDetail);
+
         return ApiResponse.onSuccess("노트 작성 완료");
     }
 

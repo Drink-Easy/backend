@@ -6,6 +6,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class TastingNoteUpdateRequestDTO {
@@ -33,8 +34,10 @@ public class TastingNoteUpdateRequestDTO {
     @Max(value = 5, message = "알콜도는 0 이상 5 이하의 정수 값이어야 합니다.")
     private Integer alcohol;
 
-    private final List<String> nose = new ArrayList<>();
-    private final List<String> palate = new ArrayList<>();
+    private final List<String> addNoseList = new ArrayList<>();
+    private final List<Long> removeNoseList = new ArrayList<>();
+    private final List<String> addPalateList = new ArrayList<>();
+    private final List<Long> removePalateList = new ArrayList<>();
 
     @Min(0)
     @Max(5)

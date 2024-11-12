@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Builder
@@ -34,9 +35,9 @@ public class TastingNoteResponseDTO {
     private int alcohol;
 
     @Builder.Default
-    private List<String> nose = new ArrayList<>();
+    private List<Map<Long, String>> noseList = new ArrayList<>();
     @Builder.Default
-    private List<String> palate = new ArrayList<>();
+    private List<Map<Long, String>> palateList = new ArrayList<>();
 
     private float satisfaction;
 
