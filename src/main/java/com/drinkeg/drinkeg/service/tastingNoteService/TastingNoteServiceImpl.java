@@ -14,7 +14,6 @@ import com.drinkeg.drinkeg.event.wineNoteEvent.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.TastingNoteNoseRepository;
-import com.drinkeg.drinkeg.repository.TastingNotePalateRepository;
 import com.drinkeg.drinkeg.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineService.WineService;
@@ -35,7 +34,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final TastingNoteRepository tastingNoteRepository;
     private final TastingNoteNoseRepository tastingNoteNoseRepository;
-    private final TastingNotePalateRepository tastingNotePalateRepository;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -181,20 +179,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             }
         }
 
-        List<String> addPalateList = tastingNoteUpdateRequestDTO.getAddPalateList();
-        if(!addPalateList.isEmpty()){
-            for(String addPalate: addPalateList){
-                foundNote.addPalateElement(addPalate);
-            }
-        }
-
-        List<Long> removePalateList = tastingNoteUpdateRequestDTO.getRemovePalateList();
-        if(!removePalateList.isEmpty()){
-            for(Long removePalateId: removePalateList){
-                removePalateElement(removePalateId);
-            }
-        }
-
         if(tastingNoteUpdateRequestDTO.getSatisfaction() != null) {
             foundNote.updateSatisfaction(tastingNoteUpdateRequestDTO.getSatisfaction());
         }
@@ -232,8 +216,5 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     private void removeNoseElement(Long noseElementId){
         tastingNoteNoseRepository.deleteById(noseElementId);
-    }
-    private void removePalateElement(Long palateElementId){
-        tastingNotePalateRepository.deleteById(palateElementId);
     }
 }

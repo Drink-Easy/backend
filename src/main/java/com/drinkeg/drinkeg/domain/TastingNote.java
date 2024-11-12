@@ -43,15 +43,10 @@ public class TastingNote extends BaseEntity {
     private int body;
     private int alcohol;
 
-    // nose와 palate를 각각 OneToMany 관계로 설정
+    // nose를 TastingNote와 OneToMany 관계로 설정
     @Builder.Default
     @OneToMany(mappedBy = "tastingNote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TastingNoteNose> noseList = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "tastingNote", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TastingNotePalate> palateList = new ArrayList<>();
-
 
     // 만족도 0 ~ 5, 소수점 가능
     private float satisfaction;
@@ -98,15 +93,6 @@ public class TastingNote extends BaseEntity {
                 .noseElement(noseElement)
                 .build();
         this.noseList.add(nose);
-    }
-
-    // palate 요소 추가 메서드
-    public void addPalateElement(String palateElement) {
-        TastingNotePalate palate = TastingNotePalate.builder()
-                .tastingNote(this)
-                .palateElement(palateElement)
-                .build();
-        this.palateList.add(palate);
     }
 
     // 만족도 업데이트
