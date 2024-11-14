@@ -1,6 +1,8 @@
 package com.drinkeg.drinkeg.repository;
 
+import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Wine;
+import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
