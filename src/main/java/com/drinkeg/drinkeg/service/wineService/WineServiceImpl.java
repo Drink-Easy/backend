@@ -39,7 +39,6 @@ public class WineServiceImpl implements WineService {
     @Override
     public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
 
-        long startTime = System.currentTimeMillis();
         // 회원을 조회한다.
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
