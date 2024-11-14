@@ -1,5 +1,7 @@
 package com.drinkeg.drinkeg.repository;
 
+import com.drinkeg.drinkeg.dto.WineDTO.response.QSearchWineResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
 import com.querydsl.core.types.Projections;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import static com.drinkeg.drinkeg.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.QWine.wine;
+import static com.drinkeg.drinkeg.domain.QWineWishlist.wineWishlist;
 
 @Repository
 @RequiredArgsConstructor
@@ -59,5 +62,26 @@ public class WineRepositoryImpl implements WineRepositoryCustom{
                 .leftJoin(wine.wineNote)
                 .where(wine.id.eq(wineId))
                 .fetchOne();
+    }
+
+    @Override
+    public List<SearchWineResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId) {
+        return queryFactory
+                .select(new QSearchWineResponseDTO(
+                        wine.id,
+                        wine.name,
+                        wine.imageUrl,
+                        wine.sort,
+                        wine.area,
+                        wine.satisfaction,
+                        wine.price,
+                        wineWishlist.id.isNotNull() // memberId와 wineId에 따라 isLiked 여부
+                ))
+                .from(wine)
+                .leftJoin(wineWishlist)
+                .on(wineWishlist.wine.eq(wine).and(wineWishlist.member.id.eq(memberId)))
+                .where(wine.name.containsIgnoreCase(searchName))
+                .orderBy(wine.name.asc())
+                .fetch();
     }
 }
