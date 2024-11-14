@@ -74,7 +74,11 @@ public class WineServiceImpl implements WineService {
     @Override
     public HomeResponseDTO getHomeResponse(Member member) {
 
-        List<RecommendWineDTO> recommendWines = wineRepository.findRecommendWines(member);
+        List<RecommendWineDTO> recommendWines = null;
+
+        if(!member.getIsFirst()){
+            recommendWines = wineRepository.findRecommendWines(member);
+        }
         return WineConverter.toHomeResponseDTO(member, recommendWines);
     }
 
