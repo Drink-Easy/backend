@@ -33,7 +33,7 @@ public class CommentController {
 
     // 특정 모임의 댓글 및 대댓글 개수 조회
     @GetMapping("/count/{partyId}")
-    public ApiResponse<Long> countCommentsAndRecomments(@PathVariable Long partyId) {
+    public ApiResponse<Long> countCommentsAndRecomments(@PathVariable("partyId") Long partyId) {
 
         long count = commentService.countCommentsAndRecommentsByPartyId(partyId);
 
