@@ -8,11 +8,14 @@ import com.drinkeg.drinkeg.domain.Party;
 import com.drinkeg.drinkeg.domain.PartyBookmark;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.event.partyBookmarkEvent.PartyBookmarkCreateEvent;
+import com.drinkeg.drinkeg.event.partyBookmarkEvent.PartyBookmarkDeleteEvent;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.PartyBookmarkRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.partyService.PartyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +29,7 @@ public class PartyBookmarkServiceImpl implements PartyBookmarkService{
     private final MemberService memberService;
     private final PartyService partyService;
     private final PartyConverter partyConverter;
+    private final ApplicationEventPublisher eventPublisher;
 
 
     // 북마크 생성
@@ -43,8 +47,8 @@ public class PartyBookmarkServiceImpl implements PartyBookmarkService{
         PartyBookmark partyBookmark = partyBookmarkConverter.toEntity(member, party);
         partyBookmarkRepository.save(partyBookmark);
 
-        // bookmarkCount 증가
-        partyService.increaseBookmarkCount(party.getId());
+        // 북마크 생성 이벤트 발행
+        eventPublisher.publishEvent(new PartyBookmarkCreateEvent(partyId, member.getId()));
     }
 
     // 북마크 취소
@@ -58,8 +62,8 @@ public class PartyBookmarkServiceImpl implements PartyBookmarkService{
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_BOOKMARK_NOT_FOUND));
         partyBookmarkRepository.delete(partyBookmark);
 
-        // bookmarkCount 감소
-        partyService.decreaseBookmarkCount(party.getId());
+        // 북마크 삭제 이벤트 발행
+        eventPublisher.publishEvent(new PartyBookmarkDeleteEvent(partyId, member.getId()));
     }
 
     // 특정 멤버가 북마크한 파티들을 조회

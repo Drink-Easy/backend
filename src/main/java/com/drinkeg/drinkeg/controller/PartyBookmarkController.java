@@ -21,7 +21,7 @@ public class PartyBookmarkController {
     @PostMapping
     public ApiResponse<String> createBookmark(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
-            @RequestParam Long partyId) {
+            @RequestParam("partyId") Long partyId) {
 
         partyBookmarkService.createBookmark(principalDetail, partyId);
         return ApiResponse.onSuccess("북마크 생성 완료");
