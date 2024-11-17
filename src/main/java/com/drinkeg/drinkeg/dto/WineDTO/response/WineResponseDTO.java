@@ -1,12 +1,11 @@
 package com.drinkeg.drinkeg.dto.WineDTO.response;
 
+import com.drinkeg.drinkeg.domain.Nose;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Builder
@@ -30,10 +29,7 @@ public class WineResponseDTO {
     private float body;
     private float alcohol;
 
-    @Builder.Default
-    private List<String> nose = new ArrayList<>();
-    @Builder.Default
-    private List<String> palate = new ArrayList<>();
+    private Nose nose;
 
     private float satisfaction;
 

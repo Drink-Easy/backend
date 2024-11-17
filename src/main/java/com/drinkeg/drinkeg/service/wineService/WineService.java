@@ -5,6 +5,8 @@ import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
+import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
 import java.io.IOException;
@@ -15,6 +17,10 @@ public interface WineService {
     public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail);
 
     public Wine findWineById(Long wineId);
+
+    public WineResponseDTO getWineResponseByWineId(Long wineId);
+
+    public List<WineReviewResponseDTO> getWineReviewsByWineId(Long wineId);
 
     public HomeResponseDTO getHomeResponse(Member member);
 

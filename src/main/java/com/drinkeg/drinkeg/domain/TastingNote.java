@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.domain;
 
-import com.drinkeg.drinkeg.converter.StringListConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,15 +43,10 @@ public class TastingNote extends BaseEntity {
     private int body;
     private int alcohol;
 
-    // 향 여러개를 ", "로 구분해서 List로 저장.
+    // nose를 TastingNote와 OneToMany 관계로 설정
     @Builder.Default
-    @Convert(converter = StringListConverter.class)
-    private List<String> nose = new ArrayList<>();
-
-    @Builder.Default
-    @Convert(converter = StringListConverter.class)
-    private List<String> palate = new ArrayList<>();
-
+    @OneToMany(mappedBy = "tastingNote", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TastingNoteNose> noseList = new ArrayList<>();
 
     // 만족도 0 ~ 5, 소수점 가능
     private float satisfaction;
@@ -91,12 +85,14 @@ public class TastingNote extends BaseEntity {
         this.alcohol = alcohol;
     }
 
-    // 향 업데이트
-    public void updateNose(List<String> nose) {
-        this.nose = nose;
-    }
-    public void updatePalete(List<String> palate) {
-        this.palate = palate;
+
+    // nose 요소 추가 메서드
+    public void addNoseElement(String noseElement) {
+        TastingNoteNose nose = TastingNoteNose.builder()
+                .tastingNote(this)
+                .noseElement(noseElement)
+                .build();
+        this.noseList.add(nose);
     }
 
     // 만족도 업데이트
@@ -107,7 +103,5 @@ public class TastingNote extends BaseEntity {
     public void updateMemo(String review) {
         this.review = review;
     }
-
-
 
 }

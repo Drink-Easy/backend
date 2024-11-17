@@ -32,6 +32,10 @@ public class WineClass {
     @JoinColumn(name = "author_id")
     private Member author;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "wineClass", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WineLecture> wineLectures = new ArrayList<>();
+
     public WineClass updateTitle(String title) {
         this.title = title;
         return this;
