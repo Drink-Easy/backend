@@ -48,8 +48,8 @@ public class Party extends BaseEntity{
     private int bookmarkCount = 0;
 
     // BaseEntity 필드
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    //private LocalDateTime createdAt;
+    //private LocalDateTime updatedAt;
 
     @Builder.Default
     @OneToMany(mappedBy = "party", cascade = CascadeType.ALL)
