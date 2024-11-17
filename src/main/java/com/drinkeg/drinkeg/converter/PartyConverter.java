@@ -39,6 +39,7 @@ public class PartyConverter {
                 .participateMemberNum(party.getParticipateMemberNum())
                 .bookmarkCount(party.getBookmarkCount())
                 .createdAt(party.getCreatedAt())
+                //.isBookmarked(party.get)
                 //.partyWine(party.getPartyWine())
                 .build();
     }
@@ -55,7 +56,7 @@ public class PartyConverter {
                 .admissionFee(partyRequest.getAdmissionFee())
                 .place(partyRequest.getPlace())
                 .hostId(existingParty.getHostId()) // 기존 host
-                .createdAt(existingParty.getCreatedAt())
+                //.createdAt(existingParty.getCreatedAt())
                 //.partyWine(partyRequest.getPartyWine())
                 .build();
     }
