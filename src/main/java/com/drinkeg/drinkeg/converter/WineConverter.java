@@ -30,45 +30,8 @@ public class WineConverter {
 
                 // wine 기본 평점과, 사용자 평점 중 높은거로
                 .satisfaction(Math.max(wine.getSatisfaction(),
-                        Optional.ofNullable(wine.getWineNote()).map(WineNote::getSatisfaction).orElse((float) 0)))
+                        Optional.ofNullable(wine.getWineNote()).map(WineNote::getAvgSatisfaction).orElse((float) 0)))
                 .build();
-    }
-
-    // 검색한 와인을 노트 와인 응답 DTO로 변환
-    public static WineResponseDTO toWineResponseDTO(Wine wine) {
-        WineNote wineNote = wine.getWineNote();
-
-        return WineResponseDTO.builder()
-                .wineId(wine.getId())
-                .name(wine.getName())
-                .imageUrl(wine.getImageUrl())
-
-                .price(((wine.getPrice() * 1300) / 100) * 100)
-                .sort(wine.getSort())
-                .area(wine.getArea())
-
-                .sugarContent(wineNote.getSugarContent())
-                .acidity(wineNote.getAcidity())
-                .tannin(wineNote.getTannin())
-                .body(wineNote.getBody())
-                .alcohol(wineNote.getAlcohol())
-
-                .nose(wineNote.getTop3Nose())
-                .palate(wineNote.getTop3Palate())
-
-                .satisfaction(Math.max(wine.getSatisfaction(), wineNote.getSatisfaction()))
-                .build();
-    }
-
-    // 와인에 대한 사용자 리뷰 DTO 로 변환
-    public static WineReviewResponseDTO toWineReviewResPonseDTO(TastingNote tastingNote){
-
-        return WineReviewResponseDTO.builder()
-                .name(tastingNote.getMember().getName())
-                .satisfaction(tastingNote.getSatisfaction())
-                .review(tastingNote.getReview())
-                .build();
-
     }
 
     // 홈화면 추천 와인 DTO 로 변환

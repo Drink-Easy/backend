@@ -62,6 +62,10 @@ public enum ErrorStatus implements BaseCode {
     WINE_LECTURE_COMPLETE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "WINE_LECTURE_COMPLETE4002", "이미 수강 완료한 강의입니다."),
     WINE_LECTURE_COMPLETE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_LECTURE_COMPLETE4003", "권한이 없는 강의 수강 이력입니다."),
 
+      // WineClassProgress Error
+    WINE_CLASS_PROGRESS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_CLASS_PROGRESS4001", "진행도가 없습니다."),
+
+  
     // Member Error
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "회원이 없습니다."),
     LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "MEMBER4001", "로그인 과정에서 오류가 발생했습니다."),
@@ -91,6 +95,7 @@ public enum ErrorStatus implements BaseCode {
     WINE_WISHLIST_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_WISHLIST4001", "와인 위시리스트가 없습니다."),
     WINE_WISHLIST_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_WISHLIST4002", "권한이 없는 위시리스트입니다."),
     WINE_WISHLIST_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "WINE_WISHLIST4003", "이미 존재하는 위시리스트입니다.");
+
 
 
 

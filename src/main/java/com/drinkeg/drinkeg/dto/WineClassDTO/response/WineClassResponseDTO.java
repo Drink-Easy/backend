@@ -14,4 +14,5 @@ public class WineClassResponseDTO {
     private String category;
     private String title;
     private String thumbnailUrl;
+    private float progress;
 }
