@@ -91,14 +91,14 @@ public class WineRepositoryImpl implements WineRepositoryCustom{
                                 .and(sortCondition.or(areaCondition))
                 )
                 .orderBy(
-                        new CaseBuilder()
-                                .when(sortCondition).then(0.2)
-                                .otherwise(0.0)
+                        wine.satisfaction
+                                .add(new CaseBuilder()
+                                        .when(sortCondition).then(0.2)
+                                        .otherwise(0.0))
                                 .add(new CaseBuilder()
                                         .when(areaCondition).then(0.2)
-                                        .otherwise(0.0)
-                                )
-                                .add(wine.satisfaction).desc()
+                                        .otherwise(0.0))
+                                .desc()
                 )
                 .limit(10)
 
