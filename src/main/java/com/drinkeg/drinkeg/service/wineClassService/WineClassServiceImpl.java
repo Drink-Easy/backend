@@ -23,27 +23,22 @@ import java.util.stream.Collectors;
 public class WineClassServiceImpl implements WineClassService {
     private final WineClassRepository wineClassRepository;
     private final MemberService memberService;
-    private final WineClassProgressService wineClassProgressService;
 
     @Override
     public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
-        List<WineClass> wineClasses = wineClassRepository.findAll();
-
-        return wineClasses.stream()
-                .map(wineClass -> WineClassConverter.toWineClassResponseDTO(wineClass, wineClassProgressService.getWineClassProgress(wineClass, member)))
-                .collect(Collectors.toList());
+        return wineClassRepository.findWineClassListByMemberId(member.getId());
     }
 
     @Override
     public WineClassResponseDTO showWineClassById(Long wineClassId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
-        WineClass wineClass = wineClassRepository.findById(wineClassId)
-                        .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
+//        WineClass wineClass = wineClassRepository.findById(wineClassId)
+//                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
-        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassProgressService.getWineClassProgress(wineClass, member));
+        return wineClassRepository.findWineClassByIdAndMemberId(wineClassId, member.getId());
     }
 
     @Override
@@ -55,7 +50,7 @@ public class WineClassServiceImpl implements WineClassService {
 
     @Override
     @Transactional
-    public WineClassResponseDTO updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
+    public void updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineClass wineClass = wineClassRepository.findById(wineClassId)
@@ -68,8 +63,6 @@ public class WineClassServiceImpl implements WineClassService {
                 .updateTitle(wineClassRequestDTO.getTitle())
                 .updateThumbnail(wineClassRequestDTO.getThumbnailUrl())
                 .updateCategory(wineClassRequestDTO.getCategory());
-
-        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassProgressService.getWineClassProgress(wineClass, member));
     }
 
     @Override

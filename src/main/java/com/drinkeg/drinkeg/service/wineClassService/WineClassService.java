@@ -12,7 +12,7 @@ public interface WineClassService {
     public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail);
     public WineClassResponseDTO showWineClassById(Long wineClassId, PrincipalDetail principalDetail);
     public void saveWineClass(WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
-    public WineClassResponseDTO updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
+    public void updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
     public void deleteWineClass(Long wineClassId, PrincipalDetail principalDetail);
 
     public List<WineClass> getAllWineClasses();
