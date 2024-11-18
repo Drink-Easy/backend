@@ -101,6 +101,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom{
                                 .desc()
                 )
                 .limit(10)
+                .fetch();
+    }
 
     @Override
     public List<SearchWineResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId) {
