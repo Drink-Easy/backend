@@ -14,7 +14,4 @@ public interface WineClassService {
     public void saveWineClass(WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
     public void updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail);
     public void deleteWineClass(Long wineClassId, PrincipalDetail principalDetail);
-
-    public List<WineClass> getAllWineClasses();
-    public WineClass getWineClassById(Long wineClassId);
 }
