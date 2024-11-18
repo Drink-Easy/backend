@@ -28,7 +28,6 @@ public class PartyBookmarkServiceImpl implements PartyBookmarkService{
     private final PartyBookmarkConverter partyBookmarkConverter;
     private final MemberService memberService;
     private final PartyService partyService;
-    private final PartyConverter partyConverter;
     private final ApplicationEventPublisher eventPublisher;
 
 
@@ -71,7 +70,7 @@ public class PartyBookmarkServiceImpl implements PartyBookmarkService{
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         return partyBookmarkRepository.findByMember(member).stream()
-                .map(partyBookmark -> partyConverter.toResponse(partyBookmark.getParty()))
+                .map(partyBookmark -> PartyConverter.toResponse(partyBookmark.getParty()))
                 .collect(Collectors.toList());
     }
 }
