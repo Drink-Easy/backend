@@ -50,7 +50,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
                 System.out.println("cookie = " + cookie.getName() + "= " + cookie.getValue());
                 if (cookie.getName().equals("accessToken")) {
-
                     accessToken = cookie.getValue();
                 }
             }
@@ -60,7 +59,6 @@ public class JWTFilter extends OncePerRequestFilter {
         if (accessToken == null) {
             filterChain.doFilter(request, response);
             //조건이 해당되면 메소드 종료 (필수)
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return ;
         }
 
@@ -69,7 +67,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
             System.out.println("token expired");
             filterChain.doFilter(request, response);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
@@ -77,7 +74,6 @@ public class JWTFilter extends OncePerRequestFilter {
         //토큰이 access 토큰인지 확인
         String category = jwtUtil.getCategory(accessToken);
         if(!category.equals("access")){
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
@@ -100,7 +96,6 @@ public class JWTFilter extends OncePerRequestFilter {
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(principalDetail, null, principalDetail.getAuthorities());
 
-        //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
         filterChain.doFilter(request, response);
     }
