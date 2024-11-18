@@ -44,9 +44,12 @@ public class Party extends BaseEntity{
     private Long hostId;
     //private String partyWine;
 
+    @Builder.Default
+    private int bookmarkCount = 0;
+
     // BaseEntity 필드
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    //private LocalDateTime createdAt;
+    //private LocalDateTime updatedAt;
 
     @Builder.Default
     @OneToMany(mappedBy = "party", cascade = CascadeType.ALL)
@@ -54,5 +57,10 @@ public class Party extends BaseEntity{
 
     public void updateParticipateMemberNum(int participateMemberNum) {
         this.participateMemberNum = participateMemberNum;
+    }
+
+    // bookmarkCount 업데이트 커스텀 메서드
+    public void updateBookmarkCount(int bookmarkCount) {
+        this.bookmarkCount = bookmarkCount;
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class PartyConverter {
 
     // RequestDTO를 엔티티로 변환
-    public Party fromRequest(PartyRequestDTO partyRequest, Member member) {
+    public static Party fromRequest(PartyRequestDTO partyRequest, Member member) {
         return Party.builder()
                 .member(member)
                 .name(partyRequest.getName())
@@ -26,7 +26,7 @@ public class PartyConverter {
     }
 
     // 엔티티를 ResponseDTO로 변환
-    public PartyResponseDTO toResponse(Party party) {
+    public static PartyResponseDTO toResponse(Party party) {
         return PartyResponseDTO.builder()
                 .id(party.getId())
                 .hostId(party.getHostId())
@@ -37,13 +37,15 @@ public class PartyConverter {
                 .admissionFee(party.getAdmissionFee())
                 .place(party.getPlace())
                 .participateMemberNum(party.getParticipateMemberNum())
+                .bookmarkCount(party.getBookmarkCount())
                 .createdAt(party.getCreatedAt())
+                //.isBookmarked(party.get)
                 //.partyWine(party.getPartyWine())
                 .build();
     }
 
     // 기존 엔티티를 업데이트된 정보로 변환
-    public Party updatePartyFromRequest(Party existingParty, PartyRequestDTO partyRequest) {
+    public static Party updatePartyFromRequest(Party existingParty, PartyRequestDTO partyRequest) {
         return Party.builder()
                 .id(existingParty.getId()) // 기존 ID
                 .member(existingParty.getMember()) // 기존 Member
@@ -54,7 +56,7 @@ public class PartyConverter {
                 .admissionFee(partyRequest.getAdmissionFee())
                 .place(partyRequest.getPlace())
                 .hostId(existingParty.getHostId()) // 기존 host
-                .createdAt(existingParty.getCreatedAt())
+                //.createdAt(existingParty.getCreatedAt())
                 //.partyWine(partyRequest.getPartyWine())
                 .build();
     }
