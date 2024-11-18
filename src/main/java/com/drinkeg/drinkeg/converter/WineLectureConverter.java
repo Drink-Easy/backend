@@ -13,14 +13,12 @@ public class WineLectureConverter {
                 .title(wineLecture.getTitle())
                 .content(wineLecture.getContent())
                 .isCompleted(isCompleted)
-                .author(MemberConverter.toMemberBasicInfoResponseDTO(wineLecture.getAuthor()))
                 .build();
     }
 
-    public static WineLecture toWineLecture(WineLectureRequestDTO wineLectureRequestDTO, WineClass wineClass, Member author) {
+    public static WineLecture toWineLecture(WineLectureRequestDTO wineLectureRequestDTO, WineClass wineClass) {
         return WineLecture.builder()
                 .wineClass(wineClass)
-                .author(author)
                 .title(wineLectureRequestDTO.getTitle())
                 .content(wineLectureRequestDTO.getContent())
                 .build();

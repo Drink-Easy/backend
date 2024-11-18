@@ -26,10 +26,6 @@ public class WineLecture {
     @JoinColumn(name = "wine_class_id", nullable = false)
     private WineClass wineClass;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
-    private Member author;
-
     public WineLecture updateTitle(String title) {
         this.title = title;
         return this;
@@ -43,5 +39,13 @@ public class WineLecture {
     public WineLecture updateWineClass(WineClass wineClass) {
         this.wineClass = wineClass;
         return this;
+    }
+
+    public static WineLecture create(String title, String content, WineClass wineClass) {
+        return WineLecture.builder()
+                .title(title)
+                .content(content)
+                .wineClass(wineClass)
+                .build();
     }
 }
