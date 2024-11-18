@@ -26,8 +26,6 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
 
     // WineNote 업데이트 메서드
     public void updateWineNoteStatistics(Long wineId) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
 
         // 평균 점수 한 번에 계산 및 null 안전 처리
         Tuple result = queryFactory
@@ -83,9 +81,6 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
                 .set(wineNote.avgSatisfaction, avgSatisfaction)
                 .set(wineNote.nose, nose)
                 .execute();
-
-        stopWatch.stop();
-        System.out.println(stopWatch.getTime());
     }
 
 }

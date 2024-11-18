@@ -12,8 +12,6 @@ import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineLectureCompleteRepository;
 import com.drinkeg.drinkeg.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.wineClassProgressService.WineClassProgressService;
-import com.drinkeg.drinkeg.service.wineLectureService.WineLectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
