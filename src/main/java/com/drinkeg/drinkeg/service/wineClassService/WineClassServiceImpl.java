@@ -35,10 +35,8 @@ public class WineClassServiceImpl implements WineClassService {
     public WineClassResponseDTO showWineClassById(Long wineClassId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
-//        WineClass wineClass = wineClassRepository.findById(wineClassId)
-//                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
-
-        return wineClassRepository.findWineClassByIdAndMemberId(wineClassId, member.getId());
+        return wineClassRepository.findWineClassByIdAndMemberId(wineClassId, member.getId())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
     }
 
     @Override

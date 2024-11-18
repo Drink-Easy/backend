@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.QWineClass.wineClass;
 import static com.drinkeg.drinkeg.domain.QWineClassProgress.wineClassProgress;
@@ -26,27 +27,29 @@ public class WineClassRepositoryImpl implements WineClassRepositoryCustom {
                         wineClass.category,
                         wineClass.title,
                         wineClass.thumbnailUrl,
-                        wineClassProgress.progress))
+                        wineClassProgress.progress.coalesce(0.0f)))
                 .from(wineClass)
-                .join(wineClassProgress)
+                .leftJoin(wineClassProgress)
                 .on(wineClassProgress.wineClass.eq(wineClass).and(wineClassProgress.member.id.eq(memberId)))
                 .orderBy(wineClass.title.asc())
                 .fetch();
     }
 
     @Override
-    public WineClassResponseDTO findWineClassByIdAndMemberId(Long wineClassId, Long memberId) {
-        return queryFactory
+    public Optional<WineClassResponseDTO> findWineClassByIdAndMemberId(Long wineClassId, Long memberId) {
+        return Optional.ofNullable(
+                queryFactory
                 .select(new QWineClassResponseDTO(
                         wineClass.id,
                         wineClass.category,
                         wineClass.title,
                         wineClass.thumbnailUrl,
-                        wineClassProgress.progress))
+                        wineClassProgress.progress.coalesce(0.0f)))
                 .from(wineClass)
-                .join(wineClassProgress)
+                .leftJoin(wineClassProgress)
                 .on(wineClassProgress.wineClass.eq(wineClass).and(wineClassProgress.member.id.eq(memberId)))
                 .where(wineClassProgress.wineClass.id.eq(wineClassId))
-                .fetchOne();
+                .fetchOne()
+        );
     }
 }
