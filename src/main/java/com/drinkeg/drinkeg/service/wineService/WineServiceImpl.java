@@ -40,18 +40,11 @@ public class WineServiceImpl implements WineService {
     public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
-
+        Member member = memberService.getMemberByUsername(principalDetail.getUsername());
 
         // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').
-        List<Wine> foundWines = wineRepository.findAllByNameContainingIgnoreCaseOrderByName(searchName);
-
-        // 와인을 NoteWineResponseDTO로 변환한다.
-        return foundWines.stream()
-                .map(wine -> WineConverter.toSearchWineResponseDTO(wine,
-                        wineWishlistService.isLiked(member, wine))
-                )
-                .collect(Collectors.toList());
+        // 이때 memberId를 이용해 isLiked()를 같이 조회한다
+        return wineRepository.findWinesWithLikeStatus(searchName, member.getId());
     }
 
     @Override

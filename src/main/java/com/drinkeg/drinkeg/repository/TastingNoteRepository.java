@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TastingNoteRepository extends JpaRepository<TastingNote, Long> {
+public interface TastingNoteRepository extends JpaRepository<TastingNote, Long>, TastingNoteRepositoryCustom {
 
-    List<TastingNote> findAllByWine(Wine wine);
 }
