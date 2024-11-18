@@ -43,6 +43,19 @@ public class TokenService {
 
     }
 
+//    public void createRefreshCookie(HttpServletResponse response, String key, String value) {
+//
+//        ResponseCookie cookie = ResponseCookie.from(key, value)
+//                .httpOnly(true)
+//                .secure(true) // HTTPS만 허용
+//                .path("/")
+//                .sameSite("Strict") // SameSite 설정
+//                .maxAge(24 * 60 * 60) // 1일
+//                .build();
+//        response.addHeader("Set-Cookie", cookie.toString());
+//
+//    }
+
 
     public void reissueRefreshToken(HttpServletRequest request, HttpServletResponse response) {
 
