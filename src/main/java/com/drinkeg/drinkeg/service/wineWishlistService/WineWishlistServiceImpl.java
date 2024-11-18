@@ -9,10 +9,8 @@ import com.drinkeg.drinkeg.dto.WineWishlistDTO.request.WineWishlistRequestDTO;
 import com.drinkeg.drinkeg.dto.WineWishlistDTO.response.WineWishlistResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
-import com.drinkeg.drinkeg.repository.WineRepository;
+import com.drinkeg.drinkeg.repository.wine.WineRepository;
 import com.drinkeg.drinkeg.repository.WineWishlistRepository;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

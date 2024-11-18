@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.repository.wine;
 
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.repository.wineNote;
 
 import com.drinkeg.drinkeg.domain.Nose;
 import com.querydsl.core.Tuple;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.QTastingNoteNose.tastingNoteNose;

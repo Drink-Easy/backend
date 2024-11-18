@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.repository.wine;
 
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
@@ -17,7 +17,7 @@ import static com.drinkeg.drinkeg.domain.QWine.wine;
 @Repository
 @RequiredArgsConstructor
 @Transactional
-public class WineRepositoryImpl implements WineRepositoryCustom{
+public class WineRepositoryImpl implements WineRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
