@@ -36,6 +36,14 @@ public class RecommentServiceImpl implements RecommentService{
         return recommentRepository.existsByCommentId(commentId);
     }
 
+    // 특정 댓글에 포함되는 대댓글의 개수를 반환하는 메서드
+    @Override
+    public long countByCommentId(Long commentId) {
+        //Optional이 비어있으면 0 반환(.orElse(0L))
+        return recommentRepository.countByCommentId(commentId).orElse(0L);
+    }
+
+
     @Override
     public void createRecomment(Comment comment, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail) {
 
