@@ -1,9 +1,12 @@
 package com.drinkeg.drinkeg.repository;
 
+import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.QSearchWineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -62,6 +65,43 @@ public class WineRepositoryImpl implements WineRepositoryCustom{
                 .leftJoin(wine.wineNote)
                 .where(wine.id.eq(wineId))
                 .fetchOne();
+    }
+
+    @Override
+    public List<RecommendWineDTO> findRecommendWines(Member member) {
+        List<String> wineSortList = member.getWineSort();
+        List<String> wineAreaList = member.getWineArea();
+        Long maxPrice = member.getMonthPriceMax()/1300;
+
+        // BooleanBuilder로 동적 조건 생성
+        BooleanBuilder sortCondition = new BooleanBuilder();
+        wineSortList.forEach(sort -> sortCondition.or(wine.sort.lower().containsIgnoreCase(sort)));
+
+        BooleanBuilder areaCondition = new BooleanBuilder();
+        wineAreaList.forEach(area -> areaCondition.or(wine.area.lower().containsIgnoreCase(area)));
+
+        return queryFactory.select(Projections.constructor(RecommendWineDTO.class,
+                        wine.id,
+                        wine.name,
+                        wine.imageUrl
+                ))
+                .from(wine)
+                .where(
+                        wine.price.loe(maxPrice)
+                                .and(sortCondition.or(areaCondition))
+                )
+                .orderBy(
+                        wine.satisfaction
+                                .add(new CaseBuilder()
+                                        .when(sortCondition).then(0.2)
+                                        .otherwise(0.0))
+                                .add(new CaseBuilder()
+                                        .when(areaCondition).then(0.2)
+                                        .otherwise(0.0))
+                                .desc()
+                )
+                .limit(10)
+                .fetch();
     }
 
     @Override
