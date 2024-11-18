@@ -10,6 +10,7 @@ import com.drinkeg.drinkeg.dto.WineLectureDTO.response.WineLectureResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.WineLectureRepository;
+import com.drinkeg.drinkeg.repository.wineClass.WineClassRepository;
 import com.drinkeg.drinkeg.service.WineLectureCompleteService.WineLectureCompleteService;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineClassService.WineClassService;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 public class WineLectureServiceImpl implements WineLectureService {
     private final WineLectureRepository wineLectureRepository;
     private final WineLectureCompleteService wineLectureCompleteService;
-    private final WineClassService wineClassService;
+    private final WineClassRepository wineClassRepository;
     private final MemberService memberService;
 
     @Override
@@ -43,7 +44,8 @@ public class WineLectureServiceImpl implements WineLectureService {
     public List<WineLectureResponseDTO> showAllWineLecturesByWineClass(Long wineClassId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
-        WineClass wineClass = wineClassService.getWineClassById(wineClassId);
+        WineClass wineClass = wineClassRepository.findById(wineClassId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
         List<WineLecture> wineLectures = wineLectureRepository.findByWineClass(wineClass);
         return wineLectures.stream()
@@ -63,7 +65,8 @@ public class WineLectureServiceImpl implements WineLectureService {
     @Override
     public WineLectureResponseDTO saveWineLecture(WineLectureRequestDTO wineLectureRequestDTO, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
-        WineClass wineClass = wineClassService.getWineClassById(wineLectureRequestDTO.getWineClassId());
+        WineClass wineClass = wineClassRepository.findById(wineLectureRequestDTO.getWineClassId())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
         WineLecture wineLecture = WineLectureConverter.toWineLecture(wineLectureRequestDTO, wineClass, member);
 
@@ -81,7 +84,8 @@ public class WineLectureServiceImpl implements WineLectureService {
         if (!member.getRole().equals("ROLE_ADMIN") && !wineLecture.getAuthor().equals(member))
             throw new GeneralException(ErrorStatus.WINE_LECTURE_UNAUTHORIZED);
 
-        WineClass wineClass = wineClassService.getWineClassById(wineLectureRequestDTO.getWineClassId());
+        WineClass wineClass = wineClassRepository.findById(wineLectureRequestDTO.getWineClassId())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
         wineLecture
                 .updateWineClass(wineClass)
