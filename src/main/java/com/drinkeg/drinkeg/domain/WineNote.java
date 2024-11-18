@@ -1,13 +1,10 @@
 package com.drinkeg.drinkeg.domain;
 
-import com.drinkeg.drinkeg.converter.StringIntegerMapConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -19,8 +16,7 @@ public class WineNote extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "wine_id")
+    @OneToOne(mappedBy = "wineNote", fetch = FetchType.LAZY)  // 연관 관계의 비주인
     private Wine wine;
 
     // 점수 평균

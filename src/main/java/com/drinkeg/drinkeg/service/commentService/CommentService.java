@@ -14,6 +14,8 @@ public interface CommentService {
 
     Comment findByIdOrThrow(Long commentId);
 
+    long countCommentsAndRecommentsByPartyId(Long partyId);
+
     void createComment(PrincipalDetail principalDetail, CommentRequestDTO commentRequest);
 
     void deleteComment(PrincipalDetail principalDetail, Long commentId);
@@ -25,5 +27,4 @@ public interface CommentService {
     String calculateTimeAgo(LocalDateTime createdAt);
 
     String calculateCreatedDate(LocalDateTime createdAt);
-
 }

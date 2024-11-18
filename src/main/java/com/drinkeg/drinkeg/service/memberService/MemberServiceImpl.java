@@ -35,5 +35,4 @@ public class MemberServiceImpl implements MemberService{
         return memberRepository.findByUsername(username).orElseThrow(()
                 -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
     }
-
 }
