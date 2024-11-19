@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.wine.dao;
+package com.drinkeg.drinkeg.wine.repository;
 
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import org.springframework.data.jpa.repository.JpaRepository;

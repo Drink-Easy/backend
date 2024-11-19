@@ -12,7 +12,7 @@ import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.wine.dao.WineRepository;
+import com.drinkeg.drinkeg.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineWishlistService.WineWishlistService;
 import lombok.RequiredArgsConstructor;

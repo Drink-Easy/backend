@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.tastingNote.dao;
+package com.drinkeg.drinkeg.tastingNote.repository;
 
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 

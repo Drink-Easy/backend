@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.wine.dao;
+package com.drinkeg.drinkeg.wine.repository;
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
