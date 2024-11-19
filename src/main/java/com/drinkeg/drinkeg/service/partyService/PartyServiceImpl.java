@@ -10,6 +10,7 @@ import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
 import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.repository.PartyBookmarkRepository;
 import com.drinkeg.drinkeg.repository.PartyRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class PartyServiceImpl implements PartyService {
     private final PartyConverter partyConverter;
     private final PartyJoinMemberConverter partyJoinMemberConverter;
     private final MemberService memberService;
+    //단순한 dao (북마크여부)판단을 위한 레포
+    private final PartyBookmarkRepository partyBookmarkRepository;
 
     @Override
     public Party findPartyById(Long partyId) {
@@ -85,7 +88,12 @@ public class PartyServiceImpl implements PartyService {
         };
 
         // Party 엔티티를 PartyResponseDTO로 변환
-        return parties.map(partyConverter::toResponse);
+        return parties.map(party -> {
+            PartyResponseDTO partyResponseDTO = partyConverter.toResponse(party);
+            boolean isBookmarked = partyBookmarkRepository.existsByMemberAndParty(foundMember, party);
+            partyResponseDTO.setBookmarked(isBookmarked);
+            return partyResponseDTO;
+        });
     }
 
     @Override
@@ -100,9 +108,20 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public List<PartyResponseDTO> getAllParties() {
+    public List<PartyResponseDTO> getAllParties(PrincipalDetail principalDetail) {
+        // 현재 로그인한 사용자 조회
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+
+        // 모든 파티 조회
         List<Party> parties = partyRepository.findAll();
-        return parties.stream().map(partyConverter::toResponse).collect(Collectors.toList());
+
+        // 각 파티에 대해 북마크 여부 확인 후 DTO로 변환
+        return parties.stream().map(party -> {
+            boolean isBookmarked = partyBookmarkRepository.existsByMemberAndParty(member, party);
+            PartyResponseDTO partyResponseDTO = partyConverter.toResponse(party);
+            partyResponseDTO.setBookmarked(isBookmarked); // 북마크 여부 설정
+            return partyResponseDTO;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -147,7 +166,8 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public List<PartyResponseDTO> searchPartiesByName(String searchName) {
+    public List<PartyResponseDTO> searchPartiesByName(String searchName, PrincipalDetail principalDetail) {
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         // 모임 제목이 정확히 일치하는 모임을 검색
         List<Party> exactMatchParties = partyRepository.findAllByName(searchName);
@@ -166,9 +186,14 @@ public class PartyServiceImpl implements PartyService {
             }
         }
 
-        // 모임을 PartyResponseDTO로 변환하여 반환
+        // 모임을 PartyResponseDTO로 변환하여 북마크 여부 설정 후 반환
         return searchParties.stream()
-                .map(partyConverter::toResponse)
+                .map(party -> {
+                    PartyResponseDTO partyResponseDTO = partyConverter.toResponse(party);
+                    boolean isBookmarked = partyBookmarkRepository.existsByMemberAndParty(member, party);
+                    partyResponseDTO.setBookmarked(isBookmarked);
+                    return partyResponseDTO;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -194,4 +219,27 @@ public class PartyServiceImpl implements PartyService {
         }
     }
 
+    // bookmarkCount 증가 메서드
+    @Override
+    public void increaseBookmarkCount(Long partyId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+
+        int updatedCount = party.getBookmarkCount() + 1;
+        party.updateBookmarkCount(updatedCount); // 커스텀 메서드 호출
+        partyRepository.save(party);
+    }
+
+    // bookmarkCount 감소 메서드
+    @Override
+    public void decreaseBookmarkCount(Long partyId) {
+        Party party = partyRepository.findById(partyId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PARTY_NOT_FOUND));
+
+        if (party.getBookmarkCount() > 0) {
+            int updatedCount = party.getBookmarkCount() - 1;
+            party.updateBookmarkCount(updatedCount); // 커스텀 메서드 호출
+            partyRepository.save(party);
+        }
+    }
 }

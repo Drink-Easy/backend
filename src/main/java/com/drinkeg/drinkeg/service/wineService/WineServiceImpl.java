@@ -67,49 +67,12 @@ public class WineServiceImpl implements WineService {
     @Override
     public HomeResponseDTO getHomeResponse(Member member) {
 
-        List<String> wineSortList = member.getWineSort();
-        List<String> wineAreaList = member.getWineArea();
-        int monthPriceMax = (int) ((member.getMonthPriceMax())/1300);
+        List<RecommendWineDTO> recommendWines = null;
 
-        Map<Wine, Double> wineScoreMap = new HashMap<>();
-
-        // 와인 종류로 검색하여 가중치 부여
-        for (String wineSort : wineSortList) {
-            List<Wine> sortContainingWines = wineRepository.findAllBySortContainingIgnoreCase(wineSort);
-            for (Wine wine : sortContainingWines) {
-                // 가중치 0.2 부여
-                wineScoreMap.put(wine, wineScoreMap.getOrDefault(wine, 0.0) + 0.2);
-            }
+        if(!member.getIsFirst()){
+            recommendWines = wineRepository.findRecommendWines(member);
         }
-
-        // 와인 생산지로 검색하여 가중치 부여
-        for (String wineArea : wineAreaList) {
-            List<Wine> areaContainingWines = wineRepository.findAllByAreaContainingIgnoreCase(wineArea);
-            for (Wine wine : areaContainingWines) {
-                // 가중치 0.2 부여
-                wineScoreMap.put(wine, wineScoreMap.getOrDefault(wine, 0.0) + 0.2);
-            }
-        }
-
-        // 와인 평점을 최종 가중치에 반영
-        wineScoreMap.replaceAll((wine, score) -> score + wine.getSatisfaction());
-
-        // 가격으로 필터링, 가중치로 정렬, 상위 20개 추출
-        List<Wine> topWines = new ArrayList<>(wineScoreMap.entrySet().stream()
-                .filter(entry -> entry.getKey().getPrice() <= monthPriceMax)
-                .sorted((entry1, entry2) -> Double.compare(entry2.getValue(), entry1.getValue()))  // 가중치로 정렬
-                .map(Map.Entry::getKey)
-                .limit(10)
-                .toList());
-
-        // 상위 20개 중에서 랜덤으로 5개 선택
-        Collections.shuffle(topWines, new Random());
-        List<RecommendWineDTO> recommendWineDTOs = topWines.stream()
-                .limit(5)
-                .map(WineConverter::toRecommendWineDTO)
-                .toList();
-
-        return WineConverter.toHomeResponseDTO(member, recommendWineDTOs);
+        return WineConverter.toHomeResponseDTO(member, recommendWines);
     }
 
     @Override

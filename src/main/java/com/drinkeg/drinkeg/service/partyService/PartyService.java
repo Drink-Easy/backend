@@ -17,11 +17,13 @@ public interface PartyService {
     Party saveParty(Party party);
     void createParty(PartyRequestDTO partyRequest, PrincipalDetail principalDetail);
     PartyResponseDTO getParty(Long id); // optional로 변경
-    List<PartyResponseDTO> getAllParties();
+    List<PartyResponseDTO> getAllParties(PrincipalDetail principalDetail);
     PartyResponseDTO updateParty(Long id, PartyRequestDTO partyRequest, PrincipalDetail principalDetail );
     void deleteParty(Long id, PrincipalDetail principalDetail);
     //boolean isHost(Long partyId, Long memberId);
     void validatePartyRequest(PartyRequestDTO partyRequest);
     Page<PartyResponseDTO> getSortedParties(String sortType, PrincipalDetail principalDetail, Pageable pageable);
-    List<PartyResponseDTO> searchPartiesByName(String searchName);
+    List<PartyResponseDTO> searchPartiesByName(String searchName, PrincipalDetail principalDetail);
+    void increaseBookmarkCount(Long partyId);
+    void decreaseBookmarkCount(Long partyId);
 }

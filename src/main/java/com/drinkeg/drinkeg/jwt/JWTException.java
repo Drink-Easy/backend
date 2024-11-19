@@ -14,6 +14,8 @@ public class JWTException {
 
     public static void jwtExceptionHandler(HttpServletResponse response, ErrorStatus errorStatus) {
 
+        System.out.println("----------jwt exception handler---------------");
+
         response.setStatus(errorStatus.getHttpStatus().value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

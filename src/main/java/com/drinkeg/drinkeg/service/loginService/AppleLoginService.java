@@ -85,8 +85,8 @@ public class AppleLoginService {
         String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole(),864000000L);
 
         // 토큰을 쿠키에 저장하여 응답
-        response.addCookie(tokenService.createCookie("accessToken", accessToken));
-        response.addCookie(tokenService.createCookie("refreshToken", refreshToken));
+        tokenService.createCookie(response, "accessToken", accessToken); // Access Token 쿠키 추가
+        tokenService.createCookie(response, "refreshToken", refreshToken); // refresh token 쿠키 추가
         response.setStatus(HttpStatus.OK.value());
 
         // redis에 refresh 토큰 저장

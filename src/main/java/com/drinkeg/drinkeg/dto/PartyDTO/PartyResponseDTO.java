@@ -32,6 +32,18 @@ public class PartyResponseDTO {
 
     private String place;
 
+    private int bookmarkCount;
+
+    private boolean isBookmarked;
+
     private LocalDateTime createdAt;
     //private  partyWine;
+
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
+    }
 }
