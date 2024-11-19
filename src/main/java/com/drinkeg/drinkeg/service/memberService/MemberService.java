@@ -7,8 +7,6 @@ public interface MemberService {
 
     public Member getMemberById(Long memberId);
 
-    public Member getMemberByUsername(String username);
-
     public Member loadMemberByPrincipalDetail(PrincipalDetail principalDetail);
 
 }

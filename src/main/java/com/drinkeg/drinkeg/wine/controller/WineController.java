@@ -22,7 +22,6 @@ public class WineController {
 
     private final WineService wineService;
 
-
     // 검색
     @GetMapping
     @Operation(summary = "와인 검색", description = "와인 이름으로 와인 검색하여 searchWineResponseDTOS로 반환")
