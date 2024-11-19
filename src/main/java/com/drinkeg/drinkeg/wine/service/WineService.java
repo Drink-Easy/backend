@@ -1,12 +1,11 @@
-package com.drinkeg.drinkeg.service.wineService;
+package com.drinkeg.drinkeg.wine.service;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.Wine;
+import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
-import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
 import java.io.IOException;

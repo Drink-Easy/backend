@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.wineNote.event;
 
-import com.drinkeg.drinkeg.service.wineNoteService.WineNoteService;
+import com.drinkeg.drinkeg.wineNote.service.WineNoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

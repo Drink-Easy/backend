@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.service.wineService;
+package com.drinkeg.drinkeg.wine.service;
 
 import org.springframework.web.multipart.MultipartFile;
 

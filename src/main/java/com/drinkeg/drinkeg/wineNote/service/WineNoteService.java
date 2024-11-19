@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.service.wineNoteService;
+package com.drinkeg.drinkeg.wineNote.service;
 
 public interface WineNoteService {
 

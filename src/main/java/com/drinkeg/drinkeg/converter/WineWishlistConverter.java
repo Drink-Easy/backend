@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.converter;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.Wine;
+import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.WineWishlist;
 import com.drinkeg.drinkeg.dto.WineWishlistDTO.response.WineWishlistResponseDTO;
 

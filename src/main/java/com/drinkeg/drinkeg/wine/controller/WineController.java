@@ -1,12 +1,12 @@
-package com.drinkeg.drinkeg.controller;
+package com.drinkeg.drinkeg.wine.controller;
 
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.service.wineService.WineService;
+import com.drinkeg.drinkeg.wine.service.WineService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

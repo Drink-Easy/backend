@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.wine.domain;
 
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.wineNote.domain.WineNote;

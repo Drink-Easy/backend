@@ -1,12 +1,9 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.wine.dao;
 
-import com.drinkeg.drinkeg.domain.Wine;
-import io.lettuce.core.dynamic.annotation.Param;
+import com.drinkeg.drinkeg.wine.domain.Wine;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface WineRepository extends JpaRepository<Wine, Long>, WineRepositoryCustom{
 

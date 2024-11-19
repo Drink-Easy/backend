@@ -6,6 +6,7 @@ import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.AllTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNotePreviewResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
+import com.drinkeg.drinkeg.wine.domain.Wine;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.HashMap;

@@ -1,10 +1,10 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.wine.dao;
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 
 import java.util.List;
 

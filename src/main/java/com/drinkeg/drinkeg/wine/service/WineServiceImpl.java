@@ -1,18 +1,18 @@
-package com.drinkeg.drinkeg.service.wineService;
+package com.drinkeg.drinkeg.wine.service;
 
 import com.drinkeg.drinkeg.S3.S3Service;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineConverter;
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.Wine;
+import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.WineRepository;
+import com.drinkeg.drinkeg.wine.dao.WineRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.service.wineWishlistService.WineWishlistService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

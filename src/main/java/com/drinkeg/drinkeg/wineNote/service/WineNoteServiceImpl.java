@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.service.wineNoteService;
+package com.drinkeg.drinkeg.wineNote.service;
 
 import com.drinkeg.drinkeg.wineNote.dao.WineNoteRepository;
 import jakarta.transaction.Transactional;
