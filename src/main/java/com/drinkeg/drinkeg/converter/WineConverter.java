@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.converter;
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.domain.WineNote;
+import com.drinkeg.drinkeg.wineNote.domain.WineNote;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;

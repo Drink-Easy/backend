@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.service.wineNoteService;
 
-import com.drinkeg.drinkeg.repository.WineNoteRepository;
+import com.drinkeg.drinkeg.wineNote.dao.WineNoteRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

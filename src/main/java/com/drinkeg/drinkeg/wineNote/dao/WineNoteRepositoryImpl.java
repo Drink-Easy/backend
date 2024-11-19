@@ -1,20 +1,19 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.wineNote.dao;
 
-import com.drinkeg.drinkeg.domain.Nose;
+import com.drinkeg.drinkeg.wineNote.domain.WineNoteNose;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
-import static com.drinkeg.drinkeg.domain.QTastingNote.tastingNote;
-import static com.drinkeg.drinkeg.domain.QTastingNoteNose.tastingNoteNose;
-import static com.drinkeg.drinkeg.domain.QWineNote.wineNote;
+import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
+import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNoteNose.tastingNoteNose;
+import static com.drinkeg.drinkeg.wineNote.domain.QWineNote.wineNote;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -64,7 +63,7 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
                 .limit(3)
                 .fetch();
 
-        Nose nose = new Nose(
+        WineNoteNose wineNoteNose = new WineNoteNose(
                 !topNoses.isEmpty() ? topNoses.get(0) : null,
                 topNoses.size() > 1 ? topNoses.get(1) : null,
                 topNoses.size() > 2 ? topNoses.get(2) : null
@@ -79,7 +78,7 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
                 .set(wineNote.avgBody, avgBody)
                 .set(wineNote.avgAlcohol, avgAlcohol)
                 .set(wineNote.avgSatisfaction, avgSatisfaction)
-                .set(wineNote.nose, nose)
+                .set(wineNote.wineNoteNose, wineNoteNose)
                 .execute();
     }
 

@@ -1,6 +1,6 @@
-package com.drinkeg.drinkeg.dto.WineNoteDTO;
+package com.drinkeg.drinkeg.wineNote.dto;
 
-import com.drinkeg.drinkeg.domain.Nose;
+import com.drinkeg.drinkeg.wineNote.domain.WineNoteNose;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,5 +20,5 @@ public class WineNoteResponseDTO {
     private float body;
     private float alcohol;
 
-    private Nose nose;
+    private WineNoteNose wineNoteNose;
 }

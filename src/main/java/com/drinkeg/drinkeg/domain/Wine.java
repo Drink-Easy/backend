@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain;
 
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.wineNote.domain.WineNote;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

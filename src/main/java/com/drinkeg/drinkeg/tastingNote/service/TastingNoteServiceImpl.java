@@ -10,7 +10,7 @@ import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.AllTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNotePreviewResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
-import com.drinkeg.drinkeg.event.wineNoteEvent.WineNoteUpdateEvent;
+import com.drinkeg.drinkeg.wineNote.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;

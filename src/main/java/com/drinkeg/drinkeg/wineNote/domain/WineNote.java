@@ -1,5 +1,7 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.wineNote.domain;
 
+import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.domain.Wine;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +31,7 @@ public class WineNote extends BaseEntity {
     // Getter 를 통해 Nose 를 얻을 수 있지만,
     // 그 내부 필드 조회를 위해선 Nose 에도 Getter 가 필요
     @Embedded
-    private Nose nose;
+    private WineNoteNose wineNoteNose;
 
     // 만족도 평균
     private float avgSatisfaction;

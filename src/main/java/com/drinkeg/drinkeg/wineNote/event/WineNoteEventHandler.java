@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.event.wineNoteEvent;
+package com.drinkeg.drinkeg.wineNote.event;
 
 import com.drinkeg.drinkeg.service.wineNoteService.WineNoteService;
 import lombok.RequiredArgsConstructor;

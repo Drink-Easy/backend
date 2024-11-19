@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.QMember.member;
-import static com.drinkeg.drinkeg.domain.QTastingNote.tastingNote;
-import static com.drinkeg.drinkeg.domain.QTastingNoteNose.tastingNoteNose;
 import static com.drinkeg.drinkeg.domain.QWine.wine;
+import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
+import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNoteNose.tastingNoteNose;
 
 @Repository
 @RequiredArgsConstructor

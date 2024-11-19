@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.wineNote.dao;
 
 public interface WineNoteRepositoryCustom {
 

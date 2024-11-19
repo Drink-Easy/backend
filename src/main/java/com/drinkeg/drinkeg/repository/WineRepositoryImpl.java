@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.drinkeg.drinkeg.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.QWine.wine;
 import static com.drinkeg.drinkeg.domain.QWineWishlist.wineWishlist;
+import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
 
 @Repository
 @RequiredArgsConstructor
@@ -55,7 +55,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom{
                         wine.wineNote.avgTannin.as("tannin"),
                         wine.wineNote.avgBody.as("body"),
                         wine.wineNote.avgAlcohol.as("alcohol"),
-                        wine.wineNote.nose,
+                        wine.wineNote.wineNoteNose,
                         new CaseBuilder()
                                 .when(wine.wineNote.avgSatisfaction.eq(0.0F))
                                 .then(wine.satisfaction)
