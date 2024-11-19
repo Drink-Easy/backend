@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.dto.WineWishlistDTO.response;
 
-import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
