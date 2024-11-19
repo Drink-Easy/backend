@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.wine.repository;
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.QSearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.QSearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.drinkeg.drinkeg.domain.QWine.wine;
 import static com.drinkeg.drinkeg.domain.QWineWishlist.wineWishlist;
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
+import static com.drinkeg.drinkeg.wine.domain.QWine.wine;
 
 @Repository
 @RequiredArgsConstructor
