@@ -1,12 +1,12 @@
-package com.drinkeg.drinkeg.controller;
+package com.drinkeg.drinkeg.tastingNote.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteUpdateRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllTastingNoteResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteUpdateRequestDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.response.AllTastingNoteResponseDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.service.tastingNoteService.TastingNoteService;
+import com.drinkeg.drinkeg.tastingNote.service.TastingNoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.TastingNoteDTO.request;
+package com.drinkeg.drinkeg.tastingNote.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -6,7 +6,6 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 public class TastingNoteUpdateRequestDTO {

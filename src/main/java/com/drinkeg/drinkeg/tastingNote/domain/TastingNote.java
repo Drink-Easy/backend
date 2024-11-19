@@ -1,5 +1,8 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.tastingNote.domain;
 
+import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.domain.Wine;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.tastingNote.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

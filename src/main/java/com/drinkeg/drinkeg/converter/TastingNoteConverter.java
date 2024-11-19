@@ -1,10 +1,11 @@
 package com.drinkeg.drinkeg.converter;
 
 import com.drinkeg.drinkeg.domain.*;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllTastingNoteResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNotePreviewResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
+import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.response.AllTastingNoteResponseDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNotePreviewResponseDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ public class TastingNoteConverter {
 
     // NoteRequestDTO를 TastingNote Entity로 변환
     // NotNull은 null이 아님을 보장하는 어노테이션
-    public static com.drinkeg.drinkeg.domain.TastingNote toTastingNoteEntity(TastingNoteRequestDTO tastingNoteRequestDTO, @NotNull Member member, @NotNull Wine wine) {
+    public static TastingNote toTastingNoteEntity(TastingNoteRequestDTO tastingNoteRequestDTO, @NotNull Member member, @NotNull Wine wine) {
         TastingNote tastingNote = TastingNote.builder()
                 .member(member)
 
@@ -41,7 +42,7 @@ public class TastingNoteConverter {
     }
 
     // TastingNote Entity를 NoteResponseDTO로 변환
-    public static TastingNoteResponseDTO toTastingNoteResponseDTO(com.drinkeg.drinkeg.domain.TastingNote tastingNote) {
+    public static TastingNoteResponseDTO toTastingNoteResponseDTO(TastingNote tastingNote) {
         Wine wine = tastingNote.getWine();
 
         return TastingNoteResponseDTO.builder()
@@ -76,7 +77,7 @@ public class TastingNoteConverter {
     }
 
     // TastingNote Entity를 NotePriviewResponseDTO로 변환
-    public static TastingNotePreviewResponseDTO toTastingNotePreviewDTO(com.drinkeg.drinkeg.domain.TastingNote tastingNote) {
+    public static TastingNotePreviewResponseDTO toTastingNotePreviewDTO(TastingNote tastingNote) {
         return TastingNotePreviewResponseDTO.builder()
                 .noteId(tastingNote.getId())
                 .name(tastingNote.getWine().getName())

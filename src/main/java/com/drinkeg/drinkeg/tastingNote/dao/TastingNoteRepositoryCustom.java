@@ -1,6 +1,6 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.tastingNote.dao;
 
-import com.drinkeg.drinkeg.domain.TastingNote;
+import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 
 import java.util.List;
 import java.util.Optional;

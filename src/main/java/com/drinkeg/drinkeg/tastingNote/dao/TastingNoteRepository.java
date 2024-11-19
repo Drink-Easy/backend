@@ -1,10 +1,7 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.tastingNote.dao;
 
-import com.drinkeg.drinkeg.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.Wine;
+import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface TastingNoteRepository extends JpaRepository<TastingNote, Long>, TastingNoteRepositoryCustom {
 

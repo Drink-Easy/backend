@@ -1,7 +1,6 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.tastingNote.dao;
 
-import com.drinkeg.drinkeg.domain.QMember;
-import com.drinkeg.drinkeg.domain.TastingNote;
+import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.TastingNoteDTO.response;
+package com.drinkeg.drinkeg.tastingNote.dto.response;
 
 import lombok.*;
 

@@ -1,14 +1,11 @@
 package com.drinkeg.drinkeg.converter;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
 import com.drinkeg.drinkeg.domain.WineNote;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.dto.WineDTO.response.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineResponseDTO;
-import com.drinkeg.drinkeg.dto.WineDTO.response.WineReviewResponseDTO;
 
 import java.util.List;
 import java.util.Optional;

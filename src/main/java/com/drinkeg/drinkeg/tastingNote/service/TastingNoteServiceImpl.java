@@ -1,21 +1,21 @@
-package com.drinkeg.drinkeg.service.tastingNoteService;
+package com.drinkeg.drinkeg.tastingNote.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.TastingNoteConverter;
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.TastingNote;
+import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.Wine;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.request.TastingNoteUpdateRequestDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.AllTastingNoteResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNotePreviewResponseDTO;
-import com.drinkeg.drinkeg.dto.TastingNoteDTO.response.TastingNoteResponseDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteUpdateRequestDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.response.AllTastingNoteResponseDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNotePreviewResponseDTO;
+import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.event.wineNoteEvent.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
-import com.drinkeg.drinkeg.repository.TastingNoteNoseRepository;
-import com.drinkeg.drinkeg.repository.TastingNoteRepository;
+import com.drinkeg.drinkeg.tastingNote.dao.TastingNoteNoseRepository;
+import com.drinkeg.drinkeg.tastingNote.dao.TastingNoteRepository;
 import com.drinkeg.drinkeg.service.wineService.WineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,7 +91,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         // 필터링된 노트를 TastingNotePreviewDTO로 변환
         List<TastingNotePreviewResponseDTO> tastingNotePreviewResponseDTOList = foundNotes.stream()
                 .filter(note -> filterBySort(note, sort))
-                .sorted(Comparator.comparing(com.drinkeg.drinkeg.domain.TastingNote::getCreatedAt).reversed())
+                .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
                 .map(TastingNoteConverter::toTastingNotePreviewDTO)
                 .toList();
 
@@ -100,7 +100,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     // 와인 타입별 필터링 로직
-    private boolean filterBySort(com.drinkeg.drinkeg.domain.TastingNote note, String sort) {
+    private boolean filterBySort(TastingNote note, String sort) {
         String wineSort = note.getWine().getSort();
 
         switch (sort) {
