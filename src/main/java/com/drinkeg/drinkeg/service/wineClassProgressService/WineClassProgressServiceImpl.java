@@ -22,9 +22,6 @@ public class WineClassProgressServiceImpl implements WineClassProgressService {
 
     @Override
     public float getWineClassProgress(WineClass wineClass, Member member) {
-        if (!wineClassProgressRepository.existsByWineClassAndMember(wineClass, member))
-            wineClassProgressRepository.save(WineClassProgress.create(wineClass, member));
-
         WineClassProgress wineClassProgress = wineClassProgressRepository.findByWineClassAndMember(wineClass, member)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_PROGRESS_NOT_FOUND));
 
