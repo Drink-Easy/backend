@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.wineService.WineService;
+import com.drinkeg.drinkeg.wine.service.WineService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
