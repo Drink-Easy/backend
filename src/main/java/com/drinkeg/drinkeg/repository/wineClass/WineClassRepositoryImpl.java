@@ -13,6 +13,7 @@ import java.util.Optional;
 import static com.drinkeg.drinkeg.domain.QWineClass.wineClass;
 import static com.drinkeg.drinkeg.domain.QWineClassProgress.wineClassProgress;
 
+
 @Repository
 @RequiredArgsConstructor
 @Transactional

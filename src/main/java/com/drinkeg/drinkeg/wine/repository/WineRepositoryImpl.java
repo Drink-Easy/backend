@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/com/drinkeg/drinkeg/repository/wine/WineRepositoryImpl.java
-package com.drinkeg.drinkeg.repository.wine;
-========
 package com.drinkeg.drinkeg.wine.repository;
->>>>>>>> dev:src/main/java/com/drinkeg/drinkeg/wine/repository/WineRepositoryImpl.java
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;

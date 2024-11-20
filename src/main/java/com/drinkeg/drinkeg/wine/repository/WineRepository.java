@@ -1,8 +1,5 @@
-<<<<<<<< HEAD:src/main/java/com/drinkeg/drinkeg/repository/wine/WineRepository.java
-package com.drinkeg.drinkeg.repository.wine;
-========
 package com.drinkeg.drinkeg.wine.repository;
->>>>>>>> dev:src/main/java/com/drinkeg/drinkeg/wine/repository/WineRepository.java
+
 
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import org.springframework.data.jpa.repository.JpaRepository;

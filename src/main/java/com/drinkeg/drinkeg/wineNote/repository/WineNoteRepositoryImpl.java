@@ -1,8 +1,5 @@
-<<<<<<<< HEAD:src/main/java/com/drinkeg/drinkeg/repository/wineNote/WineNoteRepositoryImpl.java
-package com.drinkeg.drinkeg.repository.wineNote;
-========
+
 package com.drinkeg.drinkeg.wineNote.repository;
->>>>>>>> dev:src/main/java/com/drinkeg/drinkeg/wineNote/repository/WineNoteRepositoryImpl.java
 
 import com.drinkeg.drinkeg.wineNote.domain.WineNoteNose;
 import com.querydsl.core.Tuple;
