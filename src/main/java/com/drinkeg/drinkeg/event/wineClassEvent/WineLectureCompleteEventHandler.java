@@ -13,13 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class WineLectureCompleteEventHandler {
     private final WineClassProgressService wineClassProgressService;
-    private final MemberService memberService;
-    private final WineClassService wineClassService;
+
 
     @EventListener
     public void handleWineLectureCompleteEvent(WineLectureCompleteEvent event) {
-        wineClassProgressService.updateWineClassProgress(
-                wineClassService.getWineClassById(event.getWineClasId()),
-                memberService.getMemberById(event.getMemberId()));
+        wineClassProgressService.updateWineClassProgress(event.getWineClasId(), event.getMemberId());
     }
 }
