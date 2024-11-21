@@ -20,16 +20,6 @@ public class WineLectureCompleteController {
     private final WineLectureCompleteService wineLectureCompleteService;
 
     @Operation(
-            summary = "와인 강의 수강 완료 목록 조회",
-            description = "수강 완료한 와인 강의 목록을 조회한다."
-    )
-    @GetMapping("/")
-    public ApiResponse<List<WineLectureCompleteResponseDTO>> getWineLectureCompleteByMember(@AuthenticationPrincipal PrincipalDetail principalDetail) {
-        List<WineLectureCompleteResponseDTO> wineLectureCompleteResponseDTOS = wineLectureCompleteService.showWineLectureCompleteByMember(principalDetail);
-        return ApiResponse.onSuccess(wineLectureCompleteResponseDTOS);
-    }
-
-    @Operation(
             summary = "와인 강의 수강 완료 생성",
             description = "와인 강의 수강 완료를 생성한다."
     )
@@ -43,9 +33,9 @@ public class WineLectureCompleteController {
             summary = "와인 강의 수강 완료 삭제",
             description = "와인 강의 수강 완료를 삭제한다."
     )
-    @DeleteMapping("/{wineLectureCompleteId}")
-    public ApiResponse<String> deleteWineLectureComplete(@PathVariable Long wineLectureCompleteId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        wineLectureCompleteService.deleteWineLectureCompleteById(wineLectureCompleteId, principalDetail);
+    @DeleteMapping("/wine-lecture/{wineLectureId}")
+    public ApiResponse<String> deleteWineLectureComplete(@PathVariable Long wineLectureId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        wineLectureCompleteService.deleteWineLectureComplete(wineLectureId, principalDetail);
         return ApiResponse.onSuccess("와인 강의 수강여부 삭제 완료");
     }
 }

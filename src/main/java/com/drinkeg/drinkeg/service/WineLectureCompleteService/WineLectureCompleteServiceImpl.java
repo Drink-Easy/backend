@@ -9,7 +9,7 @@ import com.drinkeg.drinkeg.dto.WineLectureCompleteDTO.response.WineLectureComple
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.event.wineClassEvent.WineLectureCompleteEvent;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.WineLectureCompleteRepository;
+import com.drinkeg.drinkeg.repository.wineLectureComplete.WineLectureCompleteRepository;
 import com.drinkeg.drinkeg.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -27,20 +27,11 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
     private final MemberService memberService;
     private final ApplicationEventPublisher eventPublisher;
 
-    @Override
-    public List<WineLectureCompleteResponseDTO> showWineLectureCompleteByMember(PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
-
-        List<WineLectureComplete> wineLectureCompletes = wineLectureCompleteRepository.findAllByMember(member);
-
-        return wineLectureCompletes.stream()
-                .map(WineLectureCompleteConverter::toWineLectureCompleteResponseDTO)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public WineLectureCompleteResponseDTO saveWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_NOT_FOUND));
 
@@ -56,10 +47,10 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
     }
 
     @Override
-    public void deleteWineLectureCompleteById(Long wineLectureCompleteId, PrincipalDetail principalDetail) {
+    public void deleteWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
-        WineLectureComplete wineLectureComplete = wineLectureCompleteRepository.findById(wineLectureCompleteId)
+        WineLectureComplete wineLectureComplete = wineLectureCompleteRepository.findByWineLectureIdAndMemberId(wineLectureId, member.getId())
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_NOT_FOUND));
 
         if (!wineLectureComplete.getMember().equals(member) && !member.getRole().equals("ROLE_ADMIN"))
