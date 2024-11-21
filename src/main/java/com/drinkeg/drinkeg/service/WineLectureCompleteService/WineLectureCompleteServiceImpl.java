@@ -9,6 +9,7 @@ import com.drinkeg.drinkeg.dto.WineLectureCompleteDTO.response.WineLectureComple
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.event.wineClassEvent.WineLectureCompleteEvent;
 import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.repository.wineLecture.WineLectureRepository;
 import com.drinkeg.drinkeg.repository.wineLectureComplete.WineLectureCompleteRepository;
 import com.drinkeg.drinkeg.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;

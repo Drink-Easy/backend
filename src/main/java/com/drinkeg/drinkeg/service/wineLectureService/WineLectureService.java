@@ -9,14 +9,9 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import java.util.List;
 
 public interface WineLectureService {
-    List<WineLectureResponseDTO> showAllWineLectures(PrincipalDetail principalDetail);
     List<WineLectureResponseDTO> showAllWineLecturesByWineClass(Long wineClassId, PrincipalDetail principalDetail);
     WineLectureResponseDTO showWineLectureById(Long wineLectureId,PrincipalDetail principalDetail);
-    WineLectureResponseDTO saveWineLecture(WineLectureRequestDTO wineLectureRequestDTO, PrincipalDetail principalDetail);
-    WineLectureResponseDTO updateWineLecture(WineLectureRequestDTO wineLectureRequestDTO, Long wineLectureId, PrincipalDetail principalDetail);
+    void saveWineLecture(WineLectureRequestDTO wineLectureRequestDTO, PrincipalDetail principalDetail);
+    void updateWineLecture(WineLectureRequestDTO wineLectureRequestDTO, Long wineLectureId, PrincipalDetail principalDetail);
     void deleteWineLecture(Long wineLectureId, PrincipalDetail principalDetail);
-
-    List<WineLecture> getAllWineLectures();
-    List<WineLecture> getAllWineLecturesByWineClass(WineClass wineClass);
-    WineLecture getWineLectureById(Long id);
 }
