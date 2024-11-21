@@ -64,7 +64,7 @@ public class WineLectureController {
             summary = "와인 강의 삭제",
             description = "와인 강의 id로 와인 강의를 삭제한다. ADMIN 만 접근 가능하다."
     )
-    @DeleteMapping("{String}")
+    @DeleteMapping("/{wineLectureId}")
     public ApiResponse<String> deleteWineLectureById(@PathVariable Long wineLectureId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         wineLectureService.deleteWineLecture(wineLectureId, principalDetail);
         return ApiResponse.onSuccess("와인 강의 삭제 성공");
