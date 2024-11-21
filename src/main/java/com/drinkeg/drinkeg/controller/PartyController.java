@@ -37,9 +37,10 @@ public class PartyController {
 
     // 모임 전체조회
     @GetMapping
-    public ApiResponse<List<PartyResponseDTO>> getAllParties() {
+    public ApiResponse<List<PartyResponseDTO>> getAllParties(
+            @AuthenticationPrincipal PrincipalDetail principalDetail) {
 
-        List<PartyResponseDTO> partyResponseDTOS = partyService.getAllParties();
+        List<PartyResponseDTO> partyResponseDTOS = partyService.getAllParties(principalDetail);
 
         return ApiResponse.onSuccess(partyResponseDTOS);
     }
@@ -109,7 +110,7 @@ public class PartyController {
             @RequestParam("searchName") String searchName) {
 
         // 모임 제목으로 검색된 결과 리스트를 반환
-        List<PartyResponseDTO> searchPartyResponseDTOS = partyService.searchPartiesByName(searchName);
+        List<PartyResponseDTO> searchPartyResponseDTOS = partyService.searchPartiesByName(searchName, principalDetail);
 
         return ApiResponse.onSuccess(searchPartyResponseDTOS);
     }

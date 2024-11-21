@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder
@@ -37,6 +38,8 @@ public class PartyRequestDTO {
     //모임 장소
     private String place;
 
+    //모임 개설 시간
+    private LocalDateTime createAt;
     //모임 와인  사진? url?
     //private Long partyWine;
 }

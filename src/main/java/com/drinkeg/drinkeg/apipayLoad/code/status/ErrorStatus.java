@@ -40,7 +40,9 @@ public enum ErrorStatus implements BaseCode {
     EXIST_IN_PARTY(HttpStatus.BAD_REQUEST, "JOIN4002", "이미 참가한 모임입니다."),
     HOST_CANNOT_LEAVE(HttpStatus.BAD_REQUEST,"JOIN4003", "호스트는 모임을 탈퇴할 수 없습니다."),
 
-
+    // PartyBookmark Error
+    PARTY_BOOKMARK_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "PARTY_BOOKMARK4002", "이미 존재하는 북마크입니다."),
+    PARTY_BOOKMARK_NOT_FOUND(HttpStatus.BAD_REQUEST, "PARTY_BOOKMARK4001", "모임 북마크가 없습니다."),
 
     // Wine class Error
     WINE_CLASS_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_CLASS4001", "와인 클래스가 없습니다."),
