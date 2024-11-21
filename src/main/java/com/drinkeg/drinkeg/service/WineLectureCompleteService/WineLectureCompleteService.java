@@ -9,9 +9,8 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import java.util.List;
 
 public interface WineLectureCompleteService {
-    List<WineLectureCompleteResponseDTO> showWineLectureCompleteByMember(PrincipalDetail principalDetail);
     WineLectureCompleteResponseDTO saveWineLectureComplete(Long wineClassId, PrincipalDetail principalDetail);
-    void deleteWineLectureCompleteById(Long wineLectureCompleteId, PrincipalDetail principalDetail);
+    void deleteWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail);
 
     boolean isCompleted(WineLecture wineLecture , Member member);
 }
