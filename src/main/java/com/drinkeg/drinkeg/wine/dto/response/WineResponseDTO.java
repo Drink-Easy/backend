@@ -2,13 +2,11 @@ package com.drinkeg.drinkeg.wine.dto.response;
 
 import com.drinkeg.drinkeg.wineNote.domain.WineNoteNose;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class WineResponseDTO {
@@ -22,15 +20,16 @@ public class WineResponseDTO {
     private int price;
     private String sort;
     private String area;
+    private float satisfaction;
 
-    private float sugarContent;
-    private float acidity;
-    private float tannin;
-    private float body;
-    private float alcohol;
+    private float avgSugarContent;
+    private float avgAcidity;
+    private float avgTannin;
+    private float avgBody;
+    private float avgAlcohol;
 
     private WineNoteNose wineNoteNose;
 
-    private float satisfaction;
+    private float avgSatisfaction;
 
 }

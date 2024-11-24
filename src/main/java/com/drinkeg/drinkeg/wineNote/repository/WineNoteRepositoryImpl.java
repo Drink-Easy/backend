@@ -69,6 +69,7 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
                 topNoses.size() > 2 ? topNoses.get(2) : null
         );
 
+
         // WineNote 업데이트
         queryFactory.update(wineNote)
                 .where(wineNote.wine.id.eq(wineId))

@@ -8,6 +8,7 @@ import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineResponse;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -54,7 +55,8 @@ public class WineServiceImpl implements WineService {
 
     }
 
-    public WineResponseDTO getWineResponseByWineId(Long wineId){
+    @Override
+    public WineResponse getWineResponseByWineId(Long wineId){
         return wineRepository.findWineResponseByWineId(wineId);
     }
 

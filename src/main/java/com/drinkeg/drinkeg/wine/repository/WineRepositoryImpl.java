@@ -2,10 +2,7 @@ package com.drinkeg.drinkeg.wine.repository;
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
-import com.drinkeg.drinkeg.wine.dto.response.QSearchWineResponseDTO;
-import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
-import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.QWineWishlist.wineWishlist;
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
@@ -40,9 +38,13 @@ public class WineRepositoryImpl implements WineRepositoryCustom{
                 .fetch();
     }
 
+
+
     @Override
-    public WineResponseDTO findWineResponseByWineId(Long wineId) {
-        return queryFactory
+    public WineResponse findWineResponseByWineId(Long wineId) {
+
+        // Wine 데이터를 가져옴
+        WineResponseDTO wineResponseDTO = queryFactory
                 .select(Projections.constructor(WineResponseDTO.class,
                         wine.id.as("wineId"),
                         wine.name,
@@ -50,21 +52,37 @@ public class WineRepositoryImpl implements WineRepositoryCustom{
                         wine.price.multiply(1300).divide(100).multiply(100).as("price"),
                         wine.sort,
                         wine.area,
-                        wine.wineNote.avgSugarContent.as("sugarContent"),
-                        wine.wineNote.avgAcidity.as("acidity"),
-                        wine.wineNote.avgTannin.as("tannin"),
-                        wine.wineNote.avgBody.as("body"),
-                        wine.wineNote.avgAlcohol.as("alcohol"),
+                        wine.satisfaction,
+
+                        wine.wineNote.avgSugarContent.as("avgSugarContent"),
+                        wine.wineNote.avgAcidity.as("avgAcidity"),
+                        wine.wineNote.avgTannin.as("avgTannin"),
+                        wine.wineNote.avgBody.as("avgBody"),
+                        wine.wineNote.avgAlcohol.as("avgAlcohol"),
+
                         wine.wineNote.wineNoteNose,
-                        new CaseBuilder()
-                                .when(wine.wineNote.avgSatisfaction.eq(0.0F))
-                                .then(wine.satisfaction)
-                                .otherwise(wine.wineNote.avgSatisfaction).as("satisfaction")
+
+                        wine.wineNote.avgSatisfaction.as("avgSatisfaction")
                 ))
                 .from(wine)
                 .leftJoin(wine.wineNote)
                 .where(wine.id.eq(wineId))
                 .fetchOne();
+
+        // 최근 생성된 3개의 TastingNote
+        Optional<List<WineReviewResponseDTO>> recentReviews = Optional.ofNullable(queryFactory
+                .select(Projections.constructor(WineReviewResponseDTO.class,
+                        tastingNote.member.name,
+                        tastingNote.review,
+                        tastingNote.satisfaction
+                ))
+                .from(tastingNote)
+                .where(tastingNote.wine.id.eq(wineId))
+                .orderBy(tastingNote.createdAt.desc()) // 최신순 정렬
+                .limit(3) // 상위 3개 제한
+                .fetch());
+
+        return new WineResponse(wineResponseDTO, recentReviews.orElse(null));
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.wine.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineResponse;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -36,11 +37,11 @@ public class WineController {
     // 선택한 와인 정보 출력
     @GetMapping("/{wineId}")
     @Operation(summary = "선택 와인 정보 열람", description = "선택한 와인의 정보를 wineResponseDTO에 담아 반환")
-    public ApiResponse<WineResponseDTO> showWine(@PathVariable("wineId") Long wineId) {
+    public ApiResponse<WineResponse> showWine(@PathVariable("wineId") Long wineId) {
 
-        WineResponseDTO wineResponseDTO = wineService.getWineResponseByWineId(wineId);
+        WineResponse wineResponse = wineService.getWineResponseByWineId(wineId);
 
-        return ApiResponse.onSuccess(wineResponseDTO);
+        return ApiResponse.onSuccess(wineResponse);
     }
 
     // 와인 리뷰 보기

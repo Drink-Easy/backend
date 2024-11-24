@@ -18,4 +18,11 @@ public class WineReviewResponseDTO {
 
     private String review;
 
+    // QueryDSL에서 사용할 수 있는 생성자 추가
+    public WineReviewResponseDTO(String name, String review, Float satisfaction) {
+        this.name = name;
+        this.review = review;
+        this.satisfaction = satisfaction;
+    }
+
 }
