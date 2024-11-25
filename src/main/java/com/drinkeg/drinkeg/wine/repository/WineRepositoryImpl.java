@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.wine.repository;
 
 import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.dto.HomeDTO.QRecommendWineDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.*;
 import com.querydsl.core.BooleanBuilder;
@@ -28,10 +29,11 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     @Override
     public List<WineReviewResponseDTO> findWineReviewsById(Long wineId) {
         return queryFactory
-                .select(Projections.constructor(WineReviewResponseDTO.class,
+                .select(new QWineReviewResponseDTO(
                         tastingNote.member.name,
-                        tastingNote.satisfaction,
-                        tastingNote.review))
+                        tastingNote.review,
+                        tastingNote.satisfaction
+                ))
                 .from(tastingNote)
                 .join(tastingNote.wine, wine)
                 .where(wine.id.eq(wineId))
@@ -45,7 +47,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
         // Wine 데이터를 가져옴
         WineResponseDTO wineResponseDTO = queryFactory
-                .select(Projections.constructor(WineResponseDTO.class,
+                .select(new QWineResponseDTO(
                         wine.id.as("wineId"),
                         wine.name,
                         wine.imageUrl,
@@ -71,7 +73,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
         // 최근 생성된 3개의 TastingNote
         Optional<List<WineReviewResponseDTO>> recentReviews = Optional.ofNullable(queryFactory
-                .select(Projections.constructor(WineReviewResponseDTO.class,
+                .select(new QWineReviewResponseDTO(
                         tastingNote.member.name,
                         tastingNote.review,
                         tastingNote.satisfaction
@@ -98,7 +100,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
         BooleanBuilder areaCondition = new BooleanBuilder();
         wineAreaList.forEach(area -> areaCondition.or(wine.area.lower().containsIgnoreCase(area)));
 
-        return queryFactory.select(Projections.constructor(RecommendWineDTO.class,
+        return queryFactory.select(new QRecommendWineDTO(
                         wine.id,
                         wine.name,
                         wine.imageUrl

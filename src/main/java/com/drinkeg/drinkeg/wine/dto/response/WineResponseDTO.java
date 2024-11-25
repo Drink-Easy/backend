@@ -1,13 +1,12 @@
 package com.drinkeg.drinkeg.wine.dto.response;
 
 import com.drinkeg.drinkeg.wineNote.domain.WineNoteNose;
-import lombok.AllArgsConstructor;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class WineResponseDTO {
 
@@ -31,5 +30,30 @@ public class WineResponseDTO {
     private WineNoteNose wineNoteNose;
 
     private float avgSatisfaction;
+
+
+    @QueryProjection
+    public WineResponseDTO(
+            Long wineId, String name, String imageUrl, int price, String sort, String area, float satisfaction,
+            float avgSugarContent, float avgAcidity, float avgTannin, float avgBody, float avgAlcohol,
+            WineNoteNose wineNoteNose, float avgSatisfaction) {
+
+        this.wineId = wineId;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.sort = sort;
+        this.area = area;
+        this.satisfaction = satisfaction;
+
+        this.avgSugarContent = avgSugarContent;
+        this.avgAcidity = avgAcidity;
+        this.avgTannin = avgTannin;
+        this.avgBody = avgBody;
+        this.avgAlcohol = avgAlcohol;
+
+        this.wineNoteNose = wineNoteNose;
+        this.avgSatisfaction = avgSatisfaction;
+    }
 
 }
