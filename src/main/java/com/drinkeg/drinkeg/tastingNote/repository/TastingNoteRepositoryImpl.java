@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.drinkeg.drinkeg.domain.QMember.member;
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNoteNose.tastingNoteNose;
 import static com.drinkeg.drinkeg.wine.domain.QWine.wine;
@@ -44,10 +43,9 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     @Override
     public List<TastingNote> findTastingNotesWithWineAndNoseByUsername(String username) {
         return queryFactory.selectFrom(tastingNote)
-                .leftJoin(tastingNote.member, member).fetchJoin()
                 .leftJoin(tastingNote.wine, wine).fetchJoin()
                 .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
-                .where(member.username.eq(username))
+                .where(tastingNote.member.username.eq(username))
                 .fetch();
     }
 }
