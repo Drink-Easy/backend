@@ -57,9 +57,9 @@ public class WineClassController {
             description = "와인 클래스 id로 와인 클래스를 수정한다. ADMIN만 접근 가능하다."
     )
     @PutMapping("/{wineClassId}")
-    public ApiResponse<WineClassResponseDTO> updateWineClass(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable Long wineClassId, @RequestBody @Valid WineClassRequestDTO wineClassRequestDTO) {
-        WineClassResponseDTO wineClassResponseDTO = wineClassService.updateWineClass(wineClassId, wineClassRequestDTO, principalDetail);
-        return ApiResponse.onSuccess(wineClassResponseDTO);
+    public ApiResponse<String> updateWineClass(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable Long wineClassId, @RequestBody @Valid WineClassRequestDTO wineClassRequestDTO) {
+        wineClassService.updateWineClass(wineClassId, wineClassRequestDTO, principalDetail);
+        return ApiResponse.onSuccess("와인클래스 수정 완료");
     }
 
     @Operation(

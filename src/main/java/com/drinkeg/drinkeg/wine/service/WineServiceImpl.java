@@ -4,6 +4,7 @@ import com.drinkeg.drinkeg.S3.S3Service;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineConverter;
 import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
@@ -31,16 +32,16 @@ import java.util.*;
 @Transactional
 public class WineServiceImpl implements WineService {
     private final WineRepository wineRepository;
+    private final MemberRepository memberRepository;
 
-    private final MemberService memberService;
-    private final WineWishlistService wineWishlistService;
     private final S3Service s3Service;
 
     @Override
     public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
-        Member member = memberService.getMemberByUsername(principalDetail.getUsername());
+        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').
         // 이때 memberId를 이용해 isLiked()를 같이 조회한다
@@ -49,10 +50,8 @@ public class WineServiceImpl implements WineService {
 
     @Override
     public Wine findWineById(Long wineId) {
-
         return wineRepository.findById(wineId).orElseThrow(()
                     -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
-
     }
 
     @Override
@@ -66,13 +65,12 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public HomeResponseDTO getHomeResponse(Member member) {
+    public HomeResponseDTO getHomeResponse(PrincipalDetail principalDetail) {
+        // 회원을 조회한다.
+        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        List<RecommendWineDTO> recommendWines = null;
-
-        if(!member.getIsFirst()){
-            recommendWines = wineRepository.findRecommendWines(member);
-        }
+        List<RecommendWineDTO> recommendWines = wineRepository.findRecommendWines(member);
         return WineConverter.toHomeResponseDTO(member, recommendWines);
     }
 

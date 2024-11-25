@@ -21,7 +21,7 @@ import static com.drinkeg.drinkeg.wine.domain.QWine.wine;
 @Repository
 @RequiredArgsConstructor
 @Transactional
-public class WineRepositoryImpl implements WineRepositoryCustom{
+public class WineRepositoryImpl implements WineRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 

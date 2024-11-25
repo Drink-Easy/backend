@@ -8,42 +8,33 @@ import com.drinkeg.drinkeg.dto.WineClassDTO.request.WineClassRequestDTO;
 import com.drinkeg.drinkeg.dto.WineClassDTO.response.WineClassResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.WineClassRepository;
+import com.drinkeg.drinkeg.repository.wineClass.WineClassRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.wineClassProgressService.WineClassProgressService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class WineClassServiceImpl implements WineClassService {
     private final WineClassRepository wineClassRepository;
     private final MemberService memberService;
-    private final WineClassProgressService wineClassProgressService;
 
     @Override
     public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
-        List<WineClass> wineClasses = wineClassRepository.findAll();
-
-        return wineClasses.stream()
-                .map(wineClass -> WineClassConverter.toWineClassResponseDTO(wineClass, wineClassProgressService.getWineClassProgress(wineClass, member)))
-                .collect(Collectors.toList());
+        return wineClassRepository.findWineClassListByMemberId(member.getId());
     }
 
     @Override
     public WineClassResponseDTO showWineClassById(Long wineClassId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
-        WineClass wineClass = wineClassRepository.findById(wineClassId)
-                        .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
-
-        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassProgressService.getWineClassProgress(wineClass, member));
+        return wineClassRepository.findWineClassByIdAndMemberId(wineClassId, member.getId())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
     }
 
     @Override
@@ -55,7 +46,7 @@ public class WineClassServiceImpl implements WineClassService {
 
     @Override
     @Transactional
-    public WineClassResponseDTO updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
+    public void updateWineClass(Long wineClassId, WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineClass wineClass = wineClassRepository.findById(wineClassId)
@@ -68,8 +59,6 @@ public class WineClassServiceImpl implements WineClassService {
                 .updateTitle(wineClassRequestDTO.getTitle())
                 .updateThumbnail(wineClassRequestDTO.getThumbnailUrl())
                 .updateCategory(wineClassRequestDTO.getCategory());
-
-        return WineClassConverter.toWineClassResponseDTO(wineClass, wineClassProgressService.getWineClassProgress(wineClass, member));
     }
 
     @Override
@@ -78,16 +67,5 @@ public class WineClassServiceImpl implements WineClassService {
             throw new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND);
 
         wineClassRepository.deleteById(wineClassId);
-    }
-
-    @Override
-    public List<WineClass> getAllWineClasses() {
-        return wineClassRepository.findAll();
-    }
-
-    @Override
-    public WineClass getWineClassById(Long wineClassId) {
-        return wineClassRepository.findById(wineClassId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
     }
 }

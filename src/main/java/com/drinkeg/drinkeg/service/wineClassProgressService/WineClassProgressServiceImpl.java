@@ -5,23 +5,29 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.WineClass;
 import com.drinkeg.drinkeg.domain.WineClassProgress;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.WineClassProgressRepository;
-import com.drinkeg.drinkeg.service.WineLectureCompleteService.WineLectureCompleteService;
+import com.drinkeg.drinkeg.repository.MemberRepository;
+import com.drinkeg.drinkeg.repository.wineClass.WineClassRepository;
+import com.drinkeg.drinkeg.repository.wineClassProgress.WineClassProgressRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class WineClassProgressServiceImpl implements WineClassProgressService {
     private final WineClassProgressRepository wineClassProgressRepository;
-    private final WineLectureCompleteService wineLectureCompleteService;
+    private final WineClassRepository wineClassRepository;
+    private final MemberRepository memberRepository;
 
     @Override
-    public float getWineClassProgress(WineClass wineClass, Member member) {
+    public float getWineClassProgress(Long wineClassId, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        WineClass wineClass = wineClassRepository.findById(wineClassId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
+
         if (!wineClassProgressRepository.existsByWineClassAndMember(wineClass, member))
             wineClassProgressRepository.save(WineClassProgress.create(wineClass, member));
 
@@ -32,17 +38,18 @@ public class WineClassProgressServiceImpl implements WineClassProgressService {
     }
 
     @Override
-    public void updateWineClassProgress(WineClass wineClass, Member member) {
+    public void updateWineClassProgress(Long wineClassId, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        WineClass wineClass = wineClassRepository.findById(wineClassId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
+
         if (!wineClassProgressRepository.existsByWineClassAndMember(wineClass, member))
             wineClassProgressRepository.save(WineClassProgress.create(wineClass, member));
 
         WineClassProgress wineClassProgress = wineClassProgressRepository.findByWineClassAndMember(wineClass, member)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_PROGRESS_NOT_FOUND));
-        // 진행도 계산
-        long completedWineLectureCnt = wineClass.getWineLectures().stream().filter(wineLecture -> wineLectureCompleteService.isCompleted(wineLecture, member)).count();
-        long wineLectureCnt = wineClass.getWineLectures().stream().count();
-        float progress = (float)completedWineLectureCnt / (float)wineLectureCnt * 100.0f;
 
-        wineClassProgress.updateProgress(progress);
+        wineClassProgress.updateProgress(wineClassProgressRepository.getProgress(wineClassId, memberId));
     }
 }

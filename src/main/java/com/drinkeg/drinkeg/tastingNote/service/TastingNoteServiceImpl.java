@@ -10,13 +10,13 @@ import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.AllTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNotePreviewResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
+import com.drinkeg.drinkeg.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.wineNote.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.tastingNote.repository.TastingNoteNoseRepository;
 import com.drinkeg.drinkeg.tastingNote.repository.TastingNoteRepository;
-import com.drinkeg.drinkeg.wine.service.WineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,11 +34,11 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final TastingNoteRepository tastingNoteRepository;
     private final TastingNoteNoseRepository tastingNoteNoseRepository;
+    private final WineRepository wineRepository;
+    private final MemberRepository memberRepository;
 
     private final ApplicationEventPublisher eventPublisher;
 
-    private final WineService wineService;
-    private final MemberRepository memberRepository;
 
     @Override
     public void saveTastingNote(TastingNoteRequestDTO tastingNoteRequestDTO, PrincipalDetail principalDetail) {
@@ -50,7 +50,8 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         // 와인을 찾는다.
         Long wineId = tastingNoteRequestDTO.getWineId();
-        Wine wine = wineService.findWineById(wineId);
+        Wine wine = wineRepository.findById(wineId).orElseThrow(
+                () -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
         // TastingNote를 저장한다.
         tastingNoteRepository.save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
