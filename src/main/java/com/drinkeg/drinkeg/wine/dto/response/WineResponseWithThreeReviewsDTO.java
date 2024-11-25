@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WineResponse {
+public class WineResponseWithThreeReviewsDTO {
     WineResponseDTO wineResponseDTO;
     List<WineReviewResponseDTO> recentReviews;
 }

@@ -41,7 +41,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
 
     @Override
-    public WineResponse findWineResponseByWineId(Long wineId) {
+    public WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId) {
 
         // Wine 데이터를 가져옴
         WineResponseDTO wineResponseDTO = queryFactory
@@ -82,7 +82,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .limit(3) // 상위 3개 제한
                 .fetch());
 
-        return new WineResponse(wineResponseDTO, recentReviews.orElse(null));
+        return new WineResponseWithThreeReviewsDTO(wineResponseDTO, recentReviews.orElse(null));
     }
 
     @Override

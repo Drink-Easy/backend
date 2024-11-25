@@ -4,8 +4,7 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.wine.dto.response.WineResponse;
-import com.drinkeg.drinkeg.wine.dto.response.WineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
@@ -18,7 +17,7 @@ public interface WineService {
 
     public Wine findWineById(Long wineId);
 
-    public WineResponse getWineResponseByWineId(Long wineId);
+    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId);
 
     public List<WineReviewResponseDTO> getWineReviewsByWineId(Long wineId);
 
