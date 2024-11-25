@@ -31,10 +31,7 @@ public class MainController {
     @Operation(summary = "홈화면 페이지", description = "사용자 이름과 추천 와인 List를 homeResponseDTO에 담아서 반환")
     public ApiResponse<HomeResponseDTO> home(@AuthenticationPrincipal PrincipalDetail principalDetail) {
 
-        // 로그인 멤버 불러오기
-        Member loadMember = memberService.loadMemberByPrincipalDetail(principalDetail);
-
-        HomeResponseDTO homeResponseDTO = wineService.getHomeResponse(loadMember);
+        HomeResponseDTO homeResponseDTO = wineService.getHomeResponse(principalDetail);
 
         return ApiResponse.onSuccess(homeResponseDTO);
     }

@@ -15,13 +15,11 @@ public interface WineService {
 
     public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail);
 
-    public Wine findWineById(Long wineId);
-
     public WineResponseDTO getWineResponseByWineId(Long wineId);
 
     public List<WineReviewResponseDTO> getWineReviewsByWineId(Long wineId);
 
-    public HomeResponseDTO getHomeResponse(Member member);
+    public HomeResponseDTO getHomeResponse(PrincipalDetail principalDetail);
 
     public void uploadWineImage() throws IOException;
 
