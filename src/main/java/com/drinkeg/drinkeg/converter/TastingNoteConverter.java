@@ -5,14 +5,10 @@ import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.AllTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNotePreviewResponseDTO;
-import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TastingNoteConverter {
 
@@ -40,41 +36,6 @@ public class TastingNoteConverter {
             tastingNote.addNoseElement(noseElement);
         }
         return tastingNote;
-    }
-
-    // TastingNote Entity를 NoteResponseDTO로 변환
-    public static TastingNoteResponseDTO toTastingNoteResponseDTO(TastingNote tastingNote) {
-        Wine wine = tastingNote.getWine();
-
-        return TastingNoteResponseDTO.builder()
-                .noteId(tastingNote.getId())
-                .wineId(wine.getId())
-                .wineName(wine.getName())
-                .sort(wine.getSort())
-                .area(wine.getArea())
-                .imageUrl(wine.getImageUrl())
-
-                .color(tastingNote.getColor())
-                .tasteDate(tastingNote.getTasteDate())
-
-                .sugarContent(tastingNote.getSugarContent())
-                .acidity(tastingNote.getAcidity())
-                .tannin(tastingNote.getTannin())
-                .body(tastingNote.getBody())
-                .alcohol(tastingNote.getAlcohol())
-
-                .noseList(tastingNote.getNoseList().stream()
-                        .map(nose -> {
-                            Map<Long, String> noseMap = new HashMap<>();
-                            noseMap.put(nose.getId(), nose.getNoseElement());
-                            return noseMap;
-                        })
-                        .collect(Collectors.toList()))
-
-                .satisfaction(tastingNote.getSatisfaction())
-                .review(tastingNote.getReview())
-                .build();
-
     }
 
     // TastingNote Entity를 NotePriviewResponseDTO로 변환

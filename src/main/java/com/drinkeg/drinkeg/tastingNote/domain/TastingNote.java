@@ -56,18 +56,13 @@ public class TastingNote extends BaseEntity {
 
     private String review;
 
-
-    // 와인 업데이트
-    public void updateWine(Wine wine) {
-        this.wine = wine;
-    }
     // 색상 업데이트
     public void updateColor(String color) {
         this.color = color;
     }
 
     // 시음 날짜 업데이트
-    public void updatetasteDate(LocalDate tasteDate) {
+    public void updateTasteDate(LocalDate tasteDate) {
         this.tasteDate = tasteDate;
     }
 

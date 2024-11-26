@@ -62,17 +62,12 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     @Override
     public  TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findTastingNoteWithWineAndNoseById(noteId).orElseThrow(()
+        return tastingNoteRepository
+                .findTastingNoteWithWineAndNoseByTastingNoteIdAndUsername(noteId, principalDetail.getUsername())
+                .orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
-        // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
-        if(!foundNote.getMember().getUsername().equals(principalDetail.getUsername())) {
-            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
-        }
-
-        // TastingNote를 DTO로 변환한다.
-        return TastingNoteConverter.toTastingNoteResponseDTO(foundNote);
     }
 
     @Override
@@ -144,7 +139,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             foundNote.updateColor(tastingNoteUpdateRequestDTO.getColor());
         }
         if(tastingNoteUpdateRequestDTO.getTastingDate() != null) {
-            foundNote.updatetasteDate(tastingNoteUpdateRequestDTO.getTastingDate());
+            foundNote.updateTasteDate(tastingNoteUpdateRequestDTO.getTastingDate());
         }
 
         if(tastingNoteUpdateRequestDTO.getSugarContent() != null) {
