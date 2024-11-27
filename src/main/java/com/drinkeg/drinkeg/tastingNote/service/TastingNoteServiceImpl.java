@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.tastingNote.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.TastingNoteConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.wine.domain.Wine;
@@ -91,8 +90,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
                 .map(note -> TastingNotePreviewResponseDTO.create(note.getId(), note.getWine().getName(), note.getWine().getImageUrl()))
                 .toList();
 
-        return TastingNoteConverter
-                .toAllNoteResponseDTO(tastingNotePreviewResponseDTOList, total, red, white, sparkling, rose, etc);
+        return AllTastingNoteResponseDTO.create(tastingNotePreviewResponseDTOList, total, red, white, sparkling, rose, etc);
     }
 
     // 와인 타입별 필터링 로직

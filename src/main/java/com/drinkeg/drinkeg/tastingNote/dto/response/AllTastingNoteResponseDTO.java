@@ -20,4 +20,18 @@ public class AllTastingNoteResponseDTO {
     int etc;
 
     List<TastingNotePreviewResponseDTO> NotePriviewList;
+
+    public static AllTastingNoteResponseDTO create(List<TastingNotePreviewResponseDTO> tastingNotePreviewResponseDTOList,
+                                                                 int total, int red, int white, int sparkling, int rose, int etc){
+
+        return AllTastingNoteResponseDTO.builder()
+                .NotePriviewList(tastingNotePreviewResponseDTOList)
+                .total(total)
+                .red(red)
+                .white(white)
+                .sparkling(sparkling)
+                .rose(rose)
+                .etc(etc)
+                .build();
+    }
 }
