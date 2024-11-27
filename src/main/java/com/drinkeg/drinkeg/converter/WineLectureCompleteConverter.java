@@ -1,9 +1,9 @@
 package com.drinkeg.drinkeg.converter;
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.WineLecture;
-import com.drinkeg.drinkeg.domain.WineLectureComplete;
-import com.drinkeg.drinkeg.dto.WineLectureCompleteDTO.response.WineLectureCompleteResponseDTO;
+import com.drinkeg.drinkeg.wineLecture.domain.WineLecture;
+import com.drinkeg.drinkeg.wineLectureComplete.domain.WineLectureComplete;
+import com.drinkeg.drinkeg.wineLectureComplete.dto.WineLectureCompleteResponseDTO;
 
 import java.time.LocalDateTime;
 

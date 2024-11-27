@@ -1,10 +1,9 @@
 package com.drinkeg.drinkeg.converter;
 
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.WineClass;
-import com.drinkeg.drinkeg.domain.WineLecture;
-import com.drinkeg.drinkeg.dto.WineLectureDTO.request.WineLectureRequestDTO;
-import com.drinkeg.drinkeg.dto.WineLectureDTO.response.WineLectureResponseDTO;
+import com.drinkeg.drinkeg.wineClass.domain.WineClass;
+import com.drinkeg.drinkeg.wineLecture.domain.WineLecture;
+import com.drinkeg.drinkeg.wineLecture.dto.WineLectureRequestDTO;
+import com.drinkeg.drinkeg.wineLecture.dto.WineLectureResponseDTO;
 
 public class WineLectureConverter {
     public static WineLectureResponseDTO toWineLectureResponseDTO(WineLecture wineLecture, boolean isCompleted) {

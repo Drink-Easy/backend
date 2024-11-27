@@ -2,9 +2,9 @@ package com.drinkeg.drinkeg.converter;
 
 
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.WineClass;
-import com.drinkeg.drinkeg.dto.WineClassDTO.request.WineClassRequestDTO;
-import com.drinkeg.drinkeg.dto.WineClassDTO.response.WineClassResponseDTO;
+import com.drinkeg.drinkeg.wineClass.domain.WineClass;
+import com.drinkeg.drinkeg.wineClass.dto.WineClassRequestDTO;
+import com.drinkeg.drinkeg.wineClass.dto.WineClassResponseDTO;
 
 public class WineClassConverter {
 
