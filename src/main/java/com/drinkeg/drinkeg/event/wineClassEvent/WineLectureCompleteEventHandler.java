@@ -22,6 +22,6 @@ public class WineLectureCompleteEventHandler {
 
     @EventListener
     public void handleWineLectureCompleteEvent(WineLectureCompleteEvent event) {
-        wineClassProgressService.updateWineClassProgress(event.getWineClasId(), event.getMemberId());
+        wineClassProgressService.updateWineClassProgress(event.getWineClassId(), event.getMemberId());
     }
 }
