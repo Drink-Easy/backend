@@ -54,7 +54,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
                 () -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
         // TastingNote를 저장한다.
-        tastingNoteRepository.save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
+        tastingNoteRepository.save(TastingNote.create(member, wine, tastingNoteRequestDTO));
 
         eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
     }
@@ -88,7 +88,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         List<TastingNotePreviewResponseDTO> tastingNotePreviewResponseDTOList = foundNotes.stream()
                 .filter(note -> filterBySort(note, sort))
                 .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
-                .map(TastingNoteConverter::toTastingNotePreviewDTO)
+                .map(note -> TastingNotePreviewResponseDTO.create(note.getId(), note.getWine().getName(), note.getWine().getImageUrl()))
                 .toList();
 
         return TastingNoteConverter
