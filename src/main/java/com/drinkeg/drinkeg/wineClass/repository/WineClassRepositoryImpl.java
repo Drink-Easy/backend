@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.drinkeg.drinkeg.wineClass.domain.QWineClass.wineClass;
-import static com.drinkeg.drinkeg.wineClass.domain.QWineClassProgress.wineClassProgress;
+import static com.drinkeg.drinkeg.wineClassProgress.domain.QWineClassProgress.wineClassProgress;
 
 
 @Repository
