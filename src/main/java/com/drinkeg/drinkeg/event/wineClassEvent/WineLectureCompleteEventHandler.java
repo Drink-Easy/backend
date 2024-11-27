@@ -19,16 +19,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class WineLectureCompleteEventHandler {
     private final WineClassProgressService wineClassProgressService;
-    private final MemberRepository memberRepository;
-    private final WineClassRepository wineClassRepository;
 
     @EventListener
     public void handleWineLectureCompleteEvent(WineLectureCompleteEvent event) {
-        Member member = memberRepository.findById(event.getMemberId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-        WineClass wineClass = wineClassRepository.findById(event.getWineClasId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
-
-        wineClassProgressService.updateWineClassProgress(wineClass, member);
+        wineClassProgressService.updateWineClassProgress(event.getWineClasId(), event.getMemberId());
     }
 }

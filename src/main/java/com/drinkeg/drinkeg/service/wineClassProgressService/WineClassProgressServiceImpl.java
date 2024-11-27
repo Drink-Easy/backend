@@ -6,9 +6,9 @@ import com.drinkeg.drinkeg.domain.WineClass;
 import com.drinkeg.drinkeg.domain.WineClassProgress;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.MemberRepository;
-import com.drinkeg.drinkeg.repository.WineClassRepository;
+
+import com.drinkeg.drinkeg.repository.wineClass.WineClassRepository;
 import com.drinkeg.drinkeg.repository.wineClassProgress.WineClassProgressRepository;
-import com.drinkeg.drinkeg.service.WineLectureCompleteService.WineLectureCompleteService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,6 +52,9 @@ public class WineClassProgressServiceImpl implements WineClassProgressService {
         WineClassProgress wineClassProgress = wineClassProgressRepository.findByWineClassAndMember(wineClass, member)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_PROGRESS_NOT_FOUND));
 
-        wineClassProgress.updateProgress(wineClassProgressRepository.getProgress(wineClass.getId(), member.getId()));
+        float progress = wineClassProgressRepository.getProgress(wineClass.getId(), member.getId())
+                .orElse(0.0f);
+
+        wineClassProgress.updateProgress(progress);
     }
 }
