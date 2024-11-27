@@ -31,15 +31,6 @@ public class WineConverter {
                 .build();
     }
 
-    // 홈화면 추천 와인 DTO 로 변환
-    public static RecommendWineDTO toRecommendWineDTO(Wine wine){
-
-        return RecommendWineDTO.builder()
-                .wineId(wine.getId())
-                .wineName(wine.getName())
-                .imageUrl(wine.getImageUrl())
-                .build();
-    }
 
     // 홈화면 추천 와인 DTO 로 변환
     public static HomeResponseDTO toHomeResponseDTO(Member member, List<RecommendWineDTO> recommendWineDTOs){
