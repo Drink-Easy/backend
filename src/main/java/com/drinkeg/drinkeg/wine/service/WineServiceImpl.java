@@ -66,7 +66,14 @@ public class WineServiceImpl implements WineService {
         Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
+        // max 20개의 추천 와인을 찾는다.
         List<RecommendWineDTO> recommendWines = wineRepository.findRecommendWines(member);
+
+        // 만약 추천 와인의 수가 5개를 넘어간다면, 랜덤으로 5개의 와인만 반환한다.
+        if (recommendWines.size() > 5) {
+            Collections.shuffle(recommendWines);
+            recommendWines = recommendWines.subList(0, 5);
+        }
         return HomeResponseDTO.create(member, recommendWines);
     }
 
