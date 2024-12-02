@@ -12,9 +12,15 @@ import lombok.NoArgsConstructor;
 public class TastingNotePreviewResponseDTO {
 
         private Long noteId;
-
-        private String name;
-
+        private String wineName;
         private String imageUrl;
+
+        public static TastingNotePreviewResponseDTO create(Long noteId, String name, String imageUrl){
+                return TastingNotePreviewResponseDTO.builder()
+                        .noteId(noteId)
+                        .wineName(name)
+                        .imageUrl(imageUrl)
+                        .build();
+        }
 
 }
