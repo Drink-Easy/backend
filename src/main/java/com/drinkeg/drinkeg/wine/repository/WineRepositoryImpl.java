@@ -5,7 +5,6 @@ import com.drinkeg.drinkeg.dto.HomeDTO.QRecommendWineDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.*;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -27,23 +26,34 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<WineReviewResponseDTO> findWineReviewsById(Long wineId) {
-        return queryFactory
-                .select(new QWineReviewResponseDTO(
+    public WineReviewResponseDTO findWineReviewsAndLikeStatusByWineIdAndMemberId(Long wineId, Long memberId) {
+
+        Boolean isLiked = queryFactory
+                .select(wineWishlist.id.isNotNull().or(wineWishlist.id.isNull())) // memberId와 wineId에 따라 isLiked 여부
+                .from(wineWishlist)
+                .where(wineWishlist.wine.id.eq(wineId).and(wineWishlist.member.id.eq(memberId)))
+                .fetchOne();
+
+
+        // 최근 생성된 3개의 TastingNote
+        Optional<List<WineReviewDTO>> recentReviews = Optional.ofNullable(queryFactory
+                .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
                         tastingNote.satisfaction
                 ))
                 .from(tastingNote)
-                .join(tastingNote.wine, wine)
-                .where(wine.id.eq(wineId))
-                .fetch();
+                .where(tastingNote.wine.id.eq(wineId))
+                .orderBy(tastingNote.createdAt.desc()) // 최신순 정렬
+                .fetch());
+
+        return WineReviewResponseDTO.create(recentReviews.get(), Boolean.TRUE.equals(isLiked));
     }
 
 
 
     @Override
-    public WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId) {
+    public WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId, Long memberId) {
 
         // Wine 데이터를 가져옴
         WineResponseDTO wineResponseDTO = queryFactory
@@ -64,16 +74,19 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
                         wine.wineNote.wineNoteNose,
 
-                        wine.wineNote.avgSatisfaction.as("avgSatisfaction")
+                        wine.wineNote.avgSatisfaction.as("avgSatisfaction"),
+                        wineWishlist.id.isNotNull().as("isLiked") // memberId와 wineId에 따라 isLiked 여부
                 ))
                 .from(wine)
                 .leftJoin(wine.wineNote)
+                .leftJoin(wineWishlist)
+                .on(wineWishlist.wine.eq(wine).and(wineWishlist.member.id.eq(memberId)))
                 .where(wine.id.eq(wineId))
                 .fetchOne();
 
         // 최근 생성된 3개의 TastingNote
-        Optional<List<WineReviewResponseDTO>> recentReviews = Optional.ofNullable(queryFactory
-                .select(new QWineReviewResponseDTO(
+        Optional<List<WineReviewDTO>> recentReviews = Optional.ofNullable(queryFactory
+                .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
                         tastingNote.satisfaction

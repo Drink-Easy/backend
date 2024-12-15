@@ -31,12 +31,14 @@ public class WineResponseDTO {
 
     private float avgSatisfaction;
 
+    private boolean isLiked;
+
 
     @QueryProjection
     public WineResponseDTO(
             Long wineId, String name, String imageUrl, int price, String sort, String area, float satisfaction,
             float avgSugarContent, float avgAcidity, float avgTannin, float avgBody, float avgAlcohol,
-            WineNoteNose wineNoteNose, float avgSatisfaction) {
+            WineNoteNose wineNoteNose, float avgSatisfaction, boolean isLiked) {
 
         this.wineId = wineId;
         this.name = name;
@@ -54,6 +56,8 @@ public class WineResponseDTO {
 
         this.wineNoteNose = wineNoteNose;
         this.avgSatisfaction = avgSatisfaction;
+
+        this.isLiked = isLiked;
     }
 
 }

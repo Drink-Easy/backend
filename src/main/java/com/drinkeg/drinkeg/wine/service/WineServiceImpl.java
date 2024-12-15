@@ -9,9 +9,9 @@ import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
-import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.wine.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,13 +51,21 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId){
-        return wineRepository.findWineResponseByWineId(wineId);
+    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId, PrincipalDetail principalDetail){
+        // 회원을 조회한다.
+        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return wineRepository.findWineResponseByWineId(wineId, member.getId());
     }
 
     @Override
-    public List<WineReviewResponseDTO> getWineReviewsByWineId(Long wineId){
-        return wineRepository.findWineReviewsById(wineId);
+    public WineReviewResponseDTO getWineReviewsByWineId(Long wineId, PrincipalDetail principalDetail){
+        // 회원을 조회한다.
+        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return wineRepository.findWineReviewsAndLikeStatusByWineIdAndMemberId(wineId, member.getId());
     }
 
     @Override
