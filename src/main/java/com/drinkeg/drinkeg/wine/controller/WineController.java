@@ -48,9 +48,9 @@ public class WineController {
     @GetMapping("/review/{wineId}")
     @Operation(summary = "선택 와인 리뷰 열람", description = "선택한 와인 리뷰를 List로 반환")
     public ApiResponse<WineReviewResponseDTO> showWineReview(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                                           @PathVariable("wineId") Long wineId) {
+                                                           @PathVariable("wineId") Long wineId, @RequestParam Boolean orderByLatest) {
 
-        WineReviewResponseDTO wineReviewResponseDTO = wineService.getWineReviewsByWineId(wineId, principalDetail);
+        WineReviewResponseDTO wineReviewResponseDTO = wineService.getWineReviewsByWineId(wineId, principalDetail, orderByLatest);
 
         return ApiResponse.onSuccess(wineReviewResponseDTO);
     }

@@ -12,7 +12,7 @@ public interface WineRepositoryCustom {
     List<SearchWineResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId);
 
     WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId, Long memberID);
-    WineReviewResponseDTO findWineReviewsAndLikeStatusByWineIdAndMemberId(Long wineId, Long memberId);
+    WineReviewResponseDTO findWineReviewsAndLikeStatusByWineIdAndMemberId(Long wineId, Long memberId, boolean orderByLatest);
 
     List<RecommendWineDTO> findRecommendWines(Member member);
 }

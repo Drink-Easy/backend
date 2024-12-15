@@ -16,7 +16,7 @@ public interface WineService {
 
     public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId, PrincipalDetail principalDetail);
 
-    public WineReviewResponseDTO getWineReviewsByWineId(Long wineId, PrincipalDetail principalDetail);
+    public WineReviewResponseDTO getWineReviewsByWineId(Long wineId, PrincipalDetail principalDetail, boolean orderByLatest);
 
     public HomeResponseDTO getHomeResponse(PrincipalDetail principalDetail);
 

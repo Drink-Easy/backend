@@ -26,7 +26,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public WineReviewResponseDTO findWineReviewsAndLikeStatusByWineIdAndMemberId(Long wineId, Long memberId) {
+    public WineReviewResponseDTO findWineReviewsAndLikeStatusByWineIdAndMemberId(Long wineId, Long memberId, boolean orderByLatest) {
 
         // wineWishlist에 해당하는 데이터가 존재하면 true, 존재하지 않으면 false
         Optional<Boolean> isLiked = Optional.ofNullable(
@@ -46,7 +46,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 ))
                 .from(tastingNote)
                 .where(tastingNote.wine.id.eq(wineId))
-                .orderBy(tastingNote.createdAt.desc()) // 최신순 정렬
+                .orderBy(orderByLatest? tastingNote.createdAt.desc()
+                        : tastingNote.satisfaction.desc()) // 최신순 정렬
                 .fetch());
 
         return WineReviewResponseDTO.create(recentReviews.orElse(null), isLiked.orElse(false));
