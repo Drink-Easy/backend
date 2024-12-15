@@ -4,6 +4,8 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 public class WineReviewDTO {
@@ -15,12 +17,16 @@ public class WineReviewDTO {
 
     private float satisfaction;
 
+    private LocalDateTime createdAt;
+
 
     @QueryProjection
-    public WineReviewDTO(String name, String review, float satisfaction) {
+    public WineReviewDTO(String name, String review, float satisfaction, LocalDateTime createdAt) {
         this.name = name;
         this.review = review;
         this.satisfaction = satisfaction;
+        this.createdAt = createdAt;
+
     }
 
 }

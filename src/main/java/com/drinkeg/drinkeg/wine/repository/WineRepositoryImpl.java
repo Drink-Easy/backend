@@ -28,26 +28,28 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     @Override
     public WineReviewResponseDTO findWineReviewsAndLikeStatusByWineIdAndMemberId(Long wineId, Long memberId) {
 
-        Boolean isLiked = queryFactory
-                .select(wineWishlist.id.isNotNull().or(wineWishlist.id.isNull())) // memberId와 wineId에 따라 isLiked 여부
-                .from(wineWishlist)
-                .where(wineWishlist.wine.id.eq(wineId).and(wineWishlist.member.id.eq(memberId)))
-                .fetchOne();
+        // wineWishlist에 해당하는 데이터가 존재하면 true, 존재하지 않으면 false
+        Optional<Boolean> isLiked = Optional.ofNullable(
+                queryFactory
+                        .select(wineWishlist.id.isNotNull()) // wineWishlist가 존재하는지 여부를 체크
+                        .from(wineWishlist)
+                        .where(wineWishlist.wine.id.eq(wineId).and(wineWishlist.member.id.eq(memberId)))
+                        .fetchOne()
+        );
 
-
-        // 최근 생성된 3개의 TastingNote
         Optional<List<WineReviewDTO>> recentReviews = Optional.ofNullable(queryFactory
                 .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
-                        tastingNote.satisfaction
+                        tastingNote.satisfaction,
+                        tastingNote.createdAt
                 ))
                 .from(tastingNote)
                 .where(tastingNote.wine.id.eq(wineId))
                 .orderBy(tastingNote.createdAt.desc()) // 최신순 정렬
                 .fetch());
 
-        return WineReviewResponseDTO.create(recentReviews.get(), Boolean.TRUE.equals(isLiked));
+        return WineReviewResponseDTO.create(recentReviews.orElse(null), isLiked.orElse(false));
     }
 
 
@@ -89,7 +91,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
-                        tastingNote.satisfaction
+                        tastingNote.satisfaction,
+                        tastingNote.createdAt
                 ))
                 .from(tastingNote)
                 .where(tastingNote.wine.id.eq(wineId))
