@@ -52,6 +52,7 @@ public class WineController {
 
         WineReviewResponseDTO wineReviewResponseDTO = wineService.getWineReviewsByWineId(wineId, principalDetail, orderByLatest);
 
+
         return ApiResponse.onSuccess(wineReviewResponseDTO);
     }
 

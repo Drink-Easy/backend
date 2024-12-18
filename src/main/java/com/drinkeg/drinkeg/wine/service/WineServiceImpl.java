@@ -4,6 +4,7 @@ import com.drinkeg.drinkeg.S3.S3Service;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.repository.MemberRepository;
+import com.drinkeg.drinkeg.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
@@ -11,6 +12,7 @@ import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.wine.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class WineServiceImpl implements WineService {
     private final MemberRepository memberRepository;
 
     private final S3Service s3Service;
+    private final WineWishlistRepository wineWishlistRepository;
 
     @Override
     public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
@@ -65,7 +68,10 @@ public class WineServiceImpl implements WineService {
         Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        return wineRepository.findWineReviewsAndLikeStatusByWineIdAndMemberId(wineId, member.getId(), orderByLatest);
+        List<WineReviewDTO> wineReviews = wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
+        boolean liked = wineWishlistRepository.existsByMemberIdAndWineId(member.getId(), wineId);
+
+        return WineReviewResponseDTO.create(wineReviews, liked);
     }
 
     @Override

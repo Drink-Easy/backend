@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
-import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewDTO;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface WineRepositoryCustom {
     List<SearchWineResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId);
 
     WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId, Long memberID);
-    WineReviewResponseDTO findWineReviewsAndLikeStatusByWineIdAndMemberId(Long wineId, Long memberId, boolean orderByLatest);
+    List<WineReviewDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest);
 
     List<RecommendWineDTO> findRecommendWines(Member member);
 }

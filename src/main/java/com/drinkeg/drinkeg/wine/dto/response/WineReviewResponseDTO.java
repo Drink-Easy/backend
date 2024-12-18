@@ -19,7 +19,6 @@ public class WineReviewResponseDTO {
     @QueryProjection
     public WineReviewResponseDTO(List<WineReviewDTO> wineReviews, boolean isLiked) {
         this.wineReviews = wineReviews;
-        this.isLiked = isLiked;
     }
 
     public static WineReviewResponseDTO create(List<WineReviewDTO> wineReviews, boolean isLiked){
@@ -27,5 +26,10 @@ public class WineReviewResponseDTO {
                 .wineReviews(wineReviews)
                 .isLiked(isLiked)
                 .build();
+    }
+
+    // 좋아요 여부 업데이트
+    public void setLiked(boolean isLiked) {
+        this.isLiked = isLiked;
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 
-public interface WineWishlistRepository extends JpaRepository<WineWishlist, Long> {
+public interface WineWishlistRepository extends JpaRepository<WineWishlist, Long>, WineWishlistRepositoryCustom {
 
     List<WineWishlist> findAllByMember(Member member);
 
