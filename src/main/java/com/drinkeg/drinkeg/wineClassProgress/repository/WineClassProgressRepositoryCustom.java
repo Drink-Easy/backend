@@ -1,5 +1,7 @@
 package com.drinkeg.drinkeg.wineClassProgress.repository;
 
+import java.util.Optional;
+
 public interface WineClassProgressRepositoryCustom {
-    float getProgress(Long wineClassId, Long memberId);
+    Optional<Float> getProgress(Long wineClassId, Long memberId);
 }

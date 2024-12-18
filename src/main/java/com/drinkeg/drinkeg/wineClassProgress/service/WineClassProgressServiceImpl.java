@@ -50,6 +50,9 @@ public class WineClassProgressServiceImpl implements WineClassProgressService {
         WineClassProgress wineClassProgress = wineClassProgressRepository.findByWineClassAndMember(wineClass, member)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_PROGRESS_NOT_FOUND));
 
-        wineClassProgress.updateProgress(wineClassProgressRepository.getProgress(wineClassId, memberId));
+        float progress = wineClassProgressRepository.getProgress(wineClass.getId(), member.getId())
+                .orElse(0.0f);
+
+        wineClassProgress.updateProgress(progress);
     }
 }
