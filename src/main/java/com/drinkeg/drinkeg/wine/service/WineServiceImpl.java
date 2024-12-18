@@ -63,7 +63,7 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public WineReviewResponseDTO getWineReviewsByWineId(Long wineId, PrincipalDetail principalDetail, boolean orderByLatest){
+    public WineReviewResponseDTO getWineReviewsAndIsLikedByWineId(Long wineId, PrincipalDetail principalDetail, boolean orderByLatest){
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));

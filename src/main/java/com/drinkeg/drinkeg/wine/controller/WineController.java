@@ -4,7 +4,6 @@ package com.drinkeg.drinkeg.wine.controller;
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
-import com.drinkeg.drinkeg.wine.dto.response.WineReviewDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.wine.service.WineService;
@@ -50,8 +49,7 @@ public class WineController {
     public ApiResponse<WineReviewResponseDTO> showWineReview(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                            @PathVariable("wineId") Long wineId, @RequestParam Boolean orderByLatest) {
 
-        WineReviewResponseDTO wineReviewResponseDTO = wineService.getWineReviewsByWineId(wineId, principalDetail, orderByLatest);
-
+        WineReviewResponseDTO wineReviewResponseDTO = wineService.getWineReviewsAndIsLikedByWineId(wineId, principalDetail, orderByLatest);
 
         return ApiResponse.onSuccess(wineReviewResponseDTO);
     }
