@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.dto.HomeDTO;
 
+import com.drinkeg.drinkeg.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +20,13 @@ public class HomeResponseDTO {
     @Builder.Default
     private List<RecommendWineDTO> recommendWineDTOs = new ArrayList<>();
 
+
+    public static HomeResponseDTO create(Member member, List<RecommendWineDTO> recommendWineDTOs){
+
+        return HomeResponseDTO.builder()
+                .name(member.getName())
+                .recommendWineDTOs(recommendWineDTOs)
+                .build();
+    }
 
 }

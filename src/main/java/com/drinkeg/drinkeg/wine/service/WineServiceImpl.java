@@ -2,7 +2,6 @@ package com.drinkeg.drinkeg.wine.service;
 
 import com.drinkeg.drinkeg.S3.S3Service;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.WineConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.repository.MemberRepository;
 import com.drinkeg.drinkeg.wine.domain.Wine;
@@ -14,8 +13,6 @@ import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.wine.repository.WineRepository;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.wineWishlistService.WineWishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +67,7 @@ public class WineServiceImpl implements WineService {
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         List<RecommendWineDTO> recommendWines = wineRepository.findRecommendWines(member);
-        return WineConverter.toHomeResponseDTO(member, recommendWines);
+        return HomeResponseDTO.create(member, recommendWines);
     }
 
     @Override

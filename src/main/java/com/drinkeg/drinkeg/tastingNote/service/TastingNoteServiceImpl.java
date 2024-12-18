@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.tastingNote.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.TastingNoteConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.wine.domain.Wine;
@@ -54,7 +53,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
                 () -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
         // TastingNote를 저장한다.
-        tastingNoteRepository.save(TastingNoteConverter.toTastingNoteEntity(tastingNoteRequestDTO, member, wine));
+        tastingNoteRepository.save(TastingNote.create(member, wine, tastingNoteRequestDTO));
 
         eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
     }
@@ -62,17 +61,12 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     @Override
     public  TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
         // noteId로 TastingNote를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findTastingNoteWithWineAndNoseById(noteId).orElseThrow(()
+        return tastingNoteRepository
+                .findTastingNoteWithWineAndNoseByTastingNoteIdAndUsername(noteId, principalDetail.getUsername())
+                .orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
-        // TastingNote의 Member가 요청한 Member와 같은지 확인한다.
-        if(!foundNote.getMember().getUsername().equals(principalDetail.getUsername())) {
-            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
-        }
-
-        // TastingNote를 DTO로 변환한다.
-        return TastingNoteConverter.toTastingNoteResponseDTO(foundNote);
     }
 
     @Override
@@ -93,11 +87,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         List<TastingNotePreviewResponseDTO> tastingNotePreviewResponseDTOList = foundNotes.stream()
                 .filter(note -> filterBySort(note, sort))
                 .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
-                .map(TastingNoteConverter::toTastingNotePreviewDTO)
+                .map(note -> TastingNotePreviewResponseDTO.create(note.getId(), note.getWine().getName(), note.getWine().getImageUrl()))
                 .toList();
 
-        return TastingNoteConverter
-                .toAllNoteResponseDTO(tastingNotePreviewResponseDTOList, total, red, white, sparkling, rose, etc);
+        return AllTastingNoteResponseDTO.create(tastingNotePreviewResponseDTOList, total, red, white, sparkling, rose, etc);
     }
 
     // 와인 타입별 필터링 로직
@@ -144,7 +137,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             foundNote.updateColor(tastingNoteUpdateRequestDTO.getColor());
         }
         if(tastingNoteUpdateRequestDTO.getTastingDate() != null) {
-            foundNote.updatetasteDate(tastingNoteUpdateRequestDTO.getTastingDate());
+            foundNote.updateTasteDate(tastingNoteUpdateRequestDTO.getTastingDate());
         }
 
         if(tastingNoteUpdateRequestDTO.getSugarContent() != null) {

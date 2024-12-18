@@ -4,12 +4,13 @@ import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.WineWishlist;
 import com.drinkeg.drinkeg.dto.WineWishlistDTO.response.WineWishlistResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 
 public class WineWishlistConverter {
     public static WineWishlistResponseDTO toWineWishlistResponseDTO(WineWishlist wineWishlist) {
         return WineWishlistResponseDTO.builder()
                 .id(wineWishlist.getId())
-                .wine(WineConverter.toSearchWineResponseDTO(wineWishlist.getWine(), true))
+                .wine(SearchWineResponseDTO.create(wineWishlist.getWine(), true))
                 .build();
     }
 

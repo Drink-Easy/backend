@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.tastingNote.domain;
 
 import com.drinkeg.drinkeg.domain.BaseEntity;
 import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -56,18 +57,43 @@ public class TastingNote extends BaseEntity {
 
     private String review;
 
+    // TastingNote 생성 매서드
+    public static TastingNote create(Member member, Wine wine, TastingNoteRequestDTO tastingNoteRequestDTO) {
+        TastingNote tastingNote = TastingNote.builder()
+                .member(member)
 
-    // 와인 업데이트
-    public void updateWine(Wine wine) {
-        this.wine = wine;
+                .wine(wine)
+                .color(tastingNoteRequestDTO.getColor())
+                .tasteDate(tastingNoteRequestDTO.getTasteDate())
+
+                .sugarContent(tastingNoteRequestDTO.getSugarContent())
+                .acidity(tastingNoteRequestDTO.getAcidity())
+                .tannin(tastingNoteRequestDTO.getTannin())
+                .body(tastingNoteRequestDTO.getBody())
+                .alcohol(tastingNoteRequestDTO.getAlcohol())
+
+
+                .satisfaction(tastingNoteRequestDTO.getSatisfaction())
+                .review(tastingNoteRequestDTO.getReview())
+                .build();
+
+        for(String noseElement : tastingNoteRequestDTO.getNose()){
+            tastingNote.addNoseElement(noseElement);
+        }
+
+        return tastingNote;
     }
+
+
+
+
     // 색상 업데이트
     public void updateColor(String color) {
         this.color = color;
     }
 
     // 시음 날짜 업데이트
-    public void updatetasteDate(LocalDate tasteDate) {
+    public void updateTasteDate(LocalDate tasteDate) {
         this.tasteDate = tasteDate;
     }
 
