@@ -27,9 +27,4 @@ public class WineReviewResponseDTO {
                 .isLiked(isLiked)
                 .build();
     }
-
-    // 좋아요 여부 업데이트
-    public void setLiked(boolean isLiked) {
-        this.isLiked = isLiked;
-    }
 }
