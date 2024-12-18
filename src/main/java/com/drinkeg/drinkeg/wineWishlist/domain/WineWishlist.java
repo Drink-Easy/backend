@@ -1,5 +1,6 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.wineWishlist.domain;
 
+import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

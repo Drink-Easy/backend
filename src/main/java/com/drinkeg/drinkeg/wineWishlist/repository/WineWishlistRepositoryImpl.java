@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.wineWishlist.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.drinkeg.drinkeg.domain.QWineWishlist.wineWishlist;
+import static com.drinkeg.drinkeg.wineWishlist.domain.QWineWishlist.wineWishlist;
+
 
 @Repository
 @RequiredArgsConstructor

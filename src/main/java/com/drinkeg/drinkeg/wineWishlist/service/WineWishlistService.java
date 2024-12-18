@@ -1,7 +1,7 @@
-package com.drinkeg.drinkeg.service.wineWishlistService;
+package com.drinkeg.drinkeg.wineWishlist.service;
 
-import com.drinkeg.drinkeg.dto.WineWishlistDTO.request.WineWishlistRequestDTO;
-import com.drinkeg.drinkeg.dto.WineWishlistDTO.response.WineWishlistResponseDTO;
+import com.drinkeg.drinkeg.wineWishlist.dto.request.WineWishlistRequestDTO;
+import com.drinkeg.drinkeg.wineWishlist.dto.response.WineWishlistResponseDTO;
 
 import java.util.List;
 

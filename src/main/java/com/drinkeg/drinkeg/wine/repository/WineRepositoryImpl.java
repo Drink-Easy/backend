@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.drinkeg.drinkeg.domain.QWineWishlist.wineWishlist;
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.wine.domain.QWine.wine;
+import static com.drinkeg.drinkeg.wineWishlist.domain.QWineWishlist.wineWishlist;
 
 @Repository
 @RequiredArgsConstructor

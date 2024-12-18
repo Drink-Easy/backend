@@ -1,12 +1,11 @@
 package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.WineWishlistDTO.request.WineWishlistRequestDTO;
-import com.drinkeg.drinkeg.dto.WineWishlistDTO.response.WineWishlistResponseDTO;
+import com.drinkeg.drinkeg.wineWishlist.dto.request.WineWishlistRequestDTO;
+import com.drinkeg.drinkeg.wineWishlist.dto.response.WineWishlistResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.wineWishlistService.WineWishlistService;
+import com.drinkeg.drinkeg.wineWishlist.service.WineWishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

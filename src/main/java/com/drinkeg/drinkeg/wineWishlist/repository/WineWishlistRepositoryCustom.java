@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.wineWishlist.repository;
 
 public interface WineWishlistRepositoryCustom {
 

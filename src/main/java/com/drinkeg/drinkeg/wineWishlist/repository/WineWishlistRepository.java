@@ -1,8 +1,8 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.wineWishlist.repository;
 
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.WineWishlist;
+import com.drinkeg.drinkeg.wineWishlist.domain.WineWishlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

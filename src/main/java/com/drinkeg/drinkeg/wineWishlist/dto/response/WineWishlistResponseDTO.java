@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.WineWishlistDTO.response;
+package com.drinkeg.drinkeg.wineWishlist.dto.response;
 
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import lombok.AllArgsConstructor;
