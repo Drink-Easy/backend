@@ -15,11 +15,10 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class S3Manager implements StorageManager {
+public class S3Manager {
     private final AmazonS3 amazonS3;
     private final S3Config s3Config;
 
-    @Override
     public String uploadFile(MultipartFile file, String keyPath) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
@@ -40,7 +39,6 @@ public class S3Manager implements StorageManager {
                 .toString();
     }
 
-    @Override
     public void deleteFile(String keyPath) {
         amazonS3.deleteObject(new DeleteObjectRequest(s3Config.getBucket(), keyPath));
     }
