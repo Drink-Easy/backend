@@ -120,7 +120,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                                         .otherwise(0.0))
                                 .desc()
                 )
-                .limit(10)
+                .limit(20)
                 .fetch();
     }
 
