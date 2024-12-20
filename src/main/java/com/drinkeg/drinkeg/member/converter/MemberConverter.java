@@ -20,6 +20,15 @@ public class MemberConverter {
                 .isFirst(true)
                 .build();
     }
+
+    public Member toKakaoMember(String kakaoname, String email ) {
+        return Member.builder()
+                .username(kakaoname)
+                .email(email)
+                .role("ROLE_USER")
+                .isFirst(true)
+                .build();
+    }
   
     public static MemberBasicInfoResponseDTO toMemberBasicInfoResponseDTO(Member member) {
       return MemberBasicInfoResponseDTO.builder()
