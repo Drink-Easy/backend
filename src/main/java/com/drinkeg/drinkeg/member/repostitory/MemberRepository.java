@@ -1,6 +1,6 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.member.repostitory;
 
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

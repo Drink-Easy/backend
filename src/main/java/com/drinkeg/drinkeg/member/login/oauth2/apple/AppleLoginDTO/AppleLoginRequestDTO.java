@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.AppleLoginDTO;
+package com.drinkeg.drinkeg.member.login.oauth2.apple.AppleLoginDTO;
 
 
 import jakarta.validation.constraints.NotEmpty;

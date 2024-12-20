@@ -3,13 +3,13 @@ package com.drinkeg.drinkeg.service.recommentService;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.RecommentConverter;
 import com.drinkeg.drinkeg.domain.Comment;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.domain.Recomment;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.RecommentRepository;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

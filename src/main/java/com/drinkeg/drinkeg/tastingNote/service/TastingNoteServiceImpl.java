@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.tastingNote.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
@@ -13,7 +13,7 @@ import com.drinkeg.drinkeg.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.wineNote.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.MemberRepository;
+import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.tastingNote.repository.TastingNoteNoseRepository;
 import com.drinkeg.drinkeg.tastingNote.repository.TastingNoteRepository;
 import lombok.RequiredArgsConstructor;

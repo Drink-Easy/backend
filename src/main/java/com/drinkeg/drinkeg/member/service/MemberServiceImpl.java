@@ -1,16 +1,16 @@
-package com.drinkeg.drinkeg.service.memberService;
+package com.drinkeg.drinkeg.member.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.MemberRepository;
+import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 

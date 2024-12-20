@@ -1,10 +1,10 @@
-package com.drinkeg.drinkeg.service.loginService;
+package com.drinkeg.drinkeg.member.service;
 
-import com.drinkeg.drinkeg.converter.MemberConverter;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.converter.MemberConverter;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
-import com.drinkeg.drinkeg.repository.MemberRepository;
+import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

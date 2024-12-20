@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.wine.service;
 
-import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;

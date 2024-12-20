@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.MemberDTO.response;
+package com.drinkeg.drinkeg.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.wineLecture.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineLectureConverter;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wineClass.domain.WineClass;
 import com.drinkeg.drinkeg.wineLecture.domain.WineLecture;
 import com.drinkeg.drinkeg.wineLecture.dto.WineLectureRequestDTO;
@@ -11,7 +11,7 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.wineLecture.repository.WineLectureRepository;
 import com.drinkeg.drinkeg.wineClass.repository.WineClassRepository;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.member.service.MemberService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

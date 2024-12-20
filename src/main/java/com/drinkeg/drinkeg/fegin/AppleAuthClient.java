@@ -1,8 +1,7 @@
 package com.drinkeg.drinkeg.fegin;
 
-import com.drinkeg.drinkeg.dto.AppleLoginDTO.ApplePublicKeyResponseDTO;
+import com.drinkeg.drinkeg.member.login.oauth2.apple.AppleLoginDTO.ApplePublicKeyResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 
 

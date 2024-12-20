@@ -1,10 +1,8 @@
 package com.drinkeg.drinkeg.dto.CommentDTO;
 
-import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentResponseDTO;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter

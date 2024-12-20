@@ -1,10 +1,9 @@
-package com.drinkeg.drinkeg.converter;
+package com.drinkeg.drinkeg.member.converter;
 
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberResponseDTO;
+import com.drinkeg.drinkeg.member.domain.Member;
+import com.drinkeg.drinkeg.member.dto.MemberResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.OAuth2Response;
-import com.drinkeg.drinkeg.dto.MemberDTO.response.MemberBasicInfoResponseDTO;
+import com.drinkeg.drinkeg.member.dto.MemberBasicInfoResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -38,15 +37,6 @@ public class MemberConverter {
                 .build();
     }
 
-    public static Member toOauth2Member(String username, OAuth2Response oAuth2Response) {
-        return Member.builder()
-                .username(username)
-                .email(oAuth2Response.getEmail())
-                .name(oAuth2Response.getName())
-                .role("ROLE_USER")
-                .isFirst(true)
-                .build();
-    }
 
     public static MemberResponseDTO toMemberResponseDTO(Member member) {
         return MemberResponseDTO.builder()

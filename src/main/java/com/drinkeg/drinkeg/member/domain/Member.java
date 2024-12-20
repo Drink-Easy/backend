@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.member.domain;
 
 
 import com.drinkeg.drinkeg.converter.StringListConverter;

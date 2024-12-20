@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.loginDTO.commonDTO;
+package com.drinkeg.drinkeg.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,16 +12,12 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberResponseDTO {
+public class MemberRequestDTO {
 
-    private Long id;
     private String name;
-    private String username;
-    private String role;
 
     private Boolean isNewbie;
-    private Boolean isFirst;
-    private Long monthPriceMax;
+    private Long monthPrice;
 
     @Builder.Default
     private List<String> wineSort = new ArrayList<>();

@@ -1,8 +1,7 @@
-package com.drinkeg.drinkeg.service.loginService;
+package com.drinkeg.drinkeg.jwt;
 
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.redis.RedisClient;

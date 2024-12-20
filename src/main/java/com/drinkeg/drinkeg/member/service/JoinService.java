@@ -1,13 +1,13 @@
-package com.drinkeg.drinkeg.service.loginService;
+package com.drinkeg.drinkeg.member.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.MemberConverter;
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.loginDTO.jwtDTO.JoinDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberRequestDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.MemberResponseDTO;
+import com.drinkeg.drinkeg.member.converter.MemberConverter;
+import com.drinkeg.drinkeg.member.domain.Member;
+import com.drinkeg.drinkeg.member.dto.JoinDTO;
+import com.drinkeg.drinkeg.member.dto.MemberRequestDTO;
+import com.drinkeg.drinkeg.member.dto.MemberResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.MemberRepository;
+import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

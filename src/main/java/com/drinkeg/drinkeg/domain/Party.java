@@ -1,11 +1,10 @@
 package com.drinkeg.drinkeg.domain;
 
 
+import com.drinkeg.drinkeg.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.domain.Auditable;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

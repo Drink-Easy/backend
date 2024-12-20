@@ -1,27 +1,25 @@
-package com.drinkeg.drinkeg.service.loginService;
+package com.drinkeg.drinkeg.member.login.oauth2.apple.sevice;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.MemberConverter;
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.AppleLoginDTO.AppleLoginRequestDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponseDTO;
+import com.drinkeg.drinkeg.member.converter.MemberConverter;
+import com.drinkeg.drinkeg.member.domain.Member;
+import com.drinkeg.drinkeg.member.login.oauth2.apple.AppleLoginDTO.AppleLoginRequestDTO;
+import com.drinkeg.drinkeg.member.login.oauth2.dto.LoginResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.fegin.AppleAuthClient;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
 import com.drinkeg.drinkeg.redis.RedisClient;
-import com.drinkeg.drinkeg.repository.MemberRepository;
+import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
+import com.drinkeg.drinkeg.jwt.TokenService;
 import com.drinkeg.drinkeg.utils.ApplePublicKeyGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.core.ClaimAccessor;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
-import javax.print.DocFlavor;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
