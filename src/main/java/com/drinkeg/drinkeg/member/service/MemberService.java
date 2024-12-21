@@ -9,4 +9,6 @@ public interface MemberService {
 
     public Member loadMemberByPrincipalDetail(PrincipalDetail principalDetail);
 
+    public void deleteMemberByUsername(String username);
+
 }

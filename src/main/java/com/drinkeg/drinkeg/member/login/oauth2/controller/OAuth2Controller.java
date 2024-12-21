@@ -37,7 +37,7 @@ public class OAuth2Controller {
 
         System.out.println("=========start kakao login controller============");
 
-        LoginResponseDTO loginResponseDTO = kakaoLoginService.kakaoLogin(kakaoLoginRequestDTO);
+        LoginResponseDTO loginResponseDTO = kakaoLoginService.kakaoLogin(kakaoLoginRequestDTO , response);
         return ApiResponse.onSuccess(loginResponseDTO);
     }
 

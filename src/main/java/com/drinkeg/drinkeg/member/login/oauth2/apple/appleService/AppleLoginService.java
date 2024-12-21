@@ -38,6 +38,7 @@ public class AppleLoginService {
     private final JWTUtil jwtUtil;
     private final MemberConverter memberConverter;
 
+
     public LoginResponseDTO appleLogin(AppleLoginRequestDTO appleLoginRequestDTO, HttpServletResponse response)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
             JsonProcessingException {
 
@@ -61,7 +62,7 @@ public class AppleLoginService {
             member = memberConverter.toAppleMember(username, claims);
             memberRepository.save(member);
             System.out.println("첫 로그인임");
-            jwtProvider(member, response);
+            tokenService.jwtProvider(member, response);
 
         }
         else{
@@ -70,26 +71,13 @@ public class AppleLoginService {
             member.updateEmail(claims.get("email", String.class));
             System.out.println("첫 로그인아님");
             memberRepository.save(member);
-            jwtProvider(member, response);
+            tokenService.jwtProvider(member, response);
 
         }
 
         return buildLoginResponseDTO(member);
     }
 
-    public void jwtProvider(Member member, HttpServletResponse response) {
-
-        String accessToken = jwtUtil.createJwt("access",member.getUsername(), member.getRole(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
-        String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole(),864000000L);
-
-        // 토큰을 쿠키에 저장하여 응답
-        tokenService.createCookie(response, "accessToken", accessToken); // Access Token 쿠키 추가
-        tokenService.createCookie(response, "refreshToken", refreshToken); // refresh token 쿠키 추가
-        response.setStatus(HttpStatus.OK.value());
-
-        // redis에 refresh 토큰 저장
-        redisClient.setValue(member.getUsername(), refreshToken, 864000000L);
-    }
 
     private LoginResponseDTO buildLoginResponseDTO(Member member) {
         return LoginResponseDTO.builder()

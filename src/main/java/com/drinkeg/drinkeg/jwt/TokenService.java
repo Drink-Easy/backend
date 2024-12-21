@@ -4,6 +4,7 @@ package com.drinkeg.drinkeg.jwt;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -148,6 +149,37 @@ public class TokenService {
         }
     }
 
+    public void deleteRefreshTokenAndAccessToken(HttpServletResponse response, String username){
+
+        // 쿠키에 저장되어 있는 AccessToken과 RefreshToken 제거
+        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+        refreshTokenCookie.setMaxAge(0); // 즉시 만료
+        refreshTokenCookie.setPath("/"); // 애플리케이션 전역 경로
+
+        Cookie accessTokenCookie = new Cookie("accessToken", null);
+        accessTokenCookie.setMaxAge(0); // 즉시 만료
+        accessTokenCookie.setPath("/"); // 애플리케이션 전역 경로
+
+        response.addCookie(refreshTokenCookie);
+        response.addCookie(accessTokenCookie);
+
+        redisClient.deleteValue(username);
+
+    }
+
+    public void jwtProvider(Member member, HttpServletResponse response) {
+
+        String accessToken = jwtUtil.createJwt("access",member.getUsername(), member.getRole(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
+        String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole(),864000000L);
+
+        // 토큰을 쿠키에 저장하여 응답
+        createCookie(response, "accessToken", accessToken); // Access Token 쿠키 추가
+        createCookie(response, "refreshToken", refreshToken); // refresh token 쿠키 추가
+        response.setStatus(HttpStatus.OK.value());
+
+        // redis에 refresh 토큰 저장
+        redisClient.setValue(member.getUsername(), refreshToken, 864000000L);
+    }
 
     }
 

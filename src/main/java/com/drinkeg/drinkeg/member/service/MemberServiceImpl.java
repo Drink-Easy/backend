@@ -7,6 +7,7 @@ import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +29,11 @@ public class MemberServiceImpl implements MemberService {
 
         return memberRepository.findByUsername(username).orElseThrow(()
                 -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+    }
+
+    @Override
+    @Transactional
+    public void deleteMemberByUsername(String username){
+        memberRepository.deleteByUsername(username);
     }
 }

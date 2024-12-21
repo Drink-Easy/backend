@@ -72,6 +72,7 @@ public enum ErrorStatus implements BaseCode {
     SESSION_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "MEMBER4001", "유효하지 않은 세션입니다."),
     AUTH_REQUEST_BODY_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "Authentication Request Body를 읽지 못했습니다."),
     USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 아이디가 없습니다."),
+    EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 이메일이 없습니다."),
     PASSWORD_NOT_FUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 비밀번호가 없습니다."),
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST,"MEMBER4001","재입력한 비밀번호와 일치하지 않습니다."),
     PASSWORD_NOT_INVALID(HttpStatus.BAD_REQUEST,"MEMBER4001","유효하지않은 비밀번호입니다"),

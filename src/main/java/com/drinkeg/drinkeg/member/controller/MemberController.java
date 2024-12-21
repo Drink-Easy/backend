@@ -1,19 +1,19 @@
 package com.drinkeg.drinkeg.member.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
+import com.drinkeg.drinkeg.jwt.TokenService;
 import com.drinkeg.drinkeg.member.dto.JoinDTO;
 import com.drinkeg.drinkeg.member.dto.MemberRequestDTO;
 import com.drinkeg.drinkeg.member.dto.MemberResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.member.service.JoinService;
+import com.drinkeg.drinkeg.member.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Authorization", description = "스프링 시큐리티 관련 API")
 @RestController
@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final JoinService joinService;
+    private final MemberService memberService;
+    private final TokenService tokenService;
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "username과 password를 입력받아 회원가입을 진행합니다.")
@@ -38,6 +40,19 @@ public class MemberController {
         MemberResponseDTO memberResponseDTO = joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername());
         return ApiResponse.onSuccess(memberResponseDTO);
     }
+
+    @DeleteMapping("/member/delete")
+    @Operation(summary = "사용자 탈퇴", description = "사용자 정보를 삭제합니다.")
+    public ApiResponse<?> deleteProcess(@AuthenticationPrincipal PrincipalDetail principalDetail,  HttpServletResponse response){
+
+            memberService.deleteMemberByUsername(principalDetail.getUsername());
+            tokenService.deleteRefreshTokenAndAccessToken(response, principalDetail.getUsername());
+
+            return ApiResponse.onSuccess("회원 탈퇴 성공");
+
+
+    }
+
 
 
 
