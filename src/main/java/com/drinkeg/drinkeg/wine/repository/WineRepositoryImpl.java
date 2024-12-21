@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         : tastingNote.satisfaction.desc()) // 최신순 정렬
                 .fetch());
 
-        return recentReviews.orElse(null);
+        return recentReviews.orElse(new ArrayList<>());
     }
 
 

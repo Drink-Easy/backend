@@ -43,7 +43,7 @@ public class WineController {
         return ApiResponse.onSuccess(wineResponseWithThreeReviewsDTO);
     }
 
-    // 와인 리뷰 보기
+    // 전체 와인 리뷰 보기
     @GetMapping("/review/{wineId}")
     @Operation(summary = "선택 와인 리뷰 열람", description = "선택한 와인 리뷰를 List로 반환")
     public ApiResponse<WineReviewResponseDTO> showWineReview(@AuthenticationPrincipal PrincipalDetail principalDetail,

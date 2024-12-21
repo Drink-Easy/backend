@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface WineRepositoryCustom {
     List<SearchWineResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId);
-
     WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId, Long memberID);
+
     List<WineReviewDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest);
 
     List<RecommendWineDTO> findRecommendWines(Member member);
