@@ -2,7 +2,6 @@ package com.drinkeg.drinkeg.tastingNote.repository;
 
 import com.drinkeg.drinkeg.tastingNote.domain.QTastingNote;
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
