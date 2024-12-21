@@ -15,6 +15,4 @@ public interface TastingNoteRepositoryCustom {
     Optional<TastingNote> findTastingNoteWithNoseById(Long tastingNoteId);
 
     List<TastingNote> findTastingNotesWithWineAndNoseByUsername(String username);
-
-    Optional<List<TastingNoteNose>> getTastingNoteNoseListByUsername(String username);
 }

@@ -76,12 +76,4 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .where(tastingNote.member.username.eq(username))
                 .fetch();
     }
-
-    @Override
-    public Optional<List<TastingNoteNose>> getTastingNoteNoseListByUsername(String username) {
-        return Optional.ofNullable(queryFactory.selectFrom(tastingNoteNose)
-                .join(tastingNoteNose.tastingNote, tastingNote)
-                .where(tastingNote.member.username.eq(username))
-                .fetch());
-    }
 }
