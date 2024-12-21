@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.jwt;
 
+import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.member.login.oauth2.dto.LoginResponseDTO;
@@ -103,11 +104,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 .isFirst(isFirst)
                 .build();
 
+
+        // ApiResponse 생성
+        ApiResponse<LoginResponseDTO> apiResponse = ApiResponse.onSuccess(loginResponseDTO);
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getWriter(), loginResponseDTO);
+        objectMapper.writeValue(response.getWriter(), apiResponse);
 
     }
 
