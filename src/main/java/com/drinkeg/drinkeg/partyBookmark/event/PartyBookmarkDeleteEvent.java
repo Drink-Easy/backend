@@ -1,11 +1,11 @@
-package com.drinkeg.drinkeg.event.partyBookmarkEvent;
+package com.drinkeg.drinkeg.partyBookmark.event;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class PartyBookmarkCreateEvent {
+public class PartyBookmarkDeleteEvent {
     private final Long partyId;
     private final Long memberId;
 }

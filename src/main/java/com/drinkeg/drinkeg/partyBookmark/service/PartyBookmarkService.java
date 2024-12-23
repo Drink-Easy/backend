@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.service.partyBookmarkService;
+package com.drinkeg.drinkeg.partyBookmark.service;
 
 import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;

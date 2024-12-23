@@ -10,7 +10,7 @@ import com.drinkeg.drinkeg.party.dto.PartyRequestDTO;
 import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.PartyBookmarkRepository;
+import com.drinkeg.drinkeg.partyBookmark.repository.PartyBookmarkRepository;
 import com.drinkeg.drinkeg.party.repository.PartyRepository;
 import com.drinkeg.drinkeg.service.memberService.MemberService;
 import lombok.RequiredArgsConstructor;

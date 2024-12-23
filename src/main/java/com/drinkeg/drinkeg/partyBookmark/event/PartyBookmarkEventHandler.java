@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.event.partyBookmarkEvent;
+package com.drinkeg.drinkeg.partyBookmark.event;
 
 import com.drinkeg.drinkeg.party.service.PartyService;
 import jakarta.transaction.Transactional;
