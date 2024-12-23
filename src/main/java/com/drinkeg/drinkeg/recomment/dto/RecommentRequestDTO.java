@@ -1,5 +1,4 @@
-package com.drinkeg.drinkeg.dto.CommentDTO;
-
+package com.drinkeg.drinkeg.recomment.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentRequestDTO {
-    private Long partyId;
+public class RecommentRequestDTO {
     private String content;
 }

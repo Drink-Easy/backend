@@ -1,11 +1,13 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.recomment.domain;
 
+import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.comment.domain.Comment;
+import com.drinkeg.drinkeg.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Auditable;
 
 @Entity
 @Getter

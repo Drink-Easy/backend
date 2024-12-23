@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.RecommentDTO;
+package com.drinkeg.drinkeg.recomment.dto;
 import lombok.*;
 
 @Getter

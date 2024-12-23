@@ -1,6 +1,6 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.recomment.repository;
 
-import com.drinkeg.drinkeg.domain.Recomment;
+import com.drinkeg.drinkeg.recomment.domain.Recomment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
