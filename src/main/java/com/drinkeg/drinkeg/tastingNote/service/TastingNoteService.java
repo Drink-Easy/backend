@@ -3,7 +3,6 @@ package com.drinkeg.drinkeg.tastingNote.service;
 import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.AllTastingNoteResponseDTO;
-import com.drinkeg.drinkeg.tastingNote.dto.response.MemberNoseMapListResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
