@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.service.recommentService;
 
 import com.drinkeg.drinkeg.domain.Comment;
-import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.domain.Recomment;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;

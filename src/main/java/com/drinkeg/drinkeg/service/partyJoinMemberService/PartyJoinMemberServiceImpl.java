@@ -2,13 +2,13 @@ package com.drinkeg.drinkeg.service.partyJoinMemberService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.PartyJoinMemberConverter;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.domain.Party;
 import com.drinkeg.drinkeg.domain.PartyJoinMember;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.PartyJoinMemberRepository;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
+import com.drinkeg.drinkeg.member.service.MemberService;
 import com.drinkeg.drinkeg.service.partyService.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

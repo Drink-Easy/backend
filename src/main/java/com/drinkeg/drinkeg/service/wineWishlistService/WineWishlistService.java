@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.service.wineWishlistService;
 
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.WineWishlistDTO.request.WineWishlistRequestDTO;
 import com.drinkeg.drinkeg.dto.WineWishlistDTO.response.WineWishlistResponseDTO;

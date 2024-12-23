@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.tastingNote.domain;
 
 import com.drinkeg.drinkeg.domain.BaseEntity;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import jakarta.persistence.*;

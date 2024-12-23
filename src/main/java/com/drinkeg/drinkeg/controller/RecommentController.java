@@ -2,7 +2,6 @@ package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.Comment;
-import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.commentService.CommentService;
@@ -10,7 +9,6 @@ import com.drinkeg.drinkeg.service.recommentService.RecommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
 
 
 @RestController
