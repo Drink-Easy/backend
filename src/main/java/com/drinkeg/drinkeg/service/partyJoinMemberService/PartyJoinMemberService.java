@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.service.partyJoinMemberService;
 
-import com.drinkeg.drinkeg.domain.Party;
+import com.drinkeg.drinkeg.party.domain.Party;
 import com.drinkeg.drinkeg.domain.PartyJoinMember;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 

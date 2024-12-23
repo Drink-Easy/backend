@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.event.partyBookmarkEvent;
 
-import com.drinkeg.drinkeg.service.partyService.PartyService;
+import com.drinkeg.drinkeg.party.service.PartyService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;

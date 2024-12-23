@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.PartyDTO;
+package com.drinkeg.drinkeg.party.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

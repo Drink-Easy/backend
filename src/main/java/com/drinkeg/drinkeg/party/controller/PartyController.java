@@ -1,12 +1,10 @@
-package com.drinkeg.drinkeg.controller;
+package com.drinkeg.drinkeg.party.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
-import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
+import com.drinkeg.drinkeg.party.dto.PartyRequestDTO;
+import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.service.partyService.PartyService;
+import com.drinkeg.drinkeg.party.service.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

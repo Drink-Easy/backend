@@ -1,11 +1,12 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.party.domain;
 
 
+import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.domain.PartyJoinMember;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.domain.Auditable;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Party extends BaseEntity{
+public class Party extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

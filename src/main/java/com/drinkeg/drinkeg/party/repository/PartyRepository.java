@@ -1,11 +1,10 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.party.repository;
 
-import com.drinkeg.drinkeg.domain.Party;
+import com.drinkeg.drinkeg.party.domain.Party;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
+import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.service.partyBookmarkService.PartyBookmarkService;
 import lombok.RequiredArgsConstructor;
