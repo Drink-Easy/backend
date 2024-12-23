@@ -2,16 +2,13 @@ package com.drinkeg.drinkeg.tastingNote.repository;
 
 import com.drinkeg.drinkeg.tastingNote.domain.QTastingNote;
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.tastingNote.dto.response.QTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
