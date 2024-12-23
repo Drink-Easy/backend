@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.party.domain;
 
 import com.drinkeg.drinkeg.domain.BaseEntity;
 import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.domain.PartyJoinMember;
+import com.drinkeg.drinkeg.partyJoinMember.domain.PartyJoinMember;
 import jakarta.persistence.*;
 import lombok.*;
 

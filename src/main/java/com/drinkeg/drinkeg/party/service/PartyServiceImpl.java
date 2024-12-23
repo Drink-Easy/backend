@@ -5,7 +5,7 @@ import com.drinkeg.drinkeg.converter.PartyConverter;
 import com.drinkeg.drinkeg.converter.PartyJoinMemberConverter;
 import com.drinkeg.drinkeg.domain.Member;
 import com.drinkeg.drinkeg.party.domain.Party;
-import com.drinkeg.drinkeg.domain.PartyJoinMember;
+import com.drinkeg.drinkeg.partyJoinMember.domain.PartyJoinMember;
 import com.drinkeg.drinkeg.party.dto.PartyRequestDTO;
 import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
