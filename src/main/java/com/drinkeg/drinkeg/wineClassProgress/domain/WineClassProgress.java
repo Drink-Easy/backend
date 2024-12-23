@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.wineClassProgress.domain;
 
 import com.drinkeg.drinkeg.domain.BaseEntity;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wineClass.domain.WineClass;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

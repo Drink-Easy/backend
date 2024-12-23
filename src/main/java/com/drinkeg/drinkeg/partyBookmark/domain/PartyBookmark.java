@@ -1,8 +1,6 @@
-package com.drinkeg.drinkeg.partyBookmark.domain;
+package com.drinkeg.drinkeg.domain;
 
-import com.drinkeg.drinkeg.domain.BaseEntity;
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.party.domain.Party;
+import com.drinkeg.drinkeg.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 

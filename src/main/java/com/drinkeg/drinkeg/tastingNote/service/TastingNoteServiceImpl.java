@@ -1,8 +1,9 @@
 package com.drinkeg.drinkeg.tastingNote.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.request.TastingNoteUpdateRequestDTO;
@@ -13,7 +14,7 @@ import com.drinkeg.drinkeg.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.wineNote.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.MemberRepository;
+import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.tastingNote.repository.TastingNoteNoseRepository;
 import com.drinkeg.drinkeg.tastingNote.repository.TastingNoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -205,6 +206,19 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         tastingNoteRepository.delete(foundNote);
 
         eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
+    }
+
+    @Override
+    public List<Map<Long, String>> showMemberNoseMapList(PrincipalDetail principalDetail) {
+
+        // 사용자가 작성한 TastingNoteNose 리스트 가져오기
+        Optional<List<TastingNoteNose>> tastingNoteNoseList = tastingNoteNoseRepository.getTastingNoteNoseListByUsername(principalDetail.getUsername());
+
+        // TastingNoteNose 리스트를 Map<Long, String>으로 변환
+        return tastingNoteNoseList.map(tastingNoteNoses -> tastingNoteNoses.stream()
+                .map(nose -> Map.of(nose.getId(), nose.getNoseElement()))
+                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+
     }
 
     private void removeNoseElement(Long noseElementId){

@@ -1,19 +1,19 @@
-package com.drinkeg.drinkeg.partyBookmark.service;
+package com.drinkeg.drinkeg.service.partyBookmarkService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.PartyBookmarkConverter;
 import com.drinkeg.drinkeg.converter.PartyConverter;
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.party.domain.Party;
-import com.drinkeg.drinkeg.partyBookmark.domain.PartyBookmark;
-import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
+import com.drinkeg.drinkeg.member.domain.Member;
+import com.drinkeg.drinkeg.domain.Party;
+import com.drinkeg.drinkeg.domain.PartyBookmark;
+import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.partyBookmark.event.PartyBookmarkCreateEvent;
-import com.drinkeg.drinkeg.partyBookmark.event.PartyBookmarkDeleteEvent;
+import com.drinkeg.drinkeg.event.partyBookmarkEvent.PartyBookmarkCreateEvent;
+import com.drinkeg.drinkeg.event.partyBookmarkEvent.PartyBookmarkDeleteEvent;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.partyBookmark.repository.PartyBookmarkRepository;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.party.service.PartyService;
+import com.drinkeg.drinkeg.repository.PartyBookmarkRepository;
+import com.drinkeg.drinkeg.member.service.MemberService;
+import com.drinkeg.drinkeg.service.partyService.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PartyBookmarkServiceImpl implements PartyBookmarkService {
+public class PartyBookmarkServiceImpl implements PartyBookmarkService{
     private final PartyBookmarkRepository partyBookmarkRepository;
     private final PartyBookmarkConverter partyBookmarkConverter;
     private final MemberService memberService;

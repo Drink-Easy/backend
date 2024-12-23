@@ -1,11 +1,10 @@
 package com.drinkeg.drinkeg.jwt;
 
+import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.dto.loginDTO.oauth2DTO.LoginResponseDTO;
-import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.member.login.oauth2.dto.LoginResponseDTO;
 import com.drinkeg.drinkeg.redis.RedisClient;
-import com.drinkeg.drinkeg.service.loginService.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -105,11 +104,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 .isFirst(isFirst)
                 .build();
 
+
+        // ApiResponse 생성
+        ApiResponse<LoginResponseDTO> apiResponse = ApiResponse.onSuccess(loginResponseDTO);
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getWriter(), loginResponseDTO);
+        objectMapper.writeValue(response.getWriter(), apiResponse);
 
     }
 

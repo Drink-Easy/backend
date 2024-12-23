@@ -1,11 +1,10 @@
 package com.drinkeg.drinkeg.wine.repository;
 
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.QRecommendWineDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.*;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

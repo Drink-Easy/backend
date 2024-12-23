@@ -1,10 +1,8 @@
 package com.drinkeg.drinkeg.config;
 
 import com.drinkeg.drinkeg.jwt.*;
-import com.drinkeg.drinkeg.oauth2.CustomSuccessHandler;
 import com.drinkeg.drinkeg.redis.RedisClient;
-import com.drinkeg.drinkeg.service.loginService.CustomOAuth2UserService;
-import com.drinkeg.drinkeg.service.loginService.TokenService;
+import com.drinkeg.drinkeg.jwt.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,24 +16,20 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Collections;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomSuccessHandler customSuccessHandler;
+
     private final JWTUtil jwtUtil;
     private final TokenService tokenService;
     private final RedisClient redisClient;
@@ -48,7 +42,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
             web.ignoring()
-                    .requestMatchers("/join","/login/apple/**",
+                    .requestMatchers("/join","/login/apple/**","/login/kakao/**",
                             "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**");// 필터를 타면 안되는 경로
         };
     }
@@ -113,13 +107,6 @@ public class SecurityConfig {
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisClient), LogoutFilter.class);
 
-        //oauth2
-        http
-                .oauth2Login((oauth2)->oauth2.userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService))
-                        .successHandler(customSuccessHandler)
-
-                );
 
         http
                 .exceptionHandling(e -> e
@@ -131,7 +118,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
-                        .requestMatchers("/", "/join", "/login", "/reissue","/login/apple").permitAll()
+                        .requestMatchers("/", "/join", "/login", "/reissue","/login/apple","/login/kakao").permitAll()
 
                         // home 인가
                         .requestMatchers(HttpMethod.GET,"/home").hasRole("USER")

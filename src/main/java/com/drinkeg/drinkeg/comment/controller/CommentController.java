@@ -1,10 +1,10 @@
-package com.drinkeg.drinkeg.comment.controller;
+package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.comment.dto.CommentRequestDTO;
-import com.drinkeg.drinkeg.comment.dto.CommentResponseDTO;
+import com.drinkeg.drinkeg.dto.CommentDTO.CommentRequestDTO;
+import com.drinkeg.drinkeg.dto.CommentDTO.CommentResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.comment.service.CommentService;
+import com.drinkeg.drinkeg.service.commentService.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

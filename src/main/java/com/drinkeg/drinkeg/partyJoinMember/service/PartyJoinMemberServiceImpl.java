@@ -1,21 +1,21 @@
-package com.drinkeg.drinkeg.partyJoinMember.service;
+package com.drinkeg.drinkeg.service.partyJoinMemberService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.PartyJoinMemberConverter;
-import com.drinkeg.drinkeg.domain.Member;
-import com.drinkeg.drinkeg.party.domain.Party;
-import com.drinkeg.drinkeg.partyJoinMember.domain.PartyJoinMember;
+import com.drinkeg.drinkeg.member.domain.Member;
+import com.drinkeg.drinkeg.domain.Party;
+import com.drinkeg.drinkeg.domain.PartyJoinMember;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.partyJoinMember.repository.PartyJoinMemberRepository;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
-import com.drinkeg.drinkeg.party.service.PartyService;
+import com.drinkeg.drinkeg.repository.PartyJoinMemberRepository;
+import com.drinkeg.drinkeg.member.service.MemberService;
+import com.drinkeg.drinkeg.service.partyService.PartyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PartyJoinMemberServiceImpl implements PartyJoinMemberService {
+public class PartyJoinMemberServiceImpl implements PartyJoinMemberService{
 
     private final PartyJoinMemberRepository partyJoinMemberRepository;
     private final PartyJoinMemberConverter partyJoinMemberConverter;

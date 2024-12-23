@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.wineLectureComplete.service;
 
 
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wineLecture.domain.WineLecture;
 import com.drinkeg.drinkeg.wineLectureComplete.dto.WineLectureCompleteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;

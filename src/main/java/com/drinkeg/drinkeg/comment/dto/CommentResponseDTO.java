@@ -1,6 +1,6 @@
-package com.drinkeg.drinkeg.comment.dto;
+package com.drinkeg.drinkeg.dto.CommentDTO;
 
-import com.drinkeg.drinkeg.recomment.dto.RecommentResponseDTO;
+import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentResponseDTO;
 import lombok.*;
 
 import java.util.List;
