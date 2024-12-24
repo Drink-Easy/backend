@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.wineClass.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.WineClassConverter;
 import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wineClass.domain.WineClass;
 import com.drinkeg.drinkeg.wineClass.dto.WineClassRequestDTO;
@@ -39,9 +38,11 @@ public class WineClassServiceImpl implements WineClassService {
 
     @Override
     public void saveWineClass(WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+        WineClass wineClass = WineClass.create(wineClassRequestDTO.getTitle(),
+                wineClassRequestDTO.getCategory(),
+                wineClassRequestDTO.getThumbnailUrl());
 
-        wineClassRepository.save(WineClassConverter.toWineClass(wineClassRequestDTO, member));
+        wineClassRepository.save(wineClass);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class WineClassServiceImpl implements WineClassService {
         WineClass wineClass = wineClassRepository.findById(wineClassId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
-        if (!wineClass.getAuthor().equals(member) && !member.getRole().equals("ROLE_ADMIN"))
+        if (!member.getRole().equals("ROLE_ADMIN"))
             throw new GeneralException(ErrorStatus.WINE_CLASS_UNAUTHORIZED);
 
         wineClass
