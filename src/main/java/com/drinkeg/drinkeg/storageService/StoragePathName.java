@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.S3;
+package com.drinkeg.drinkeg.storageService;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

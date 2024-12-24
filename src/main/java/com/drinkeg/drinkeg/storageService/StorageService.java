@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.S3;
+package com.drinkeg.drinkeg.storageService;
 
 import org.springframework.web.multipart.MultipartFile;
 

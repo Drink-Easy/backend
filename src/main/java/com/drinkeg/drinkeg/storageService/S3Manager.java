@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.S3;
+package com.drinkeg.drinkeg.storageService;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;

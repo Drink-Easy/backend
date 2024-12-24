@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.S3;
+package com.drinkeg.drinkeg.storageService;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.Uuid;
