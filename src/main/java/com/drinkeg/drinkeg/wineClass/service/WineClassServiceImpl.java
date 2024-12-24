@@ -2,6 +2,8 @@ package com.drinkeg.drinkeg.wineClass.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.member.domain.Member;
+import com.drinkeg.drinkeg.storageService.StoragePathName;
+import com.drinkeg.drinkeg.storageService.StorageService;
 import com.drinkeg.drinkeg.wineClass.domain.WineClass;
 import com.drinkeg.drinkeg.wineClass.dto.WineClassRequestDTO;
 import com.drinkeg.drinkeg.wineClass.dto.WineClassResponseDTO;
@@ -20,6 +22,7 @@ import java.util.List;
 public class WineClassServiceImpl implements WineClassService {
     private final WineClassRepository wineClassRepository;
     private final MemberService memberService;
+    private final StorageService storageService;
 
     @Override
     public List<WineClassResponseDTO> showAllWineClasses(PrincipalDetail principalDetail) {
@@ -37,10 +40,13 @@ public class WineClassServiceImpl implements WineClassService {
     }
 
     @Override
+    @Transactional
     public void saveWineClass(WineClassRequestDTO wineClassRequestDTO, PrincipalDetail principalDetail) {
+        String thumbnailUrl = storageService.uploadFile(wineClassRequestDTO.getThumbnail(), StoragePathName.WINE_CLASS);
+
         WineClass wineClass = WineClass.create(wineClassRequestDTO.getTitle(),
                 wineClassRequestDTO.getCategory(),
-                wineClassRequestDTO.getThumbnailUrl());
+                thumbnailUrl);
 
         wineClassRepository.save(wineClass);
     }
@@ -56,16 +62,20 @@ public class WineClassServiceImpl implements WineClassService {
         if (!member.getRole().equals("ROLE_ADMIN"))
             throw new GeneralException(ErrorStatus.WINE_CLASS_UNAUTHORIZED);
 
+        String thumbnailUrl = storageService.uploadFile(wineClassRequestDTO.getThumbnail(), StoragePathName.WINE_CLASS);
+
         wineClass
                 .updateTitle(wineClassRequestDTO.getTitle())
-                .updateThumbnail(wineClassRequestDTO.getThumbnailUrl())
+                .updateThumbnail(thumbnailUrl)
                 .updateCategory(wineClassRequestDTO.getCategory());
     }
 
     @Override
     public void deleteWineClass(Long wineClassId, PrincipalDetail principalDetail) {
-        if (!wineClassRepository.existsById(wineClassId))
-            throw new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND);
+        WineClass wineClass = wineClassRepository.findById(wineClassId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
+
+        storageService.deleteFile(wineClass.getThumbnailUrl());
 
         wineClassRepository.deleteById(wineClassId);
     }

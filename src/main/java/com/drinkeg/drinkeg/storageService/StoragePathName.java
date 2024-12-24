@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum StoragePathName {
     WINE("wine"),
-    WINE_CLASS("wine_class"),
+    WINE_CLASS("wine-class"),
     MEMBER_PROFILE("member/profile");
 
     private final String path;
