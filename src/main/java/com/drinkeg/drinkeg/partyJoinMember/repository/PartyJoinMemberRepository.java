@@ -1,8 +1,8 @@
-package com.drinkeg.drinkeg.repository;
+package com.drinkeg.drinkeg.partyJoinMember.repository;
 
 import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.domain.Party;
-import com.drinkeg.drinkeg.domain.PartyJoinMember;
+import com.drinkeg.drinkeg.party.domain.Party;
+import com.drinkeg.drinkeg.partyJoinMember.domain.PartyJoinMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

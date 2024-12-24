@@ -1,17 +1,17 @@
-package com.drinkeg.drinkeg.service.partyService;
+package com.drinkeg.drinkeg.party.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.PartyConverter;
 import com.drinkeg.drinkeg.converter.PartyJoinMemberConverter;
 import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.domain.Party;
-import com.drinkeg.drinkeg.domain.PartyJoinMember;
-import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
-import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.PartyBookmarkRepository;
-import com.drinkeg.drinkeg.repository.PartyRepository;
+import com.drinkeg.drinkeg.party.domain.Party;
+import com.drinkeg.drinkeg.party.dto.PartyRequestDTO;
+import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
+import com.drinkeg.drinkeg.party.repository.PartyRepository;
+import com.drinkeg.drinkeg.partyBookmark.repository.PartyBookmarkRepository;
+import com.drinkeg.drinkeg.partyJoinMember.domain.PartyJoinMember;
 import com.drinkeg.drinkeg.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

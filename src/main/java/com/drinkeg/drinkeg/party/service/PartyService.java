@@ -1,9 +1,10 @@
-package com.drinkeg.drinkeg.service.partyService;
+package com.drinkeg.drinkeg.party.service;
 
-import com.drinkeg.drinkeg.domain.Party;
-import com.drinkeg.drinkeg.dto.PartyDTO.PartyRequestDTO;
-import com.drinkeg.drinkeg.dto.PartyDTO.PartyResponseDTO;
+
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.party.domain.Party;
+import com.drinkeg.drinkeg.party.dto.PartyRequestDTO;
+import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

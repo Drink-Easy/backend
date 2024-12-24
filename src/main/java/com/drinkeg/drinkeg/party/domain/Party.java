@@ -1,7 +1,9 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.party.domain;
 
 
+import com.drinkeg.drinkeg.domain.BaseEntity;
 import com.drinkeg.drinkeg.member.domain.Member;
+import com.drinkeg.drinkeg.partyJoinMember.domain.PartyJoinMember;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Party extends BaseEntity{
+public class Party extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
