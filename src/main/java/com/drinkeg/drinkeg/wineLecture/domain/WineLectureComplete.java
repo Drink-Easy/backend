@@ -1,7 +1,6 @@
-package com.drinkeg.drinkeg.wineLectureComplete.domain;
+package com.drinkeg.drinkeg.wineLecture.domain;
 
 import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.wineLecture.domain.WineLecture;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

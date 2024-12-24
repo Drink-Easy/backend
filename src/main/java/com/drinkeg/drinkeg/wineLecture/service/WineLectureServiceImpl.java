@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.wineLecture.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.WineLectureConverter;
 import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wineClass.domain.WineClass;
 import com.drinkeg.drinkeg.wineLecture.domain.WineLecture;
@@ -51,7 +50,11 @@ public class WineLectureServiceImpl implements WineLectureService {
         WineClass wineClass = wineClassRepository.findById(wineLectureRequestDTO.getWineClassId())
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_CLASS_NOT_FOUND));
 
-        WineLecture wineLecture = WineLectureConverter.toWineLecture(wineLectureRequestDTO, wineClass);
+        WineLecture wineLecture = WineLecture.create(
+                wineLectureRequestDTO.getTitle(),
+                wineLectureRequestDTO.getContent(),
+                wineClass
+        );
 
         wineLectureRepository.save(wineLecture);
     }
