@@ -1,26 +1,16 @@
 package com.drinkeg.drinkeg.S3;
 
-
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.SdkClientException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.config.S3Config;
 import com.drinkeg.drinkeg.domain.Uuid;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.repository.UuidRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +28,13 @@ public class S3Service implements StorageService {
         return path + '/' + uuid.getUuid();
     }
 
-    public String uploadFile(MultipartFile file, String path) {
+    public String uploadFile(MultipartFile file, StoragePathName storagePathName) {
         try {
             Uuid uuid = uuidRepository.save(Uuid.builder()
                     .uuid(UUID.randomUUID().toString())
                     .build());
 
-            String url = s3Manager.uploadFile(file, generateKeyPath(uuid, path));
+            String url = s3Manager.uploadFile(file, generateKeyPath(uuid, storagePathName.getPath()));
 
             return url;
         } catch (DataIntegrityViolationException e) { // 유니크 제약조건 위반시 발생
@@ -53,7 +43,7 @@ public class S3Service implements StorageService {
     }
 
     @Transactional
-    public List<String> uploadFiles(List<MultipartFile> files, String path) {
+    public List<String> uploadFiles(List<MultipartFile> files, StoragePathName storagePathName) {
         List<String> FileUrls = new ArrayList<>();
         for (MultipartFile file : files) {
             try {
@@ -61,7 +51,7 @@ public class S3Service implements StorageService {
                         .uuid(UUID.randomUUID().toString())
                         .build());
 
-                String url = s3Manager.uploadFile(file, generateKeyPath(uuid, path));
+                String url = s3Manager.uploadFile(file, generateKeyPath(uuid, storagePathName.getPath()));
 
                 FileUrls.add(url);
             } catch (DataIntegrityViolationException e) { // 유니크 제약조건 위반시 발생
