@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.drinkeg.drinkeg.wineLecture.domain.QWineLecture.wineLecture;
-import static com.drinkeg.drinkeg.wineLecture.domain.QWineLectureComplete.wineLectureComplete;
+import static com.drinkeg.drinkeg.wineLectureComplete.domain.QWineLectureComplete.wineLectureComplete;
+
 
 @Repository
 @RequiredArgsConstructor
