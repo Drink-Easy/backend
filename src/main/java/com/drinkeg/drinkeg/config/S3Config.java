@@ -26,22 +26,6 @@ public class S3Config {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.path.wineNews}")
-    private String wineNewsPaths;
-
-    @Value("${cloud.aws.s3.path.wineNews}")
-    private String wineImagePaths;
-
-    @Bean
-    public AWSCredentials awsCredentials(){
-        return new BasicAWSCredentials(s3AccessKey, s3SecretKey);
-    }
-
-    @Bean
-    public AWSStaticCredentialsProvider awsStaticCredentialsProvider(AWSCredentials awsCredentials){
-        return new AWSStaticCredentialsProvider(awsCredentials);
-    }
-
     @Bean
     public AmazonS3 amazonS3(){
         AWSCredentials  awsCredentials = new BasicAWSCredentials(s3AccessKey, s3SecretKey);
