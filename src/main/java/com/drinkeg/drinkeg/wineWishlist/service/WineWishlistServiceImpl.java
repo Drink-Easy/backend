@@ -2,13 +2,13 @@ package com.drinkeg.drinkeg.wineWishlist.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.converter.WineWishlistConverter;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.wineWishlist.dto.request.WineWishlistRequestDTO;
 import com.drinkeg.drinkeg.wineWishlist.dto.response.WineWishlistResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.repository.MemberRepository;
+import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.wineWishlist.repository.WineWishlistRepository;
 import lombok.RequiredArgsConstructor;

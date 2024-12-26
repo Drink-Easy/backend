@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain;
 
 
+import com.drinkeg.drinkeg.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

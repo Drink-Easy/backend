@@ -72,6 +72,7 @@ public enum ErrorStatus implements BaseCode {
     SESSION_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "MEMBER4001", "유효하지 않은 세션입니다."),
     AUTH_REQUEST_BODY_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "Authentication Request Body를 읽지 못했습니다."),
     USERNAME_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 아이디가 없습니다."),
+    EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 이메일이 없습니다."),
     PASSWORD_NOT_FUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "유저 비밀번호가 없습니다."),
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST,"MEMBER4001","재입력한 비밀번호와 일치하지 않습니다."),
     PASSWORD_NOT_INVALID(HttpStatus.BAD_REQUEST,"MEMBER4001","유효하지않은 비밀번호입니다"),
@@ -94,7 +95,11 @@ public enum ErrorStatus implements BaseCode {
     // WineWishlist Error
     WINE_WISHLIST_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_WISHLIST4001", "와인 위시리스트가 없습니다."),
     WINE_WISHLIST_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_WISHLIST4002", "권한이 없는 위시리스트입니다."),
-    WINE_WISHLIST_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "WINE_WISHLIST4003", "이미 존재하는 위시리스트입니다.");
+    WINE_WISHLIST_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "WINE_WISHLIST4003", "이미 존재하는 위시리스트입니다."),
+
+    // Uplodat Error
+    FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_UPLOAD5001", "파일 업로드에 실패했습니다."),
+    FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_UPLOAD5002", "파일 삭제에 실패했습니다.");
 
 
 

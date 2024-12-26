@@ -4,7 +4,6 @@ import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.wineWishlist.dto.request.WineWishlistRequestDTO;
 import com.drinkeg.drinkeg.wineWishlist.dto.response.WineWishlistResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.service.memberService.MemberService;
 import com.drinkeg.drinkeg.wineWishlist.service.WineWishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +16,6 @@ import java.util.List;
 @RequestMapping("/wine-wishlist")
 public class WineWishlist {
     private final WineWishlistService wineWishlistService;
-    private final MemberService memberService;
 
     @PostMapping("")
     public ApiResponse<WineWishlistResponseDTO> createWineWishlist(@RequestBody WineWishlistRequestDTO wineWishlistRequestDTO, @AuthenticationPrincipal PrincipalDetail principalDetail) {

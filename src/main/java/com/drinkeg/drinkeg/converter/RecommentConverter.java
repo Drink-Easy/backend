@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.converter;
 
 import com.drinkeg.drinkeg.domain.Comment;
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.domain.Recomment;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentRequestDTO;
 import com.drinkeg.drinkeg.dto.RecommentDTO.RecommentResponseDTO;

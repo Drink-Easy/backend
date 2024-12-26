@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.wine.repository;
 
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.QRecommendWineDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.*;
@@ -29,7 +29,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     @Override
     public List<WineReviewDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
 
-        Optional<List<WineReviewDTO>> recentReviews = Optional.ofNullable(queryFactory
+        List<WineReviewDTO> recentReviews = queryFactory
                 .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
@@ -40,9 +40,9 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .where(tastingNote.wine.id.eq(wineId))
                 .orderBy(orderByLatest? tastingNote.createdAt.desc()
                         : tastingNote.satisfaction.desc()) // 최신순 정렬
-                .fetch());
+                .fetch();
 
-        return recentReviews.orElse(new ArrayList<>());
+        return recentReviews;
     }
 
 
@@ -80,7 +80,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .fetchOne();
 
         // 최근 생성된 3개의 TastingNote
-        Optional<List<WineReviewDTO>> recentReviews = Optional.ofNullable(queryFactory
+        List<WineReviewDTO> recentReviews = queryFactory
                 .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
@@ -91,9 +91,9 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .where(tastingNote.wine.id.eq(wineId))
                 .orderBy(tastingNote.createdAt.desc()) // 최신순 정렬
                 .limit(3) // 상위 3개 제한
-                .fetch());
+                .fetch();
 
-        return new WineResponseWithThreeReviewsDTO(wineResponseDTO, recentReviews.orElse(null));
+        return new WineResponseWithThreeReviewsDTO(wineResponseDTO, recentReviews);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                                         .otherwise(0.0))
                                 .desc()
                 )
-                .limit(10)
+                .limit(20)
                 .fetch();
     }
 

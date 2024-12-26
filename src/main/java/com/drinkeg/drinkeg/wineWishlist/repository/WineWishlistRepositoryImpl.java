@@ -21,6 +21,7 @@ public class WineWishlistRepositoryImpl implements WineWishlistRepositoryCustom 
     @Override
     public Boolean existsByMemberIdAndWineId(Long memberId, Long wineId) {
         // wineWishlist에 해당하는 데이터가 존재하면 true, 존재하지 않으면 false
+        // Optional 없을 시 NullPointerException 발생 확인 완료
         Optional<Boolean> isLiked = Optional.ofNullable(
                 queryFactory
                         .select(wineWishlist.id.isNotNull()) // wineWishlist가 존재하는지 여부를 체크

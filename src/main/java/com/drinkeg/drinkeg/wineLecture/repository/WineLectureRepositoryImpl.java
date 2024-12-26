@@ -13,6 +13,7 @@ import java.util.Optional;
 import static com.drinkeg.drinkeg.wineLecture.domain.QWineLecture.wineLecture;
 import static com.drinkeg.drinkeg.wineLectureComplete.domain.QWineLectureComplete.wineLectureComplete;
 
+
 @Repository
 @RequiredArgsConstructor
 @Transactional

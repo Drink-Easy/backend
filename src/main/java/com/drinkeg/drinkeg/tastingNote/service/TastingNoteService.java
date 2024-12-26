@@ -6,6 +6,9 @@ import com.drinkeg.drinkeg.tastingNote.dto.response.AllTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.tastingNote.dto.response.TastingNoteResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
+import java.util.List;
+import java.util.Map;
+
 
 public interface TastingNoteService {
 
@@ -19,5 +22,7 @@ public interface TastingNoteService {
     public void updateTastingNote(Long noteId, TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO, PrincipalDetail principalDetail);
 
     public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail);
+
+    public List<Map<Long, String>> showMemberNoseMapList(PrincipalDetail principalDetail);
 
 }

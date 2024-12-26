@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.wineClassProgress.repository;
 
-import com.drinkeg.drinkeg.domain.Member;
+import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wineClass.domain.WineClass;
 import com.drinkeg.drinkeg.wineClassProgress.domain.WineClassProgress;
 import org.springframework.data.jpa.repository.JpaRepository;
