@@ -4,8 +4,8 @@ package com.drinkeg.drinkeg.wine.controller;
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
-import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.wine.service.WineService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -35,21 +35,23 @@ public class WineController {
     // 선택한 와인 정보 출력
     @GetMapping("/{wineId}")
     @Operation(summary = "선택 와인 정보 열람", description = "선택한 와인의 정보를 wineResponseDTO에 담아 반환")
-    public ApiResponse<WineResponseWithThreeReviewsDTO> showWine(@PathVariable("wineId") Long wineId) {
+    public ApiResponse<WineResponseWithThreeReviewsDTO> showWine(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                                                 @PathVariable("wineId") Long wineId) {
 
-        WineResponseWithThreeReviewsDTO wineResponseWithThreeReviewsDTO = wineService.getWineResponseByWineId(wineId);
+        WineResponseWithThreeReviewsDTO wineResponseWithThreeReviewsDTO = wineService.getWineResponseByWineId(wineId, principalDetail);
 
         return ApiResponse.onSuccess(wineResponseWithThreeReviewsDTO);
     }
 
-    // 와인 리뷰 보기
+    // 전체 와인 리뷰 보기
     @GetMapping("/review/{wineId}")
     @Operation(summary = "선택 와인 리뷰 열람", description = "선택한 와인 리뷰를 List로 반환")
-    public ApiResponse<List<WineReviewResponseDTO>> showWineReview(@PathVariable("wineId") Long wineId) {
+    public ApiResponse<WineReviewResponseDTO> showWineReview(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                                           @PathVariable("wineId") Long wineId, @RequestParam Boolean orderByLatest) {
 
-        List<WineReviewResponseDTO> wineReviews = wineService.getWineReviewsByWineId(wineId);
+        WineReviewResponseDTO wineReviewResponseDTO = wineService.getWineReviewsAndIsLikedByWineId(wineId, principalDetail, orderByLatest);
 
-        return ApiResponse.onSuccess(wineReviews);
+        return ApiResponse.onSuccess(wineReviewResponseDTO);
     }
 
     // 와인 이미지 업로드

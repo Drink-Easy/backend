@@ -11,12 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.drinkeg.drinkeg.domain.QWineWishlist.wineWishlist;
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.wine.domain.QWine.wine;
+import static com.drinkeg.drinkeg.wineWishlist.domain.QWineWishlist.wineWishlist;
 
 @Repository
 @RequiredArgsConstructor
@@ -26,23 +27,28 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<WineReviewResponseDTO> findWineReviewsById(Long wineId) {
-        return queryFactory
-                .select(new QWineReviewResponseDTO(
+    public List<WineReviewDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
+
+        List<WineReviewDTO> recentReviews = queryFactory
+                .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
-                        tastingNote.satisfaction
+                        tastingNote.satisfaction,
+                        tastingNote.createdAt
                 ))
                 .from(tastingNote)
-                .join(tastingNote.wine, wine)
-                .where(wine.id.eq(wineId))
+                .where(tastingNote.wine.id.eq(wineId))
+                .orderBy(orderByLatest? tastingNote.createdAt.desc()
+                        : tastingNote.satisfaction.desc()) // 최신순 정렬
                 .fetch();
+
+        return recentReviews;
     }
 
 
 
     @Override
-    public WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId) {
+    public WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId, Long memberId) {
 
         // Wine 데이터를 가져옴
         WineResponseDTO wineResponseDTO = queryFactory
@@ -63,27 +69,31 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
                         wine.wineNote.wineNoteNose,
 
-                        wine.wineNote.avgSatisfaction.as("avgSatisfaction")
+                        wine.wineNote.avgSatisfaction.as("avgSatisfaction"),
+                        wineWishlist.id.isNotNull().as("isLiked") // memberId와 wineId에 따라 isLiked 여부
                 ))
                 .from(wine)
                 .leftJoin(wine.wineNote)
+                .leftJoin(wineWishlist)
+                .on(wineWishlist.wine.eq(wine).and(wineWishlist.member.id.eq(memberId)))
                 .where(wine.id.eq(wineId))
                 .fetchOne();
 
         // 최근 생성된 3개의 TastingNote
-        Optional<List<WineReviewResponseDTO>> recentReviews = Optional.ofNullable(queryFactory
-                .select(new QWineReviewResponseDTO(
+        List<WineReviewDTO> recentReviews = queryFactory
+                .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
-                        tastingNote.satisfaction
+                        tastingNote.satisfaction,
+                        tastingNote.createdAt
                 ))
                 .from(tastingNote)
                 .where(tastingNote.wine.id.eq(wineId))
                 .orderBy(tastingNote.createdAt.desc()) // 최신순 정렬
                 .limit(3) // 상위 3개 제한
-                .fetch());
+                .fetch();
 
-        return new WineResponseWithThreeReviewsDTO(wineResponseDTO, recentReviews.orElse(null));
+        return new WineResponseWithThreeReviewsDTO(wineResponseDTO, recentReviews);
     }
 
     @Override

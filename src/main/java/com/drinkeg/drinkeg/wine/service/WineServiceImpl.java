@@ -5,14 +5,16 @@ import com.drinkeg.drinkeg.storageService.StorageService;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
+import com.drinkeg.drinkeg.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
-import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.wine.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ public class WineServiceImpl implements WineService {
     private final WineRepository wineRepository;
     private final MemberRepository memberRepository;
 
+    private final WineWishlistRepository wineWishlistRepository;
     private final StorageService storageService;
 
     @Override
@@ -52,13 +55,24 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId){
-        return wineRepository.findWineResponseByWineId(wineId);
+    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId, PrincipalDetail principalDetail){
+        // 회원을 조회한다.
+        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return wineRepository.findWineResponseByWineId(wineId, member.getId());
     }
 
     @Override
-    public List<WineReviewResponseDTO> getWineReviewsByWineId(Long wineId){
-        return wineRepository.findWineReviewsById(wineId);
+    public WineReviewResponseDTO getWineReviewsAndIsLikedByWineId(Long wineId, PrincipalDetail principalDetail, boolean orderByLatest){
+        // 회원을 조회한다.
+        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        List<WineReviewDTO> wineReviews = wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
+        boolean liked = wineWishlistRepository.existsByMemberIdAndWineId(member.getId(), wineId);
+
+        return WineReviewResponseDTO.create(wineReviews, liked);
     }
 
     @Override

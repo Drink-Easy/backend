@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.wineWishlist.domain;
 
 import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;

@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface TastingNoteNoseRepositoryCustom {
 
-    Optional<List<TastingNoteNose>> getTastingNoteNoseListByUsername(String username);
+    List<TastingNoteNose> getTastingNoteNoseListByUsername(String username);
 }

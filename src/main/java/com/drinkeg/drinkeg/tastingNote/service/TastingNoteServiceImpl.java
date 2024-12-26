@@ -212,12 +212,12 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public List<Map<Long, String>> showMemberNoseMapList(PrincipalDetail principalDetail) {
 
         // 사용자가 작성한 TastingNoteNose 리스트 가져오기
-        Optional<List<TastingNoteNose>> tastingNoteNoseList = tastingNoteNoseRepository.getTastingNoteNoseListByUsername(principalDetail.getUsername());
+        List<TastingNoteNose> tastingNoteNoseList = tastingNoteNoseRepository.getTastingNoteNoseListByUsername(principalDetail.getUsername());
 
         // TastingNoteNose 리스트를 Map<Long, String>으로 변환
-        return tastingNoteNoseList.map(tastingNoteNoses -> tastingNoteNoses.stream()
+        return tastingNoteNoseList.stream()
                 .map(nose -> Map.of(nose.getId(), nose.getNoseElement()))
-                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+                .collect(Collectors.toList());
 
     }
 

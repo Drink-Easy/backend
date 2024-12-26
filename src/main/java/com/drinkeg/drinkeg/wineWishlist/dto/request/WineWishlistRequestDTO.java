@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.WineWishlistDTO.request;
+package com.drinkeg.drinkeg.wineWishlist.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

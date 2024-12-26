@@ -20,10 +20,10 @@ public class TastingNoteNoseRepositoryImpl implements TastingNoteNoseRepositoryC
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<List<TastingNoteNose>> getTastingNoteNoseListByUsername(String username) {
-        return Optional.ofNullable(queryFactory.selectFrom(tastingNoteNose)
+    public List<TastingNoteNose> getTastingNoteNoseListByUsername(String username) {
+        return queryFactory.selectFrom(tastingNoteNose)
                 .join(tastingNoteNose.tastingNote, tastingNote)
                 .where(tastingNote.member.username.eq(username))
-                .fetch());
+                .fetch();
     }
 }
