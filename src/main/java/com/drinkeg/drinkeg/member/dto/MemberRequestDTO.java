@@ -23,8 +23,6 @@ public class MemberRequestDTO {
     private List<String> wineSort = new ArrayList<>();
     @Builder.Default
     private List<String> wineArea = new ArrayList<>();
-    @Builder.Default
-    private List<String> wineVariety = new ArrayList<>();
 
     private String region;
 }

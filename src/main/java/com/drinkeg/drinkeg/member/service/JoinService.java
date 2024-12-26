@@ -61,9 +61,6 @@ public class JoinService {
         if (memberRequestDTO.getWineArea() != null) {
             member.updateWineNation(memberRequestDTO.getWineArea());
         }
-        if (memberRequestDTO.getWineVariety() != null) {
-            member.updateWineVariety(memberRequestDTO.getWineVariety());
-        }
         if (memberRequestDTO.getRegion() != null) {
             member.updateRegion(memberRequestDTO.getRegion());
         }
