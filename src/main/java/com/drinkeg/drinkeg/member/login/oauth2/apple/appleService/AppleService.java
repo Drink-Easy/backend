@@ -1,23 +1,27 @@
 package com.drinkeg.drinkeg.member.login.oauth2.apple.appleService;
 
+import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.member.converter.MemberConverter;
 import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.member.login.oauth2.apple.AppleLoginDTO.AppleLoginRequestDTO;
+import com.drinkeg.drinkeg.member.login.oauth2.apple.AppleClientSecretGenerator;
+import com.drinkeg.drinkeg.member.login.oauth2.apple.AppleProvider;
+import com.drinkeg.drinkeg.member.login.oauth2.apple.appleDTO.AppleLoginRequestDTO;
 import com.drinkeg.drinkeg.member.login.oauth2.dto.LoginResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.fegin.AppleAuthClient;
+import com.drinkeg.drinkeg.member.login.oauth2.apple.AppleAuthClient;
 import com.drinkeg.drinkeg.jwt.JWTUtil;
+import com.drinkeg.drinkeg.member.service.MemberService;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.jwt.TokenService;
-import com.drinkeg.drinkeg.utils.ApplePublicKeyGenerator;
+import com.drinkeg.drinkeg.member.login.oauth2.apple.ApplePublicKeyGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.AuthenticationException;
 import java.security.NoSuchAlgorithmException;
@@ -28,15 +32,16 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AppleLoginService {
+public class AppleService {
 
     private final TokenService tokenService;
     private final AppleAuthClient appleAuthClient;
     private final ApplePublicKeyGenerator applePublicKeyGenerator;
     private final MemberRepository memberRepository;
-    private final RedisClient redisClient;
-    private final JWTUtil jwtUtil;
     private final MemberConverter memberConverter;
+    private final AppleClientSecretGenerator appleClientSecretGenerator;
+    private final AppleProvider appleProvider;
+    private final MemberService memberService;
 
 
     public LoginResponseDTO appleLogin(AppleLoginRequestDTO appleLoginRequestDTO, HttpServletResponse response)throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException,
@@ -78,6 +83,23 @@ public class AppleLoginService {
         return buildLoginResponseDTO(member);
     }
 
+
+    @Transactional
+    public void unlinkApple(String appleName, String code, HttpServletResponse response){
+
+        try {
+            String clientSecret = appleClientSecretGenerator.generateClientSecret();
+            String refreshToken = appleProvider.getAppleRefreshToken(code, clientSecret);
+            appleProvider.requestRevoke(refreshToken, clientSecret);
+        } catch (Exception e) {
+            throw new GeneralException(ErrorStatus.FAILED_TO_REVOKE_MEMBER);
+        }
+
+        memberService.deleteMemberByUsername(appleName);
+        tokenService.deleteRefreshTokenAndAccessToken(response, appleName);
+
+
+    }
 
     private LoginResponseDTO buildLoginResponseDTO(Member member) {
         return LoginResponseDTO.builder()
