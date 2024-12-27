@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static com.drinkeg.drinkeg.wineClass.domain.QWineClass.wineClass;
 import static com.drinkeg.drinkeg.wineLecture.domain.QWineLecture.wineLecture;
-import static com.drinkeg.drinkeg.wineLectureComplete.domain.QWineLectureComplete.wineLectureComplete;
+import static com.drinkeg.drinkeg.wineLecture.domain.QWineLectureComplete.wineLectureComplete;
 
 
 @Repository
