@@ -58,7 +58,6 @@ public class MemberConverter {
                 .monthPriceMax(member.getMonthPriceMax())
                 .wineSort(member.getWineSort())
                 .wineArea(member.getWineArea())
-                .wineVariety(member.getWineVariety())
                 .region(member.getRegion())
                 .build();
     }
