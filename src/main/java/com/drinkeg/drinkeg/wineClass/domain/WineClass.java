@@ -30,10 +30,6 @@ public class WineClass {
 
     private String thumbnailUrl;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "author_id")
-    private Member author;
-
     @Builder.Default
     @OneToMany(mappedBy = "wineClass", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WineLecture> wineLectures = new ArrayList<>();
@@ -52,9 +48,11 @@ public class WineClass {
         return this;
     }
 
-    public WineClass updateAuthor(Member author) {
-        this.author = author;
-        return this;
+    public static WineClass create(String title, String category, String thumbnailUrl) {
+        return WineClass.builder()
+                .title(title)
+                .category(category)
+                .thumbnailUrl(thumbnailUrl)
+                .build();
     }
-
 }

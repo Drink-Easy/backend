@@ -1,16 +1,14 @@
-package com.drinkeg.drinkeg.wineLectureComplete.service;
+package com.drinkeg.drinkeg.wineLecture.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.WineLectureCompleteConverter;
 import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wineLecture.domain.WineLecture;
-import com.drinkeg.drinkeg.wineLectureComplete.domain.WineLectureComplete;
-import com.drinkeg.drinkeg.wineLectureComplete.dto.WineLectureCompleteResponseDTO;
+import com.drinkeg.drinkeg.wineLecture.domain.WineLectureComplete;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.event.wineClassEvent.WineLectureCompleteEvent;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.wineLecture.repository.WineLectureRepository;
-import com.drinkeg.drinkeg.wineLectureComplete.repository.WineLectureCompleteRepository;
+import com.drinkeg.drinkeg.wineLecture.repository.WineLectureCompleteRepository;
 import com.drinkeg.drinkeg.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,7 +24,7 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
 
 
     @Override
-    public WineLectureCompleteResponseDTO saveWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail) {
+    public void saveWineLectureComplete(Long wineLectureId, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         WineLecture wineLecture = wineLectureRepository.findById(wineLectureId)
@@ -35,12 +33,14 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
         if (wineLectureCompleteRepository.existsByWineLectureAndMember(wineLecture, member))
             throw new GeneralException(ErrorStatus.WINE_LECTURE_COMPLETE_ALREADY_EXISTS);
 
-        WineLectureComplete wineLectureComplete = WineLectureCompleteConverter.toWineLectureComplete(wineLecture, member);
+        WineLectureComplete wineLectureComplete = WineLectureComplete.builder()
+                .wineLecture(wineLecture)
+                .member(member)
+                .build();
+
         wineLectureCompleteRepository.save(wineLectureComplete);
 
         eventPublisher.publishEvent(new WineLectureCompleteEvent(wineLecture.getWineClass().getId(), member.getId()));
-
-        return WineLectureCompleteConverter.toWineLectureCompleteResponseDTO(wineLectureComplete);
     }
 
     @Override
@@ -56,10 +56,5 @@ public class WineLectureCompleteServiceImpl implements WineLectureCompleteServic
         eventPublisher.publishEvent(new WineLectureCompleteEvent(wineLectureComplete.getWineLecture().getWineClass().getId(), member.getId()));
 
         wineLectureCompleteRepository.delete(wineLectureComplete);
-    }
-
-    @Override
-    public boolean isCompleted(WineLecture wineLecture, Member member) {
-        return wineLectureCompleteRepository.existsByWineLectureAndMember(wineLecture, member);
     }
 }
