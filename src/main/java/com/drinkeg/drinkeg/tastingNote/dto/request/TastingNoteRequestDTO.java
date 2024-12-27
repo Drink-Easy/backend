@@ -60,7 +60,7 @@ public class TastingNoteRequestDTO {
     @NotNull(message = "만족도 선택은 필수입니다.")
     @Min(0)
     @Max(5)
-    private float satisfaction;
+    private float rating;
 
     private String review;
 

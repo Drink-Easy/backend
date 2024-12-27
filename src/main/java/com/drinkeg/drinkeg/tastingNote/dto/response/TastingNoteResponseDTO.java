@@ -35,7 +35,7 @@ public class TastingNoteResponseDTO {
 
     private List<Map<Long, String>> noseMapList = new ArrayList<>();
 
-    private float satisfaction;
+    private float rating;
 
     private String review;
 
@@ -43,7 +43,7 @@ public class TastingNoteResponseDTO {
     public TastingNoteResponseDTO(Long noteId, Long wineId, String wineName, String sort,
                                   String area, String imageUrl, String color, LocalDate tasteDate,
                                   int sugarContent, int acidity, int tannin, int body, int alcohol,
-                                  List<TastingNoteNose> noseList, float satisfaction, String review){
+                                  List<TastingNoteNose> noseList, float rating, String review){
         this.noteId = noteId;
         this.wineId = wineId;
         this.wineName = wineName;
@@ -60,7 +60,7 @@ public class TastingNoteResponseDTO {
         this.noseMapList = noseList.stream()
                 .map(nose -> Map.of(nose.getId(), nose.getNoseElement()))
                 .collect(Collectors.toList());
-        this.satisfaction = satisfaction;
+        this.rating = rating;
         this.review = review;
     }
 

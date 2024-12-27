@@ -32,8 +32,8 @@ public class Wine {
     // 지역
     private String area;
 
-    // wine.com 별점
-    private float satisfaction;
+    // vivino 평점
+    private float vivinoRating;
 
     // 가격
     private int price;
