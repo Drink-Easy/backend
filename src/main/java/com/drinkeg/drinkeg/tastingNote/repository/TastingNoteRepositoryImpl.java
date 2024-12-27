@@ -51,7 +51,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                         tastingNote.getBody(),
                         tastingNote.getAlcohol(),
                         tastingNote.getNoseList(),
-                        tastingNote.getSatisfaction(),
+                        tastingNote.getRating(),
                         tastingNote.getReview()
                 )
         );

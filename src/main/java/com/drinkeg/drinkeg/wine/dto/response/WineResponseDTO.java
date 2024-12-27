@@ -19,7 +19,7 @@ public class WineResponseDTO {
     private int price;
     private String sort;
     private String area;
-    private float satisfaction;
+    private float vivinoRating;
 
     private float avgSugarContent;
     private float avgAcidity;
@@ -29,16 +29,16 @@ public class WineResponseDTO {
 
     private WineNoteNose wineNoteNose;
 
-    private float avgSatisfaction;
+    private float avgMemberRating;
 
     private boolean isLiked;
 
 
     @QueryProjection
     public WineResponseDTO(
-            Long wineId, String name, String imageUrl, int price, String sort, String area, float satisfaction,
+            Long wineId, String name, String imageUrl, int price, String sort, String area, float vivinoRating,
             float avgSugarContent, float avgAcidity, float avgTannin, float avgBody, float avgAlcohol,
-            WineNoteNose wineNoteNose, float avgSatisfaction, boolean isLiked) {
+            WineNoteNose wineNoteNose, float avgMemberRating, boolean isLiked) {
 
         this.wineId = wineId;
         this.name = name;
@@ -46,7 +46,7 @@ public class WineResponseDTO {
         this.price = price;
         this.sort = sort;
         this.area = area;
-        this.satisfaction = satisfaction;
+        this.vivinoRating = vivinoRating;
 
         this.avgSugarContent = avgSugarContent;
         this.avgAcidity = avgAcidity;
@@ -55,7 +55,7 @@ public class WineResponseDTO {
         this.avgAlcohol = avgAlcohol;
 
         this.wineNoteNose = wineNoteNose;
-        this.avgSatisfaction = avgSatisfaction;
+        this.avgMemberRating = avgMemberRating;
 
         this.isLiked = isLiked;
     }

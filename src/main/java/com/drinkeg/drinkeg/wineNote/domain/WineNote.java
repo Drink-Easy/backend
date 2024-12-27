@@ -34,6 +34,6 @@ public class WineNote extends BaseEntity {
     private WineNoteNose wineNoteNose;
 
     // 만족도 평균
-    private float avgSatisfaction;
+    private float avgMemberRating;
 
 }

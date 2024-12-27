@@ -36,7 +36,7 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
                         tastingNote.tannin.avg().coalesce(0.0),
                         tastingNote.body.avg().coalesce(0.0),
                         tastingNote.alcohol.avg().coalesce(0.0),
-                        tastingNote.satisfaction.avg().coalesce(0.0)
+                        tastingNote.rating.avg().coalesce(0.0)
                 )
                 .from(tastingNote)
                 .where(tastingNote.wine.id.eq(wineId))
@@ -52,7 +52,7 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
         float avgTannin = result.get(2, Double.class).floatValue();
         float avgBody = result.get(3, Double.class).floatValue();
         float avgAlcohol = result.get(4, Double.class).floatValue();
-        float avgSatisfaction = result.get(5, Double.class).floatValue();
+        float avgMemberRating = result.get(5, Double.class).floatValue();
 
         // 상위 3개의 noseElement 추출
         List<String> topNoses = queryFactory
@@ -79,7 +79,7 @@ public class WineNoteRepositoryImpl implements WineNoteRepositoryCustom {
                 .set(wineNote.avgTannin, avgTannin)
                 .set(wineNote.avgBody, avgBody)
                 .set(wineNote.avgAlcohol, avgAlcohol)
-                .set(wineNote.avgSatisfaction, avgSatisfaction)
+                .set(wineNote.avgMemberRating, avgMemberRating)
                 .set(wineNote.wineNoteNose, wineNoteNose)
                 .execute();
     }

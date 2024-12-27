@@ -38,7 +38,7 @@ public class TastingNoteUpdateRequestDTO {
 
     @Min(0)
     @Max(5)
-    private Float satisfaction;
+    private Float rating;
 
     private String review;
 }

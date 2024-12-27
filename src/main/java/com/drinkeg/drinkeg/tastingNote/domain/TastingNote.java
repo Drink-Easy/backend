@@ -53,7 +53,7 @@ public class TastingNote extends BaseEntity {
     private List<TastingNoteNose> noseList = new ArrayList<>();
 
     // 만족도 0 ~ 5, 소수점 가능
-    private float satisfaction;
+    private float rating;
 
     private String review;
 
@@ -73,7 +73,7 @@ public class TastingNote extends BaseEntity {
                 .alcohol(tastingNoteRequestDTO.getAlcohol())
 
 
-                .satisfaction(tastingNoteRequestDTO.getSatisfaction())
+                .rating(tastingNoteRequestDTO.getRating())
                 .review(tastingNoteRequestDTO.getReview())
                 .build();
 
@@ -83,8 +83,6 @@ public class TastingNote extends BaseEntity {
 
         return tastingNote;
     }
-
-
 
 
     // 색상 업데이트
@@ -125,8 +123,8 @@ public class TastingNote extends BaseEntity {
     }
 
     // 만족도 업데이트
-    public void updateSatisfaction(float satisfaction) {
-        this.satisfaction = satisfaction;
+    public void updateRating(float rating) {
+        this.rating = rating;
     }
     // 메모 업데이트
     public void updateMemo(String review) {

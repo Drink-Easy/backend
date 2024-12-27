@@ -171,8 +171,8 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             }
         }
 
-        if(tastingNoteUpdateRequestDTO.getSatisfaction() != null) {
-            foundNote.updateSatisfaction(tastingNoteUpdateRequestDTO.getSatisfaction());
+        if(tastingNoteUpdateRequestDTO.getRating() != null) {
+            foundNote.updateRating(tastingNoteUpdateRequestDTO.getRating());
         }
         if(tastingNoteUpdateRequestDTO.getReview() != null) {
             foundNote.updateMemo(tastingNoteUpdateRequestDTO.getReview());

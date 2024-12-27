@@ -15,16 +15,16 @@ public class WineReviewDTO {
 
     private String review;
 
-    private float satisfaction;
+    private float rating;
 
     private LocalDateTime createdAt;
 
 
     @QueryProjection
-    public WineReviewDTO(String name, String review, float satisfaction, LocalDateTime createdAt) {
+    public WineReviewDTO(String name, String review, float rating, LocalDateTime createdAt) {
         this.name = name;
         this.review = review;
-        this.satisfaction = satisfaction;
+        this.rating = rating;
         this.createdAt = createdAt;
 
     }

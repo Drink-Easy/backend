@@ -33,13 +33,13 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
-                        tastingNote.satisfaction,
+                        tastingNote.rating,
                         tastingNote.createdAt
                 ))
                 .from(tastingNote)
                 .where(tastingNote.wine.id.eq(wineId))
                 .orderBy(orderByLatest? tastingNote.createdAt.desc()
-                        : tastingNote.satisfaction.desc()) // 최신순 정렬
+                        : tastingNote.rating.desc()) // 최신순 정렬 or 별점 내림차순 정렬
                 .fetch();
 
         return recentReviews;
@@ -59,17 +59,17 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.price.multiply(1300).divide(100).multiply(100).as("price"),
                         wine.sort,
                         wine.area,
-                        wine.satisfaction,
+                        wine.vivinoRating,
 
-                        wine.wineNote.avgSugarContent.as("avgSugarContent"),
-                        wine.wineNote.avgAcidity.as("avgAcidity"),
-                        wine.wineNote.avgTannin.as("avgTannin"),
-                        wine.wineNote.avgBody.as("avgBody"),
-                        wine.wineNote.avgAlcohol.as("avgAlcohol"),
+                        wine.wineNote.avgSugarContent,
+                        wine.wineNote.avgAcidity,
+                        wine.wineNote.avgTannin,
+                        wine.wineNote.avgBody,
+                        wine.wineNote.avgAlcohol,
 
                         wine.wineNote.wineNoteNose,
 
-                        wine.wineNote.avgSatisfaction.as("avgSatisfaction"),
+                        wine.wineNote.avgMemberRating,
                         wineWishlist.id.isNotNull().as("isLiked") // memberId와 wineId에 따라 isLiked 여부
                 ))
                 .from(wine)
@@ -84,7 +84,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .select(new QWineReviewDTO(
                         tastingNote.member.name,
                         tastingNote.review,
-                        tastingNote.satisfaction,
+                        tastingNote.rating,
                         tastingNote.createdAt
                 ))
                 .from(tastingNote)
@@ -120,7 +120,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                                 .and(sortCondition.or(areaCondition))
                 )
                 .orderBy(
-                        wine.satisfaction
+                        wine.vivinoRating
                                 .add(new CaseBuilder()
                                         .when(sortCondition).then(0.2)
                                         .otherwise(0.0))
@@ -142,7 +142,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.imageUrl,
                         wine.sort,
                         wine.area,
-                        wine.satisfaction,
+                        wine.vivinoRating,
                         wine.price,
                         wineWishlist.id.isNotNull() // memberId와 wineId에 따라 isLiked 여부
                 ))
