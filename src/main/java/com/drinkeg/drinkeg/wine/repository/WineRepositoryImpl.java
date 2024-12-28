@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
@@ -27,10 +26,10 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     // 선택한 와인의 전체 리뷰 볼 때 사용
     @Override
-    public List<WineReviewDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
+    public List<WineReviewResponseDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
 
-        List<WineReviewDTO> recentReviews = queryFactory
-                .select(new QWineReviewDTO(
+        List<WineReviewResponseDTO> recentReviews = queryFactory
+                .select(new QWineReviewResponseDTO(
                         tastingNote.member.name,
                         tastingNote.review,
                         tastingNote.rating,
@@ -81,8 +80,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .fetchOne();
 
         // 최근 생성된 3개의 TastingNote
-        List<WineReviewDTO> recentReviews = queryFactory
-                .select(new QWineReviewDTO(
+        List<WineReviewResponseDTO> recentReviews = queryFactory
+                .select(new QWineReviewResponseDTO(
                         tastingNote.member.name,
                         tastingNote.review,
                         tastingNote.rating,

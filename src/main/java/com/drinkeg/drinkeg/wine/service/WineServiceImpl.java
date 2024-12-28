@@ -12,7 +12,6 @@ import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.wine.dto.response.WineReviewDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.wine.repository.WineRepository;
 import lombok.RequiredArgsConstructor;
@@ -63,15 +62,9 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public WineReviewResponseDTO getWineReviewsAndIsLikedByWineId(Long wineId, PrincipalDetail principalDetail, boolean orderByLatest){
-        // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
-                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+    public List<WineReviewResponseDTO> getWineReviewsAndIsLikedByWineId(Long wineId, boolean orderByLatest){
 
-        List<WineReviewDTO> wineReviews = wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
-        boolean liked = wineWishlistRepository.existsByMemberIdAndWineId(member.getId(), wineId);
-
-        return WineReviewResponseDTO.create(wineReviews, liked);
+        return wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
     }
 
     // 회원 닉네임과 추천와인 10개 반환

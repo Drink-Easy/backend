@@ -47,12 +47,11 @@ public class WineController {
     // 전체 와인 리뷰 보기
     @GetMapping("/review/{wineId}")
     @Operation(summary = "선택 와인 리뷰 열람", description = "선택한 와인 리뷰를 List로 반환")
-    public ApiResponse<WineReviewResponseDTO> showWineReview(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                                           @PathVariable("wineId") Long wineId, @RequestParam Boolean orderByLatest) {
+    public ApiResponse<List<WineReviewResponseDTO>> showWineReview(@PathVariable("wineId") Long wineId, @RequestParam Boolean orderByLatest) {
 
-        WineReviewResponseDTO wineReviewResponseDTO = wineService.getWineReviewsAndIsLikedByWineId(wineId, principalDetail, orderByLatest);
+        List<WineReviewResponseDTO> wineReviewResponseDTOList = wineService.getWineReviewsAndIsLikedByWineId(wineId, orderByLatest);
 
-        return ApiResponse.onSuccess(wineReviewResponseDTO);
+        return ApiResponse.onSuccess(wineReviewResponseDTOList);
     }
 
     // 와인 이미지 업로드
