@@ -1,10 +1,10 @@
 package com.drinkeg.drinkeg.converter;
 
-import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.wine.domain.Wine;
-import com.drinkeg.drinkeg.wineWishlist.domain.WineWishlist;
-import com.drinkeg.drinkeg.wineWishlist.dto.response.WineWishlistResponseDTO;
-import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
+import com.drinkeg.drinkeg.domain.wineWishlist.dto.response.WineWishlistResponseDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.SearchWineResponseDTO;
 
 public class WineWishlistConverter {
     public static WineWishlistResponseDTO toWineWishlistResponseDTO(WineWishlist wineWishlist) {

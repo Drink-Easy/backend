@@ -1,9 +1,9 @@
 package com.drinkeg.drinkeg.controller;
 
-import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
+import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
-import com.drinkeg.drinkeg.member.service.MemberService;
-import com.drinkeg.drinkeg.wine.service.WineService;
+import com.drinkeg.drinkeg.domain.member.service.MemberService;
+import com.drinkeg.drinkeg.domain.wine.service.WineService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;

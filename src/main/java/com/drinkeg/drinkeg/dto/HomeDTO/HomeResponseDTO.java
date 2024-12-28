@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.dto.HomeDTO;
 
-import com.drinkeg.drinkeg.member.domain.Member;
+import com.drinkeg.drinkeg.domain.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

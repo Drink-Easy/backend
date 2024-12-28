@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.converter;
 
-import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.party.domain.Party;
-import com.drinkeg.drinkeg.partyBookmark.domain.PartyBookmark;
+import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.party.domain.Party;
+import com.drinkeg.drinkeg.domain.partyBookmark.domain.PartyBookmark;
 import org.springframework.stereotype.Component;
 
 @Component

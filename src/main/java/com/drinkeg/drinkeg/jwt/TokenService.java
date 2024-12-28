@@ -1,11 +1,10 @@
 package com.drinkeg.drinkeg.jwt;
 
 
-import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.exception.GeneralException;
-import com.drinkeg.drinkeg.jwt.JWTUtil;
-import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.redis.RedisClient;
+import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.global.exception.GeneralException;
+import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.infra.redis.RedisClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;

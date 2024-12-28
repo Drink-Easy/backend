@@ -1,11 +1,11 @@
 package com.drinkeg.drinkeg.converter;
 
-import com.drinkeg.drinkeg.comment.domain.Comment;
-import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.recomment.domain.Recomment;
+import com.drinkeg.drinkeg.domain.comment.domain.Comment;
+import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.recomment.domain.Recomment;
 
-import com.drinkeg.drinkeg.recomment.dto.RecommentRequestDTO;
-import com.drinkeg.drinkeg.recomment.dto.RecommentResponseDTO;
+import com.drinkeg.drinkeg.domain.recomment.dto.RecommentRequestDTO;
+import com.drinkeg.drinkeg.domain.recomment.dto.RecommentResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component

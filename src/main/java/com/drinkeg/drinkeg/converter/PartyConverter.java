@@ -1,9 +1,9 @@
 package com.drinkeg.drinkeg.converter;
 
-import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.party.domain.Party;
-import com.drinkeg.drinkeg.party.dto.PartyRequestDTO;
-import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
+import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.party.domain.Party;
+import com.drinkeg.drinkeg.domain.party.dto.PartyRequestDTO;
+import com.drinkeg.drinkeg.domain.party.dto.PartyResponseDTO;
 import org.springframework.stereotype.Component;
 
 
