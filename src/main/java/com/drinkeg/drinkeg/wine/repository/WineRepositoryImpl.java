@@ -131,7 +131,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.imageUrl,
                         wine.name.as("wineName"),
                         wine.sort,
-                        wine.price.multiply(1400).divide(100).multiply(100)
+                        wine.price.multiply(1400).divide(100).multiply(100),
+                        wine.vivinoRating
                 ))
                 .from(wine)
                 .where(
@@ -161,7 +162,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.imageUrl,
                         wine.name.as("wineName"),
                         wine.sort,
-                        wine.price.multiply(1400).divide(100).multiply(100)
+                        wine.price.multiply(1400).divide(100).multiply(100),
+                        wine.vivinoRating
                 ))
                 .from(wine)
                 .leftJoin(wineWishlist).on(wineWishlist.wine.eq(wine))

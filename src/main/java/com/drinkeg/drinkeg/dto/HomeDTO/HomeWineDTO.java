@@ -15,13 +15,17 @@ public class HomeWineDTO {
     private String sort;
     private int price;
 
+    private float vivinoRating;
+
     @QueryProjection
-    public HomeWineDTO(Long wineId, String imageUrl, String wineName, String sort, int price){
+    public HomeWineDTO(Long wineId, String imageUrl, String wineName, String sort, int price, float vivinoRating){
         this.wineId = wineId;
         this.imageUrl = imageUrl;
 
         this.wineName = wineName;
         this.sort = sort;
         this.price = price;
+
+        this.vivinoRating = vivinoRating;
     }
 }
