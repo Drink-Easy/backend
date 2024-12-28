@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.wine.controller;
 
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -64,5 +65,25 @@ public class WineController {
             throw new RuntimeException(e);
         }
         return ApiResponse.onSuccess("업로드 성공");
+    }
+
+    // 홈화면 추천 와인 반환
+    @GetMapping("/recommend")
+    @Operation(summary = "홈화면 페이지", description = "추천 와인 10개를 List로 반환")
+    public ApiResponse<List<HomeWineDTO>> home(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+
+        List<HomeWineDTO> recommendWineList = wineService.getRecommendWineList(principalDetail);
+
+        return ApiResponse.onSuccess(recommendWineList);
+    }
+
+    // 홈화면 인기 와인 반환
+    @GetMapping("/most-liked")
+    @Operation(summary = "홈화면 페이지", description = "인기 와인 10개를 List로 반환")
+    public ApiResponse<List<HomeWineDTO>> mostLikedWine() {
+
+        List<HomeWineDTO> mostLikedWineList = wineService.getMostLikedWineList();
+
+        return ApiResponse.onSuccess(mostLikedWineList);
     }
 }

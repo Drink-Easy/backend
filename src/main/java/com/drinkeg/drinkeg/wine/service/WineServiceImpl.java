@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.wine.service;
 
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeWineDTO;
 import com.drinkeg.drinkeg.storageService.StoragePathName;
 import com.drinkeg.drinkeg.storageService.StorageService;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
@@ -7,8 +8,6 @@ import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.wine.domain.Wine;
-import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
-import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -75,21 +74,29 @@ public class WineServiceImpl implements WineService {
         return WineReviewResponseDTO.create(wineReviews, liked);
     }
 
+    // 회원 닉네임과 추천와인 10개 반환
     @Override
-    public HomeResponseDTO getHomeResponse(PrincipalDetail principalDetail) {
+    public List<HomeWineDTO> getRecommendWineList(PrincipalDetail principalDetail) {
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // max 20개의 추천 와인을 찾는다.
-        List<RecommendWineDTO> recommendWines = wineRepository.findRecommendWines(member);
+        List<HomeWineDTO> recommendWines = wineRepository.findRecommendWinesByMember(member);
 
-        // 만약 추천 와인의 수가 5개를 넘어간다면, 랜덤으로 5개의 와인만 반환한다.
-        if (recommendWines.size() > 5) {
+        // 만약 추천 와인의 수가 10개를 넘어간다면, 랜덤으로 10개의 와인만 반환한다.
+        if (recommendWines.size() > 10) {
             Collections.shuffle(recommendWines);
-            recommendWines = recommendWines.subList(0, 5);
+            recommendWines = recommendWines.subList(0, 10);
         }
-        return HomeResponseDTO.create(member, recommendWines);
+
+        return recommendWines;
+    }
+
+    @Override
+    public List<HomeWineDTO> getMostLikedWineList() {
+
+        return wineRepository.findMostLikedWines();
     }
 
     @Override

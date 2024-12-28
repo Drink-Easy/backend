@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.wine.service;
 
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeWineDTO;
 import com.drinkeg.drinkeg.wine.domain.Wine;
-import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.*;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 
@@ -18,7 +18,9 @@ public interface WineService {
 
     public WineReviewResponseDTO getWineReviewsAndIsLikedByWineId(Long wineId, PrincipalDetail principalDetail, boolean orderByLatest);
 
-    public HomeResponseDTO getHomeResponse(PrincipalDetail principalDetail);
+    public List<HomeWineDTO> getRecommendWineList(PrincipalDetail principalDetail);
+
+    public List<HomeWineDTO> getMostLikedWineList();
 
     public void uploadWineImage() throws IOException;
 

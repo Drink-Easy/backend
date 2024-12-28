@@ -1,23 +1,27 @@
 package com.drinkeg.drinkeg.dto.HomeDTO;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor
-public class RecommendWineDTO {
+public class HomeWineDTO {
 
     private Long wineId;
-    private String wineName;
     private String imageUrl;
 
+    private String wineName;
+    private String sort;
+    private int price;
+
     @QueryProjection
-    public RecommendWineDTO(Long wineId, String wineName, String imageUrl){
+    public HomeWineDTO(Long wineId, String imageUrl, String wineName, String sort, int price){
         this.wineId = wineId;
-        this.wineName = wineName;
         this.imageUrl = imageUrl;
+
+        this.wineName = wineName;
+        this.sort = sort;
+        this.price = price;
     }
 }
