@@ -14,7 +14,7 @@ public interface WineRepositoryCustom {
 
     List<WineReviewDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest);
 
-    List<HomeWineDTO> findRecommendWines(Member member);
+    List<HomeWineDTO> findRecommendWinesByMember(Member member);
 
     List<HomeWineDTO> findMostLikedWines();
 }
