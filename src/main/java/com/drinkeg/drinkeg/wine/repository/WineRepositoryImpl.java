@@ -59,6 +59,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.price.multiply(1300).divide(100).multiply(100).as("price"),
                         wine.sort,
                         wine.area,
+                        wine.variety,
                         wine.vivinoRating,
 
                         wine.wineNote.avgSugarContent,
@@ -142,6 +143,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.imageUrl,
                         wine.sort,
                         wine.area,
+                        wine.variety,
                         wine.vivinoRating,
                         wine.price,
                         wineWishlist.id.isNotNull() // memberId와 wineId에 따라 isLiked 여부
