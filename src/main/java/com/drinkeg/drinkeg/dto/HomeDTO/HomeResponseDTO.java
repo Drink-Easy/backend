@@ -18,14 +18,19 @@ public class HomeResponseDTO {
     private String name;
 
     @Builder.Default
-    private List<RecommendWineDTO> recommendWineDTOs = new ArrayList<>();
+    private List<HomeWineDTO> recommendWineDTOS = new ArrayList<>();
+
+    @Builder.Default
+    private List<HomeWineDTO> MostLikedWineDTOS = new ArrayList<>();
 
 
-    public static HomeResponseDTO create(Member member, List<RecommendWineDTO> recommendWineDTOs){
+    public static HomeResponseDTO create(Member member
+            , List<HomeWineDTO> recommendWineDTOS, List<HomeWineDTO> mostLikedWineDTOS){
 
         return HomeResponseDTO.builder()
                 .name(member.getName())
-                .recommendWineDTOs(recommendWineDTOs)
+                .recommendWineDTOS(recommendWineDTOS)
+                .MostLikedWineDTOS(mostLikedWineDTOS)
                 .build();
     }
 

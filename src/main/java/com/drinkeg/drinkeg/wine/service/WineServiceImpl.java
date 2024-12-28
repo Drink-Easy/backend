@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.wine.service;
 
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeWineDTO;
 import com.drinkeg.drinkeg.storageService.StoragePathName;
 import com.drinkeg.drinkeg.storageService.StorageService;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
@@ -8,7 +9,6 @@ import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.wine.domain.Wine;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
-import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -82,14 +82,17 @@ public class WineServiceImpl implements WineService {
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // max 20개의 추천 와인을 찾는다.
-        List<RecommendWineDTO> recommendWines = wineRepository.findRecommendWines(member);
+        List<HomeWineDTO> recommendWines = wineRepository.findRecommendWines(member);
 
         // 만약 추천 와인의 수가 5개를 넘어간다면, 랜덤으로 5개의 와인만 반환한다.
         if (recommendWines.size() > 5) {
             Collections.shuffle(recommendWines);
             recommendWines = recommendWines.subList(0, 5);
         }
-        return HomeResponseDTO.create(member, recommendWines);
+
+        List<HomeWineDTO> mostLikedWines = wineRepository.findMostLikedWines();
+
+        return HomeResponseDTO.create(member, recommendWines, mostLikedWines);
     }
 
     @Override

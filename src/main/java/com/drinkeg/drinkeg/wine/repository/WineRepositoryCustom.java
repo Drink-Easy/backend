@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.wine.repository;
 
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeWineDTO;
 import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewDTO;
@@ -14,5 +14,7 @@ public interface WineRepositoryCustom {
 
     List<WineReviewDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest);
 
-    List<RecommendWineDTO> findRecommendWines(Member member);
+    List<HomeWineDTO> findRecommendWines(Member member);
+
+    List<HomeWineDTO> findMostLikedWines();
 }

@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.wine.repository;
 
+import com.drinkeg.drinkeg.dto.HomeDTO.QHomeWineDTO;
 import com.drinkeg.drinkeg.member.domain.Member;
-import com.drinkeg.drinkeg.dto.HomeDTO.QRecommendWineDTO;
-import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
+import com.drinkeg.drinkeg.dto.HomeDTO.HomeWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.CaseBuilder;
@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.wine.domain.QWine.wine;
@@ -26,6 +24,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    // 선택한 와인의 전체 리뷰 볼 때 사용
     @Override
     public List<WineReviewDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
 
@@ -46,7 +45,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     }
 
 
-
+    // 선택한 와인 정보와 최근 리뷰 3개 가져오기
     @Override
     public WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId, Long memberId) {
 
@@ -56,7 +55,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.id.as("wineId"),
                         wine.name,
                         wine.imageUrl,
-                        wine.price.multiply(1300).divide(100).multiply(100).as("price"),
+                        wine.price.multiply(1400).divide(100).multiply(100).as("price"),
                         wine.sort,
                         wine.area,
                         wine.variety,
@@ -97,11 +96,12 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
         return new WineResponseWithThreeReviewsDTO(wineResponseDTO, recentReviews);
     }
 
+    // 홈하면 추천 와인 반환 시 사용
     @Override
-    public List<RecommendWineDTO> findRecommendWines(Member member) {
+    public List<HomeWineDTO> findRecommendWines(Member member) {
         List<String> wineSortList = member.getWineSort();
         List<String> wineAreaList = member.getWineArea();
-        Long maxPrice = member.getMonthPriceMax()/1300;
+        Long maxPrice = member.getMonthPriceMax()/1400;
 
         // BooleanBuilder로 동적 조건 생성
         BooleanBuilder sortCondition = new BooleanBuilder();
@@ -110,10 +110,13 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
         BooleanBuilder areaCondition = new BooleanBuilder();
         wineAreaList.forEach(area -> areaCondition.or(wine.area.lower().containsIgnoreCase(area)));
 
-        return queryFactory.select(new QRecommendWineDTO(
+        return queryFactory.select(new QHomeWineDTO(
                         wine.id,
-                        wine.name,
-                        wine.imageUrl
+                        wine.imageUrl,
+
+                        wine.name.as("wineName"),
+                        wine.sort,
+                        wine.price.multiply(1400).divide(100).multiply(100)
                 ))
                 .from(wine)
                 .where(
@@ -134,6 +137,25 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .fetch();
     }
 
+    // 홈하면 인기 와인 반환 시 사용
+    @Override
+    public List<HomeWineDTO> findMostLikedWines() {
+        return queryFactory.select(new QHomeWineDTO(
+                        wine.id,
+                        wine.imageUrl,
+                        wine.name.as("wineName"),
+                        wine.sort,
+                        wine.price.multiply(1400).divide(100).multiply(100)
+                ))
+                .from(wine)
+                .leftJoin(wineWishlist).on(wineWishlist.wine.eq(wine))
+                .groupBy(wine.id)
+                .orderBy(wineWishlist.count().desc())
+                .limit(20)
+                .fetch();
+    }
+
+    // 검색한 와인들 정보 반환 시 사용
     @Override
     public List<SearchWineResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId) {
         return queryFactory
