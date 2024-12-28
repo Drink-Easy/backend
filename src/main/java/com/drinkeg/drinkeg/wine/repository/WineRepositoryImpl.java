@@ -103,7 +103,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
         List<String> wineSortList = member.getWineSort();
         List<String> wineAreaList = member.getWineArea();
 
-        // maxPrice가 null이면 가격 제한을 10달러로
+        // maxPrice가 null이면 가격 제한을 100달러로
         Long maxPrice = member.getMonthPriceMax() != null ? member.getMonthPriceMax() / 1400 : 100;
 
         // BooleanBuilder로 동적 조건 생성
@@ -142,7 +142,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.vivinoRating
                                 .add(new CaseBuilder()
                                         .when(sortCondition.and(areaCondition)) // 두 조건이 모두 일치하면 0.4
-                                        .then(0.4)
+                                        .then(0.3)
                                         .when(sortCondition.or(areaCondition)) // 하나라도 일치하면 0.2
                                         .then(0.2)
                                         .otherwise(0.0))
