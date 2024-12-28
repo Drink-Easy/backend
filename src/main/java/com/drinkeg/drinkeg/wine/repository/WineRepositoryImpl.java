@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.wine.domain.QWine.wine;
@@ -110,18 +112,23 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
         BooleanBuilder condition = new BooleanBuilder();
         condition.and(wine.vivinoRating.goe(4));
 
-        // wineSortList가 빈 리스트면 조건에서 제외
+        // wineSortList가 빈 리스트면 기본값 처리
         BooleanBuilder sortCondition = new BooleanBuilder();
         if (!wineSortList.isEmpty()) {
-            wineSortList.forEach(sort -> sortCondition.or(wine.sort.lower().containsIgnoreCase(sort)));
+            wineSortList.forEach(sort -> sortCondition.or(wine.sort.isNotNull().and(wine.sort.lower().containsIgnoreCase(sort))));
             condition.and(sortCondition);
         }
 
-        // wineAreaList가 빈 리스트면 조건에서 제외
+        // wineAreaList가 빈 리스트면 기본값 처리
         BooleanBuilder areaCondition = new BooleanBuilder();
         if (!wineAreaList.isEmpty()) {
-            wineAreaList.forEach(area -> areaCondition.or(wine.area.lower().containsIgnoreCase(area)));
+            wineAreaList.forEach(area -> areaCondition.or(wine.area.isNotNull().and(wine.area.lower().containsIgnoreCase(area))));
             condition.and(areaCondition);
+        }
+
+        // 두 조건 모두 비어 있다면, 기본 조건만 유지 (에러 방지)
+        if (sortCondition.getValue() == null && areaCondition.getValue() == null) {
+            condition.and(wine.vivinoRating.goe(4)); // 기본 평점 조건만 유지
         }
 
         // 쿼리 실행 후 반환
@@ -139,18 +146,10 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                                 .and(condition)  // sort와 area 조건을 모두 포함
                 )
                 .orderBy(
-                        wine.vivinoRating
-                                .add(new CaseBuilder()
-                                        .when(sortCondition.and(areaCondition)) // 두 조건이 모두 일치하면 0.4
-                                        .then(0.3)
-                                        .when(sortCondition.or(areaCondition)) // 하나라도 일치하면 0.2
-                                        .then(0.2)
-                                        .otherwise(0.0))
-                                .desc() // 내림차순 정렬
+                        wine.vivinoRating.desc() // 내림차순 정렬
                 )
                 .limit(20)
                 .fetch();
-
     }
 
     // 홈하면 인기 와인 반환 시 사용
