@@ -32,6 +32,9 @@ public class Wine {
     // 지역
     private String area;
 
+    // 품종 : 카베르네소비뇽, 샤도네이 등등
+    private String variety;
+
     // vivino 평점
     private float vivinoRating;
 

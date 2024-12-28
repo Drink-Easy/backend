@@ -18,6 +18,7 @@ public class SearchWineResponseDTO {
 
     private String sort;
     private String area;
+    private String variety;
 
     private float vivinoRating;
 
@@ -26,13 +27,14 @@ public class SearchWineResponseDTO {
     private boolean isLiked;
 
     @QueryProjection // 생성자에 추가
-    public SearchWineResponseDTO(Long wineId, String name, String imageUrl, String sort, String area,
+    public SearchWineResponseDTO(Long wineId, String name, String imageUrl, String sort, String area, String variety,
                                  float vivinoRating, int price, boolean isLiked) {
         this.wineId = wineId;
         this.name = name;
         this.imageUrl = imageUrl;
         this.sort = sort;
         this.area = area;
+        this.variety = variety;
         this.vivinoRating = vivinoRating;
         this.price = price;
         this.isLiked = isLiked;
@@ -47,6 +49,7 @@ public class SearchWineResponseDTO {
                 .isLiked(isLiked)
                 .sort(wine.getSort())
                 .area(wine.getArea())
+                .variety(wine.getVariety())
 
                 .price(((wine.getPrice() * 1300) / 1000) * 1000)
 
