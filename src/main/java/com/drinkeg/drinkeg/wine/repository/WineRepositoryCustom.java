@@ -17,6 +17,4 @@ public interface WineRepositoryCustom {
     List<HomeWineDTO> findRecommendWinesByMember(Member member);
 
     List<HomeWineDTO> findMostLikedWines();
-
-//    public List<SearchWineResponseDTO> findWishlistWinesByUsername(String username);
 }
