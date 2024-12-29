@@ -103,32 +103,40 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     public List<HomeWineDTO> findRecommendWinesByMember(Member member) {
         List<String> wineSortList = member.getWineSort();
         List<String> wineAreaList = member.getWineArea();
-
         // maxPrice가 null이면 가격 제한을 100달러로
         Long maxPrice = member.getMonthPriceMax() != null ? member.getMonthPriceMax() / 1400 : 100;
 
-        // BooleanBuilder로 동적 조건 생성
-        // 기본 조건 평점 4점 이상으로 설정
+        if(wineAreaList.isEmpty() && wineSortList.isEmpty()){
+            return queryFactory.select(new QHomeWineDTO(
+                            wine.id,
+                            wine.imageUrl,
+                            wine.name.as("wineName"),
+                            wine.sort,
+                            wine.price.multiply(1400).divide(100).multiply(100),
+                            wine.vivinoRating
+                    ))
+                    .from(wine)
+                    .where(
+                            wine.price.loe(maxPrice)
+                    )
+                    .orderBy(
+                            wine.vivinoRating.desc()
+                    )
+                    .limit(20)
+                    .fetch();
+        }
+
         BooleanBuilder condition = new BooleanBuilder();
         condition.and(wine.vivinoRating.goe(4));
 
         // wineSortList가 빈 리스트면 기본값 처리
-        BooleanBuilder sortCondition = new BooleanBuilder();
         if (!wineSortList.isEmpty()) {
-            wineSortList.forEach(sort -> sortCondition.or(wine.sort.isNotNull().and(wine.sort.lower().containsIgnoreCase(sort))));
-            condition.and(sortCondition);
+            wineSortList.forEach(sort -> condition.or(wine.sort.isNotNull().and(wine.sort.lower().containsIgnoreCase(sort))));
         }
 
         // wineAreaList가 빈 리스트면 기본값 처리
-        BooleanBuilder areaCondition = new BooleanBuilder();
         if (!wineAreaList.isEmpty()) {
-            wineAreaList.forEach(area -> areaCondition.or(wine.area.isNotNull().and(wine.area.lower().containsIgnoreCase(area))));
-            condition.and(areaCondition);
-        }
-
-        // 두 조건 모두 비어 있다면, 기본 조건만 유지 (에러 방지)
-        if (sortCondition.getValue() == null && areaCondition.getValue() == null) {
-            condition.and(wine.vivinoRating.goe(4)); // 기본 평점 조건만 유지
+            wineAreaList.forEach(area -> condition.or(wine.area.isNotNull().and(wine.area.lower().containsIgnoreCase(area))));
         }
 
         // 쿼리 실행 후 반환
@@ -141,10 +149,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.vivinoRating
                 ))
                 .from(wine)
-                .where(
-                        wine.price.loe(maxPrice)  // 가격 조건
-                                .and(condition)  // sort와 area 조건을 모두 포함
-                )
+                .where(condition)
                 .orderBy(
                         wine.vivinoRating.desc() // 내림차순 정렬
                 )
