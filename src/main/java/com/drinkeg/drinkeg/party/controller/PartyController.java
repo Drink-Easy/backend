@@ -5,6 +5,7 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.party.dto.PartyRequestDTO;
 import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
 import com.drinkeg.drinkeg.party.service.PartyService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class PartyController {
 
     // 모임 생성
     @PostMapping
+    @Operation(summary = "모임 생성", description = "PartyRequestDTO로 모임 개설 요청")
     public ApiResponse<String> createParty(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestBody PartyRequestDTO partyRequestDTO) {
@@ -35,6 +37,7 @@ public class PartyController {
 
     // 모임 전체조회
     @GetMapping
+    @Operation(summary = "모든 모임 조회", description = "단순 모든 모임 조회 실사용X")
     public ApiResponse<List<PartyResponseDTO>> getAllParties(
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
 
@@ -51,6 +54,7 @@ public class PartyController {
     // 가격순 /parties/sorted?sortType=price
     // 거리순 /parties/sorted?sortType=distance
     @GetMapping("/sorted")
+    @Operation(summary = "모임 정렬 조회", description = "RequestParam 정렬 기준으로 5개씩(pageable) 모임 조회")
     public ApiResponse<Page<PartyResponseDTO>> getSortedParties(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestParam("sortType") String sortType,
@@ -64,6 +68,7 @@ public class PartyController {
 
     // 모임 단건 조회
     @GetMapping("/{id}")
+    @Operation(summary = "모임 단건 조회", description = "ParthVariable(모임id)로 PartyResponseDTO 모임 단건 조회")
     public ApiResponse<PartyResponseDTO> getParty(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("id") Long id) {
@@ -74,7 +79,8 @@ public class PartyController {
     }
 
     // 모임 수정
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
+    @Operation(summary = "모임 수정", description = "PathVariable(모임id)로 모임 수정")
     public ApiResponse<String> updateParty(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("id") Long id,
@@ -89,6 +95,7 @@ public class PartyController {
 
     // 모임 삭제
     @DeleteMapping("/{id}")
+    @Operation(summary = "모임 삭제", description = "PathVariable(모임id)로 모임 하드 삭제")
     public ApiResponse<String> deleteParty(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("id") Long id) {
@@ -103,6 +110,7 @@ public class PartyController {
 
     //모임 검색
     @GetMapping("/search")
+    @Operation(summary = "모임 검색", description = "RequestParam으로 모임 제목 검색")
     public ApiResponse<List<PartyResponseDTO>> searchPartiesByName(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestParam("searchName") String searchName) {
