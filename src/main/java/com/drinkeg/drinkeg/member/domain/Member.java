@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.member.domain;
 
 
 import com.drinkeg.drinkeg.converter.StringListConverter;
+import com.drinkeg.drinkeg.member.enums.Provider;
 import com.drinkeg.drinkeg.member.enums.Role;
 import com.drinkeg.drinkeg.tastingNote.domain.TastingNote;
 import jakarta.persistence.*;
@@ -27,6 +28,9 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
     private String username;
 

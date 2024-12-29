@@ -51,7 +51,7 @@ public class KakaoLoginService {
 
         if (existData.isEmpty()){
 
-            member = memberConverter.toKakaoMember(kakaoname,kakaoEmail);
+            member = memberConverter.toOAuthMember(kakaoname,kakaoEmail,"Kakao");
             memberRepository.save(member);
             System.out.println("첫 로그인임");
             tokenService.jwtProvider(member, response);

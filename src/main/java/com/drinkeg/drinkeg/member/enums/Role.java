@@ -17,14 +17,4 @@ public enum Role {
     }
 
 
-
-    public static Role fromValue(String value) {
-        for (Role role : Role.values()) {
-            if (role.getValue().equalsIgnoreCase(value)) {
-                return role;
-            }
-        }
-        throw new IllegalArgumentException("Unknown role: " + value);
-    }
-
 }

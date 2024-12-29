@@ -4,6 +4,7 @@ import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.member.dto.MemberResponseDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
 import com.drinkeg.drinkeg.member.dto.MemberBasicInfoResponseDTO;
+import com.drinkeg.drinkeg.member.enums.Provider;
 import com.drinkeg.drinkeg.member.enums.Role;
 import org.springframework.stereotype.Component;
 
@@ -13,25 +14,18 @@ import java.util.Map;
 @Component
 public class MemberConverter {
 
-    public Member toAppleMember(String username, Map<String, Object> claims) {
+    public Member toOAuthMember(String username, String email, String provider) {
 
 
         return Member.builder()
                 .username(username)
-                .email((String) claims.get("email"))  // email 값을 claims에서 추출
+                .email(email)
                 .role(Role.USER)
+                .provider(Provider.fromValue(provider))
                 .isFirst(true)
                 .build();
     }
 
-    public Member toKakaoMember(String kakaoname, String email ) {
-        return Member.builder()
-                .username(kakaoname)
-                .email(email)
-                .role(Role.USER)
-                .isFirst(true)
-                .build();
-    }
   
     public static MemberBasicInfoResponseDTO toMemberBasicInfoResponseDTO(Member member) {
       return MemberBasicInfoResponseDTO.builder()
@@ -45,6 +39,7 @@ public class MemberConverter {
                 .username(username)
                 .password(password)
                 .role(Role.USER)
+                .provider(Provider.DRINKEG)
                 .isFirst(isBoolean)
                 .build();
     }
