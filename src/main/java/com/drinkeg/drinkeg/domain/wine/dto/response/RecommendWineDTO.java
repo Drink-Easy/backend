@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.HomeDTO;
+package com.drinkeg.drinkeg.domain.wine.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;

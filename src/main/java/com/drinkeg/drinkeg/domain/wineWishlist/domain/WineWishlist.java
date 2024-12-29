@@ -28,4 +28,6 @@ public class WineWishlist {
     @JoinColumn(name = "wine_id")
     private Wine wine;
 
+
+
 }

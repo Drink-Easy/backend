@@ -6,7 +6,7 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseDTO;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewDTO;
 import com.drinkeg.drinkeg.dto.HomeDTO.QRecommendWineDTO;
-import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.RecommendWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.CaseBuilder;

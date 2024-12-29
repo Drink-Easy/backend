@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.HomeDTO;
+package com.drinkeg.drinkeg.domain.wine.dto.response;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import lombok.AllArgsConstructor;

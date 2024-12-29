@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.wine.repository;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.wine.dto.response.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.dto.HomeDTO.RecommendWineDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.RecommendWineDTO;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewDTO;
 

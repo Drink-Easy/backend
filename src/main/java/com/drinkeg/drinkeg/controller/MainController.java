@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.controller;
 
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.dto.HomeDTO.HomeResponseDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.HomeResponseDTO;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import com.drinkeg.drinkeg.domain.wine.service.WineService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,12 +26,5 @@ public class MainController {
         return ApiResponse.onSuccess("하윙");
     }
 
-    @GetMapping("/home")
-    @Operation(summary = "홈화면 페이지", description = "사용자 이름과 추천 와인 List를 homeResponseDTO에 담아서 반환")
-    public ApiResponse<HomeResponseDTO> home(@AuthenticationPrincipal PrincipalDetail principalDetail) {
 
-        HomeResponseDTO homeResponseDTO = wineService.getHomeResponse(principalDetail);
-
-        return ApiResponse.onSuccess(homeResponseDTO);
-    }
 }

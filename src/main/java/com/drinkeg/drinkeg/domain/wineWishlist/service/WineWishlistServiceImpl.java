@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.wineWishlist.service;
 
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.WineWishlistConverter;
+import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlistConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
