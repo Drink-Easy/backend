@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.jwt;
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.member.enums.Role;
 import com.drinkeg.drinkeg.member.login.oauth2.dto.LoginResponseDTO;
 import com.drinkeg.drinkeg.redis.RedisClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -100,7 +101,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
                 .username(username)
-                .role(role)
+                .role(Role.USER)
                 .isFirst(isFirst)
                 .build();
 

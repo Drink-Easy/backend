@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.jwt;
 
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
+import com.drinkeg.drinkeg.member.enums.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -79,13 +80,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //토큰에서 username과 role 획득
         String username = jwtUtil.getUsername(accessToken);
-        String role = jwtUtil.getRole(accessToken);
-
+        String roleStr = jwtUtil.getRole(accessToken);
 
         //userDTO를 생성하여 값 set
         UserDTO userDTO = UserDTO.builder()
                 .username(username)
-                .role(role)
+                .role(Role.valueOf(roleStr))
                 .build();
 
         System.out.println(userDTO);
