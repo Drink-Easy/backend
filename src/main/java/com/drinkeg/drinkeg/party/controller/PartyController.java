@@ -121,4 +121,13 @@ public class PartyController {
         return ApiResponse.onSuccess(searchPartyResponseDTOS);
     }
 
+    // 참가 모임
+    @GetMapping("/member")
+    @Operation(summary = "참가 모임 조회", description = "로그인중인 사용자가 참가한 모임 조회")
+    public ApiResponse<List<PartyResponseDTO>> getPartiesByMemberId(
+            @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        List<PartyResponseDTO> parties = partyService.getPartiesByMemberId(principalDetail);
+        return ApiResponse.onSuccess(parties);
+    }
+
 }
