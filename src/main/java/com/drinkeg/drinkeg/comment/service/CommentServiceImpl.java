@@ -50,48 +50,35 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentResponseDTO> getCommentsByPartyId(Long partyId) {
-        // party 존재 여부 검증
+        // 파티 존재 여부 검증
         Party party = partyService.findPartyById(partyId);
 
-        // 특정 모임의 댓글 조회
-        List<Comment> comments = commentRepository.findByPartyId(partyId);
+        // QueryProjection을 사용하여 댓글을 조회
+        List<CommentResponseDTO> commentDTOs = commentRepository.findCommentsWithRecomments(partyId);
 
-        // 댓글을 DTO로 변환하면서 대댓글도 함께 처리
-        return comments.stream().map(comment -> {
-
-            CommentResponseDTO commentDTO = commentConverter.toResponse(comment);
-
-            // 시간 계산하여 timeAgo 필드에 설정
-            String timeAgo = calculateTimeAgo(comment.getCreatedAt());
+        // 각 댓글 DTO에 추가 데이터 설정
+        commentDTOs.forEach(commentDTO -> {
+            Comment commentEntity = findByIdOrThrow(commentDTO.getId());
+            String timeAgo = calculateTimeAgo(commentEntity.getCreatedAt());
             commentDTO.setTimeAgo(timeAgo);
 
-            // 작성일자 계산하여 createdDate 필드에 설정
-            String createdDate = calculateCreatedDate(comment.getCreatedAt());
+            String createdDate = calculateCreatedDate(commentEntity.getCreatedAt());
             commentDTO.setCreatedDate(createdDate);
 
-            // 대댓글 처리
-            List<Recomment> recomments = recommentService.findByCommentId(comment.getId());
-            List<RecommentResponseDTO> recommentDTOs = recomments.stream()
+            // 대댓글 조회 및 DTO 변환
+            List<RecommentResponseDTO> recommentDTOs = recommentService.findByCommentId(commentDTO.getId()).stream()
                     .map(recomment -> {
                         RecommentResponseDTO recommentDTO = recommentConverter.toResponse(recomment);
-
-                        // 시간 계산하여 timeAgo 필드에 설정
-                        String recommentTimeAgo = calculateTimeAgo(recomment.getCreatedAt());
-                        recommentDTO.setTimeAgo(recommentTimeAgo);
-
-                        // 작성일자 계산하여 createdDate 필드에 설정
-                        String recommentCreatedDate = calculateCreatedDate(recomment.getCreatedAt());
-                        recommentDTO.setCreatedDate(recommentCreatedDate);
-
-                        return recommentDTO; // 변환된 RecommentResponseDTO 반환
+                        recommentDTO.setTimeAgo(calculateTimeAgo(recomment.getCreatedAt()));
+                        recommentDTO.setCreatedDate(calculateCreatedDate(recomment.getCreatedAt()));
+                        return recommentDTO;
                     })
                     .collect(Collectors.toList());
 
-            // DTO에 대댓글 리스트 추가
             commentDTO.setRecomments(recommentDTOs);
+        });
 
-            return commentDTO;
-        }).collect(Collectors.toList());
+        return commentDTOs;
     }
 
 

@@ -1,10 +1,16 @@
 package com.drinkeg.drinkeg.comment.repository;
 
 import com.drinkeg.drinkeg.comment.domain.QComment;
+import com.drinkeg.drinkeg.comment.dto.CommentResponseDTO;
 import com.drinkeg.drinkeg.recomment.domain.QRecomment;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+import static com.drinkeg.drinkeg.member.domain.QMember.member;
 
 @RequiredArgsConstructor
 @Repository
@@ -36,5 +42,24 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         recommentCount = recommentCount != null ? recommentCount : 0L;
 
         return commentCount + recommentCount;
+    }
+
+    @Override
+    public List<CommentResponseDTO> findCommentsWithRecomments(Long partyId) {
+        QComment comment = QComment.comment;
+
+        return queryFactory.select(Projections.constructor(CommentResponseDTO.class,
+                        comment.id,
+                        comment.party.id,
+                        comment.member.id,
+                        comment.member.username,
+                        comment.content,
+                        comment.isDeleted,
+                        comment.createdAt))
+                .from(comment)
+                .leftJoin(comment.member, member)
+                .where(comment.party.id.eq(partyId)
+                        .and(comment.isDeleted.isFalse()))
+                .fetch();
     }
 }
