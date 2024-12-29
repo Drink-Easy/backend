@@ -12,6 +12,7 @@ import com.drinkeg.drinkeg.wineWishlist.repository.WineWishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,7 +40,10 @@ public class WineWishlistServiceImpl implements WineWishlistService{
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        return wineRepository.findWishlistWinesByUsername(username);
+        List<WineWishlist> wishlistWineList = wineWishlistRepository.findByMemberOrderByCreatedAtDesc(member);
+
+        return wishlistWineList.stream().map(wineWishlist
+                -> SearchWineResponseDTO.create(wineWishlist.getWine(), true)).toList();
     }
 
     @Override

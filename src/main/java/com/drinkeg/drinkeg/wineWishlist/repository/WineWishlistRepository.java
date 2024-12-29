@@ -14,4 +14,6 @@ public interface WineWishlistRepository extends JpaRepository<WineWishlist, Long
 
     Boolean existsByMemberAndWine(Member member, Wine wine);
 
+    List<WineWishlist> findByMemberOrderByCreatedAtDesc(Member member);
+
 }
