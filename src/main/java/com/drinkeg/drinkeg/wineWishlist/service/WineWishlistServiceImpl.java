@@ -1,12 +1,10 @@
 package com.drinkeg.drinkeg.wineWishlist.service;
 
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.WineWishlistConverter;
 import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;
+import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wineWishlist.domain.WineWishlist;
-import com.drinkeg.drinkeg.wineWishlist.dto.request.WineWishlistRequestDTO;
-import com.drinkeg.drinkeg.wineWishlist.dto.response.WineWishlistResponseDTO;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.wine.repository.WineRepository;
@@ -15,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,40 +22,38 @@ public class WineWishlistServiceImpl implements WineWishlistService{
     private final WineRepository wineRepository;
 
     @Override
-    public WineWishlistResponseDTO createWineWishlist(WineWishlistRequestDTO wineWishlistRequestDTO, String username) {
+    public void createWineWishlist(Long wineId, String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-        Wine wine = wineRepository.findById(wineWishlistRequestDTO.getWineId())
+        Wine wine = wineRepository.findById(wineId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
         if (wineWishlistRepository.existsByMemberAndWine(member, wine))
             throw new GeneralException(ErrorStatus.WINE_WISHLIST_ALREADY_EXISTS);
 
-        WineWishlist wineWishlist = wineWishlistRepository.save(WineWishlistConverter.toWineWishlist(wine, member));
-
-        return WineWishlistConverter.toWineWishlistResponseDTO(wineWishlist);
+        wineWishlistRepository.save(WineWishlist.create(member, wine));
     }
 
     @Override
-    public List<WineWishlistResponseDTO> getAllWineWishlistByMember(String username) {
+    public List<SearchWineResponseDTO> getAllWineWishlistByMember(String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        return wineWishlistRepository.findAllByMember(member).stream()
-                .map(WineWishlistConverter::toWineWishlistResponseDTO)
-                .collect(Collectors.toList());
+        return wineRepository.findWishlistWinesByUsername(username);
     }
 
     @Override
-    public void deleteWineWishlistById(Long wineWishlistId, String username) {
+    public void deleteWineWishlistById(Long wineId, String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-        WineWishlist wineWishlist = wineWishlistRepository.findById(wineWishlistId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_WISHLIST_NOT_FOUND));
+        Wine wine = wineRepository.findById(wineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
-        if (!wineWishlist.getMember().getId().equals(member.getId()))
+        WineWishlist wineWishlist = wineWishlistRepository.findWineWishlistByMemberAndWine(member, wine);
+
+        if (!wineWishlist.getMember().equals(member))
             throw new GeneralException(ErrorStatus.WINE_WISHLIST_UNAUTHORIZED);
 
-        wineWishlistRepository.deleteById(wineWishlistId);
+        wineWishlistRepository.deleteById(wineWishlist.getId());
     }
 }

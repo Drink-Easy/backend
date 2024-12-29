@@ -198,4 +198,27 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .orderBy(wine.name.asc())
                 .fetch();
     }
+
+    // 좋아요 누른 와인들 정보 반환 시 사용
+    @Override
+    public List<SearchWineResponseDTO> findWishlistWinesByUsername(String username) {
+        return queryFactory
+                .select(new QSearchWineResponseDTO(
+                        wine.id,
+                        wine.name,
+                        wine.imageUrl,
+                        wine.sort,
+                        wine.area,
+                        wine.variety,
+                        wine.vivinoRating,
+                        wine.price,
+                        wineWishlist.id.isNotNull() // 좋아요가 눌린 경우에만 true
+                ))
+                .from(wine)
+                .leftJoin(wineWishlist)
+                .on(wineWishlist.wine.eq(wine).and(wineWishlist.member.username.eq(username)))
+                .where(wineWishlist.id.isNotNull())  // 좋아요를 누른 와인만 필터링
+                .orderBy(wineWishlist.createdAt.desc())
+                .fetch();
+    }
 }
