@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.partyJoinMember.controller;
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.partyJoinMember.service.PartyJoinMemberService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ public class PartyJoinMemberController {
 
     // 특정 멤버가 특정 모임에 참가하는 API
     @PostMapping("/{partyId}")
+    @Operation(summary = "모임 참가", description = "로그인된 사용자가 PathVariable(모임 id)모임에 참가")
     public ApiResponse<String> participateInParty(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("partyId") Long partyId) {
@@ -27,7 +29,8 @@ public class PartyJoinMemberController {
     }
 
     // 모임 참가 취소 API
-    @DeleteMapping("/partyJoin/{partyId}")
+    @DeleteMapping("/{partyId}")
+    @Operation(summary = "모임 참가 취소", description = "참가했었던 모임 참가 취소")
     public ApiResponse<String> cancelPartyJoin(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("partyId") Long partyId) {
