@@ -17,7 +17,6 @@ public class WineWishlistRepositoryImpl implements WineWishlistRepositoryCustom 
 
     private final JPAQueryFactory queryFactory;
 
-
     @Override
     public Boolean existsByMemberIdAndWineId(Long memberId, Long wineId) {
         // wineWishlist에 해당하는 데이터가 존재하면 true, 존재하지 않으면 false
@@ -32,4 +31,5 @@ public class WineWishlistRepositoryImpl implements WineWishlistRepositoryCustom 
 
         return isLiked.orElse(false);
     }
+
 }

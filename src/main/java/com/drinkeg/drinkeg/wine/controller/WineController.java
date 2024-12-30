@@ -9,6 +9,7 @@ import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.wine.service.WineService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+@Tag(name = "Wine", description = "와인 관련 CRUD API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/wine")

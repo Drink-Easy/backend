@@ -10,8 +10,10 @@ import java.util.List;
 
 public interface WineWishlistRepository extends JpaRepository<WineWishlist, Long>, WineWishlistRepositoryCustom {
 
-    List<WineWishlist> findAllByMember(Member member);
+    WineWishlist findWineWishlistByMemberAndWine(Member member, Wine wine);
 
     Boolean existsByMemberAndWine(Member member, Wine wine);
+
+    List<WineWishlist> findByMemberOrderByCreatedAtDesc(Member member);
 
 }

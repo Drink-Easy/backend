@@ -1,11 +1,8 @@
 package com.drinkeg.drinkeg.wine.dto.response;
 
 import com.drinkeg.drinkeg.wine.domain.Wine;
-import com.drinkeg.drinkeg.wineNote.domain.WineNote;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
-
-import java.util.Optional;
 
 @Getter
 @Builder
@@ -46,16 +43,14 @@ public class SearchWineResponseDTO {
                 .name(wine.getName())
                 .imageUrl(wine.getImageUrl())
 
-                .isLiked(isLiked)
                 .sort(wine.getSort())
                 .area(wine.getArea())
                 .variety(wine.getVariety())
 
+                .vivinoRating(wine.getVivinoRating())
                 .price(((wine.getPrice() * 1300) / 1000) * 1000)
+                .isLiked(isLiked)
 
-                // wine 기본 평점과, 사용자 평점 중 높은거로
-                .vivinoRating(Math.max(wine.getVivinoRating(),
-                        Optional.ofNullable(wine.getWineNote()).map(WineNote::getAvgMemberRating).orElse((float) 0)))
                 .build();
     }
 
