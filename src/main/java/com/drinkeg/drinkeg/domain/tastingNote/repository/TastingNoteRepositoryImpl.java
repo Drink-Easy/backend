@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNoteNose.tastingNoteNose;
-import static com.drinkeg.drinkeg.wine.domain.QWine.wine;
+import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
 
 @Repository
 @RequiredArgsConstructor

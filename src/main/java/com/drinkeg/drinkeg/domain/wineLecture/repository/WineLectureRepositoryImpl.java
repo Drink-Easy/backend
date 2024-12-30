@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.wineLecture.repository;
 
+import com.drinkeg.drinkeg.domain.wineLecture.dto.QWineLectureResponseDTO;
 import com.drinkeg.drinkeg.domain.wineLecture.dto.WineLectureResponseDTO;
-import com.drinkeg.drinkeg.wineLecture.dto.QWineLectureResponseDTO;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.drinkeg.drinkeg.wineLecture.domain.QWineLecture.wineLecture;
-import static com.drinkeg.drinkeg.wineLecture.domain.QWineLectureComplete.wineLectureComplete;
+import static com.drinkeg.drinkeg.domain.wineLecture.domain.QWineLecture.wineLecture;
+import static com.drinkeg.drinkeg.domain.wineLecture.domain.QWineLectureComplete.wineLectureComplete;
 
 
 @Repository

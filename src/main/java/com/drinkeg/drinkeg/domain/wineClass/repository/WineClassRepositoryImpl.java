@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.domain.wineClass.repository;
 
-import com.drinkeg.drinkeg.wineClass.dto.QWineClassResponseDTO;
+import com.drinkeg.drinkeg.domain.wineClass.dto.QWineClassResponseDTO;
 import com.drinkeg.drinkeg.domain.wineClass.dto.WineClassResponseDTO;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.transaction.Transactional;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.drinkeg.drinkeg.wineClass.domain.QWineClass.wineClass;
-import static com.drinkeg.drinkeg.wineClassProgress.domain.QWineClassProgress.wineClassProgress;
+import static com.drinkeg.drinkeg.domain.wineClass.domain.QWineClass.wineClass;
+import static com.drinkeg.drinkeg.domain.wineClassProgress.domain.QWineClassProgress.wineClassProgress;
 
 
 @Repository

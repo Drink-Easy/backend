@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.partyBookmark.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.party.dto.PartyResponseDTO;
 import com.drinkeg.drinkeg.domain.partyBookmark.service.PartyBookmarkService;
@@ -19,6 +20,7 @@ public class PartyBookmarkController {
 
     // 북마크 생성
     @PostMapping
+    @Operation(summary = "북마크 생성", description = "모임 id로 북마크 생성")
     public ApiResponse<String> createBookmark(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @RequestParam("partyId") Long partyId) {
@@ -29,6 +31,7 @@ public class PartyBookmarkController {
 
     // 북마크 취소
     @DeleteMapping("/{partyId}")
+    @Operation(summary = "북마크 취소", description = "모임 id로 북마크 하드 삭제")
     public ApiResponse<String> cancelBookmark(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("partyId") Long partyId) {
@@ -39,6 +42,7 @@ public class PartyBookmarkController {
 
     // 멤버가 북마크한 모임들을 get
     @GetMapping("/partyBookmark")
+    @Operation(summary = "북마크 조회", description = "로그인된 사용자가 북마크한 모임들을 PartyResponseDTO로 조회")
     public ApiResponse<List<PartyResponseDTO>> getMemberBookmarks(
             @AuthenticationPrincipal PrincipalDetail principalDetail) {
 

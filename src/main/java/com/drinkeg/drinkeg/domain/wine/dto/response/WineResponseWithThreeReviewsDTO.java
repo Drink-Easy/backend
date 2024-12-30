@@ -10,10 +10,10 @@ import java.util.List;
 @NoArgsConstructor
 public class WineResponseWithThreeReviewsDTO {
     WineResponseDTO wineResponseDTO;
-    List<WineReviewDTO> recentReviews;
+    List<WineReviewResponseDTO> recentReviews;
 
     @QueryProjection
-    public WineResponseWithThreeReviewsDTO(WineResponseDTO wineResponseDTO, List<WineReviewDTO> recentReviews) {
+    public WineResponseWithThreeReviewsDTO(WineResponseDTO wineResponseDTO, List<WineReviewResponseDTO> recentReviews) {
         this.wineResponseDTO = wineResponseDTO;
         this.recentReviews = recentReviews;
     }

@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNoteNose.tastingNoteNose;
-import static com.drinkeg.drinkeg.wineNote.domain.QWineNote.wineNote;
+import static com.drinkeg.drinkeg.domain.wineNote.domain.QWineNote.wineNote;
 
 
 @Repository

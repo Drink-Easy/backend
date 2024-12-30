@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.global.config;
 
 import com.drinkeg.drinkeg.global.security.jwt.*;
-import com.drinkeg.drinkeg.jwt.*;
 import com.drinkeg.drinkeg.infra.redis.RedisClient;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

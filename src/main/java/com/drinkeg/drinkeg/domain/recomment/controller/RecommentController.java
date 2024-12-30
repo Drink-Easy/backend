@@ -6,6 +6,7 @@ import com.drinkeg.drinkeg.domain.comment.service.CommentService;
 import com.drinkeg.drinkeg.domain.recomment.dto.RecommentRequestDTO;
 import com.drinkeg.drinkeg.domain.recomment.service.RecommentService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class RecommentController {
     private final CommentService commentService;
     // 대댓글 생성
     @PostMapping("/{commentId}")
+    @Operation(summary = "대댓글 생성", description = "PathVariable(댓글id)로 댓글 하위에 대댓글 생성")
     public ApiResponse<String> createRecomment(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("commentId") Long commentId,
@@ -33,6 +35,7 @@ public class RecommentController {
 
     // 대댓글 삭제
     @DeleteMapping("/{recommentId}")
+    @Operation(summary = "대댓글 삭제", description = "대댓글 id로 대댓글 하드 삭제")
     public ApiResponse<String> deleteRecomment(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("recommentId") Long recommentId) {

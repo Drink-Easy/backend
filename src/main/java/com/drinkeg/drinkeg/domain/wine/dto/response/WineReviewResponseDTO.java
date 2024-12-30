@@ -1,29 +1,32 @@
 package com.drinkeg.drinkeg.domain.wine.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-@Builder
 public class WineReviewResponseDTO {
 
-    List<WineReviewDTO> wineReviews;
-    boolean isLiked;
+    // 회원이 설정한 이름
+    private String name;
+
+    private String review;
+
+    private float rating;
+
+    private LocalDateTime createdAt;
+
 
     @QueryProjection
-    public WineReviewResponseDTO(List<WineReviewDTO> wineReviews, boolean isLiked) {
-        this.wineReviews = wineReviews;
+    public WineReviewResponseDTO(String name, String review, float rating, LocalDateTime createdAt) {
+        this.name = name;
+        this.review = review;
+        this.rating = rating;
+        this.createdAt = createdAt;
+
     }
 
-    public static WineReviewResponseDTO create(List<WineReviewDTO> wineReviews, boolean isLiked){
-        return WineReviewResponseDTO.builder()
-                .wineReviews(wineReviews)
-                .isLiked(isLiked)
-                .build();
-    }
 }

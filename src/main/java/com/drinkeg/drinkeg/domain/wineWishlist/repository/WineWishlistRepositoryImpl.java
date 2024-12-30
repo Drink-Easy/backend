@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.drinkeg.drinkeg.wineWishlist.domain.QWineWishlist.wineWishlist;
+import static com.drinkeg.drinkeg.domain.wineWishlist.domain.QWineWishlist.wineWishlist;
 
 
 @Repository
@@ -16,7 +16,6 @@ import static com.drinkeg.drinkeg.wineWishlist.domain.QWineWishlist.wineWishlist
 public class WineWishlistRepositoryImpl implements WineWishlistRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-
 
     @Override
     public Boolean existsByMemberIdAndWineId(Long memberId, Long wineId) {
@@ -32,4 +31,5 @@ public class WineWishlistRepositoryImpl implements WineWishlistRepositoryCustom 
 
         return isLiked.orElse(false);
     }
+
 }

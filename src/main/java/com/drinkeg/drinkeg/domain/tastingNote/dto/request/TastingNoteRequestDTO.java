@@ -27,28 +27,28 @@ public class TastingNoteRequestDTO {
 
 
     @NotNull(message = "당도 선택은 필수입니다.")
-    @Min(value = 0, message = "당도는 0 이상 10 이하의 정수 값이어야 합니다.")
-    @Max(value = 10, message = "당도는 0 이상 10 이하의 정수 값이어야 합니다.")
+    @Min(value = 0, message = "당도는 0 이상 100 이하의 정수 값이어야 합니다.")
+    @Max(value = 100, message = "당도는 0 이상 100 이하의 정수 값이어야 합니다.")
     private int sugarContent;
 
     @NotNull(message = "산도 선택은 필수입니다.")
-    @Min(value = 0, message = "산도는 0 이상 10 이하의 정수 값이어야 합니다.")
-    @Max(value = 10, message = "산도는 0 이상 10 이하의 정수 값이어야 합니다.")
+    @Min(value = 0, message = "산도는 0 이상 100 이하의 정수 값이어야 합니다.")
+    @Max(value = 100, message = "산도는 0 이상 100 이하의 정수 값이어야 합니다.")
     private int acidity;
 
     @NotNull(message = "탄닌 선택은 필수입니다.")
-    @Min(value = 0, message = "탄닌은 0 이상 10 이하의 정수 값이어야 합니다.")
-    @Max(value = 10, message = "탄닌은 0 이상 10 이하의 정수 값이어야 합니다.")
+    @Min(value = 0, message = "탄닌은 0 이상 100 이하의 정수 값이어야 합니다.")
+    @Max(value = 100, message = "탄닌은 0 이상 100 이하의 정수 값이어야 합니다.")
     private int tannin;
 
     @NotNull(message = "바디 선택은 필수입니다.")
-    @Min(value = 0, message = "바디는 0 이상 10 이하의 정수 값이어야 합니다.")
-    @Max(value = 10, message = "바디는 0 이상 10 이하의 정수 값이어야 합니다.")
+    @Min(value = 0, message = "바디는 0 이상 100 이하의 정수 값이어야 합니다.")
+    @Max(value = 100, message = "바디는 0 이상 100 이하의 정수 값이어야 합니다.")
     private int body;
 
     @NotNull(message = "알콜도 선택은 필수입니다.")
-    @Min(value = 0, message = "알콜도는 0 이상 10 이하의 정수 값이어야 합니다.")
-    @Max(value = 10, message = "알콜도는 0 이상 10 이하의 정수 값이어야 합니다.")
+    @Min(value = 0, message = "알콜도는 0 이상 100 이하의 정수 값이어야 합니다.")
+    @Max(value = 100, message = "알콜도는 0 이상 100 이하의 정수 값이어야 합니다.")
     private int alcohol;
 
 
@@ -58,8 +58,8 @@ public class TastingNoteRequestDTO {
 
 
     @NotNull(message = "만족도 선택은 필수입니다.")
-    @Min(0)
-    @Max(5)
+    @Min(value = 0, message = "만족도는 0 이상 5 이하의 실수 값이어야 합니다.")
+    @Max(value = 5, message = "만족도는 0 이상 5 이하의 실수 값이어야 합니다.")
     private float rating;
 
     private String review;

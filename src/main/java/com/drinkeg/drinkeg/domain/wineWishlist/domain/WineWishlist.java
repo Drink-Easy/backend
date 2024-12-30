@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.wineWishlist.domain;
 
+import com.drinkeg.drinkeg.domain.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WineWishlist {
+public class WineWishlist extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,6 +29,12 @@ public class WineWishlist {
     @JoinColumn(name = "wine_id")
     private Wine wine;
 
-
+    // WineWishlist 생성 매서드
+    public static WineWishlist create(Member member, Wine wine) {
+        return WineWishlist.builder()
+                .member(member)
+                .wine(wine)
+                .build();
+    }
 
 }

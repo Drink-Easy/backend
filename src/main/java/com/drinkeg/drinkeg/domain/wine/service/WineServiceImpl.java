@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
-import com.drinkeg.drinkeg.domain.wine.dto.response.SearchWineResponseDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponseDTO;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.infra.storage.StoragePathName;
@@ -11,8 +11,6 @@ import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.wine.dto.response.HomeResponseDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.RecommendWineDTO;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
@@ -37,7 +35,7 @@ public class WineServiceImpl implements WineService {
     private final StorageService storageService;
 
     @Override
-    public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
+    public List<WinePreviewResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
@@ -64,32 +62,34 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public WineReviewResponseDTO getWineReviewsAndIsLikedByWineId(Long wineId, PrincipalDetail principalDetail, boolean orderByLatest){
-        // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
-                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+    public List<WineReviewResponseDTO> getWineReviewsAndIsLikedByWineId(Long wineId, boolean orderByLatest){
 
-        List<WineReviewDTO> wineReviews = wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
-        boolean liked = wineWishlistRepository.existsByMemberIdAndWineId(member.getId(), wineId);
-
-        return WineReviewResponseDTO.create(wineReviews, liked);
+        return wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
     }
 
+    // 회원 닉네임과 추천와인 10개 반환
     @Override
-    public HomeResponseDTO getHomeResponse(PrincipalDetail principalDetail) {
+    public List<HomeWineDTO> getRecommendWineList(PrincipalDetail principalDetail) {
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // max 20개의 추천 와인을 찾는다.
-        List<RecommendWineDTO> recommendWines = wineRepository.findRecommendWines(member);
+        List<HomeWineDTO> recommendWines = wineRepository.findRecommendWinesByMember(member);
 
-        // 만약 추천 와인의 수가 5개를 넘어간다면, 랜덤으로 5개의 와인만 반환한다.
-        if (recommendWines.size() > 5) {
+        // 만약 추천 와인의 수가 10개를 넘어간다면, 랜덤으로 10개의 와인만 반환한다.
+        if (recommendWines.size() > 10) {
             Collections.shuffle(recommendWines);
-            recommendWines = recommendWines.subList(0, 5);
+            recommendWines = recommendWines.subList(0, 10);
         }
-        return HomeResponseDTO.create(member, recommendWines);
+
+        return recommendWines;
+    }
+
+    @Override
+    public List<HomeWineDTO> getMostLikedWineList() {
+
+        return wineRepository.findMostLikedWines();
     }
 
     @Override
