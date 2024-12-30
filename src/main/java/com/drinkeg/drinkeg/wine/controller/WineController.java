@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.wine.controller;
 
 import com.drinkeg.drinkeg.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeWineDTO;
-import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WinePreviewResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.wine.dto.response.WineReviewResponseDTO;
@@ -27,12 +27,12 @@ public class WineController {
 
     // 검색
     @GetMapping
-    @Operation(summary = "와인 검색", description = "와인 이름으로 와인 검색하여 searchWineResponseDTOS로 반환")
-    public ApiResponse<List<SearchWineResponseDTO>> searchWine(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                                               @RequestParam String searchName) {
+    @Operation(summary = "와인 검색", description = "와인 이름으로 와인 검색하여 List<WinePreviewResponseDTO> 반환")
+    public ApiResponse<List<WinePreviewResponseDTO>> searchWine(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                                                @RequestParam String searchName) {
 
-        List<SearchWineResponseDTO> searchWineResponseDTOS = wineService.searchWinesByName(searchName, principalDetail);
-        return ApiResponse.onSuccess(searchWineResponseDTOS);
+        List<WinePreviewResponseDTO> winePreviewResponseDTOS = wineService.searchWinesByName(searchName, principalDetail);
+        return ApiResponse.onSuccess(winePreviewResponseDTOS);
     }
 
     // 선택한 와인 정보 출력

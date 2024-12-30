@@ -6,9 +6,9 @@ import com.drinkeg.drinkeg.storageService.StorageService;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
+import com.drinkeg.drinkeg.wine.dto.response.WinePreviewResponseDTO;
 import com.drinkeg.drinkeg.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.wine.domain.Wine;
-import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.wine.dto.response.WineResponseWithThreeReviewsDTO;
 import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.exception.GeneralException;
@@ -35,7 +35,7 @@ public class WineServiceImpl implements WineService {
     private final StorageService storageService;
 
     @Override
-    public List<SearchWineResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
+    public List<WinePreviewResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
 
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
