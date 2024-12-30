@@ -6,7 +6,7 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.SearchWineResponseDTO;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.domain.wine.service.WineService;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseWithThreeReviewsDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

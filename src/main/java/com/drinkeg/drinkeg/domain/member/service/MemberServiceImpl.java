@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.domain.member.service;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

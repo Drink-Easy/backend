@@ -5,7 +5,7 @@ import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.comment.service.CommentService;
 import com.drinkeg.drinkeg.domain.recomment.dto.RecommentRequestDTO;
 import com.drinkeg.drinkeg.domain.recomment.service.RecommentService;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

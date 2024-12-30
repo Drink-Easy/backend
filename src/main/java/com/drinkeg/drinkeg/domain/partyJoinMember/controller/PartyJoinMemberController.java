@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.partyJoinMember.controller;
 
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.partyJoinMember.service.PartyJoinMemberService;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

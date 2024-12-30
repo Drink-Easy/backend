@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.wineClass.service;
 
 import com.drinkeg.drinkeg.domain.wineClass.dto.WineClassRequestDTO;
 import com.drinkeg.drinkeg.domain.wineClass.dto.WineClassResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 
 import java.util.List;
 

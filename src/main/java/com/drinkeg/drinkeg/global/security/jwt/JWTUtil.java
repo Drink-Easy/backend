@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.jwt;
+package com.drinkeg.drinkeg.global.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.dto.loginDTO.commonDTO;
+package com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO;
 
 
 import lombok.*;

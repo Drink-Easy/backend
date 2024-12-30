@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentRequestDTO;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentResponseDTO;
 import com.drinkeg.drinkeg.domain.comment.service.CommentService;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.comment.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

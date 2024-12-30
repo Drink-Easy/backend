@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.wineLecture.dto.WineLectureRequestDTO;
 import com.drinkeg.drinkeg.domain.wineLecture.dto.WineLectureResponseDTO;
 import com.drinkeg.drinkeg.domain.wineLecture.service.WineLectureService;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

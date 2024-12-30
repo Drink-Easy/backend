@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.wineLecture.domain.WineLecture;
 import com.drinkeg.drinkeg.domain.wineLecture.domain.WineLectureComplete;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.wineClass.event.WineLectureCompleteEvent;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.wineLecture.repository.WineLectureRepository;

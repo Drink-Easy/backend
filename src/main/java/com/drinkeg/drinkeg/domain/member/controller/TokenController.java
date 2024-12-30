@@ -1,7 +1,7 @@
-package com.drinkeg.drinkeg.controller;
+package com.drinkeg.drinkeg.domain.member.controller;
 
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.jwt.TokenService;
+import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

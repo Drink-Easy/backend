@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.member.service;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 
 public interface MemberService {
 

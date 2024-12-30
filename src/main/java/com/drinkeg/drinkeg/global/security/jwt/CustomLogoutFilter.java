@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.jwt;
+package com.drinkeg.drinkeg.global.security.jwt;
 
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
@@ -17,8 +17,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
-
-import static com.drinkeg.drinkeg.jwt.JWTException.*;
 
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
@@ -64,7 +62,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         if (refresh == null) {
 
             // response status code
-            jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_NOT_FOUND);
+            JWTException.jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_NOT_FOUND);
             return;
         }
 
@@ -74,7 +72,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         } catch (ExpiredJwtException e) {
 
             // response status code
-            jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_EXPIRED);
+            JWTException.jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_EXPIRED);
             return;
         }
 
@@ -83,7 +81,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         if (!category.equals("refresh")) {
 
             // response status code
-            jwtExceptionHandler(response, ErrorStatus.INVALID_REFRESH_TOKEN);
+            JWTException.jwtExceptionHandler(response, ErrorStatus.INVALID_REFRESH_TOKEN);
             return;
         }
 

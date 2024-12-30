@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.domain.wineClass.controller;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.wineClass.dto.WineClassRequestDTO;
 import com.drinkeg.drinkeg.domain.wineClass.dto.WineClassResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.wineClass.service.WineClassService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

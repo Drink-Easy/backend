@@ -8,7 +8,7 @@ import com.drinkeg.drinkeg.domain.wineClass.repository.WineClassRepository;
 import com.drinkeg.drinkeg.infra.storage.StoragePathName;
 import com.drinkeg.drinkeg.infra.storage.StorageService;
 import com.drinkeg.drinkeg.domain.wineClass.domain.WineClass;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import jakarta.transaction.Transactional;

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.fegin;
+package com.drinkeg.drinkeg.domain.member.login.oauth2.apple.fegin;
 
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.AppleLoginDTO.ApplePublicKeyResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;

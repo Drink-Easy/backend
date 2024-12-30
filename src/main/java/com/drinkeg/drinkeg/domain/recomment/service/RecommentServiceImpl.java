@@ -2,12 +2,12 @@ package com.drinkeg.drinkeg.domain.recomment.service;
 
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
-import com.drinkeg.drinkeg.converter.RecommentConverter;
+import com.drinkeg.drinkeg.domain.recomment.RecommentConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 
 import com.drinkeg.drinkeg.domain.recomment.domain.Recomment;
 import com.drinkeg.drinkeg.domain.recomment.dto.RecommentRequestDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import com.drinkeg.drinkeg.domain.recomment.repository.RecommentRepository;

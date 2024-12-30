@@ -8,7 +8,7 @@ import com.drinkeg.drinkeg.domain.member.login.oauth2.dto.LoginResponseDTO;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.kakao.kakaoLoginDTO.KakaoLoginRequestDTO;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import com.drinkeg.drinkeg.jwt.TokenService;
+import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

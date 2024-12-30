@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.converter;
+package com.drinkeg.drinkeg.domain.party;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.party.domain.Party;

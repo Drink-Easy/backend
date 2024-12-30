@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.domain.partyBookmark.controller;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.party.dto.PartyResponseDTO;
 import com.drinkeg.drinkeg.domain.partyBookmark.service.PartyBookmarkService;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

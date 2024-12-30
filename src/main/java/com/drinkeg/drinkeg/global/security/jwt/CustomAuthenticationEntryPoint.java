@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.jwt;
+package com.drinkeg.drinkeg.global.security.jwt;
 
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;

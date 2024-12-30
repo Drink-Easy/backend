@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.global.config;
 
+import com.drinkeg.drinkeg.global.security.jwt.*;
 import com.drinkeg.drinkeg.jwt.*;
 import com.drinkeg.drinkeg.infra.redis.RedisClient;
-import com.drinkeg.drinkeg.jwt.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

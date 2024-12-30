@@ -1,11 +1,11 @@
 package com.drinkeg.drinkeg.domain.member.controller;
 
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.jwt.TokenService;
+import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import com.drinkeg.drinkeg.domain.member.dto.JoinDTO;
 import com.drinkeg.drinkeg.domain.member.dto.MemberRequestDTO;
 import com.drinkeg.drinkeg.domain.member.dto.MemberResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.service.JoinService;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -4,7 +4,7 @@ import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.comment.dto.*;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentRequestDTO;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 
 import java.time.LocalDateTime;
 import java.util.List;

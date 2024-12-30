@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.domain.wineWishlist.controller;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.wineWishlist.dto.request.WineWishlistRequestDTO;
 import com.drinkeg.drinkeg.domain.wineWishlist.dto.response.WineWishlistResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.wineWishlist.service.WineWishlistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,10 +1,10 @@
 package com.drinkeg.drinkeg.domain.party.service;
 
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.converter.PartyConverter;
-import com.drinkeg.drinkeg.converter.PartyJoinMemberConverter;
+import com.drinkeg.drinkeg.domain.party.PartyConverter;
+import com.drinkeg.drinkeg.domain.partyJoinMember.PartyJoinMemberConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.party.domain.Party;
 import com.drinkeg.drinkeg.domain.party.dto.PartyRequestDTO;

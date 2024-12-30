@@ -5,7 +5,7 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseWithThreeReviews
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponseDTO;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.HomeResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,8 +1,8 @@
-package com.drinkeg.drinkeg.jwt;
+package com.drinkeg.drinkeg.global.security.jwt;
 
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.dto.LoginResponseDTO;
 import com.drinkeg.drinkeg.infra.redis.RedisClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.drinkeg.drinkeg.jwt.JWTException.*;
+import static com.drinkeg.drinkeg.global.security.jwt.JWTException.*;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {

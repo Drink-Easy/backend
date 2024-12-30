@@ -14,7 +14,7 @@ import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wineNote.event.WineNoteUpdateEvent;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import lombok.RequiredArgsConstructor;

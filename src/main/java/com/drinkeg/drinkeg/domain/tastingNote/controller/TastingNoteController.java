@@ -5,7 +5,7 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequestDTO;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponseDTO;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.tastingNote.service.TastingNoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

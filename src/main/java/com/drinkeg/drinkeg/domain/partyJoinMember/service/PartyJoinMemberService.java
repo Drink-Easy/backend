@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.partyJoinMember.service;
 
 import com.drinkeg.drinkeg.domain.party.domain.Party;
 import com.drinkeg.drinkeg.domain.partyJoinMember.domain.PartyJoinMember;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 
 public interface PartyJoinMemberService {
 

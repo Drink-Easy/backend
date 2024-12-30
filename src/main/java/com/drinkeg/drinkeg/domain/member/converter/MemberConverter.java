@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.member.converter;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.dto.MemberResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.UserDTO;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.UserDTO;
 import com.drinkeg.drinkeg.domain.member.dto.MemberBasicInfoResponseDTO;
 import org.springframework.stereotype.Component;
 

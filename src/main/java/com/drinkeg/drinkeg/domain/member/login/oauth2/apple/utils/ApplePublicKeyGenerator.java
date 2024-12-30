@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.utils;
+package com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils;
 
 
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.AppleLoginDTO.ApplePublicKeyResponseDTO;

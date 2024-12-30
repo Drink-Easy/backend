@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.member.domain;
 
 
-import com.drinkeg.drinkeg.converter.StringListConverter;
+import com.drinkeg.drinkeg.domain.member.converter.StringListConverter;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import jakarta.persistence.*;
 import lombok.*;

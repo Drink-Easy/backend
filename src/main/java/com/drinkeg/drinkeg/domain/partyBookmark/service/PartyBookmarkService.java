@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.partyBookmark.service;
 
 import com.drinkeg.drinkeg.domain.party.dto.PartyResponseDTO;
-import com.drinkeg.drinkeg.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 
 import java.util.List;
 
