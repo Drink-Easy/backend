@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.wineWishlist.service;
 import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.wine.domain.Wine;
-import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WinePreviewResponseDTO;
 import com.drinkeg.drinkeg.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
@@ -12,7 +12,6 @@ import com.drinkeg.drinkeg.wineWishlist.repository.WineWishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,14 +35,14 @@ public class WineWishlistServiceImpl implements WineWishlistService{
     }
 
     @Override
-    public List<SearchWineResponseDTO> getAllWineWishlistByMember(String username) {
+    public List<WinePreviewResponseDTO> getAllWineWishlistByMember(String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         List<WineWishlist> wishlistWineList = wineWishlistRepository.findByMemberOrderByCreatedAtDesc(member);
 
         return wishlistWineList.stream().map(wineWishlist
-                -> SearchWineResponseDTO.create(wineWishlist.getWine(), true)).toList();
+                -> WinePreviewResponseDTO.create(wineWishlist.getWine())).toList();
     }
 
     @Override

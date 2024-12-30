@@ -1,13 +1,10 @@
 package com.drinkeg.drinkeg.wineWishlist.service;
 
-import com.drinkeg.drinkeg.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.exception.GeneralException;
 import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.member.repostitory.MemberRepository;
-import com.drinkeg.drinkeg.wine.dto.response.SearchWineResponseDTO;
+import com.drinkeg.drinkeg.wine.dto.response.WinePreviewResponseDTO;
 import com.drinkeg.drinkeg.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.wineWishlist.repository.WineWishlistRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,8 +33,8 @@ class WineWishlistServiceImplTest {
         memberRepository.save(member);
         List<WineWishlist> wineWishlists = wineWishlistRepository.findByMemberOrderByCreatedAtDesc(member);
 
-        List<SearchWineResponseDTO> list = wineWishlists.stream().map(wineWishlist
-                -> SearchWineResponseDTO.create(wineWishlist.getWine(), true)).toList();
+        List<WinePreviewResponseDTO> list = wineWishlists.stream().map(wineWishlist
+                -> WinePreviewResponseDTO.create(wineWishlist.getWine(), true)).toList();
 
         assertEquals(list, new ArrayList<>());
 

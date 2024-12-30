@@ -5,15 +5,12 @@ import com.drinkeg.drinkeg.member.domain.Member;
 import com.drinkeg.drinkeg.dto.HomeDTO.HomeWineDTO;
 import com.drinkeg.drinkeg.wine.dto.response.*;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static com.drinkeg.drinkeg.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.wine.domain.QWine.wine;
@@ -181,11 +178,11 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .fetch();
     }
 
-    // 검색한 와인들 정보 반환 시 사용
+    // 검색한 와인 PreviewResponse 반환 시 사용
     @Override
-    public List<SearchWineResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId) {
+    public List<WinePreviewResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId) {
         return queryFactory
-                .select(new QSearchWineResponseDTO(
+                .select(new QWinePreviewResponseDTO(
                         wine.id,
                         wine.name,
                         wine.imageUrl,
@@ -193,12 +190,9 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.area,
                         wine.variety,
                         wine.vivinoRating,
-                        wine.price,
-                        wineWishlist.id.isNotNull() // memberId와 wineId에 따라 isLiked 여부
+                        wine.price
                 ))
                 .from(wine)
-                .leftJoin(wineWishlist)
-                .on(wineWishlist.wine.eq(wine).and(wineWishlist.member.id.eq(memberId)))
                 .where(wine.name.containsIgnoreCase(searchName))
                 .orderBy(wine.name.asc())
                 .fetch();
