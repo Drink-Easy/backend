@@ -22,7 +22,8 @@ public class WinePreviewResponseDTO {
     private int price;
 
     @QueryProjection // 생성자에 추가
-    public WinePreviewResponseDTO(Long wineId, String name, String imageUrl, String sort, String area, String variety,
+    public WinePreviewResponseDTO(Long wineId, String name, String imageUrl,
+                                  String sort, String area, String variety,
                                   float vivinoRating, int price) {
         this.wineId = wineId;
         this.name = name;
