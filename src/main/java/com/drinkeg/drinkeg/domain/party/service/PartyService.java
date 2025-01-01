@@ -1,0 +1,28 @@
+package com.drinkeg.drinkeg.domain.party.service;
+
+
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.party.domain.Party;
+import com.drinkeg.drinkeg.domain.party.dto.PartyRequestDTO;
+import com.drinkeg.drinkeg.domain.party.dto.PartyResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+
+public interface PartyService {
+
+    Party findPartyById(Long partyId);
+    Party saveParty(Party party);
+    void createParty(PartyRequestDTO partyRequest, PrincipalDetail principalDetail);
+    PartyResponseDTO getParty(Long id); // optional로 변경
+    List<PartyResponseDTO> getAllParties(PrincipalDetail principalDetail);
+    PartyResponseDTO updateParty(Long id, PartyRequestDTO partyRequest, PrincipalDetail principalDetail );
+    void deleteParty(Long id, PrincipalDetail principalDetail);
+    //boolean isHost(Long partyId, Long memberId);
+    void validatePartyRequest(PartyRequestDTO partyRequest);
+    Page<PartyResponseDTO> getSortedParties(String sortType, PrincipalDetail principalDetail, Pageable pageable);
+    List<PartyResponseDTO> searchPartiesByName(String searchName, PrincipalDetail principalDetail);
+    void increaseBookmarkCount(Long partyId);
+    void decreaseBookmarkCount(Long partyId);
+}

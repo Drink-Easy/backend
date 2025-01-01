@@ -1,0 +1,18 @@
+package com.drinkeg.drinkeg.domain.recomment.dto;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RecommentResponseDTO {
+    private Long id;
+    private Long commentId;
+    private String memberName;
+    private Long memberId;
+    private String content;
+    private String timeAgo;
+    private String createdDate;
+    //private String url;
+}

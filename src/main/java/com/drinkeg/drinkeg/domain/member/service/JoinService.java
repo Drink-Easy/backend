@@ -1,0 +1,90 @@
+package com.drinkeg.drinkeg.domain.member.service;
+
+import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.domain.member.converter.MemberConverter;
+import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.member.dto.JoinDTO;
+import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
+import com.drinkeg.drinkeg.domain.member.dto.MemberRequestDTO;
+import com.drinkeg.drinkeg.domain.member.dto.MemberResponseDTO;
+import com.drinkeg.drinkeg.global.exception.GeneralException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class JoinService {
+
+    private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MemberConverter memberConverter;
+
+    public void join(JoinDTO joinDTO) {
+
+        String username = joinDTO.getUsername();
+        String password = joinDTO.getPassword();
+        String rePassword = joinDTO.getRePassword();
+
+        if (memberRepository.existsByUsername(username)) {
+            throw new GeneralException(ErrorStatus.MEMBER_ALREADY_EXIST);
+        }
+        if (!password.equals(rePassword)){
+            throw new GeneralException(ErrorStatus.PASSWORD_NOT_MATCH);
+        }
+        if(!isValidPassword(password)){
+            throw new GeneralException(ErrorStatus.PASSWORD_NOT_INVALID);
+        }
+
+        Member member = memberConverter.toMember(username,(bCryptPasswordEncoder.encode(password) ),true);
+
+        memberRepository.save(member);
+    }
+
+    public MemberResponseDTO addMemberDetail(MemberRequestDTO memberRequestDTO, String username) {
+
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.SESSION_UNAUTHORIZED));
+
+        if (memberRequestDTO.getName() != null) {
+            member.updateName(memberRequestDTO.getName());
+        }
+        if (memberRequestDTO.getIsNewbie() != null) {
+            member.updateIsNewbie(memberRequestDTO.getIsNewbie());
+        }
+        if (memberRequestDTO.getMonthPrice() != null) {
+            member.updateMonthPriceMax(memberRequestDTO.getMonthPrice());
+        }
+        if (memberRequestDTO.getWineSort() != null) {
+            member.updateWineSort(memberRequestDTO.getWineSort());
+        }
+        if (memberRequestDTO.getWineArea() != null) {
+            member.updateWineNation(memberRequestDTO.getWineArea());
+        }
+        if (memberRequestDTO.getRegion() != null) {
+            member.updateRegion(memberRequestDTO.getRegion());
+        }
+
+        // 회원 가입을 한 유저로 변경
+        member.updateIsFirst();
+
+        memberRepository.save(member);
+
+        MemberResponseDTO memberResponseDTO = MemberConverter.toMemberResponseDTO(member);
+
+        return memberResponseDTO;
+    }
+
+    public boolean isValidPassword(String password) {
+
+        // 영문자, 숫자, 특수문자 각각에 대한 패턴
+        String letterPattern = ".*[A-Za-z].*";
+        String digitPattern = ".*\\d.*";
+
+        boolean hasLetter = password.matches(letterPattern);
+        boolean hasDigit = password.matches(digitPattern);
+
+        // 세 가지 조건이 모두 충족되는지 확인
+        return hasLetter && hasDigit;
+    }
+}
