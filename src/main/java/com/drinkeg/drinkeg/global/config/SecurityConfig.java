@@ -159,6 +159,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "partyJoin/**").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "partyJoin/**").hasRole("USER")
 
+                        // 관리자 기능 인가
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated());
 
 
