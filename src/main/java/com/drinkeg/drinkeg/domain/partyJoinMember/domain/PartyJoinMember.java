@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.partyJoinMember.domain;
 
 
-import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.party.domain.Party;
 import jakarta.persistence.*;

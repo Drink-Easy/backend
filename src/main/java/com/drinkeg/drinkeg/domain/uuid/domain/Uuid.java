@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.uuid.domain;
 
 
-import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
