@@ -41,10 +41,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
 
     @Override
-    public void saveTastingNote(TastingNoteRequestDTO tastingNoteRequestDTO, PrincipalDetail principalDetail) {
+    public void saveTastingNote(TastingNoteRequestDTO tastingNoteRequestDTO, String username) {
 
         // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
         );
 
@@ -60,10 +60,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail) {
+    public TastingNoteResponseDTO showTastingNoteById(Long noteId, String username) {
         // noteId로 TastingNote를 찾는다.
         return tastingNoteRepository
-                .findTastingNoteWithWineAndNoseByTastingNoteIdAndUsername(noteId, principalDetail.getUsername())
+                .findTastingNoteWithWineAndNoseByTastingNoteIdAndUsername(noteId, username)
                 .orElseThrow(()
                 -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
@@ -71,11 +71,11 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public AllTastingNoteResponseDTO findAllTastingNote(String sort, PrincipalDetail principalDetail) {
+    public AllTastingNoteResponseDTO findAllTastingNote(String sort, String username) {
 
         // username 을 이용해서 TastingNotes 조회
         // TastingNotes 조회 시 Wine, WineNose fetch join 하여 최적화
-        List<TastingNote> foundNotes= tastingNoteRepository.findTastingNotesWithWineAndNoseByUsername(principalDetail.getUsername());
+        List<TastingNote> foundNotes= tastingNoteRepository.findTastingNotesWithWineAndNoseByUsername(username);
 
         int total = foundNotes.size();
         int red = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("레드")).count();
@@ -116,10 +116,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void updateTastingNote(Long noteId, TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO, PrincipalDetail principalDetail) {
+    public void updateTastingNote(Long noteId, TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO, String username) {
 
         // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
         );
 
@@ -183,10 +183,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail) {
+    public void deleteTastingNote(Long noteId, String username) {
 
         // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
         );
 
@@ -209,10 +209,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public List<Map<Long, String>> showMemberNoseMapList(PrincipalDetail principalDetail) {
+    public List<Map<Long, String>> showMemberNoseMapList(String username) {
 
         // 사용자가 작성한 TastingNoteNose 리스트 가져오기
-        List<TastingNoteNose> tastingNoteNoseList = tastingNoteNoseRepository.getTastingNoteNoseListByUsername(principalDetail.getUsername());
+        List<TastingNoteNose> tastingNoteNoseList = tastingNoteNoseRepository.getTastingNoteNoseListByUsername(username);
 
         // TastingNoteNose 리스트를 Map<Long, String>으로 변환
         return tastingNoteNoseList.stream()

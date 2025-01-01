@@ -13,16 +13,16 @@ import java.util.Map;
 public interface TastingNoteService {
 
 
-    public void saveTastingNote(TastingNoteRequestDTO tastingNote, PrincipalDetail principalDetail);
+    public void saveTastingNote(TastingNoteRequestDTO tastingNote, String username);
 
-    public TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail);
+    public TastingNoteResponseDTO showTastingNoteById(Long noteId, String username);
 
-    public AllTastingNoteResponseDTO findAllTastingNote(String sort, PrincipalDetail principalDetail);
+    public AllTastingNoteResponseDTO findAllTastingNote(String sort, String username);
 
-    public void updateTastingNote(Long noteId, TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO, PrincipalDetail principalDetail);
+    public void updateTastingNote(Long noteId, TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO, String username);
 
-    public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail);
+    public void deleteTastingNote(Long noteId, String username);
 
-    public List<Map<Long, String>> showMemberNoseMapList(PrincipalDetail principalDetail);
+    public List<Map<Long, String>> showMemberNoseMapList(String username);
 
 }
