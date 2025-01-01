@@ -1,10 +1,10 @@
 package com.drinkeg.drinkeg.domain.tastingNote.controller;
 
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequestDTO;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequestDTO;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponseDTO;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponseDTO;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.tastingNote.service.TastingNoteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,9 +29,9 @@ public class TastingNoteController {
     @PostMapping("/new-note")
     @Operation(summary = "새 노트 작성 요청", description = "TastingNoteRequestDTO를 가지고 새 노트 작성 요청")
     public ApiResponse<String> saveTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                               @RequestBody @Valid TastingNoteRequestDTO tastingNoteRequestDTO) {
+                                               @RequestBody @Valid TastingNoteRequest tastingNoteRequest) {
 
-        tastingNoteService.saveTastingNote(tastingNoteRequestDTO, principalDetail.getUsername());
+        tastingNoteService.saveTastingNote(tastingNoteRequest, principalDetail.getUsername());
 
         return ApiResponse.onSuccess("노트 작성 완료");
     }
@@ -39,9 +39,9 @@ public class TastingNoteController {
     // 전체 노트 보기
     @GetMapping("/all")
     @Operation(summary = "전체 테이스팅 노트 확인", description = "sort(red, white, sparkling, rose, all) 를 RequestParam 으로 조회")
-    public ApiResponse<AllTastingNoteResponseDTO> showAllTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestParam("sort") String sort) {
+    public ApiResponse<AllTastingNoteResponse> showAllTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestParam("sort") String sort) {
 
-        AllTastingNoteResponseDTO allTastingNote =
+        AllTastingNoteResponse allTastingNote =
                 tastingNoteService.findAllTastingNote(sort, principalDetail.getUsername());
         return ApiResponse.onSuccess(allTastingNote);
     }
@@ -50,12 +50,12 @@ public class TastingNoteController {
     @GetMapping("/{noteId}")
     @Operation(summary = "선택 테이스팅 노트 열람", description = "선택한 테이스팅 노트의 noteId로 노트 열람")
 
-    public ApiResponse<TastingNoteResponseDTO> showTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                                               @PathVariable("noteId") Long noteId) {
+    public ApiResponse<TastingNoteResponse> showTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                                            @PathVariable("noteId") Long noteId) {
 
-        TastingNoteResponseDTO tastingNoteResponseDTO =
+        TastingNoteResponse tastingNoteResponse =
                 tastingNoteService.showTastingNoteById(noteId, principalDetail.getUsername());
-        return ApiResponse.onSuccess(tastingNoteResponseDTO);
+        return ApiResponse.onSuccess(tastingNoteResponse);
     }
 
 
@@ -63,9 +63,9 @@ public class TastingNoteController {
     @Operation(summary = "테이스팅 노트 수정", description = "선택한 테이스팅 노트의 noteId로 노트 수정") 
     public ApiResponse<String> updateTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                  @PathVariable("noteId") Long noteId,
-                                                 @RequestBody @Valid TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO) {
+                                                 @RequestBody @Valid TastingNoteUpdateRequest tastingNoteUpdateRequest) {
 
-        tastingNoteService.updateTastingNote(noteId, tastingNoteUpdateRequestDTO, principalDetail.getUsername());
+        tastingNoteService.updateTastingNote(noteId, tastingNoteUpdateRequest, principalDetail.getUsername());
         return ApiResponse.onSuccess("노트 수정 완료");
     }
 

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class WineReviewResponseDTO {
+public class WineReviewResponse {
 
     // 회원이 설정한 이름
     private String name;
@@ -21,7 +21,7 @@ public class WineReviewResponseDTO {
 
 
     @QueryProjection
-    public WineReviewResponseDTO(String name, String review, float rating, LocalDateTime createdAt) {
+    public WineReviewResponse(String name, String review, float rating, LocalDateTime createdAt) {
         this.name = name;
         this.review = review;
         this.rating = rating;

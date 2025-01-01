@@ -24,9 +24,9 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     // 검색한 와인 PreviewResponse 반환 시 사용
     @Override
-    public List<WinePreviewResponseDTO> findSearchWines(String searchName) {
+    public List<WinePreviewResponse> findSearchWines(String searchName) {
         return queryFactory
-                .select(new QWinePreviewResponseDTO(
+                .select(new QWinePreviewResponse(
                         wine.id,
                         wine.name,
                         wine.imageUrl,
@@ -44,11 +44,11 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     // 선택한 와인 정보와 최근 리뷰 3개 가져오기
     @Override
-    public WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId, Long memberId) {
+    public WineWithThreeReviewsResponse findWineResponseByWineId(Long wineId, Long memberId) {
 
         // Wine 데이터를 가져옴
-        WineResponseDTO wineResponseDTO = queryFactory
-                .select(new QWineResponseDTO(
+        WineResponse wineResponse = queryFactory
+                .select(new QWineResponse(
                         wine.id.as("wineId"),
                         wine.name,
                         wine.imageUrl,
@@ -77,8 +77,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .fetchOne();
 
         // 최근 생성된 3개의 TastingNote
-        List<WineReviewResponseDTO> recentReviews = queryFactory
-                .select(new QWineReviewResponseDTO(
+        List<WineReviewResponse> recentReviews = queryFactory
+                .select(new QWineReviewResponse(
                         tastingNote.member.name,
                         tastingNote.review,
                         tastingNote.rating,
@@ -90,16 +90,16 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .limit(3) // 상위 3개 제한
                 .fetch();
 
-        return new WineResponseWithThreeReviewsDTO(wineResponseDTO, recentReviews);
+        return new WineWithThreeReviewsResponse(wineResponse, recentReviews);
     }
 
 
     // 선택한 와인의 전체 리뷰 볼 때 사용
     @Override
-    public List<WineReviewResponseDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
+    public List<WineReviewResponse> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
 
-        List<WineReviewResponseDTO> recentReviews = queryFactory
-                .select(new QWineReviewResponseDTO(
+        List<WineReviewResponse> recentReviews = queryFactory
+                .select(new QWineReviewResponse(
                         tastingNote.member.name,
                         tastingNote.review,
                         tastingNote.rating,
@@ -117,14 +117,14 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     // 홈하면 추천 와인 반환 시 사용
     @Override
-    public List<HomeWineDTO> findRecommendWinesByMember(Member member) {
+    public List<HomeWineResponse> findRecommendWinesByMember(Member member) {
         List<String> wineSortList = member.getWineSort();
         List<String> wineAreaList = member.getWineArea();
         // maxPrice가 null이면 가격 제한을 100달러로
         Long maxPrice = member.getMonthPriceMax() != null ? member.getMonthPriceMax() / 1400 : 100;
 
         if(wineAreaList.isEmpty() && wineSortList.isEmpty()){
-            return queryFactory.select(new QHomeWineDTO(
+            return queryFactory.select(new QHomeWineResponse(
                             wine.id,
                             wine.imageUrl,
                             wine.name.as("wineName"),
@@ -157,7 +157,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
         }
 
         // 쿼리 실행 후 반환
-        return queryFactory.select(new QHomeWineDTO(
+        return queryFactory.select(new QHomeWineResponse(
                         wine.id,
                         wine.imageUrl,
                         wine.name.as("wineName"),
@@ -177,8 +177,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     // 홈하면 인기 와인 반환 시 사용
     @Override
-    public List<HomeWineDTO> findMostLikedWines() {
-        return queryFactory.select(new QHomeWineDTO(
+    public List<HomeWineResponse> findMostLikedWines() {
+        return queryFactory.select(new QHomeWineResponse(
                         wine.id,
                         wine.imageUrl,
                         wine.name.as("wineName"),

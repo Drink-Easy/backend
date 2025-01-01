@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.wineWishlist.controller;
 
 
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponseDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wineWishlist.service.WineWishlistService;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,8 +29,8 @@ public class WineWishlistController {
 
     @Operation(summary = "위시리스트에 담긴 와인 전체 조회", description = "위시리스트에 담긴 와인 전체 조회한다.")
     @GetMapping("")
-    public ApiResponse<List<WinePreviewResponseDTO>> getWineWishlist(@AuthenticationPrincipal PrincipalDetail principalDetail) {
-        List<WinePreviewResponseDTO> allWineWishlistByMember = wineWishlistService.getAllWineWishlistByMember(principalDetail.getUsername());
+    public ApiResponse<List<WinePreviewResponse>> getWineWishlist(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+        List<WinePreviewResponse> allWineWishlistByMember = wineWishlistService.getAllWineWishlistByMember(principalDetail.getUsername());
         return ApiResponse.onSuccess(allWineWishlistByMember);
     }
 
