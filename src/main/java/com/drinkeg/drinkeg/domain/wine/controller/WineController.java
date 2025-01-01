@@ -10,6 +10,7 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseWithThreeReviews
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -71,9 +72,14 @@ public class WineController {
     // 홈화면 추천 와인 반환
     @GetMapping("/recommend")
     @Operation(summary = "홈화면 페이지", description = "추천 와인 10개를 List로 반환")
-    public ApiResponse<List<HomeWineDTO>> home(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+    public ApiResponse<List<HomeWineDTO>> home(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                               HttpServletResponse response) {
 
+        // 추천 와인 리스트 가져오기
         List<HomeWineDTO> recommendWineList = wineService.getRecommendWineList(principalDetail);
+
+        // 응답 헤더에 Cache-Control 추가
+        response.setHeader("Cache-Control", "max-age=3600, public");
 
         return ApiResponse.onSuccess(recommendWineList);
     }
@@ -81,10 +87,13 @@ public class WineController {
     // 홈화면 인기 와인 반환
     @GetMapping("/most-liked")
     @Operation(summary = "홈화면 페이지", description = "인기 와인 10개를 List로 반환")
-    public ApiResponse<List<HomeWineDTO>> mostLikedWine() {
+    public ApiResponse<List<HomeWineDTO>> mostLikedWine(HttpServletResponse response) {
 
+        // 인기 와인 리스트 가져오기
         List<HomeWineDTO> mostLikedWineList = wineService.getMostLikedWineList();
 
+        // 응답 헤더에 Cache-Control 추가
+        response.setHeader("Cache-Control", "max-age=3600, public");
         return ApiResponse.onSuccess(mostLikedWineList);
     }
 }
