@@ -2,6 +2,8 @@ package com.drinkeg.drinkeg.domain.member.domain;
 
 
 import com.drinkeg.drinkeg.domain.member.converter.StringListConverter;
+import com.drinkeg.drinkeg.domain.member.enums.Provider;
+import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
@@ -26,7 +28,11 @@ public class Member {
 
     private String email;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
     private String username;
 
@@ -72,4 +78,24 @@ public class Member {
     public void updateWineNation(List<String> wineArea) { this.wineArea = wineArea; };
     public void updateRegion(String region) { this.region = region; };
     public void updateIsFirst(){ this.isFirst = false;};
+
+    public static Member createMember(String username, String password, boolean isFirst) {
+        return Member.builder()
+                .username(username)
+                .password(password)
+                .role(Role.USER)
+                .isFirst(isFirst)
+                .build();
+    }
+
+    public static Member createOAuthMember(String username, String email, String provider) {
+        return Member.builder()
+                .username(username)
+                .email(email) // email 값을 claims에서 추출
+                .role(Role.USER)
+                .provider(Provider.fromValue(provider))
+                .isFirst(true)
+                .build();
+    }
+
 }

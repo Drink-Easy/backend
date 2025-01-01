@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.member.dto;
 
+import com.drinkeg.drinkeg.domain.member.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class MemberResponseDTO {
     private Long id;
     private String name;
     private String username;
-    private String role;
+    private Role role;
 
     private Boolean isNewbie;
     private Boolean isFirst;
