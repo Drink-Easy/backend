@@ -74,7 +74,6 @@ class AdminNoticeServiceTest {
     @Test
     void deleteNoticeWithWrongId() {
         // given
-
         // when // then
         assertThatThrownBy(() -> adminNoticeService.delete(-1L))
                 .isInstanceOf(GeneralException.class)
