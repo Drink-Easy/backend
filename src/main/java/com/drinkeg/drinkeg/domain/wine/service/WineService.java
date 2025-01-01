@@ -12,15 +12,15 @@ import java.util.List;
 
 public interface WineService {
 
-    public List<WinePreviewResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail);
+    public List<WinePreviewResponseDTO> searchWinesByName(String searchName);
 
     public Wine findWineById(Long wineId);
 
-    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId, PrincipalDetail principalDetail);
+    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId, String username);
 
     public List<WineReviewResponseDTO> getWineReviewsAndIsLikedByWineId(Long wineId, boolean orderByLatest);
 
-    public List<HomeWineDTO> getRecommendWineList(PrincipalDetail principalDetail);
+    public List<HomeWineDTO> getRecommendWineList(String username);
 
     public List<HomeWineDTO> getMostLikedWineList();
 

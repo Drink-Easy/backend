@@ -29,10 +29,9 @@ public class WineController {
     // 검색
     @GetMapping
     @Operation(summary = "와인 검색", description = "와인 이름으로 와인 검색하여 List<WinePreviewResponseDTO> 반환")
-    public ApiResponse<List<WinePreviewResponseDTO>> searchWine(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                                                @RequestParam String searchName) {
+    public ApiResponse<List<WinePreviewResponseDTO>> searchWine(@RequestParam String searchName) {
 
-        List<WinePreviewResponseDTO> winePreviewResponseDTOS = wineService.searchWinesByName(searchName, principalDetail);
+        List<WinePreviewResponseDTO> winePreviewResponseDTOS = wineService.searchWinesByName(searchName);
         return ApiResponse.onSuccess(winePreviewResponseDTOS);
     }
 
@@ -42,7 +41,8 @@ public class WineController {
     public ApiResponse<WineResponseWithThreeReviewsDTO> showWine(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                                  @PathVariable("wineId") Long wineId) {
 
-        WineResponseWithThreeReviewsDTO wineResponseWithThreeReviewsDTO = wineService.getWineResponseByWineId(wineId, principalDetail);
+        WineResponseWithThreeReviewsDTO wineResponseWithThreeReviewsDTO =
+                wineService.getWineResponseByWineId(wineId, principalDetail.getUsername());
 
         return ApiResponse.onSuccess(wineResponseWithThreeReviewsDTO);
     }
@@ -52,7 +52,8 @@ public class WineController {
     @Operation(summary = "선택 와인 리뷰 열람", description = "선택한 와인 리뷰를 List로 반환")
     public ApiResponse<List<WineReviewResponseDTO>> showWineReview(@PathVariable("wineId") Long wineId, @RequestParam Boolean orderByLatest) {
 
-        List<WineReviewResponseDTO> wineReviewResponseDTOList = wineService.getWineReviewsAndIsLikedByWineId(wineId, orderByLatest);
+        List<WineReviewResponseDTO> wineReviewResponseDTOList =
+                wineService.getWineReviewsAndIsLikedByWineId(wineId, orderByLatest);
 
         return ApiResponse.onSuccess(wineReviewResponseDTOList);
     }
@@ -76,7 +77,8 @@ public class WineController {
                                                HttpServletResponse response) {
 
         // 추천 와인 리스트 가져오기
-        List<HomeWineDTO> recommendWineList = wineService.getRecommendWineList(principalDetail);
+        List<HomeWineDTO> recommendWineList =
+                wineService.getRecommendWineList(principalDetail.getUsername());
 
         // 응답 헤더에 Cache-Control 추가
         response.setHeader("Cache-Control", "max-age=3600, public");

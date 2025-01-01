@@ -21,26 +21,26 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    // 선택한 와인의 전체 리뷰 볼 때 사용
+
+    // 검색한 와인 PreviewResponse 반환 시 사용
     @Override
-    public List<WineReviewResponseDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
-
-        List<WineReviewResponseDTO> recentReviews = queryFactory
-                .select(new QWineReviewResponseDTO(
-                        tastingNote.member.name,
-                        tastingNote.review,
-                        tastingNote.rating,
-                        tastingNote.createdAt
+    public List<WinePreviewResponseDTO> findSearchWines(String searchName) {
+        return queryFactory
+                .select(new QWinePreviewResponseDTO(
+                        wine.id,
+                        wine.name,
+                        wine.imageUrl,
+                        wine.sort,
+                        wine.area,
+                        wine.variety,
+                        wine.vivinoRating,
+                        wine.price
                 ))
-                .from(tastingNote)
-                .where(tastingNote.wine.id.eq(wineId))
-                .orderBy(orderByLatest? tastingNote.createdAt.desc()
-                        : tastingNote.rating.desc()) // 최신순 정렬 or 별점 내림차순 정렬
+                .from(wine)
+                .where(wine.name.containsIgnoreCase(searchName))
+                .orderBy(wine.name.asc())
                 .fetch();
-
-        return recentReviews;
     }
-
 
     // 선택한 와인 정보와 최근 리뷰 3개 가져오기
     @Override
@@ -92,6 +92,28 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
         return new WineResponseWithThreeReviewsDTO(wineResponseDTO, recentReviews);
     }
+
+
+    // 선택한 와인의 전체 리뷰 볼 때 사용
+    @Override
+    public List<WineReviewResponseDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
+
+        List<WineReviewResponseDTO> recentReviews = queryFactory
+                .select(new QWineReviewResponseDTO(
+                        tastingNote.member.name,
+                        tastingNote.review,
+                        tastingNote.rating,
+                        tastingNote.createdAt
+                ))
+                .from(tastingNote)
+                .where(tastingNote.wine.id.eq(wineId))
+                .orderBy(orderByLatest? tastingNote.createdAt.desc()
+                        : tastingNote.rating.desc()) // 최신순 정렬 or 별점 내림차순 정렬
+                .fetch();
+
+        return recentReviews;
+    }
+
 
     // 홈하면 추천 와인 반환 시 사용
     @Override
@@ -152,6 +174,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .fetch();
     }
 
+
     // 홈하면 인기 와인 반환 시 사용
     @Override
     public List<HomeWineDTO> findMostLikedWines() {
@@ -173,26 +196,6 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.vivinoRating.desc()
                 )
                 .limit(10)
-                .fetch();
-    }
-
-    // 검색한 와인 PreviewResponse 반환 시 사용
-    @Override
-    public List<WinePreviewResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId) {
-        return queryFactory
-                .select(new QWinePreviewResponseDTO(
-                        wine.id,
-                        wine.name,
-                        wine.imageUrl,
-                        wine.sort,
-                        wine.area,
-                        wine.variety,
-                        wine.vivinoRating,
-                        wine.price
-                ))
-                .from(wine)
-                .where(wine.name.containsIgnoreCase(searchName))
-                .orderBy(wine.name.asc())
                 .fetch();
     }
 }

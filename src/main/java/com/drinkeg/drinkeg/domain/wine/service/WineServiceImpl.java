@@ -35,15 +35,10 @@ public class WineServiceImpl implements WineService {
     private final StorageService storageService;
 
     @Override
-    public List<WinePreviewResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
-
-        // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
-                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+    public List<WinePreviewResponseDTO> searchWinesByName(String searchName) {
 
         // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').
-        // 이때 memberId를 이용해 isLiked()를 같이 조회한다
-        return wineRepository.findWinesWithLikeStatus(searchName, member.getId());
+        return wineRepository.findSearchWines(searchName);
     }
 
     @Override
@@ -53,9 +48,9 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId, PrincipalDetail principalDetail){
+    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId, String username){
         // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         return wineRepository.findWineResponseByWineId(wineId, member.getId());
@@ -69,9 +64,9 @@ public class WineServiceImpl implements WineService {
 
     // 회원 닉네임과 추천와인 10개 반환
     @Override
-    public List<HomeWineDTO> getRecommendWineList(PrincipalDetail principalDetail) {
+    public List<HomeWineDTO> getRecommendWineList(String username) {
         // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // max 20개의 추천 와인을 찾는다.
