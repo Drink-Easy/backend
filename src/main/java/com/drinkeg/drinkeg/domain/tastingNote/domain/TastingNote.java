@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.domain;
 
-import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequestDTO;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
