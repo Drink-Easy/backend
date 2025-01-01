@@ -2,20 +2,22 @@ package com.drinkeg.drinkeg.domain.wine.repository;
 
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
-import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponseDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseWithThreeReviewsDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 
 import java.util.List;
 
 public interface WineRepositoryCustom {
-    List<WinePreviewResponseDTO> findWinesWithLikeStatus(String searchName, Long memberId);
-    WineResponseWithThreeReviewsDTO findWineResponseByWineId(Long wineId, Long memberID);
 
-    List<WineReviewResponseDTO> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest);
+    List<WinePreviewResponse> findSearchWines(String searchName);
 
-    List<HomeWineDTO> findRecommendWinesByMember(Member member);
+    WineWithThreeReviewsResponse findWineResponseByWineId(Long wineId, Long memberID);
 
-    List<HomeWineDTO> findMostLikedWines();
+    List<WineReviewResponse> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest);
+
+    List<HomeWineResponse> findRecommendWinesByMember(Member member);
+
+    List<HomeWineResponse> findMostLikedWines();
 }

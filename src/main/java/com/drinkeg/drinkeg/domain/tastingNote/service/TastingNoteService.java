@@ -1,10 +1,9 @@
 package com.drinkeg.drinkeg.domain.tastingNote.service;
 
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequestDTO;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequestDTO;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponseDTO;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponseDTO;
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -13,16 +12,16 @@ import java.util.Map;
 public interface TastingNoteService {
 
 
-    public void saveTastingNote(TastingNoteRequestDTO tastingNote, PrincipalDetail principalDetail);
+    public void saveTastingNote(TastingNoteRequest tastingNote, String username);
 
-    public TastingNoteResponseDTO showTastingNoteById(Long noteId, PrincipalDetail principalDetail);
+    public TastingNoteResponse showTastingNoteById(Long noteId, String username);
 
-    public AllTastingNoteResponseDTO findAllTastingNote(String sort, PrincipalDetail principalDetail);
+    public AllTastingNoteResponse findAllTastingNote(String sort, String username);
 
-    public void updateTastingNote(Long noteId, TastingNoteUpdateRequestDTO tastingNoteUpdateRequestDTO, PrincipalDetail principalDetail);
+    public void updateTastingNote(Long noteId, TastingNoteUpdateRequest tastingNoteUpdateRequest, String username);
 
-    public void deleteTastingNote(Long noteId, PrincipalDetail principalDetail);
+    public void deleteTastingNote(Long noteId, String username);
 
-    public List<Map<Long, String>> showMemberNoseMapList(PrincipalDetail principalDetail);
+    public List<Map<Long, String>> showMemberNoseMapList(String username);
 
 }

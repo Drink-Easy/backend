@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Builder
 @NoArgsConstructor
-public class WinePreviewResponseDTO {
+public class WinePreviewResponse {
 
     private Long wineId;
     private String name;
@@ -22,9 +22,9 @@ public class WinePreviewResponseDTO {
     private int price;
 
     @QueryProjection // 생성자에 추가
-    public WinePreviewResponseDTO(Long wineId, String name, String imageUrl,
-                                  String sort, String area, String variety,
-                                  float vivinoRating, int price) {
+    public WinePreviewResponse(Long wineId, String name, String imageUrl,
+                               String sort, String area, String variety,
+                               float vivinoRating, int price) {
         this.wineId = wineId;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -35,8 +35,8 @@ public class WinePreviewResponseDTO {
         this.price = price;
     }
 
-    public static WinePreviewResponseDTO create(Wine wine) {
-        return WinePreviewResponseDTO.builder()
+    public static WinePreviewResponse create(Wine wine) {
+        return WinePreviewResponse.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())
                 .imageUrl(wine.getImageUrl())

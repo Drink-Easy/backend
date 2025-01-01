@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.domain.wineWishlist.service;
 
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponseDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
@@ -35,14 +35,14 @@ public class WineWishlistServiceImpl implements WineWishlistService{
     }
 
     @Override
-    public List<WinePreviewResponseDTO> getAllWineWishlistByMember(String username) {
+    public List<WinePreviewResponse> getAllWineWishlistByMember(String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         List<WineWishlist> wishlistWineList = wineWishlistRepository.findByMemberOrderByCreatedAtDesc(member);
 
         return wishlistWineList.stream().map(wineWishlist
-                -> WinePreviewResponseDTO.create(wineWishlist.getWine())).toList();
+                -> WinePreviewResponse.create(wineWishlist.getWine())).toList();
     }
 
     @Override

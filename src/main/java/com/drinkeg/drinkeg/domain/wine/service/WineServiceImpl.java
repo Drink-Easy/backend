@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
-import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponseDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.infra.storage.StoragePathName;
 import com.drinkeg.drinkeg.infra.storage.StorageService;
@@ -11,8 +11,7 @@ import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseWithThreeReviewsDTO;
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,15 +34,10 @@ public class WineServiceImpl implements WineService {
     private final StorageService storageService;
 
     @Override
-    public List<WinePreviewResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail) {
-
-        // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
-                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+    public List<WinePreviewResponse> searchWinesByName(String searchName) {
 
         // 검색한 와인 이름이 포함된 모든 와인을 찾는다 (LIKE '%검색어%').
-        // 이때 memberId를 이용해 isLiked()를 같이 조회한다
-        return wineRepository.findWinesWithLikeStatus(searchName, member.getId());
+        return wineRepository.findSearchWines(searchName);
     }
 
     @Override
@@ -53,29 +47,29 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId, PrincipalDetail principalDetail){
+    public WineWithThreeReviewsResponse getWineResponseByWineId(Long wineId, String username){
         // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         return wineRepository.findWineResponseByWineId(wineId, member.getId());
     }
 
     @Override
-    public List<WineReviewResponseDTO> getWineReviewsAndIsLikedByWineId(Long wineId, boolean orderByLatest){
+    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, boolean orderByLatest){
 
         return wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
     }
 
     // 회원 닉네임과 추천와인 10개 반환
     @Override
-    public List<HomeWineDTO> getRecommendWineList(PrincipalDetail principalDetail) {
+    public List<HomeWineResponse> getRecommendWineList(String username) {
         // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(principalDetail.getUsername()).orElseThrow(
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // max 20개의 추천 와인을 찾는다.
-        List<HomeWineDTO> recommendWines = wineRepository.findRecommendWinesByMember(member);
+        List<HomeWineResponse> recommendWines = wineRepository.findRecommendWinesByMember(member);
 
         // 만약 추천 와인의 수가 10개를 넘어간다면, 랜덤으로 10개의 와인만 반환한다.
         if (recommendWines.size() > 10) {
@@ -87,7 +81,7 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public List<HomeWineDTO> getMostLikedWineList() {
+    public List<HomeWineResponse> getMostLikedWineList() {
 
         return wineRepository.findMostLikedWines();
     }

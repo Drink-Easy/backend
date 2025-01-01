@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.tastingNote.domain;
 
 import com.drinkeg.drinkeg.domain.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequestDTO;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -58,26 +58,26 @@ public class TastingNote extends BaseEntity {
     private String review;
 
     // TastingNote 생성 매서드
-    public static TastingNote create(Member member, Wine wine, TastingNoteRequestDTO tastingNoteRequestDTO) {
+    public static TastingNote create(Member member, Wine wine, TastingNoteRequest tastingNoteRequest) {
         TastingNote tastingNote = TastingNote.builder()
                 .member(member)
 
                 .wine(wine)
-                .color(tastingNoteRequestDTO.getColor())
-                .tasteDate(tastingNoteRequestDTO.getTasteDate())
+                .color(tastingNoteRequest.getColor())
+                .tasteDate(tastingNoteRequest.getTasteDate())
 
-                .sugarContent(tastingNoteRequestDTO.getSugarContent())
-                .acidity(tastingNoteRequestDTO.getAcidity())
-                .tannin(tastingNoteRequestDTO.getTannin())
-                .body(tastingNoteRequestDTO.getBody())
-                .alcohol(tastingNoteRequestDTO.getAlcohol())
+                .sugarContent(tastingNoteRequest.getSugarContent())
+                .acidity(tastingNoteRequest.getAcidity())
+                .tannin(tastingNoteRequest.getTannin())
+                .body(tastingNoteRequest.getBody())
+                .alcohol(tastingNoteRequest.getAlcohol())
 
 
-                .rating(tastingNoteRequestDTO.getRating())
-                .review(tastingNoteRequestDTO.getReview())
+                .rating(tastingNoteRequest.getRating())
+                .review(tastingNoteRequest.getReview())
                 .build();
 
-        for(String noseElement : tastingNoteRequestDTO.getNose()){
+        for(String noseElement : tastingNoteRequest.getNose()){
             tastingNote.addNoseElement(noseElement);
         }
 

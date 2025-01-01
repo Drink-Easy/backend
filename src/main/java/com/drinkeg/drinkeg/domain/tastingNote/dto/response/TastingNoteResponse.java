@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
-public class TastingNoteResponseDTO {
+public class TastingNoteResponse {
 
     private Long noteId;
 
@@ -40,10 +40,10 @@ public class TastingNoteResponseDTO {
     private String review;
 
     @QueryProjection
-    public TastingNoteResponseDTO(Long noteId, Long wineId, String wineName, String sort,
-                                  String area, String imageUrl, String color, LocalDate tasteDate,
-                                  int sugarContent, int acidity, int tannin, int body, int alcohol,
-                                  List<TastingNoteNose> noseList, float rating, String review){
+    public TastingNoteResponse(Long noteId, Long wineId, String wineName, String sort,
+                               String area, String imageUrl, String color, LocalDate tasteDate,
+                               int sugarContent, int acidity, int tannin, int body, int alcohol,
+                               List<TastingNoteNose> noseList, float rating, String review){
         this.noteId = noteId;
         this.wineId = wineId;
         this.wineName = wineName;

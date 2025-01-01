@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TastingNotePreviewResponseDTO {
+public class TastingNotePreviewResponse {
 
         private Long noteId;
         private String wineName;
         private String imageUrl;
 
-        public static TastingNotePreviewResponseDTO create(Long noteId, String name, String imageUrl){
-                return TastingNotePreviewResponseDTO.builder()
+        public static TastingNotePreviewResponse create(Long noteId, String name, String imageUrl){
+                return TastingNotePreviewResponse.builder()
                         .noteId(noteId)
                         .wineName(name)
                         .imageUrl(imageUrl)

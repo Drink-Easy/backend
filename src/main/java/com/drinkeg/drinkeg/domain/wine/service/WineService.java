@@ -1,28 +1,27 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
-import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponseDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineResponseWithThreeReviewsDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponseDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface WineService {
 
-    public List<WinePreviewResponseDTO> searchWinesByName(String searchName, PrincipalDetail principalDetail);
+    public List<WinePreviewResponse> searchWinesByName(String searchName);
 
     public Wine findWineById(Long wineId);
 
-    public WineResponseWithThreeReviewsDTO getWineResponseByWineId(Long wineId, PrincipalDetail principalDetail);
+    public WineWithThreeReviewsResponse getWineResponseByWineId(Long wineId, String username);
 
-    public List<WineReviewResponseDTO> getWineReviewsAndIsLikedByWineId(Long wineId, boolean orderByLatest);
+    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, boolean orderByLatest);
 
-    public List<HomeWineDTO> getRecommendWineList(PrincipalDetail principalDetail);
+    public List<HomeWineResponse> getRecommendWineList(String username);
 
-    public List<HomeWineDTO> getMostLikedWineList();
+    public List<HomeWineResponse> getMostLikedWineList();
 
     public void uploadWineImage() throws IOException;
 

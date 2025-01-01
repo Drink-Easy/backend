@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class WineResponseDTO {
+public class WineResponse {
 
     private Long wineId;
 
@@ -36,7 +36,7 @@ public class WineResponseDTO {
 
 
     @QueryProjection
-    public WineResponseDTO(
+    public WineResponse(
             Long wineId, String name, String imageUrl, int price, String sort, String area, String variety, float vivinoRating,
             float avgSugarContent, float avgAcidity, float avgTannin, float avgBody, float avgAlcohol,
             WineNoteNose wineNoteNose, float avgMemberRating, boolean isLiked) {

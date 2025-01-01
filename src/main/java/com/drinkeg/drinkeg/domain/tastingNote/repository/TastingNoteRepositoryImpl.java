@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.tastingNote.repository;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponseDTO;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<TastingNoteResponseDTO> findTastingNoteWithWineAndNoseByTastingNoteIdAndUsername(Long tastingNoteId, String username) {
+    public Optional<TastingNoteResponse> findTastingNoteWithWineAndNoseByTastingNoteIdAndUsername(Long tastingNoteId, String username) {
         TastingNote tastingNote = queryFactory.selectFrom(QTastingNote.tastingNote)
                 .leftJoin(QTastingNote.tastingNote.wine, wine).fetchJoin()
                 .leftJoin(QTastingNote.tastingNote.noseList, tastingNoteNose).fetchJoin()
@@ -37,7 +37,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
         }
 
         return Optional.of(
-                new TastingNoteResponseDTO(
+                new TastingNoteResponse(
                         tastingNote.getId(),
                         tastingNote.getWine().getId(),
                         tastingNote.getWine().getName(),

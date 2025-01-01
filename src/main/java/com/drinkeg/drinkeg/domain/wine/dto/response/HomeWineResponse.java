@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class HomeWineDTO {
+public class HomeWineResponse {
 
     private Long wineId;
     private String imageUrl;
@@ -18,7 +18,7 @@ public class HomeWineDTO {
     private float vivinoRating;
 
     @QueryProjection
-    public HomeWineDTO(Long wineId, String imageUrl, String wineName, String sort, int price, float vivinoRating){
+    public HomeWineResponse(Long wineId, String imageUrl, String wineName, String sort, int price, float vivinoRating){
         this.wineId = wineId;
         this.imageUrl = imageUrl;
 

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class TastingNoteUpdateRequestDTO {
+public class TastingNoteUpdateRequest {
 
     private String color;
     private LocalDate tastingDate;
