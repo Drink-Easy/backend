@@ -2,13 +2,20 @@ package com.drinkeg.drinkeg.domain.notice.dto;
 
 import com.drinkeg.drinkeg.domain.notice.domain.Notice;
 import com.drinkeg.drinkeg.domain.notice.domain.NoticeTag;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 
+import static io.lettuce.core.pubsub.PubSubOutput.Type.message;
+
 @Getter
 public class NoticeRequest {
+    @NotBlank(message = "제목은 필수입니다.")
     private String title;
+    @NotBlank(message = "공지사항 태그는 필수입니다.")
     private NoticeTag tag;
+    @NotBlank(message = "공지사항 url은 필수입니다.")
     private String contentUrl;
 
     @Builder
