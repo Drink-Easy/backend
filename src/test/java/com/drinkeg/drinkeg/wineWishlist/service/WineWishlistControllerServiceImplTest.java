@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.wineWishlist.service;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponseDTO;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
 import org.junit.jupiter.api.Test;
@@ -33,8 +33,8 @@ class WineWishlistControllerServiceImplTest {
         memberRepository.save(member);
         List<WineWishlist> wineWishlists = wineWishlistRepository.findByMemberOrderByCreatedAtDesc(member);
 
-        List<WinePreviewResponseDTO> list = wineWishlists.stream()
-                .map(wineWishlist -> WinePreviewResponseDTO.create(wineWishlist.getWine()))
+        List<WinePreviewResponse> list = wineWishlists.stream()
+                .map(wineWishlist -> WinePreviewResponse.create(wineWishlist.getWine()))
                 .toList();
 
         assertEquals(list, new ArrayList<>());
