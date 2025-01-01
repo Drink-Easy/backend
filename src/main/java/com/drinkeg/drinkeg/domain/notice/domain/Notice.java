@@ -29,6 +29,13 @@ public class Notice extends BaseEntity {
         this.tag = tag;
     }
 
+    public Notice update(String title, String contentUrl, NoticeTag tag) {
+        this.title = title;
+        this.contentUrl = contentUrl;
+        this.tag = tag;
+        return this;
+    }
+
     public static Notice create(String title, String contentUrl, NoticeTag tag) {
         return Notice.builder()
                 .title(title)

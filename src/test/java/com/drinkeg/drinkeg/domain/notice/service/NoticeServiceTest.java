@@ -59,12 +59,10 @@ class NoticeServiceTest {
                 .containsExactlyInAnyOrder(notice.getId(), "공지사항1", "https://notion/drinkeg/notice1", NoticeTag.NOTICE);
     }
 
-    @DisplayName("공지사항을 잘못된 Id로 반환하면 에러가 발생한다.")
+    @DisplayName("공지사항을 잘못된 Id로 조회하면 에러가 발생한다.")
     @Test
     void findNoticeByIdWithWrongId() {
         // given
-        Notice notice1 = Notice.create("공지사항1", "https://notion/drinkeg/notice1", NoticeTag.NOTICE);
-        noticeRepository.save(notice1);
         // when // then
         assertThatThrownBy(() -> noticeService.findNoticeById(0L))
                 .isInstanceOf(GeneralException.class)
