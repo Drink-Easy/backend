@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.member.controller;
 
+import com.drinkeg.drinkeg.domain.member.dto.MemberInfoResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import com.drinkeg.drinkeg.domain.member.dto.JoinDTO;
@@ -43,17 +44,19 @@ public class MemberController {
 
     @DeleteMapping("/member/delete")
     @Operation(summary = "사용자 탈퇴", description = "사용자 정보를 삭제합니다.")
-    public ApiResponse<?> deleteProcess(@AuthenticationPrincipal PrincipalDetail principalDetail,  HttpServletResponse response){
+    public ApiResponse<?> deleteProcess(@AuthenticationPrincipal PrincipalDetail principalDetail, HttpServletResponse response) {
 
-            memberService.deleteMemberByUsername(principalDetail.getUsername());
-            tokenService.deleteRefreshTokenAndAccessToken(response, principalDetail.getUsername());
+        memberService.deleteMemberByUsername(principalDetail.getUsername());
+        tokenService.deleteRefreshTokenAndAccessToken(response, principalDetail.getUsername());
 
-            return ApiResponse.onSuccess("회원 탈퇴 성공");
+        return ApiResponse.onSuccess("회원 탈퇴 성공");
 
 
     }
 
-
-
-
+    @GetMapping("/member/info")
+    @Operation(summary = "마이페이지 ", description = "유저 정보를 불러옵니다.")
+    public ApiResponse<MemberInfoResponse> getMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+        return ApiResponse.onSuccess(memberService.showMemberInfo(principalDetail.getUsername()));
+    }
 }

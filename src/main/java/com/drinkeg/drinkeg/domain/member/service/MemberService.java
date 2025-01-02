@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain.member.service;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.member.dto.MemberInfoResponse;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 
 public interface MemberService {
@@ -10,5 +11,7 @@ public interface MemberService {
     public Member loadMemberByPrincipalDetail(PrincipalDetail principalDetail);
 
     public void deleteMemberByUsername(String username);
+
+    public MemberInfoResponse showMemberInfo(String username);
 
 }

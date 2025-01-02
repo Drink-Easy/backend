@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.member.service;
 
+import com.drinkeg.drinkeg.domain.member.dto.MemberInfoResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
@@ -8,6 +9,8 @@ import com.drinkeg.drinkeg.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +38,34 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void deleteMemberByUsername(String username){
         memberRepository.deleteByUsername(username);
+    }
+
+    @Override
+    public MemberInfoResponse showMemberInfo(String username){
+
+        Member member = memberRepository.findMemberByUsername(username);
+
+        String imageUrl;
+        String email;
+        String city;
+
+
+        if(member.getImageUrl() == null){
+            imageUrl = "미입력";
+        }else{
+            imageUrl = member.getImageUrl();
+        }
+        if(member.getEmail() == null){
+            email = "미입력";
+        }else{
+            email = member.getEmail();
+        }
+        if(member.getRegion() == null){
+            city = "미입력";
+        }else{
+            city = member.getRegion();
+        }
+
+        return MemberInfoResponse.create(member,imageUrl, email,city);
     }
 }
