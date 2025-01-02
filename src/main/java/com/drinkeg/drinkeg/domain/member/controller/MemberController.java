@@ -1,11 +1,8 @@
 package com.drinkeg.drinkeg.domain.member.controller;
 
-import com.drinkeg.drinkeg.domain.member.dto.MemberInfoResponse;
+import com.drinkeg.drinkeg.domain.member.dto.*;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.security.jwt.TokenService;
-import com.drinkeg.drinkeg.domain.member.dto.JoinDTO;
-import com.drinkeg.drinkeg.domain.member.dto.MemberRequestDTO;
-import com.drinkeg.drinkeg.domain.member.dto.MemberResponseDTO;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.service.JoinService;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
@@ -59,4 +56,19 @@ public class MemberController {
     public ApiResponse<MemberInfoResponse> getMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail) {
         return ApiResponse.onSuccess(memberService.showMemberInfo(principalDetail.getUsername()));
     }
+
+    @PostMapping("/member/{nickname}")
+    @Operation(summary = "마이페이지내에 닉네임 중복 검사 ", description = "중복된 닉네임이면 False, 사용 가능한 닉네임이면 True를 반환합니다.")
+    public ApiResponse<?> checkNickname(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable String nickname){
+        return ApiResponse.onSuccess(memberService.isNicknameAvailable(nickname));
+    }
+
+    @PatchMapping("/member/info")
+    @Operation(summary = "마이페이지 정보 수정 ", description = "마이페이지의 정보를 수정합니다.")
+    public ApiResponse<?> updateMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody MemberUpdateRequest memberUpdateRequest){
+
+        memberService.updateMemberInfo(principalDetail,memberUpdateRequest);
+        return ApiResponse.onSuccess("정보 수정 성공");
+    }
+
 }

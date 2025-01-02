@@ -84,6 +84,8 @@ public class Member {
     public void updateWineNation(List<String> wineArea) { this.wineArea = wineArea; };
     public void updateRegion(String region) { this.region = region; };
     public void updateIsFirst(){ this.isFirst = false;};
+    public void updateImageUrl(String imageUrl){this.imageUrl = imageUrl;}
+
 
     public static Member createMember(String username, String password, boolean isFirst) {
         return Member.builder()

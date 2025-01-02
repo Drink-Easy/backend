@@ -1,11 +1,14 @@
 package com.drinkeg.drinkeg.domain.member.service;
 
 import com.drinkeg.drinkeg.domain.member.dto.MemberInfoResponse;
+import com.drinkeg.drinkeg.domain.member.dto.MemberUpdateRequest;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
+import com.drinkeg.drinkeg.infra.storage.StoragePathName;
+import com.drinkeg.drinkeg.infra.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final StorageService storageService;
 
     @Override
     public Member getMemberById(Long memberId) {
@@ -67,5 +71,35 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return MemberInfoResponse.create(member,imageUrl, email,city);
+    }
+
+    @Override
+    public boolean isNicknameAvailable(String nickname){
+
+        return !memberRepository.existsByName(nickname);
+    }
+
+    @Override
+    @Transactional
+    public void updateMemberInfo(PrincipalDetail principalDetail, MemberUpdateRequest memberUpdateRequest){
+
+        Member member = loadMemberByPrincipalDetail(principalDetail);
+
+        if (memberUpdateRequest.getProfileImage() != null && !memberUpdateRequest.getProfileImage().isEmpty()) {
+            String profileImage = storageService.uploadFile(memberUpdateRequest.getProfileImage(), StoragePathName.MEMBER_PROFILE);
+            if (profileImage != null) {
+                member.updateImageUrl(profileImage);
+            }
+        }
+
+        if (memberUpdateRequest.getCity() != null) {
+            member.updateRegion(memberUpdateRequest.getCity());
+        }
+
+        if (memberUpdateRequest.getUsername() != null) {
+            member.updateName(memberUpdateRequest.getUsername());
+        }
+
+
     }
 }
