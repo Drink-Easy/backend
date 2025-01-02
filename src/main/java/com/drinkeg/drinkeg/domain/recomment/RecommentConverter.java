@@ -14,6 +14,7 @@ public class RecommentConverter {
     public Recomment fromRequest(RecommentRequestDTO recommentRequest, Comment comment, Member member) {
         return Recomment.builder()
                 .comment(comment)
+                .party(comment.getParty())
                 .member(member)
                 .content(recommentRequest.getContent())
                 .build();

@@ -1,6 +1,7 @@
-package com.drinkeg.drinkeg.comment.repository;
+package com.drinkeg.drinkeg.domain.comment.repository;
 
-import com.drinkeg.drinkeg.comment.dto.CommentResponseDTO;
+
+import com.drinkeg.drinkeg.domain.comment.dto.CommentResponseDTO;
 
 import java.util.List;
 
