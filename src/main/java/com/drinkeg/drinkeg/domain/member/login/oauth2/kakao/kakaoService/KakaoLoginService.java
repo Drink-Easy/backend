@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain.member.login.oauth2.kakao.kakaoService;
 
 
+import com.drinkeg.drinkeg.domain.member.enums.Provider;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
@@ -31,7 +32,7 @@ public class KakaoLoginService {
 
 
         if (kakaoLoginRequestDTO != null) {
-            kakaoname = kakaoLoginRequestDTO.getKakaoName();
+            kakaoname = "kakao " +kakaoLoginRequestDTO.getKakaoName();
             kakaoEmail = kakaoLoginRequestDTO.getKakaoEmail();
         } else {
 
@@ -55,27 +56,17 @@ public class KakaoLoginService {
             tokenService.jwtProvider(member, response);
 
         }
-        else{
-
+        else {
             member = existData.get();
             System.out.println("첫 로그인아님");
             tokenService.jwtProvider(member, response);
-
         }
 
         memberRepository.save(member);
 
-        return buildLoginResponseDTO(member);
+        return LoginResponseDTO.create(member.getId(), member.getUsername(), member.getRole(),member.getIsFirst());
 
     }
 
-    private LoginResponseDTO buildLoginResponseDTO(Member member) {
-        return LoginResponseDTO.builder()
-                .username(member.getUsername())
-                .role(member.getRole())
-                .isFirst(member.getIsFirst())
-                .build();
-
-    }
 
 }
