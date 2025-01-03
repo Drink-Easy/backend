@@ -1,23 +1,19 @@
 package com.drinkeg.drinkeg.domain.notice.service;
 
+import com.drinkeg.drinkeg.IntegrationTestSupport;
 import com.drinkeg.drinkeg.domain.notice.domain.Notice;
 import com.drinkeg.drinkeg.domain.notice.domain.NoticeTag;
-import com.drinkeg.drinkeg.domain.notice.controller.request.NoticeRequest;
 import com.drinkeg.drinkeg.domain.notice.repository.NoticeRepository;
 import com.drinkeg.drinkeg.domain.notice.service.request.NoticeServiceRequest;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.drinkeg.drinkeg.domain.notice.domain.NoticeTag.*;
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
-@Transactional
-class AdminNoticeServiceTest {
+class AdminNoticeServiceTest extends IntegrationTestSupport {
     @Autowired private AdminNoticeService adminNoticeService;
     @Autowired private NoticeRepository noticeRepository;
 
@@ -36,7 +32,7 @@ class AdminNoticeServiceTest {
     @Test
     void updateNotice() {
         // given
-        Notice notice = noticeRepository.save(Notice.create("공지사항1", "https://notion/test/notice", NOTICE));
+        Notice notice = noticeRepository.save(createNotice("공지사항1", "https://notion/test/notice", NOTICE));
         NoticeServiceRequest request = createNoticeServiceRequest("이벤트1", "https://notion/test/notice/updated", EVENT);
         // when
         adminNoticeService.update(notice.getId(), request);
@@ -61,7 +57,7 @@ class AdminNoticeServiceTest {
     @Test
     void deleteNotice() {
         // given
-        Notice notice1 = Notice.create("공지사항1", "https://notion/drinkeg/notice1", NoticeTag.NOTICE);
+        Notice notice1 = createNotice("공지사항1", "https://notion/drinkeg/notice1", NoticeTag.NOTICE);
         noticeRepository.save(notice1);
         // when
         adminNoticeService.delete(notice1.getId());
@@ -81,6 +77,14 @@ class AdminNoticeServiceTest {
 
     private NoticeServiceRequest createNoticeServiceRequest(String title, String contentUrl, NoticeTag tag) {
         return NoticeServiceRequest.builder()
+                .title(title)
+                .contentUrl(contentUrl)
+                .tag(tag)
+                .build();
+    }
+
+    private Notice createNotice(String title, String contentUrl, NoticeTag tag) {
+        return Notice.builder()
                 .title(title)
                 .contentUrl(contentUrl)
                 .tag(tag)
