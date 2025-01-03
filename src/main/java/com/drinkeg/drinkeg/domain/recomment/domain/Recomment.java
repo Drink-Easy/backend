@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.recomment.domain;
 
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
-import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

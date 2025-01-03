@@ -4,6 +4,7 @@ package com.drinkeg.drinkeg.domain.member.domain;
 import com.drinkeg.drinkeg.domain.member.converter.StringListConverter;
 import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -57,6 +58,11 @@ public class Member {
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<TastingNote> tastingNotes = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WineWishlist> wineWishlists = new ArrayList<>();
+
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

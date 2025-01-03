@@ -97,9 +97,12 @@ public enum ErrorStatus implements BaseCode {
     WINE_WISHLIST_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "WINE_WISHLIST4002", "권한이 없는 위시리스트입니다."),
     WINE_WISHLIST_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "WINE_WISHLIST4003", "이미 존재하는 위시리스트입니다."),
 
-    // Uplodat Error
+    // Upload Error
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_UPLOAD5001", "파일 업로드에 실패했습니다."),
-    FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_UPLOAD5002", "파일 삭제에 실패했습니다.");
+    FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_UPLOAD5002", "파일 삭제에 실패했습니다."),
+
+    // Notice Error
+    NOTICE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTICE4001", "존재하지 않는 공지사항입니다.");
 
 
 
