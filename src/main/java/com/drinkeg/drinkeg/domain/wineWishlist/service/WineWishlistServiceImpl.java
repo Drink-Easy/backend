@@ -59,4 +59,5 @@ public class WineWishlistServiceImpl implements WineWishlistService{
 
         wineWishlistRepository.deleteById(wineWishlist.getId());
     }
+
 }

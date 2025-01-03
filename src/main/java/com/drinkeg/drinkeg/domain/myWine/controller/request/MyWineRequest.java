@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.myWine.dto.request;
+package com.drinkeg.drinkeg.domain.myWine.controller.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MyWineResponse {
+    private Long myWineid;
 
     private Long wineId;
     private String wineName;
@@ -27,7 +28,7 @@ public class MyWineResponse {
 
     private int period;
 
-    public static MyWineResponse create(MyWine myWine){
+    public static MyWineResponse of(MyWine myWine){
 
         Wine wine = myWine.getWine();
         LocalDate currentDate = LocalDate.now();
@@ -37,6 +38,7 @@ public class MyWineResponse {
         int period = (int) ChronoUnit.DAYS.between(purchaseDate, currentDate);
 
         return MyWineResponse.builder()
+                .myWineid(myWine.getId())
                 .wineId(wine.getId())
                 .wineName(wine.getName())
                 .wineSort(wine.getSort())

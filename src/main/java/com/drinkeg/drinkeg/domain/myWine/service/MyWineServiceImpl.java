@@ -3,7 +3,8 @@ package com.drinkeg.drinkeg.domain.myWine.service;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
-import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineRequest;
+import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
+import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.domain.myWine.repository.MyWineRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
@@ -53,6 +54,29 @@ public class MyWineServiceImpl implements MyWineService{
 
         List<MyWine> myWineList = myWineRepository.findByMemberOrderByPurchaseDate(member);
 
-        return myWineList.stream().map(MyWineResponse::create).toList();
+        return myWineList.stream().map(MyWineResponse::of).toList();
+    }
+
+
+    @Override
+    public void updateMyWine(Long wineWishlistId, MyWineUpdateRequest myWineUpdateRequest, String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        MyWine myWine = myWineRepository.findById(wineWishlistId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_WISHLIST_NOT_FOUND));
+
+        if(member != myWine.getMember()){
+            throw new GeneralException(ErrorStatus.WINE_WISHLIST_UNAUTHORIZED);
+        }
+
+        if(myWineUpdateRequest.getPurchaseDate() != null){
+            myWine.updatePurchaseDate(myWineUpdateRequest.getPurchaseDate());
+        }
+        if(myWineUpdateRequest.getPurchasePrice() != null){
+            myWine.updatePurchasePrice(myWineUpdateRequest.getPurchasePrice());
+        }
+
+        myWineRepository.save(myWine);
     }
 }

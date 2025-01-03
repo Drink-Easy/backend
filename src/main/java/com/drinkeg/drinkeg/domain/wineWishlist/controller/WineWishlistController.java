@@ -38,7 +38,7 @@ public class WineWishlistController {
     @DeleteMapping("/{wineId}")
     public ApiResponse<String>  deleteWineWishlist(@PathVariable("wineId") Long wineId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         wineWishlistService.deleteWineWishlistById(wineId, principalDetail.getUsername());
-        return ApiResponse.onSuccess("와인 위시리트스 삭제 완료");
+        return ApiResponse.onSuccess("와인 위시리스트 삭제 완료");
     }
 
 }
