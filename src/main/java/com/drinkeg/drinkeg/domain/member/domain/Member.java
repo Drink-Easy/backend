@@ -89,8 +89,9 @@ public class Member {
 
     public static Member createMember(String username, String password, boolean isFirst) {
         return Member.builder()
-                .username(username)
+                .username("drinkeg "+username)
                 .password(password)
+                .email(username)
                 .provider(Provider.DRINKEG)
                 .role(Role.USER)
                 .isFirst(isFirst)

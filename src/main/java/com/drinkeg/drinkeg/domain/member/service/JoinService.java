@@ -39,7 +39,7 @@ public class JoinService {
             throw new GeneralException(ErrorStatus.PASSWORD_NOT_INVALID);
         }
 
-        Member member = Member.createMember(username,(bCryptPasswordEncoder.encode(password) ),true);
+        Member member = Member.createMember( username,(bCryptPasswordEncoder.encode(password) ),true);
 
         memberRepository.save(member);
         System.out.println("Saved Member: " );

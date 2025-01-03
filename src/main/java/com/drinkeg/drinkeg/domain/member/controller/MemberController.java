@@ -69,12 +69,6 @@ public class MemberController {
     @Operation(summary = "마이페이지 정보 수정 ", description = "마이페이지의 정보를 수정합니다.")
     public ApiResponse<?> updateMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile,  @RequestPart("memberUpdateRequest")  MemberUpdateRequest memberUpdateRequest){
 
-        System.out.println("시작");
-        System.out.println("username: " + memberUpdateRequest.getUsername());
-        System.out.println("city: " + memberUpdateRequest.getCity());
-
-        System.out.println("File Name: " + multipartFile.getOriginalFilename());
-
         memberService.updateMemberInfo(principalDetail,memberUpdateRequest, multipartFile);
         return ApiResponse.onSuccess("정보 수정 성공");
     }

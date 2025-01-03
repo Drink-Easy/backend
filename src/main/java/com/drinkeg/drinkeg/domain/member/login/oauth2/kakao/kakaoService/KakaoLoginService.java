@@ -21,7 +21,6 @@ import java.util.Optional;
 public class KakaoLoginService {
 
     private final MemberRepository memberRepository;
-    private final MemberConverter memberConverter;
     private final TokenService tokenService;
 
     public LoginResponseDTO kakaoLogin(KakaoLoginRequestDTO kakaoLoginRequestDTO, HttpServletResponse response){
