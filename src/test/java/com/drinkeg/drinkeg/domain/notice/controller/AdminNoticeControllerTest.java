@@ -1,11 +1,11 @@
 package com.drinkeg.drinkeg.domain.notice.controller;
 
 import com.drinkeg.drinkeg.domain.notice.domain.NoticeTag;
-import com.drinkeg.drinkeg.domain.notice.dto.NoticeRequest;
+import com.drinkeg.drinkeg.domain.notice.controller.request.NoticeRequest;
 import com.drinkeg.drinkeg.domain.notice.service.AdminNoticeService;
+import com.drinkeg.drinkeg.domain.notice.service.request.NoticeServiceRequest;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class AdminNoticeControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void save() throws Exception {
         // given
-        when(adminNoticeService.save(any(NoticeRequest.class))).thenReturn(1L);
+        when(adminNoticeService.save(any(NoticeServiceRequest.class))).thenReturn(1L);
         NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", NoticeTag.NOTICE);
         // when // then
         mockMvc.perform(post("/admin/notice")
@@ -74,7 +74,7 @@ class AdminNoticeControllerTest {
         // given
         doThrow(new GeneralException(ErrorStatus.NOTICE_NOT_FOUND))
                 .when(adminNoticeService)
-                .update(any(Long.class), any(NoticeRequest.class));
+                .update(any(Long.class), any(NoticeServiceRequest.class));
         NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", NoticeTag.NOTICE);
         // when // then
         mockMvc.perform(put("/admin/notice/1")

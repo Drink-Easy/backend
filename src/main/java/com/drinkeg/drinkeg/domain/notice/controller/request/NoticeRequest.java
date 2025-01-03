@@ -1,14 +1,12 @@
-package com.drinkeg.drinkeg.domain.notice.dto;
+package com.drinkeg.drinkeg.domain.notice.controller.request;
 
 import com.drinkeg.drinkeg.domain.notice.domain.Notice;
 import com.drinkeg.drinkeg.domain.notice.domain.NoticeTag;
+import com.drinkeg.drinkeg.domain.notice.service.request.NoticeServiceRequest;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-
-import static io.lettuce.core.pubsub.PubSubOutput.Type.message;
 
 @Getter
 public class NoticeRequest {
@@ -26,8 +24,8 @@ public class NoticeRequest {
         this.contentUrl = contentUrl;
     }
 
-    public Notice toEntity() {
-        return Notice.builder()
+    public NoticeServiceRequest toServiceRequest() {
+        return NoticeServiceRequest.builder()
                 .title(title)
                 .tag(tag)
                 .contentUrl(contentUrl)

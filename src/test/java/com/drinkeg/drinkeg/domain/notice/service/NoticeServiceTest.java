@@ -2,10 +2,9 @@ package com.drinkeg.drinkeg.domain.notice.service;
 
 import com.drinkeg.drinkeg.domain.notice.domain.Notice;
 import com.drinkeg.drinkeg.domain.notice.domain.NoticeTag;
-import com.drinkeg.drinkeg.domain.notice.dto.NoticeResponse;
+import com.drinkeg.drinkeg.domain.notice.service.response.NoticeResponse;
 import com.drinkeg.drinkeg.domain.notice.repository.NoticeRepository;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

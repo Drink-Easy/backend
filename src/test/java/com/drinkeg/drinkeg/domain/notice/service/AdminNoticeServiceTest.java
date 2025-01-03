@@ -2,11 +2,10 @@ package com.drinkeg.drinkeg.domain.notice.service;
 
 import com.drinkeg.drinkeg.domain.notice.domain.Notice;
 import com.drinkeg.drinkeg.domain.notice.domain.NoticeTag;
-import com.drinkeg.drinkeg.domain.notice.dto.NoticeRequest;
-import com.drinkeg.drinkeg.domain.notice.dto.NoticeResponse;
+import com.drinkeg.drinkeg.domain.notice.controller.request.NoticeRequest;
 import com.drinkeg.drinkeg.domain.notice.repository.NoticeRepository;
+import com.drinkeg.drinkeg.domain.notice.service.request.NoticeServiceRequest;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ class AdminNoticeServiceTest {
     @Test
     void saveNotice() {
         // given
-        NoticeRequest request = createNoticeRequest("공지사항1", "https://notion/test/notice", NOTICE);
+        NoticeServiceRequest request = createNoticeServiceRequest("공지사항1", "https://notion/test/notice", NOTICE);
         // when
         Long savedId = adminNoticeService.save(request);
         // then
@@ -38,7 +37,7 @@ class AdminNoticeServiceTest {
     void updateNotice() {
         // given
         Notice notice = noticeRepository.save(Notice.create("공지사항1", "https://notion/test/notice", NOTICE));
-        NoticeRequest request = createNoticeRequest("이벤트1", "https://notion/test/notice/updated", EVENT);
+        NoticeServiceRequest request = createNoticeServiceRequest("이벤트1", "https://notion/test/notice/updated", EVENT);
         // when
         adminNoticeService.update(notice.getId(), request);
         // then
@@ -51,7 +50,7 @@ class AdminNoticeServiceTest {
     @Test
     void updateNoticeWithWrongId() {
         // given
-        NoticeRequest request = createNoticeRequest("이벤트1", "https://notion/test/notice/updated", EVENT);
+        NoticeServiceRequest request = createNoticeServiceRequest("이벤트1", "https://notion/test/notice/updated", EVENT);
         // when // then
         assertThatThrownBy(() -> adminNoticeService.update(0L, request))
                 .isInstanceOf(GeneralException.class)
@@ -80,8 +79,8 @@ class AdminNoticeServiceTest {
                 .hasMessage("존재하지 않는 공지사항입니다.");
     }
 
-    private NoticeRequest createNoticeRequest(String title, String contentUrl, NoticeTag tag) {
-        return NoticeRequest.builder()
+    private NoticeServiceRequest createNoticeServiceRequest(String title, String contentUrl, NoticeTag tag) {
+        return NoticeServiceRequest.builder()
                 .title(title)
                 .contentUrl(contentUrl)
                 .tag(tag)

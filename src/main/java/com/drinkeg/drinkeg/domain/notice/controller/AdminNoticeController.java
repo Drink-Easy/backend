@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.domain.notice.controller;
 
-import com.drinkeg.drinkeg.domain.notice.dto.NoticeRequest;
+import com.drinkeg.drinkeg.domain.notice.controller.request.NoticeRequest;
 import com.drinkeg.drinkeg.domain.notice.service.AdminNoticeService;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +19,7 @@ public class AdminNoticeController {
     )
     @PostMapping("/admin/notice")
     public ApiResponse<Long> save(@Valid @RequestBody NoticeRequest request) {
-        Long savedId = adminNoticeService.save(request);
+        Long savedId = adminNoticeService.save(request.toServiceRequest());
         return ApiResponse.onSuccess(savedId);
     }
 
@@ -29,7 +29,7 @@ public class AdminNoticeController {
     )
     @PutMapping("/admin/notice/{noticeId}")
     public ApiResponse<String> update(@PathVariable Long noticeId, @Valid @RequestBody NoticeRequest request) {
-        adminNoticeService.update(noticeId, request);
+        adminNoticeService.update(noticeId, request.toServiceRequest());
         return ApiResponse.onSuccess("공지사항 수정 완료");
     }
 

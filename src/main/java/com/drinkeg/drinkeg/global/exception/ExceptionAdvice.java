@@ -36,7 +36,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ReasonDTO reason, HttpHeaders headers, HttpServletRequest request) {
         WebRequest webRequest = new ServletWebRequest(request);
-        return handleExceptionInternal(e, reason, headers, HttpStatus.INTERNAL_SERVER_ERROR, webRequest);
+        return handleExceptionInternal(e, reason, headers, reason.getHttpStatus(), webRequest);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ReasonDTO reason, HttpHeaders headers, WebRequest request) {
