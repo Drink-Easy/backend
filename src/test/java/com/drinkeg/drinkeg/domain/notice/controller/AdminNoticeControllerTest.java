@@ -115,6 +115,54 @@ class AdminNoticeControllerTest {
                 .andExpect(jsonPath("$.message").value("존재하지 않는 공지사항입니다."));
     }
 
+    @DisplayName("제목 없이 공지사항 등록 요청을 하면 오류를 반환한다.")
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void createWithBlankTitle() throws Exception {
+        // given
+        NoticeRequest request = createNoticeRequest("  ", "https://notion/notice", NoticeTag.NOTICE);
+        // when // then
+        mockMvc.perform(post("/admin/notice")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.message").value("제목은 필수입니다."));
+    }
+
+    @DisplayName("공지사항 url 없이 공지사항 등록 요청을 하면 오류를 반환한다.")
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void createWithBlankUrl() throws Exception {
+        // given
+        NoticeRequest request = createNoticeRequest("공지사항", "  ", NoticeTag.NOTICE);
+        // when // then
+        mockMvc.perform(post("/admin/notice")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.message").value("공지사항 url은 필수입니다."));
+    }
+
+    @DisplayName("태그 없이 공지사항 등록 요청을 하면 오류를 반환한다.")
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void createWithoutTag() throws Exception {
+        // given
+        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", null);
+        // when // then
+        mockMvc.perform(post("/admin/notice")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.message").value("공지사항 태그는 필수입니다."));
+    }
+
     private NoticeRequest createNoticeRequest(String title, String contentUrl, NoticeTag tag) {
         return NoticeRequest.builder()
                 .title(title)
