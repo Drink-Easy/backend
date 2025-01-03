@@ -18,7 +18,6 @@ public class MemberUpdateRequest {
 
     private String city;
 
-    private MultipartFile profileImage;
 
 
 }

@@ -9,9 +9,11 @@ import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Authorization", description = "스프링 시큐리티 관련 API")
 @RestController
@@ -65,9 +67,15 @@ public class MemberController {
 
     @PatchMapping("/member/info")
     @Operation(summary = "마이페이지 정보 수정 ", description = "마이페이지의 정보를 수정합니다.")
-    public ApiResponse<?> updateMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody MemberUpdateRequest memberUpdateRequest){
+    public ApiResponse<?> updateMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile,  @RequestPart("memberUpdateRequest")  MemberUpdateRequest memberUpdateRequest){
 
-        memberService.updateMemberInfo(principalDetail,memberUpdateRequest);
+        System.out.println("시작");
+        System.out.println("username: " + memberUpdateRequest.getUsername());
+        System.out.println("city: " + memberUpdateRequest.getCity());
+
+        System.out.println("File Name: " + multipartFile.getOriginalFilename());
+
+        memberService.updateMemberInfo(principalDetail,memberUpdateRequest, multipartFile);
         return ApiResponse.onSuccess("정보 수정 성공");
     }
 

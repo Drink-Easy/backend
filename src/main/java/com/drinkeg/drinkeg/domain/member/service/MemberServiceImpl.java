@@ -12,6 +12,7 @@ import com.drinkeg.drinkeg.infra.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -81,14 +82,21 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void updateMemberInfo(PrincipalDetail principalDetail, MemberUpdateRequest memberUpdateRequest){
+    public void updateMemberInfo(PrincipalDetail principalDetail, MemberUpdateRequest memberUpdateRequest, MultipartFile multipartFile){
+
+        System.out.println("service 시작");
 
         Member member = loadMemberByPrincipalDetail(principalDetail);
+        System.out.println("loaduser 끝");
 
-        if (memberUpdateRequest.getProfileImage() != null && !memberUpdateRequest.getProfileImage().isEmpty()) {
-            String profileImage = storageService.uploadFile(memberUpdateRequest.getProfileImage(), StoragePathName.MEMBER_PROFILE);
+
+        if (multipartFile != null ) {
+            System.out.println("1");
+            String profileImage = storageService.uploadFile(multipartFile, StoragePathName.MEMBER_PROFILE);
+            System.out.println("2");
             if (profileImage != null) {
                 member.updateImageUrl(profileImage);
+                System.out.println("update 성공");
             }
         }
 
