@@ -20,6 +20,7 @@ public class MyWineController {
 
     private final MyWineService myWineService;
 
+    @Operation(summary = "보유 와인 추가", description = "MyWineRequest로 보유와인을 추가한다.")
     @PostMapping("")
     public ApiResponse<String> getMyWines(@RequestBody MyWineRequest myWineRequest,
                                           @AuthenticationPrincipal PrincipalDetail principalDetail){
@@ -28,6 +29,7 @@ public class MyWineController {
         return ApiResponse.onSuccess("보유 와인 저장 성공");
     }
 
+    @Operation(summary = "보유 와인 목록 열람", description = "보유 와인 목록을 열람한다.")
     @GetMapping("")
     public ApiResponse<List<MyWineResponse>> getMyWines(@AuthenticationPrincipal PrincipalDetail principalDetail){
 
