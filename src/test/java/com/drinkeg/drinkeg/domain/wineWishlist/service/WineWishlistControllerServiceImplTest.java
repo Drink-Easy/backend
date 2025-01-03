@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.wineWishlist.service;
+package com.drinkeg.drinkeg.domain.wineWishlist.service;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;

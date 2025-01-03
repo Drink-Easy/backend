@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MyWineService {
 
-    void saveMyWine(MyWineRequest myWineRequest, String username);
+    Long saveMyWine(MyWineRequest myWineRequest, String username);
 
     List<MyWineResponse> getMyWinesByUsername(String username);
 

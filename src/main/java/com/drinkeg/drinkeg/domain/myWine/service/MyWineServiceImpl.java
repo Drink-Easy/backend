@@ -27,7 +27,7 @@ public class MyWineServiceImpl implements MyWineService{
     private final MyWineRepository myWineRepository;
 
     @Override
-    public void saveMyWine(MyWineRequest myWineRequest, String username) {
+    public Long saveMyWine(MyWineRequest myWineRequest, String username) {
 
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(username).orElseThrow(
@@ -42,7 +42,8 @@ public class MyWineServiceImpl implements MyWineService{
         // MyWine을 저장한다.
         MyWine myWine = MyWine.create(member, wine, myWineRequest.getPurchaseDate(), myWineRequest.getPurchasePrice());
 
-        myWineRepository.save(myWine);
+        MyWine savedMyWine = myWineRepository.save(myWine);
+        return savedMyWine.getId();
     }
 
     @Override
