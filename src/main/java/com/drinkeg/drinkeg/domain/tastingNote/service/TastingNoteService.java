@@ -23,4 +23,6 @@ public interface TastingNoteService {
 
     List<Map<Long, String>> showMemberNoseMapList(String username);
 
+    public void setTastingNoteMemberNull(String username);
+
 }
