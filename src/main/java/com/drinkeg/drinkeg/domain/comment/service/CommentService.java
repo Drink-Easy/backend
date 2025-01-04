@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.comment.service;
 
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
-import com.drinkeg.drinkeg.domain.comment.dto.*;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentRequestDTO;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentResponseDTO;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;

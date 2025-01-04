@@ -2,16 +2,13 @@ package com.drinkeg.drinkeg.domain.comment.repository;
 
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.comment.domain.QComment;
-import com.drinkeg.drinkeg.domain.comment.dto.CommentResponseDTO;
 import com.drinkeg.drinkeg.domain.recomment.domain.QRecomment;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.drinkeg.drinkeg.domain.member.domain.QMember.member;
 
 @RequiredArgsConstructor
 @Repository

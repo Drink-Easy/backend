@@ -6,17 +6,13 @@ import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentRequestDTO;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentResponseDTO;
 import com.drinkeg.drinkeg.domain.comment.repository.CommentRepository;
-import com.drinkeg.drinkeg.domain.comment.CommentConverter;
-import com.drinkeg.drinkeg.domain.recomment.RecommentConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import com.drinkeg.drinkeg.domain.party.domain.Party;
 import com.drinkeg.drinkeg.domain.party.service.PartyService;
-import com.drinkeg.drinkeg.domain.recomment.domain.Recomment;
 import com.drinkeg.drinkeg.domain.recomment.dto.RecommentResponseDTO;
-import com.drinkeg.drinkeg.domain.recomment.service.RecommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +28,7 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final CommentConverter commentConverter;
 
-    private final RecommentConverter recommentConverter;
-    private final RecommentService recommentService;
     private final PartyService partyService;
     private final MemberService memberService;
     private final RecommentRepository recommentRepository;
@@ -62,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
         Party party = partyService.findPartyById(commentRequest.getPartyId());
 
         // Comment 엔티티 생성
-        Comment comment = commentConverter.toEntity(commentRequest, party, foundMember);
+        Comment comment = CommentRequestDTO.toEntity(commentRequest, party, foundMember);
 
         // 댓글 저장
         Comment savedComment = commentRepository.save(comment);
@@ -141,7 +134,7 @@ public class CommentServiceImpl implements CommentService {
 
         if (hasRecomments) {
             // 대댓글이 있는 경우: isDeleted 상태를 true로 설정
-            Comment updatedComment = commentConverter.setDeleted(comment);
+            Comment updatedComment = CommentResponseDTO.setDeleted(comment);
             commentRepository.save(updatedComment);
         } else {
             throw new GeneralException(ErrorStatus.COMMENT_HAS_NO_RECOMMENTS);

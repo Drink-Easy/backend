@@ -45,4 +45,15 @@ public class CommentResponseDTO {
                 .recomments(recommentDTOs)
                 .build();
     }
+
+    public static Comment setDeleted(Comment comment) {
+        comment = Comment.builder()
+                .id(comment.getId())
+                .party(comment.getParty())
+                .member(comment.getMember())
+                .content("삭제된 댓글입니다.")
+                .isDeleted(true)
+                .build();
+        return comment;
+    }
 }
