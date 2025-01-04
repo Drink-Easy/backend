@@ -2,10 +2,10 @@ package com.drinkeg.drinkeg.domain.member.domain;
 
 
 import com.drinkeg.drinkeg.domain.member.converter.StringListConverter;
+import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
 import com.drinkeg.drinkeg.domain.member.enums.Provider;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,9 +15,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
     @Id
@@ -49,11 +48,9 @@ public class Member {
     private Long monthPriceMax;
 
     // 선호 종류, 품종, 국가
-    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> wineSort = new ArrayList<>();
 
-    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> wineArea = new ArrayList<>();
 
@@ -61,29 +58,44 @@ public class Member {
 
 
     // CascadeType.ALL: Member 엔티티가 삭제되면 연관된 TastingNote 엔티티도 삭제
-    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<TastingNote> tastingNotes = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WineWishlist> wineWishlists = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MyWine> myWines = new ArrayList<>();
+
+    @Builder
+    private Member(String name, String email, Role role, Provider provider, String username, String password,
+                   String region, Boolean isNewbie, Boolean isFirst, Long monthPriceMax,
+                   List<String> wineSort, List<String> wineArea, boolean agreement) {
+        this.name = name;
+        this.email = email;
+        this.role = role;
+        this.provider = provider;
+
+        this.username = username;
+        this.password = password;
+
+        this.region = region;
+        this.isNewbie = isNewbie;
+        this.isFirst = isFirst;
+        this.monthPriceMax = monthPriceMax;
+        this.wineSort = wineSort != null ? wineSort : new ArrayList<>();
+        this.wineArea = wineArea != null ? wineArea : new ArrayList<>();
+        this.agreement = agreement;
+    }
+
 
     public void updateEmail(String email) { this.email = email; };
-    public void updateName(String name) { this.name = name; };
-    public void updateIsNewbie(Boolean isNewbie) { this.isNewbie = isNewbie; };
-    public void updateMonthPriceMax(Long monthPrice) { this.monthPriceMax = monthPrice; };
-    public void updateWineSort(List<String> wineSort) { this.wineSort = wineSort; };
-    public void updateWineNation(List<String> wineArea) { this.wineArea = wineArea; };
-    public void updateRegion(String region) { this.region = region; };
-    public void updateIsFirst(){ this.isFirst = false;};
 
     public static Member createMember(String username, String password, boolean isFirst) {
         return Member.builder()
                 .username(username)
                 .password(password)
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .isFirst(isFirst)
                 .build();
     }
@@ -92,10 +104,21 @@ public class Member {
         return Member.builder()
                 .username(username)
                 .email(email) // email 값을 claims에서 추출
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .provider(Provider.fromValue(provider))
                 .isFirst(true)
                 .build();
     }
 
+
+    public void updateFirstUser(String name, Boolean isNewbie, Long monthPrice,
+                                List<String> wineSort, List<String> wineArea, String region){
+        if(name != null) this.name = name;
+        if(isNewbie != null) this.isNewbie = isNewbie;
+        if(monthPrice != null) this.monthPriceMax = monthPrice;
+        if(wineSort != null) this.wineSort = wineSort;
+        if(wineArea != null) this.wineArea = wineArea;
+        if(region != null) this.region = region;
+        this.isFirst = false;
+    }
 }

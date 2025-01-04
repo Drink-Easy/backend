@@ -1,11 +1,13 @@
 package com.drinkeg.drinkeg.domain.member.service;
 
+import com.drinkeg.drinkeg.domain.tastingNote.event.RemoveTastingNoteMemberEvent;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public Member getMemberById(Long memberId) {
@@ -34,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void deleteMemberByUsername(String username){
+        eventPublisher.publishEvent(new RemoveTastingNoteMemberEvent(username));
         memberRepository.deleteByUsername(username);
     }
 }

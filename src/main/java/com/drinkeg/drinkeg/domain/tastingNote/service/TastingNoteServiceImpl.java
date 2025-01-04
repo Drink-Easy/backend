@@ -220,6 +220,12 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     }
 
+    // 회원 탈퇴 시 탈퇴한 회원의 테이스팅 노트의 member_id null 로 설정
+    @Override
+    public void setTastingNoteMemberNull(String username) {
+        tastingNoteNoseRepository.updateTastingNoteMemberNull(username);
+    }
+
     private void removeNoseElement(Long noseElementId){
         tastingNoteNoseRepository.deleteById(noseElementId);
     }

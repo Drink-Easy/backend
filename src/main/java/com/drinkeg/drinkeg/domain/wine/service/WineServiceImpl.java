@@ -61,7 +61,7 @@ public class WineServiceImpl implements WineService {
         return wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
     }
 
-    // 회원 닉네임과 추천와인 10개 반환
+    // 추천와인 10개 반환
     @Override
     public List<HomeWineResponse> getRecommendWineList(String username) {
         // 회원을 조회한다.
