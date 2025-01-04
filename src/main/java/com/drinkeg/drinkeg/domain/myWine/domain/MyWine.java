@@ -9,7 +9,6 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyWine {
@@ -28,6 +27,15 @@ public class MyWine {
 
     private LocalDate purchaseDate;
     private int purchasePrice;
+
+    @Builder
+    public MyWine(Member member, Wine wine, LocalDate purchaseDate, int purchasePrice){
+        this.member = member;
+        this.wine = wine;
+
+        this.purchaseDate = purchaseDate;
+        this.purchasePrice = purchasePrice;
+    }
 
     public static MyWine create(Member member, Wine wine, LocalDate purchaseDate, int purchasePrice){
         return MyWine.builder()
