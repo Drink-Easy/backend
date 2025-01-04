@@ -38,13 +38,9 @@ public class MyWine {
                 .build();
     }
 
-    // 구매 날짜 수정
-    public void updatePurchaseDate(LocalDate purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
-    // 구매 가격 수정
-    public void updatePurchasePrice(int purchasePrice) {
-        this.purchasePrice = purchasePrice;
+    // 보유 와인 정보 수정
+    public void update(LocalDate purchaseDate, Integer purchasePrice) {
+        if(purchaseDate != null) this.purchaseDate = purchaseDate;
+        if(purchasePrice != null) this.purchasePrice = purchasePrice;
     }
 }

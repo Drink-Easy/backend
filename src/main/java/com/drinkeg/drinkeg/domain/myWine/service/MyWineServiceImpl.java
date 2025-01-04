@@ -67,16 +67,11 @@ public class MyWineServiceImpl implements MyWineService{
         MyWine myWine = myWineRepository.findById(myWineId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MY_WINE_NOT_FOUND));
 
-        if (member.equals(myWine.getMember())) {
+        if (!member.equals(myWine.getMember())) {
             throw new GeneralException(ErrorStatus.MY_WINE_UNAUTHORIZED);
         }
 
-        if(myWineUpdateRequest.getPurchaseDate() != null){
-            myWine.updatePurchaseDate(myWineUpdateRequest.getPurchaseDate());
-        }
-        if(myWineUpdateRequest.getPurchasePrice() != null){
-            myWine.updatePurchasePrice(myWineUpdateRequest.getPurchasePrice());
-        }
+        myWine.update(myWineUpdateRequest.getPurchaseDate(), myWineUpdateRequest.getPurchasePrice());
 
         myWineRepository.save(myWine);
     }
