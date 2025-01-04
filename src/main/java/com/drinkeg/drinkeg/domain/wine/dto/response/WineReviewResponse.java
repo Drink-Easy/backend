@@ -1,13 +1,14 @@
 package com.drinkeg.drinkeg.domain.wine.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WineReviewResponse {
 
     // 회원이 설정한 이름

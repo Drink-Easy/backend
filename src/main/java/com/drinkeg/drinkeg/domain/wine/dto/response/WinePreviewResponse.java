@@ -6,7 +6,7 @@ import lombok.*;
 
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WinePreviewResponse {
 
     private Long wineId;

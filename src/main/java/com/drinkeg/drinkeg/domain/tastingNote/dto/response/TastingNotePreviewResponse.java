@@ -1,14 +1,11 @@
 package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TastingNotePreviewResponse {
 
         private Long noteId;

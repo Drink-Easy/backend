@@ -2,12 +2,13 @@ package com.drinkeg.drinkeg.domain.wine.dto.response;
 
 import com.drinkeg.drinkeg.domain.wineNote.domain.WineNoteNose;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WineResponse {
 
     private Long wineId;
