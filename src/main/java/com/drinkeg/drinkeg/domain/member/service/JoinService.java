@@ -46,27 +46,9 @@ public class JoinService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.SESSION_UNAUTHORIZED));
 
-        if (memberRequestDTO.getName() != null) {
-            member.updateName(memberRequestDTO.getName());
-        }
-        if (memberRequestDTO.getIsNewbie() != null) {
-            member.updateIsNewbie(memberRequestDTO.getIsNewbie());
-        }
-        if (memberRequestDTO.getMonthPrice() != null) {
-            member.updateMonthPriceMax(memberRequestDTO.getMonthPrice());
-        }
-        if (memberRequestDTO.getWineSort() != null) {
-            member.updateWineSort(memberRequestDTO.getWineSort());
-        }
-        if (memberRequestDTO.getWineArea() != null) {
-            member.updateWineNation(memberRequestDTO.getWineArea());
-        }
-        if (memberRequestDTO.getRegion() != null) {
-            member.updateRegion(memberRequestDTO.getRegion());
-        }
-
-        // 회원 가입을 한 유저로 변경
-        member.updateIsFirst();
+        // 회원이 입력한 정보로 update 하고 isFirst = false 로 변경
+        member.updateFirstUser(memberRequestDTO.getName(), memberRequestDTO.getIsNewbie(), memberRequestDTO.getMonthPrice(),
+                memberRequestDTO.getWineSort(), memberRequestDTO.getWineArea(), memberRequestDTO.getRegion());
 
         memberRepository.save(member);
 

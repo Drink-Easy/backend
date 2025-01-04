@@ -81,12 +81,17 @@ public class Member {
         this.agreement = agreement;
     }
 
+
     public void updateEmail(String email) { this.email = email; };
-    public void updateName(String name) { this.name = name; };
-    public void updateIsNewbie(Boolean isNewbie) { this.isNewbie = isNewbie; };
-    public void updateMonthPriceMax(Long monthPrice) { this.monthPriceMax = monthPrice; };
-    public void updateWineSort(List<String> wineSort) { this.wineSort = wineSort; };
-    public void updateWineNation(List<String> wineArea) { this.wineArea = wineArea; };
-    public void updateRegion(String region) { this.region = region; };
-    public void updateIsFirst(){ this.isFirst = false;};
+
+    public void updateFirstUser(String name, Boolean isNewbie, Long monthPrice,
+                                List<String> wineSort, List<String> wineArea, String region){
+        if(name != null) this.name = name;
+        if(isNewbie != null) this.isNewbie = isNewbie;
+        if(monthPrice != null) this.monthPriceMax = monthPrice;
+        if(wineSort != null) this.wineSort = wineSort;
+        if(wineArea != null) this.wineArea = wineArea;
+        if(region != null) this.region = region;
+        this.isFirst = false;
+    }
 }
