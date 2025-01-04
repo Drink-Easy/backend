@@ -29,7 +29,7 @@ public class TastingNote extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "wine_id")
+    @JoinColumn(name = "wine_id", nullable = false)
     private Wine wine;
 
     private String color;

@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.domain.wine.repository;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.drinkeg.drinkeg.domain.member.domain.QMember.member;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
 import static com.drinkeg.drinkeg.domain.wineWishlist.domain.QWineWishlist.wineWishlist;
@@ -76,18 +78,23 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .where(wine.id.eq(wineId))
                 .fetchOne();
 
-        // 최근 생성된 3개의 TastingNote
         List<WineReviewResponse> recentReviews = queryFactory
                 .select(new QWineReviewResponse(
-                        tastingNote.member.name,
+                        // tastingNote.member가 null이면 name에 "(알 수 없음)"으로 들어가게
+                        Expressions.stringTemplate(
+                                "COALESCE({0}, {1})",
+                                tastingNote.member.name,
+                                "(알 수 없음)"
+                        ),
                         tastingNote.review,
                         tastingNote.rating,
                         tastingNote.createdAt
                 ))
                 .from(tastingNote)
+                .leftJoin(tastingNote.member, member) // LEFT JOIN 명시
                 .where(tastingNote.wine.id.eq(wineId))
-                .orderBy(tastingNote.createdAt.desc()) // 최신순 정렬
-                .limit(3) // 상위 3개 제한
+                .orderBy(tastingNote.createdAt.desc())
+                .limit(3)
                 .fetch();
 
         return new WineWithThreeReviewsResponse(wineResponse, recentReviews);
@@ -100,15 +107,21 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
         List<WineReviewResponse> recentReviews = queryFactory
                 .select(new QWineReviewResponse(
-                        tastingNote.member.name,
+                        // tastingNote.member가 null이면 name에 "(알 수 없음)"으로 들어가게
+                        Expressions.stringTemplate(
+                                "COALESCE({0}, {1})",
+                                tastingNote.member.name,
+                                "(알 수 없음)"
+                        ),
                         tastingNote.review,
                         tastingNote.rating,
                         tastingNote.createdAt
                 ))
                 .from(tastingNote)
+                .leftJoin(tastingNote.member, member) // LEFT JOIN 명시
                 .where(tastingNote.wine.id.eq(wineId))
-                .orderBy(orderByLatest? tastingNote.createdAt.desc()
-                        : tastingNote.rating.desc()) // 최신순 정렬 or 별점 내림차순 정렬
+                .orderBy(tastingNote.createdAt.desc())
+                .limit(3)
                 .fetch();
 
         return recentReviews;
