@@ -93,8 +93,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .from(tastingNote)
                 .leftJoin(tastingNote.member, member) // LEFT JOIN 명시
                 .where(tastingNote.wine.id.eq(wineId))
-                .orderBy(tastingNote.createdAt.desc())
-                .limit(3)
+                .orderBy(tastingNote.createdAt.desc()) // 최신순 정렬
+                .limit(3) // 상위 3개 제한
                 .fetch();
 
         return new WineWithThreeReviewsResponse(wineResponse, recentReviews);
@@ -120,8 +120,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .from(tastingNote)
                 .leftJoin(tastingNote.member, member) // LEFT JOIN 명시
                 .where(tastingNote.wine.id.eq(wineId))
-                .orderBy(tastingNote.createdAt.desc())
-                .limit(3)
+                .orderBy(orderByLatest? tastingNote.createdAt.desc()
+                        : tastingNote.rating.desc()) // 최신순 정렬 or 별점 내림차순 정렬
                 .fetch();
 
         return recentReviews;
