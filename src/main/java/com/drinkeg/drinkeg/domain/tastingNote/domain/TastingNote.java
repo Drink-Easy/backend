@@ -99,32 +99,31 @@ public class TastingNote extends BaseEntity {
     }
 
 
-    // 색상 업데이트
-    public void updateColor(String color) {
-        this.color = color;
+    public void updateTastingNote(String color, LocalDate tasteDate,
+                                  Integer sugarContent, Integer acidity, Integer tannin, Integer body, Integer alcohol,
+                                  List<String> addNoseList, Float rating, String review){
+        if(color != null) this.color = color;
+        if(tasteDate != null) this.tasteDate = tasteDate;
+
+        if(sugarContent != null) this.sugarContent = sugarContent;
+        if(acidity != null) this.acidity = acidity;
+        if(tannin != null) this.tannin = tannin;
+        if(body != null) this.body = body;
+        if(alcohol != null) this.alcohol = alcohol;
+
+        if(!addNoseList.isEmpty()) {
+            addNoseList.forEach(addNoseElement ->
+                    this.noseList.add(TastingNoteNose.builder()
+                            .tastingNote(this)
+                            .noseElement(addNoseElement)
+                            .build())
+            );
+        }
+
+        if(rating != null) this.rating = rating;
+        if(review != null) this.review = review;
     }
 
-    // 시음 날짜 업데이트
-    public void updateTasteDate(LocalDate tasteDate) {
-        this.tasteDate = tasteDate;
-    }
-
-    // 맛 업데이트
-    public void updateSugarContent(int sugarContent) {
-        this.sugarContent = sugarContent;
-    }
-    public void updateAcidity(int acidity) {
-        this.acidity = acidity;
-    }
-    public void updateTannin(int tannin) {
-        this.tannin = tannin;
-    }
-    public void updateBody(int body) {
-        this.body = body;
-    }
-    public void updateAlcohol(int alcohol) {
-        this.alcohol = alcohol;
-    }
 
 
     // nose 요소 추가 메서드
@@ -134,15 +133,6 @@ public class TastingNote extends BaseEntity {
                 .noseElement(noseElement)
                 .build();
         this.noseList.add(nose);
-    }
-
-    // 만족도 업데이트
-    public void updateRating(float rating) {
-        this.rating = rating;
-    }
-    // 메모 업데이트
-    public void updateMemo(String review) {
-        this.review = review;
     }
 
 }

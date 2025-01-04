@@ -115,7 +115,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void updateTastingNote(Long noteId, TastingNoteUpdateRequest tastingNoteUpdateRequest, String username) {
+    public void updateTastingNote(Long noteId, TastingNoteUpdateRequest t, String username) {
 
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(username).orElseThrow(
@@ -133,48 +133,15 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         }
 
         // TastingNote를 업데이트한다.
-        if(tastingNoteUpdateRequest.getColor() != null) {
-            foundNote.updateColor(tastingNoteUpdateRequest.getColor());
-        }
-        if(tastingNoteUpdateRequest.getTastingDate() != null) {
-            foundNote.updateTasteDate(tastingNoteUpdateRequest.getTastingDate());
-        }
+        foundNote.updateTastingNote(t.getColor(), t.getTastingDate(),
+                t.getSugarContent(), t.getAcidity(), t.getTannin(), t.getBody(), t.getAlcohol(),
+                t.getAddNoseList(), t.getRating(), t.getReview());
 
-        if(tastingNoteUpdateRequest.getSugarContent() != null) {
-            foundNote.updateSugarContent(tastingNoteUpdateRequest.getSugarContent());
-        }
-        if(tastingNoteUpdateRequest.getAcidity() != null) {
-            foundNote.updateAcidity(tastingNoteUpdateRequest.getAcidity());
-        }
-        if(tastingNoteUpdateRequest.getTannin() != null) {
-            foundNote.updateTannin(tastingNoteUpdateRequest.getTannin());
-        }
-        if(tastingNoteUpdateRequest.getBody() != null) {
-            foundNote.updateBody(tastingNoteUpdateRequest.getBody());
-        }
-        if(tastingNoteUpdateRequest.getAlcohol() != null) {
-            foundNote.updateAlcohol(tastingNoteUpdateRequest.getAlcohol());
-        }
-
-        List<String> addNoseList = tastingNoteUpdateRequest.getAddNoseList();
-        if(!addNoseList.isEmpty()){
-            for(String addNose: addNoseList){
-                foundNote.addNoseElement(addNose);
-            }
-        }
-
-        List<Long> removeNoseList = tastingNoteUpdateRequest.getRemoveNoseList();
+        List<Long> removeNoseList = t.getRemoveNoseList();
         if(!removeNoseList.isEmpty()){
             for(Long removeNoseId: removeNoseList){
-                removeNoseElement(removeNoseId);
+                removeNoseElement(foundNote.getId(), removeNoseId);
             }
-        }
-
-        if(tastingNoteUpdateRequest.getRating() != null) {
-            foundNote.updateRating(tastingNoteUpdateRequest.getRating());
-        }
-        if(tastingNoteUpdateRequest.getReview() != null) {
-            foundNote.updateMemo(tastingNoteUpdateRequest.getReview());
         }
 
         tastingNoteRepository.save(foundNote);
@@ -225,10 +192,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     // 회원 탈퇴 시 탈퇴한 회원의 테이스팅 노트의 member_id null 로 설정
     @Override
     public void setTastingNoteMemberNull(String username) {
-        tastingNoteNoseRepository.updateTastingNoteMemberNull(username);
+        tastingNoteRepository.updateTastingNoteMemberNull(username);
     }
 
-    private void removeNoseElement(Long noseElementId){
-        tastingNoteNoseRepository.deleteById(noseElementId);
+    private void removeNoseElement(Long tastingNoteId, Long noseElementId){
+        tastingNoteNoseRepository.deleteByIdAndTastingNoteId(tastingNoteId, noseElementId);
     }
 }

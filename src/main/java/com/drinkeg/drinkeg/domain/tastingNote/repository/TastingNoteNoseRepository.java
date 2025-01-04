@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface TastingNoteNoseRepository extends JpaRepository<TastingNoteNose, Long>, TastingNoteNoseRepositoryCustom {
 
     @Modifying
-    @Query("UPDATE TastingNote t SET t.member = null WHERE t.member.username = :username")
-    void updateTastingNoteMemberNull(@Param("username") String username);
+    @Query("DELETE TastingNoteNose tnn WHERE tnn.tastingNote.id = :tastingNoteId AND tnn.id = :id")
+    void deleteByIdAndTastingNoteId(@Param Long tastingNoteId, @Param Long id);
 }
