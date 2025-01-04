@@ -31,7 +31,6 @@ public class CommentServiceImpl implements CommentService {
 
     private final PartyService partyService;
     private final MemberService memberService;
-    private final RecommentRepository recommentRepository;
 
     @Override
     public Comment findByIdOrThrow(Long commentId) {
@@ -107,7 +106,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         // 대댓글 여부 확인
-        boolean hasRecomments = recommentRepository.existsByCommentId(commentId);
+        boolean hasRecomments = !comment.getRecomments().isEmpty();
 
         if (hasRecomments) {
             throw new GeneralException(ErrorStatus.COMMENT_HAS_RECOMMENTS);
@@ -130,7 +129,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         // 대댓글 여부 확인
-        boolean hasRecomments = recommentRepository.existsByCommentId(commentId);
+        boolean hasRecomments = !comment.getRecomments().isEmpty();
 
         if (hasRecomments) {
             // 대댓글이 있는 경우: isDeleted 상태를 true로 설정
