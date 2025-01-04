@@ -11,7 +11,6 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WineWishlist extends BaseEntity {
@@ -19,13 +18,19 @@ public class WineWishlist extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = LAZY, cascade = REMOVE)
-    @JoinColumn(name = "member_id")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = LAZY, cascade = REMOVE)
-    @JoinColumn(name = "wine_id")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "wine_id", nullable = false)
     private Wine wine;
+
+    @Builder
+    public WineWishlist(Member member, Wine wine){
+        this.member = member;
+        this.wine = wine;
+    }
 
     // WineWishlist 생성 매서드
     public static WineWishlist create(Member member, Wine wine) {

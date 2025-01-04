@@ -7,7 +7,6 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WineNote extends BaseEntity {
@@ -32,5 +31,18 @@ public class WineNote extends BaseEntity {
 
     // 만족도 평균
     private float avgMemberRating;
+
+    @Builder
+    public WineNote(Wine wine, float avgSugarContent, float avgAcidity, float avgTannin,
+                    float avgBody, float avgAlcohol, WineNoteNose wineNoteNose, float avgMemberRating) {
+        this.wine = wine;
+        this.avgSugarContent = avgSugarContent;
+        this.avgAcidity = avgAcidity;
+        this.avgTannin = avgTannin;
+        this.avgBody = avgBody;
+        this.avgAlcohol = avgAlcohol;
+        this.wineNoteNose = wineNoteNose;
+        this.avgMemberRating = avgMemberRating;
+    }
 
 }
