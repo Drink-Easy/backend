@@ -13,7 +13,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
@@ -43,11 +42,9 @@ public class Member {
     private Long monthPriceMax;
 
     // 선호 종류, 품종, 국가
-    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> wineSort = new ArrayList<>();
 
-    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> wineArea = new ArrayList<>();
 
@@ -55,18 +52,34 @@ public class Member {
 
 
     // CascadeType.ALL: Member 엔티티가 삭제되면 연관된 TastingNote 엔티티도 삭제
-    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<TastingNote> tastingNotes = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WineWishlist> wineWishlists = new ArrayList<>();
 
-
-    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MyWine> myWines = new ArrayList<>();
+
+    @Builder
+    private Member(String name, String email, String role, String username, String password,
+                   String region, Boolean isNewbie, Boolean isFirst, Long monthPriceMax,
+                   List<String> wineSort, List<String> wineArea, boolean agreement) {
+        this.name = name;
+        this.email = email;
+        this.role = role;
+
+        this.username = username;
+        this.password = password;
+
+        this.region = region;
+        this.isNewbie = isNewbie;
+        this.isFirst = isFirst;
+        this.monthPriceMax = monthPriceMax;
+        this.wineSort = wineSort != null ? wineSort : new ArrayList<>();
+        this.wineArea = wineArea != null ? wineArea : new ArrayList<>();
+        this.agreement = agreement;
+    }
 
     public void updateEmail(String email) { this.email = email; };
     public void updateName(String name) { this.name = name; };
