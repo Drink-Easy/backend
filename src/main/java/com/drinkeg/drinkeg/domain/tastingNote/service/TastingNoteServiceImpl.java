@@ -195,7 +195,9 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         );
 
         // TastingNote 의 Member 가 요청한 Member 와 같은지 확인한다.
-        if(!foundNote.getMember().equals(member)) {
+        Member foundNoteMember = foundNote.getMember();
+
+        if(foundNoteMember == null || !foundNoteMember.equals(member)) {
             throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
         }
 
