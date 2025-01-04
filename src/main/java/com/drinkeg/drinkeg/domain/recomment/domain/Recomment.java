@@ -29,9 +29,6 @@ public class Recomment extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "party_id")
-    private Party party;
 
     private String content;
 }

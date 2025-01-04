@@ -4,11 +4,15 @@ package com.drinkeg.drinkeg.domain.comment.domain;
 import com.drinkeg.drinkeg.domain.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.party.domain.Party;
+import com.drinkeg.drinkeg.domain.recomment.domain.Recomment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,6 +34,9 @@ public class Comment extends BaseEntity {
     private Member member;
 
     private String content;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recomment> recomments = new ArrayList<>();
 
     @Builder.Default
     private boolean isDeleted = false;
