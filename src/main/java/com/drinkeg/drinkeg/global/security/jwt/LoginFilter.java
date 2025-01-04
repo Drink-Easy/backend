@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.global.security.jwt;
 
+import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -100,7 +101,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
                 .username(username)
-                .role(role)
+                .role(Role.fromValue(role))
                 .isFirst(isFirst)
                 .build();
 
