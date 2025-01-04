@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Getter
 @RequiredArgsConstructor
 public enum Role {
-    ADMIN("ADMIN"), USER("USER");
+    ROLE_ADMIN("ROLE_ADMIN"), ROLE_USER("ROLE_USER");
 
     private final String value;
     public static Role fromValue(String value) {

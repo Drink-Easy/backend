@@ -95,7 +95,7 @@ public class Member {
         return Member.builder()
                 .username(username)
                 .password(password)
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .isFirst(isFirst)
                 .build();
     }
@@ -104,7 +104,7 @@ public class Member {
         return Member.builder()
                 .username(username)
                 .email(email) // email 값을 claims에서 추출
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .provider(Provider.fromValue(provider))
                 .isFirst(true)
                 .build();
