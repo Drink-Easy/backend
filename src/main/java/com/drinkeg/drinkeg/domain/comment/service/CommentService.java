@@ -17,11 +17,11 @@ public interface CommentService {
 
     void createComment(PrincipalDetail principalDetail, CommentRequestDTO commentRequest);
 
+    List<CommentResponseDTO> getCommentsByPartyId(Long partyId);
+
     void deleteComment(PrincipalDetail principalDetail, Long commentId);
 
     void updateCommentStatus(PrincipalDetail principalDetail, Long commentId);
-
-    List<CommentResponseDTO> getCommentsByPartyId(Long partyId) ;
 
     String calculateTimeAgo(LocalDateTime createdAt);
 

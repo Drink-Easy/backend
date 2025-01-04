@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.recomment.service;
 
+import com.drinkeg.drinkeg.domain.recomment.dto.RecommentResponseDTO;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.recomment.RecommentConverter;
@@ -25,17 +26,7 @@ public class RecommentServiceImpl implements RecommentService{
     private final MemberService memberService;
 
 
-    // 댓글 ID로 대댓글을 조회하는 메서드
-    @Override
-    public List<Recomment> findByCommentId(Long commentId) {
-        return recommentRepository.findByCommentId(commentId);
-    }
 
-    // 특정 댓글(commentId)에 대댓글이 존재하는지 확인하는 메서드
-    @Override
-    public boolean existsByCommentId(Long commentId) {
-        return recommentRepository.existsByCommentId(commentId);
-    }
 
     // 특정 댓글에 포함되는 대댓글의 개수를 반환하는 메서드
     @Override
@@ -43,6 +34,7 @@ public class RecommentServiceImpl implements RecommentService{
         //Optional이 비어있으면 0 반환(.orElse(0L))
         return recommentRepository.countByCommentId(commentId).orElse(0L);
     }
+
 
 
     @Override

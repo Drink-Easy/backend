@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.comment.repository;
 
+import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.comment.domain.QComment;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentResponseDTO;
 import com.drinkeg.drinkeg.domain.recomment.domain.QRecomment;
@@ -45,21 +46,17 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     }
 
     @Override
-    public List<CommentResponseDTO> findCommentsWithRecomments(Long partyId) {
+    public List<Comment> findCommentsWithRecomments(Long partyId) {
         QComment comment = QComment.comment;
+        QRecomment recomment = QRecomment.recomment;
 
-        return queryFactory.select(Projections.constructor(CommentResponseDTO.class,
-                        comment.id,
-                        comment.party.id,
-                        comment.member.id,
-                        comment.member.username,
-                        comment.content,
-                        comment.isDeleted,
-                        comment.createdAt))
-                .from(comment)
-                .leftJoin(comment.member, member)
-                .where(comment.party.id.eq(partyId)
-                        .and(comment.isDeleted.isFalse()))
+        return queryFactory.selectFrom(comment)
+                .leftJoin(comment.recomments, recomment)
+                .fetchJoin()
+                .where(
+                        comment.party.id.eq(partyId)
+                )
+                .distinct()
                 .fetch();
     }
 }

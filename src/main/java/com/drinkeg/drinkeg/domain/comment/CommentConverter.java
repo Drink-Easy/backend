@@ -23,7 +23,6 @@ public class CommentConverter {
     public CommentResponseDTO toResponse(Comment comment) {
         return CommentResponseDTO.builder()
                 .id(comment.getId())
-                .partyId(comment.getParty().getId())
                 .memberName(comment.getMember().getUsername())
                 .content(comment.getContent())
                 .isDeleted(comment.isDeleted())

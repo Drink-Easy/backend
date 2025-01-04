@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.comment.service;
 
+import com.drinkeg.drinkeg.domain.recomment.repository.RecommentRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentRequestDTO;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,7 @@ public class CommentServiceImpl implements CommentService {
     private final RecommentService recommentService;
     private final PartyService partyService;
     private final MemberService memberService;
+    private final RecommentRepository recommentRepository;
 
     @Override
     public Comment findByIdOrThrow(Long commentId) {
@@ -46,39 +49,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public long countCommentsAndRecommentsByPartyId(Long partyId) {
         return commentRepository.countCommentsAndRecommentsByPartyId(partyId);
-    }
-
-    @Override
-    public List<CommentResponseDTO> getCommentsByPartyId(Long partyId) {
-        // 파티 존재 여부 검증
-        Party party = partyService.findPartyById(partyId);
-
-        // QueryProjection을 사용하여 댓글을 조회
-        List<CommentResponseDTO> commentDTOs = commentRepository.findCommentsWithRecomments(partyId);
-
-        // 각 댓글 DTO에 추가 데이터 설정
-        commentDTOs.forEach(commentDTO -> {
-            Comment commentEntity = findByIdOrThrow(commentDTO.getId());
-            String timeAgo = calculateTimeAgo(commentEntity.getCreatedAt());
-            commentDTO.setTimeAgo(timeAgo);
-
-            String createdDate = calculateCreatedDate(commentEntity.getCreatedAt());
-            commentDTO.setCreatedDate(createdDate);
-
-            // 대댓글 조회 및 DTO 변환
-            List<RecommentResponseDTO> recommentDTOs = recommentService.findByCommentId(commentDTO.getId()).stream()
-                    .map(recomment -> {
-                        RecommentResponseDTO recommentDTO = recommentConverter.toResponse(recomment);
-                        recommentDTO.setTimeAgo(calculateTimeAgo(recomment.getCreatedAt()));
-                        recommentDTO.setCreatedDate(calculateCreatedDate(recomment.getCreatedAt()));
-                        return recommentDTO;
-                    })
-                    .collect(Collectors.toList());
-
-            commentDTO.setRecomments(recommentDTOs);
-        });
-
-        return commentDTOs;
     }
 
 
@@ -101,6 +71,37 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
+    public List<CommentResponseDTO> getCommentsByPartyId(Long partyId) {
+        // 1. 파티 존재 여부 검증
+        Party party = partyService.findPartyById(partyId);
+
+
+        // 2. 댓글과 대댓글 조회
+        List<Comment> comments = commentRepository.findCommentsWithRecomments(partyId);
+
+        if (comments.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // 3. DTO 매핑
+        List<CommentResponseDTO> commentDTOs = comments.stream().map(comment -> {
+            String timeAgo = calculateTimeAgo(comment.getCreatedAt());
+            String createdDate = calculateCreatedDate(comment.getCreatedAt());
+
+            // 대댓글 매핑
+            List<RecommentResponseDTO> recommentDTOs = comment.getRecomments().stream().map(recomment -> {
+                String recommentTimeAgo = calculateTimeAgo(recomment.getCreatedAt());
+                String recommentCreatedDate = calculateCreatedDate(recomment.getCreatedAt());
+                return RecommentResponseDTO.fromEntity(recomment, recommentTimeAgo, recommentCreatedDate);
+            }).collect(Collectors.toList());
+
+            return CommentResponseDTO.fromEntity(comment, timeAgo, createdDate, recommentDTOs);
+        }).collect(Collectors.toList());
+
+        return commentDTOs;
+    }
+
+    @Override
     public void deleteComment(PrincipalDetail principalDetail, Long commentId) {
         // 댓글 존재 여부 검증
         Comment comment = commentRepository.findById(commentId)
@@ -113,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         // 대댓글 여부 확인
-        boolean hasRecomments = recommentService.existsByCommentId(commentId);
+        boolean hasRecomments = recommentRepository.existsByCommentId(commentId);
 
         if (hasRecomments) {
             throw new GeneralException(ErrorStatus.COMMENT_HAS_RECOMMENTS);
@@ -136,7 +137,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         // 대댓글 여부 확인
-        boolean hasRecomments = recommentService.existsByCommentId(commentId);
+        boolean hasRecomments = recommentRepository.existsByCommentId(commentId);
 
         if (hasRecomments) {
             // 대댓글이 있는 경우: isDeleted 상태를 true로 설정
