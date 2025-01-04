@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.notice.controller;
 
-import com.drinkeg.drinkeg.domain.notice.domain.Notice;
-import com.drinkeg.drinkeg.domain.notice.dto.NoticeResponse;
+import com.drinkeg.drinkeg.domain.notice.service.response.NoticeResponse;
 import com.drinkeg.drinkeg.domain.notice.service.NoticeService;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

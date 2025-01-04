@@ -1,9 +1,10 @@
 package com.drinkeg.drinkeg.domain.notice.controller;
 
-import com.drinkeg.drinkeg.domain.notice.dto.NoticeRequest;
+import com.drinkeg.drinkeg.domain.notice.controller.request.NoticeRequest;
 import com.drinkeg.drinkeg.domain.notice.service.AdminNoticeService;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +18,8 @@ public class AdminNoticeController {
             description = "공지사항을 생성한다."
     )
     @PostMapping("/admin/notice")
-    public ApiResponse<Long> save(@RequestBody NoticeRequest request) {
-        Long savedId = adminNoticeService.save(request);
+    public ApiResponse<Long> save(@Valid @RequestBody NoticeRequest request) {
+        Long savedId = adminNoticeService.save(request.toServiceRequest());
         return ApiResponse.onSuccess(savedId);
     }
 
@@ -27,8 +28,8 @@ public class AdminNoticeController {
             description = "공지사항 Id로 공지사항을 수정한다."
     )
     @PutMapping("/admin/notice/{noticeId}")
-    public ApiResponse<String> update(@PathVariable Long noticeId, @RequestBody NoticeRequest request) {
-        adminNoticeService.update(noticeId, request);
+    public ApiResponse<String> update(@PathVariable Long noticeId, @Valid @RequestBody NoticeRequest request) {
+        adminNoticeService.update(noticeId, request.toServiceRequest());
         return ApiResponse.onSuccess("공지사항 수정 완료");
     }
 

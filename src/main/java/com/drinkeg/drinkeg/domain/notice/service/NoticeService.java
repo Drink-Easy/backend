@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.domain.notice.service;
 
-import com.drinkeg.drinkeg.domain.notice.dto.NoticeResponse;
+import com.drinkeg.drinkeg.domain.notice.service.response.NoticeResponse;
 import com.drinkeg.drinkeg.domain.notice.repository.NoticeRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;

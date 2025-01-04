@@ -1,37 +1,23 @@
 package com.drinkeg.drinkeg.domain.notice.controller;
 
-import com.drinkeg.drinkeg.domain.notice.domain.Notice;
 import com.drinkeg.drinkeg.domain.notice.domain.NoticeTag;
-import com.drinkeg.drinkeg.domain.notice.dto.NoticeResponse;
-import com.drinkeg.drinkeg.domain.notice.service.NoticeService;
+import com.drinkeg.drinkeg.domain.notice.service.response.NoticeResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(NoticeController.class)
-class NoticeControllerTest {
-    @Autowired private MockMvc mockMvc;
-    @MockBean private NoticeService noticeService;
-
+class NoticeControllerTest extends NoticeControllerTestSupport {
     @DisplayName("전체 공지사항을 조회한다.")
     @Test
     @WithMockUser(username = "testUser", roles = {"USER"})
@@ -87,7 +73,7 @@ class NoticeControllerTest {
 
     }
 
-    @DisplayName("단일 공지사항을 잘못된 아이디로 조회하면 오류를 발생시킨다..")
+    @DisplayName("단일 공지사항을 잘못된 아이디로 조회하면 오류를 발생시킨다.")
     @Test
     @WithMockUser(username = "testUser", roles = {"USER"})
     void findNoticeByIdWithWrongId() throws Exception {
