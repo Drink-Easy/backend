@@ -52,8 +52,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         Wine wine = wineRepository.findById(wineId).orElseThrow(
                 () -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
-        System.out.println("tastingNoteRequest = " + tastingNoteRequest.getBody());
-
         // TastingNote를 저장한다.
         tastingNoteRepository.save(TastingNote.create(member, wine, tastingNoteRequest));
 

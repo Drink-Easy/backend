@@ -45,7 +45,6 @@ public class TastingNote extends BaseEntity {
     private int alcohol;
 
     // nose를 TastingNote와 OneToMany 관계로 설정
-    @Builder.Default
     @OneToMany(mappedBy = "tastingNote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TastingNoteNose> noseList = new ArrayList<>();
 
@@ -53,6 +52,24 @@ public class TastingNote extends BaseEntity {
     private float rating;
 
     private String review;
+
+    @Builder
+    public TastingNote(Member member, Wine wine, String color, LocalDate tasteDate,
+                       int sugarContent, int acidity, int tannin, int body, int alcohol,
+                       List<TastingNoteNose> noseList, float rating, String review) {
+        this.member = member;
+        this.wine = wine;
+        this.color = color;
+        this.tasteDate = tasteDate;
+        this.sugarContent = sugarContent;
+        this.acidity = acidity;
+        this.tannin = tannin;
+        this.body = body;
+        this.alcohol = alcohol;
+        this.noseList = !noseList.isEmpty() ? noseList : new ArrayList<>();
+        this.rating = rating;
+        this.review = review;
+    }
 
     // TastingNote 생성 매서드
     public static TastingNote create(Member member, Wine wine, TastingNoteRequest tastingNoteRequest) {
@@ -69,7 +86,7 @@ public class TastingNote extends BaseEntity {
                 .body(tastingNoteRequest.getBody())
                 .alcohol(tastingNoteRequest.getAlcohol())
 
-
+                .noseList(new ArrayList<>())
                 .rating(tastingNoteRequest.getRating())
                 .review(tastingNoteRequest.getReview())
                 .build();
