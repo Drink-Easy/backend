@@ -40,4 +40,14 @@ public class Comment extends BaseEntity {
 
     @Builder.Default
     private boolean isDeleted = false;
+
+    public void addRecomment(Recomment recomment) {
+        this.recomments.add(recomment);
+        recomment.setParentComment(this); // 자식의 참조도 설정
+    }
+
+    public void removeRecomment(Recomment recomment) {
+        this.recomments.remove(recomment);
+        recomment.setParentComment(null); // 자식의 부모 참조 제거
+    }
 }

@@ -29,6 +29,9 @@ public class Recomment extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-
     private String content;
+
+    public void setParentComment(Comment comment) {
+        this.comment = comment;
+    }
 }
