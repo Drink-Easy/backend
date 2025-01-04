@@ -78,6 +78,8 @@ public enum ErrorStatus implements BaseCode {
     PASSWORD_NOT_INVALID(HttpStatus.BAD_REQUEST,"MEMBER4001","유효하지않은 비밀번호입니다"),
     MEMBER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4001", "이미 존재하는 아이디입니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "MEMBER4001", "접근 권한이 없습니다."),
+    PROVIDER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "일치하는 Provider가 없습니다."),
+    ROLE_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "일치하는 Role 없습니다."),
 
     // Token Error
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4001", "유효하지 않은 엑세스 토큰입니다."),

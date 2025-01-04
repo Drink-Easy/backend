@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.notice.dto;
+package com.drinkeg.drinkeg.domain.notice.service.response;
 
 import com.drinkeg.drinkeg.domain.notice.domain.Notice;
 import com.drinkeg.drinkeg.domain.notice.domain.NoticeTag;

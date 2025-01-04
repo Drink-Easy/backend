@@ -3,6 +3,8 @@ package com.drinkeg.drinkeg.domain.member.domain;
 
 import com.drinkeg.drinkeg.domain.member.converter.StringListConverter;
 import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
+import com.drinkeg.drinkeg.domain.member.enums.Provider;
+import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import jakarta.persistence.*;
@@ -25,7 +27,11 @@ public class Member {
 
     private String email;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
     private String username;
 
@@ -62,12 +68,13 @@ public class Member {
     private List<MyWine> myWines = new ArrayList<>();
 
     @Builder
-    private Member(String name, String email, String role, String username, String password,
+    private Member(String name, String email, Role role, Provider provider, String username, String password,
                    String region, Boolean isNewbie, Boolean isFirst, Long monthPriceMax,
                    List<String> wineSort, List<String> wineArea, boolean agreement) {
         this.name = name;
         this.email = email;
         this.role = role;
+        this.provider = provider;
 
         this.username = username;
         this.password = password;
@@ -83,6 +90,26 @@ public class Member {
 
 
     public void updateEmail(String email) { this.email = email; };
+
+    public static Member createMember(String username, String password, boolean isFirst) {
+        return Member.builder()
+                .username(username)
+                .password(password)
+                .role(Role.USER)
+                .isFirst(isFirst)
+                .build();
+    }
+
+    public static Member createOAuthMember(String username, String email, String provider) {
+        return Member.builder()
+                .username(username)
+                .email(email) // email 값을 claims에서 추출
+                .role(Role.USER)
+                .provider(Provider.fromValue(provider))
+                .isFirst(true)
+                .build();
+    }
+
 
     public void updateFirstUser(String name, Boolean isNewbie, Long monthPrice,
                                 List<String> wineSort, List<String> wineArea, String region){

@@ -4,6 +4,9 @@ import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.dto.MemberResponseDTO;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.UserDTO;
 import com.drinkeg.drinkeg.domain.member.dto.MemberBasicInfoResponseDTO;
+
+import com.drinkeg.drinkeg.domain.member.enums.Provider;
+import com.drinkeg.drinkeg.domain.member.enums.Role;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -12,23 +15,8 @@ import java.util.Map;
 @Component
 public class MemberConverter {
 
-    public Member toAppleMember(String username, Map<String, Object> claims) {
-        return Member.builder()
-                .username(username)
-                .email((String) claims.get("email"))  // email 값을 claims에서 추출
-                .role("ROLE_USER")
-                .isFirst(true)
-                .build();
-    }
 
-    public Member toKakaoMember(String kakaoname, String email ) {
-        return Member.builder()
-                .username(kakaoname)
-                .email(email)
-                .role("ROLE_USER")
-                .isFirst(true)
-                .build();
-    }
+
   
     public static MemberBasicInfoResponseDTO toMemberBasicInfoResponseDTO(Member member) {
       return MemberBasicInfoResponseDTO.builder()
@@ -36,14 +24,6 @@ public class MemberConverter {
               .name(member.getName())
               .email(member.getEmail())
               .build();
-    }
-    public Member toMember(String username, String password, boolean isBoolean){
-        return Member.builder()
-                .username(username)
-                .password(password)
-                .role("ROLE_USER")
-                .isFirst(isBoolean)
-                .build();
     }
 
 

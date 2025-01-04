@@ -30,7 +30,7 @@ public class PrincipalDetail implements UserDetails, OAuth2User {
             @Override
             public String getAuthority() {
 
-                return userDTO.getRole();
+                return userDTO.getRole().getValue();
             }
         });
 

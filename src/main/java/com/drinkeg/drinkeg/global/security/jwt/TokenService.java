@@ -168,8 +168,8 @@ public class TokenService {
 
     public void jwtProvider(Member member, HttpServletResponse response) {
 
-        String accessToken = jwtUtil.createJwt("access",member.getUsername(), member.getRole(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
-        String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole(),864000000L);
+        String accessToken = jwtUtil.createJwt("access",member.getUsername(), member.getRole().getValue(), 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
+        String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole().getValue(),864000000L);
 
         // 토큰을 쿠키에 저장하여 응답
         createCookie(response, "accessToken", accessToken); // Access Token 쿠키 추가

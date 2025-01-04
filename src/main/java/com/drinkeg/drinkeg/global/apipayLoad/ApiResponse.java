@@ -4,6 +4,7 @@ import com.drinkeg.drinkeg.global.apipayLoad.code.status.SuccessStatus;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.ResponseEntity;
 
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
 @AllArgsConstructor

@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.global.security.jwt;
 
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.UserDTO;
+import com.drinkeg.drinkeg.domain.member.enums.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -85,7 +86,7 @@ public class JWTFilter extends OncePerRequestFilter {
         //userDTO를 생성하여 값 set
         UserDTO userDTO = UserDTO.builder()
                 .username(username)
-                .role(role)
+                .role(Role.fromValue(role))
                 .build();
 
         System.out.println(userDTO);
