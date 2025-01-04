@@ -60,15 +60,15 @@ public class MyWineServiceImpl implements MyWineService{
 
 
     @Override
-    public void updateMyWine(Long wineWishlistId, MyWineUpdateRequest myWineUpdateRequest, String username) {
+    public void updateMyWine(Long myWineId, MyWineUpdateRequest myWineUpdateRequest, String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        MyWine myWine = myWineRepository.findById(wineWishlistId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_WISHLIST_NOT_FOUND));
+        MyWine myWine = myWineRepository.findById(myWineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MY_WINE_NOT_FOUND));
 
-        if(member != myWine.getMember()){
-            throw new GeneralException(ErrorStatus.WINE_WISHLIST_UNAUTHORIZED);
+        if (member.equals(myWine.getMember())) {
+            throw new GeneralException(ErrorStatus.MY_WINE_UNAUTHORIZED);
         }
 
         if(myWineUpdateRequest.getPurchaseDate() != null){

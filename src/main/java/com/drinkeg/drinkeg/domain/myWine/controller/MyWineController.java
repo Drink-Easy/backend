@@ -7,6 +7,7 @@ import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.domain.myWine.service.MyWineService;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class MyWineController {
 
     @Operation(summary = "보유 와인 추가", description = "MyWineRequest로 보유와인을 추가한다.")
     @PostMapping("")
-    public ApiResponse<String> getMyWines(@RequestBody MyWineRequest myWineRequest,
+    public ApiResponse<String> getMyWines(@RequestBody @Valid MyWineRequest myWineRequest,
                                           @AuthenticationPrincipal PrincipalDetail principalDetail){
 
         myWineService.saveMyWine(myWineRequest, principalDetail.getUsername());
