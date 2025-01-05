@@ -98,7 +98,6 @@ public class TastingNote extends BaseEntity {
         return tastingNote;
     }
 
-
     public void updateTastingNote(String color, LocalDate tasteDate,
                                   Integer sugarContent, Integer acidity, Integer tannin, Integer body, Integer alcohol,
                                   List<String> addNoseList, Float rating, String review){
@@ -121,14 +120,9 @@ public class TastingNote extends BaseEntity {
     }
 
 
-
     // nose 요소 추가 메서드
     public void addNoseElement(String noseElement) {
-        TastingNoteNose nose = TastingNoteNose.builder()
-                .tastingNote(this)
-                .noseElement(noseElement)
-                .build();
-        this.noseList.add(nose);
+        this.noseList.add(new TastingNoteNose(this, noseElement));
     }
 
 }
