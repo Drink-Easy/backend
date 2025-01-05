@@ -135,14 +135,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         // TastingNote를 업데이트한다.
         foundNote.updateTastingNote(t.getColor(), t.getTastingDate(),
                 t.getSugarContent(), t.getAcidity(), t.getTannin(), t.getBody(), t.getAlcohol(),
-                t.getAddNoseList(), t.getRating(), t.getReview());
-
-        List<Long> removeNoseList = t.getRemoveNoseList();
-        if(!removeNoseList.isEmpty()){
-            for(Long removeNoseId: removeNoseList){
-                removeNoseElement(foundNote.getId(), removeNoseId);
-            }
-        }
+                t.getUpdateNoseList(), t.getRating(), t.getReview());
 
         tastingNoteRepository.save(foundNote);
 

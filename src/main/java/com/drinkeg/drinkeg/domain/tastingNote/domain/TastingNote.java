@@ -6,18 +6,24 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Slf4j
 public class TastingNote extends BaseEntity {
 
     @Id
@@ -66,7 +72,7 @@ public class TastingNote extends BaseEntity {
         this.tannin = tannin;
         this.body = body;
         this.alcohol = alcohol;
-        this.noseList = !noseList.isEmpty() ? noseList : new ArrayList<>();
+        this.noseList = noseList != null ? noseList : new ArrayList<>();
         this.rating = rating;
         this.review = review;
     }
@@ -79,19 +85,18 @@ public class TastingNote extends BaseEntity {
                 .wine(wine)
                 .color(tastingNoteRequest.getColor())
                 .tasteDate(tastingNoteRequest.getTasteDate())
-
                 .sugarContent(tastingNoteRequest.getSugarContent())
                 .acidity(tastingNoteRequest.getAcidity())
                 .tannin(tastingNoteRequest.getTannin())
                 .body(tastingNoteRequest.getBody())
                 .alcohol(tastingNoteRequest.getAlcohol())
-
-                .noseList(new ArrayList<>())
                 .rating(tastingNoteRequest.getRating())
                 .review(tastingNoteRequest.getReview())
                 .build();
 
-        for(String noseElement : tastingNoteRequest.getNose()){
+        // Set으로 중복 제거
+        Set<String> uniqueNoseElements = new HashSet<>(tastingNoteRequest.getNose());
+        for (String noseElement : uniqueNoseElements) {
             tastingNote.addNoseElement(noseElement);
         }
 
@@ -100,7 +105,7 @@ public class TastingNote extends BaseEntity {
 
     public void updateTastingNote(String color, LocalDate tasteDate,
                                   Integer sugarContent, Integer acidity, Integer tannin, Integer body, Integer alcohol,
-                                  List<String> addNoseList, Float rating, String review){
+                                  List<String> updateNoseList, Float rating, String review){
         if(color != null) this.color = color;
         if(tasteDate != null) this.tasteDate = tasteDate;
 
@@ -110,9 +115,8 @@ public class TastingNote extends BaseEntity {
         if(body != null) this.body = body;
         if(alcohol != null) this.alcohol = alcohol;
 
-        if(addNoseList != null) {
-            addNoseList.forEach(addNoseElement ->
-                    this.noseList.add(new TastingNoteNose(this, addNoseElement)));
+        if(updateNoseList != null) {
+            this.updateTastingNoteNoseList(updateNoseList);
         }
 
         if(rating != null) this.rating = rating;
@@ -123,6 +127,26 @@ public class TastingNote extends BaseEntity {
     // nose 요소 추가 메서드
     public void addNoseElement(String noseElement) {
         this.noseList.add(new TastingNoteNose(this, noseElement));
+    }
+
+    public void updateTastingNoteNoseList(List<String> updateNoseList) {
+        // Set으로 중복 제거
+        Set<String> uniqueNoseElements = new HashSet<>(updateNoseList);
+
+        // updateNoseList의 요소 중 기존에 없는 것 추가
+        uniqueNoseElements.forEach(noseElement -> {
+            if (this.noseList.stream().noneMatch(nose -> nose.getNoseElement().equals(noseElement))) {
+                this.addNoseElement(noseElement);
+            }
+        });
+
+        // 기존 noseList에서 updateNoseList에 없는 것 삭제
+        List<TastingNoteNose> noseToDelete = this.noseList.stream()
+                .filter(nose -> !updateNoseList.contains(nose.getNoseElement()))
+                .toList();
+
+        // 삭제된 항목을 noseList에서 제거
+        this.noseList.removeAll(noseToDelete);
     }
 
 }

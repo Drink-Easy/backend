@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TastingNoteRequest {
@@ -21,7 +20,6 @@ public class TastingNoteRequest {
 
     @NotNull(message = "시음 날짜는 필수입니다")
     private LocalDate tasteDate;
-
 
     @NotNull(message = "당도 선택은 필수입니다.")
     @Min(value = 0, message = "당도는 0 이상 100 이하의 정수 값이어야 합니다.")
@@ -48,11 +46,8 @@ public class TastingNoteRequest {
     @Max(value = 100, message = "알콜도는 0 이상 100 이하의 정수 값이어야 합니다.")
     private int alcohol;
 
-
-    @Builder.Default
     @NotEmpty(message = "향 선택은 필수입니다.")
     private List<String> nose = new ArrayList<>();
-
 
     @NotNull(message = "만족도 선택은 필수입니다.")
     @Min(value = 0, message = "만족도는 0 이상 5 이하의 실수 값이어야 합니다.")
