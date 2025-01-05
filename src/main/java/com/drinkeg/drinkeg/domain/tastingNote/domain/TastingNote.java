@@ -111,13 +111,9 @@ public class TastingNote extends BaseEntity {
         if(body != null) this.body = body;
         if(alcohol != null) this.alcohol = alcohol;
 
-        if(!addNoseList.isEmpty()) {
+        if(addNoseList != null) {
             addNoseList.forEach(addNoseElement ->
-                    this.noseList.add(TastingNoteNose.builder()
-                            .tastingNote(this)
-                            .noseElement(addNoseElement)
-                            .build())
-            );
+                    this.noseList.add(new TastingNoteNose(this, addNoseElement)));
         }
 
         if(rating != null) this.rating = rating;
