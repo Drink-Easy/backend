@@ -31,8 +31,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         // 대댓글 수 카운트 (부모 댓글의 삭제 여부와 관계없이 모든 대댓글)
         Long recommentCount = queryFactory.select(recomment.count())
                 .from(recomment)
-                .join(recomment.comment, comment)
-                .where(comment.party.id.eq(partyId))
+                .where(recomment.comment.party.id.eq(partyId))
                 .fetchOne();
 
         // null 방지
@@ -48,11 +47,8 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         QRecomment recomment = QRecomment.recomment;
 
         return queryFactory.selectFrom(comment)
-                .leftJoin(comment.recomments, recomment)
+                .leftJoin(recomment).on(comment.id.eq(recomment.comment.id))
                 .fetchJoin()
-                .where(
-                        comment.party.id.eq(partyId)
-                )
                 .distinct()
                 .fetch();
     }
