@@ -68,7 +68,7 @@ public class Member {
     private List<MyWine> myWines = new ArrayList<>();
 
     @Builder
-    private Member(String name, String email, Role role, Provider provider, String username, String password,
+    public Member(String name, String email, Role role, Provider provider, String username, String password,
                    String region, Boolean isNewbie, Boolean isFirst, Long monthPriceMax,
                    List<String> wineSort, List<String> wineArea, boolean agreement) {
         this.name = name;
