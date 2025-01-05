@@ -35,7 +35,7 @@ public class WinePreviewResponse {
         this.price = price;
     }
 
-    public static WinePreviewResponse create(Wine wine) {
+    public static WinePreviewResponse of(Wine wine) {
         return WinePreviewResponse.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())

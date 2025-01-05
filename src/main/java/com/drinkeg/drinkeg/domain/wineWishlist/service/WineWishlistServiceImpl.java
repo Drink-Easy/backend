@@ -42,7 +42,7 @@ public class WineWishlistServiceImpl implements WineWishlistService{
         List<WineWishlist> wishlistWineList = wineWishlistRepository.findByMemberOrderByCreatedAtDesc(member);
 
         return wishlistWineList.stream().map(wineWishlist
-                -> WinePreviewResponse.create(wineWishlist.getWine())).toList();
+                -> WinePreviewResponse.of(wineWishlist.getWine())).toList();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.wineNote.event;
+package com.drinkeg.drinkeg.domain.wineNote.event;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

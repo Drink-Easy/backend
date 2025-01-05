@@ -12,8 +12,6 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Wine {
 
@@ -25,33 +23,40 @@ public class Wine {
 
     private String imageUrl;
 
-    // 종 : 레드, 화이트 등등
+    // 종류
     private String sort;
 
-    // 지역
+    // 원산지
     private String area;
 
-    // 품종 : 카베르네소비뇽, 샤도네이 등등
+    // 품종
     private String variety;
 
-    // vivino 평점
     private float vivinoRating;
 
-    // 가격
     private int price;
 
-    // cascade = CascadeType.ALL : 와인이 저장될 때 같이 저장됨
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wine_note_id")
     private WineNote wineNote;
 
-    @Builder.Default
     @OneToMany
     @JoinColumn(name = "wine_id")
-    private List<TastingNote> tastingNoteList = new ArrayList<>();
+    private final List<TastingNote> tastingNoteList = new ArrayList<>();
 
     public void updateImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
     }
 
+    @Builder
+    public Wine(String name, String imageUrl, String sort, String area, String variety, float vivinoRating, int price, WineNote wineNote) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.sort = sort;
+        this.area = area;
+        this.variety = variety;
+        this.vivinoRating = vivinoRating;
+        this.price = price;
+        this.wineNote = wineNote;
+    }
 }

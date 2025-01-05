@@ -21,27 +21,6 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-
-    // 검색한 와인 PreviewResponse 반환 시 사용
-    @Override
-    public List<WinePreviewResponse> findSearchWines(String searchName) {
-        return queryFactory
-                .select(new QWinePreviewResponse(
-                        wine.id,
-                        wine.name,
-                        wine.imageUrl,
-                        wine.sort,
-                        wine.area,
-                        wine.variety,
-                        wine.vivinoRating,
-                        wine.price
-                ))
-                .from(wine)
-                .where(wine.name.containsIgnoreCase(searchName))
-                .orderBy(wine.name.asc())
-                .fetch();
-    }
-
     // 선택한 와인 정보와 최근 리뷰 3개 가져오기
     @Override
     public WineWithThreeReviewsResponse findWineResponseByWineId(Long wineId, Long memberId) {

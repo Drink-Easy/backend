@@ -23,15 +23,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/wine")
 public class WineController {
-
     private final WineService wineService;
 
-    // 검색
     @GetMapping
     @Operation(summary = "와인 검색", description = "와인 이름으로 와인 검색하여 List<WinePreviewResponseDTO> 반환")
-    public ApiResponse<List<WinePreviewResponse>> searchWine(@RequestParam String searchName) {
+    public ApiResponse<List<WinePreviewResponse>> searchWine(@RequestParam(defaultValue = "") String searchName) {
 
         List<WinePreviewResponse> winePreviewResponses = wineService.searchWinesByName(searchName);
+
         return ApiResponse.onSuccess(winePreviewResponses);
     }
 

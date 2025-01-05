@@ -10,9 +10,6 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import java.util.List;
 
 public interface WineRepositoryCustom {
-
-    List<WinePreviewResponse> findSearchWines(String searchName);
-
     WineWithThreeReviewsResponse findWineResponseByWineId(Long wineId, Long memberID);
 
     List<WineReviewResponse> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest);
