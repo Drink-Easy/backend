@@ -5,8 +5,6 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TastingNoteNose {
 
@@ -21,4 +19,20 @@ public class TastingNoteNose {
 
     // 향 요소
     private String noseElement;
+
+    public void updateTastingNote(TastingNote tastingNote) {
+        this.tastingNote = tastingNote;
+    }
+
+    @Builder
+    public TastingNoteNose(TastingNote tastingNote, String noseElement) {
+        this.tastingNote = tastingNote;
+        this.noseElement = noseElement;
+    }
+
+    public static TastingNoteNose create(TastingNote tastingNote, String noseElement) {
+        return TastingNoteNose.builder()
+                .tastingNote(tastingNote)
+                .noseElement(noseElement).build();
+    }
 }

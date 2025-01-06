@@ -13,7 +13,7 @@ public interface WineService {
 
     public List<WinePreviewResponse> searchWinesByName(String searchName);
 
-    public Wine findWineById(Long wineId);
+    public void updateWineNoteStatics(Long wineId);
 
     public WineWithThreeReviewsResponse getWineResponseByWineId(Long wineId, String username);
 

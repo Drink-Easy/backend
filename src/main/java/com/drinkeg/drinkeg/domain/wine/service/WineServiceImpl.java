@@ -4,6 +4,7 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
+import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
 import com.drinkeg.drinkeg.infra.storage.StoragePathName;
 import com.drinkeg.drinkeg.infra.storage.StorageService;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
@@ -43,9 +44,16 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public Wine findWineById(Long wineId) {
-        return wineRepository.findById(wineId)
+    public void updateWineNoteStatics(Long wineId) {
+        Wine wine = wineRepository.findById(wineId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
+
+        WineNoteStatisticsAvgDto avgDto = wineRepository.findWineNoteStatisticsByWineId(wineId);
+        List<String> topThreeNose = wineRepository.findTopThreeNoseByWineId(wineId);
+
+        wine.getWineNoteStatistics()
+                .updateAvgStatistics(avgDto)
+                .updateNose(topThreeNose);
     }
 
     @Override

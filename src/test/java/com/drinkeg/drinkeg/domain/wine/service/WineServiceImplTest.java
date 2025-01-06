@@ -1,7 +1,13 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
 import com.drinkeg.drinkeg.IntegrationTestSupport;
+import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.member.enums.Role;
+import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import org.assertj.core.api.Assertions;
@@ -9,8 +15,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class WineServiceImplTest extends IntegrationTestSupport {
@@ -18,6 +26,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
     WineRepository wineRepository;
     @Autowired
     WineService wineService;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    TastingNoteRepository tastingNoteRepository;
 
     @DisplayName("와인 이름을 받아서 이름을 포함하는 모든 와인을 조회한다.")
     @Test
@@ -65,6 +77,42 @@ class WineServiceImplTest extends IntegrationTestSupport {
         assertThat(winePreviewList).isEmpty();
     }
 
+    @DisplayName("와인 아이디를 받아서 와인의 통계 정보를 업데이트 한다.")
+    @Test
+    void updateWineStatisticsByWineId() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
+
+        TastingNote tastingNote1 = createTastingNote(member, wine,
+                50, 30, 20, 40, 30, 10)
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(2));
+        TastingNote tastingNote2 = createTastingNote(member, wine,
+                60, 35, 30, 40, 0, 4)
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(1))
+                .addNoseElement(noseList.get(2));
+        TastingNote tastingNote3 = createTastingNote(member, wine,
+                40, 40, 40, 40, 60, 7)
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(2))
+                .addNoseElement(noseList.get(4));
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
+        // when
+        wineService.updateWineNoteStatics(wine.getId());
+        // then
+        assertThat(wine.getWineNoteStatistics())
+                .extracting(
+                        "avgSugarContent", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol", "avgMemberRating",
+                        "nose1", "nose2", "nose3")
+                .containsExactly(
+                        50.0f, 35.0f, 30.0f, 40.0f, 30.0f, 7.0f,
+                        "건포도", "오렌지", "시트러스");
+    }
+
     private Wine createWine(String name) {
         return Wine.builder()
                 .name(name)
@@ -74,5 +122,34 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .variety("샤도네이")
                 .vivinoRating(4.1f)
                 .price(100).build();
+    }
+
+    private TastingNote createTastingNote(Member member, Wine wine,
+                                          int sugarContent, int acidity, int tannin, int body, int alcohol,
+                                          float rating) {
+        return TastingNote.builder()
+                .member(member)
+                .wine(wine)
+                .color("빨간색")
+                .tasteDate(LocalDate.of(2025, 1, 6))
+                .sugarContent(sugarContent)
+                .acidity(acidity)
+                .tannin(tannin)
+                .body(body)
+                .alcohol(alcohol)
+                .rating(rating)
+                .review("나쁘지 않아요").build();
+    }
+
+    private TastingNote createTastingNote(Member member, Wine wine) {
+        return createTastingNote(member, wine, 0, 0, 0, 0, 0, 0);
+    }
+
+    private Member createMember(String username) {
+        return Member.builder()
+                .username(username)
+                .role(Role.ROLE_USER)
+                .isFirst(false)
+                .build();
     }
 }

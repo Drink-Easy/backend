@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain.wine.domain;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,7 +32,7 @@ public class Wine {
     private int price;
 
     @Embedded
-    private WineNoteStatics wineNoteStatics;
+    private WineNoteStatistics wineNoteStatistics;
 
     @OneToMany
     @JoinColumn(name = "wine_id")
@@ -42,7 +43,7 @@ public class Wine {
     }
 
     @Builder
-    public Wine(String name, String imageUrl, String sort, String area, String variety, float vivinoRating, int price, WineNoteStatics wineNoteStatics) {
+    public Wine(String name, String imageUrl, String sort, String area, String variety, float vivinoRating, int price, WineNoteStatistics wineNoteStatistics) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.sort = sort;
@@ -50,7 +51,7 @@ public class Wine {
         this.variety = variety;
         this.vivinoRating = vivinoRating;
         this.price = price;
-        this.wineNoteStatics = wineNoteStatics;
+        this.wineNoteStatistics = wineNoteStatistics != null ? wineNoteStatistics : WineNoteStatistics.create();
     }
 }
 

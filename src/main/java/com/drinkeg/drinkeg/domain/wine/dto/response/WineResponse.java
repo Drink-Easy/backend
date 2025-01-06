@@ -27,7 +27,9 @@ public class WineResponse {
     private float avgBody;
     private float avgAlcohol;
 
-    private WineNoteNose wineNoteNose;
+    private String nose1;
+    private String nose2;
+    private String nose3;
 
     private float avgMemberRating;
 
@@ -38,7 +40,7 @@ public class WineResponse {
     public WineResponse(
             Long wineId, String name, String imageUrl, int price, String sort, String area, String variety, float vivinoRating,
             float avgSugarContent, float avgAcidity, float avgTannin, float avgBody, float avgAlcohol,
-            WineNoteNose wineNoteNose, float avgMemberRating, boolean isLiked) {
+            String nose1, String nose2, String nose3, float avgMemberRating, boolean isLiked) {
 
         this.wineId = wineId;
         this.name = name;
@@ -55,7 +57,9 @@ public class WineResponse {
         this.avgBody = avgBody;
         this.avgAlcohol = avgAlcohol;
 
-        this.wineNoteNose = wineNoteNose;
+        this.nose1 = nose1;
+        this.nose2 = nose2;
+        this.nose3 = nose3;
         this.avgMemberRating = avgMemberRating;
 
         this.isLiked = isLiked;
