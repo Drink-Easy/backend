@@ -1,12 +1,10 @@
 package com.drinkeg.drinkeg.domain.member.service;
 
+import com.drinkeg.drinkeg.domain.member.dto.*;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
-import com.drinkeg.drinkeg.domain.member.dto.JoinDTO;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
-import com.drinkeg.drinkeg.domain.member.dto.MemberRequestDTO;
-import com.drinkeg.drinkeg.domain.member.dto.MemberResponseDTO;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -68,5 +66,10 @@ public class JoinService {
 
         // 세 가지 조건이 모두 충족되는지 확인
         return hasLetter && hasDigit;
+    }
+
+    public UsernameCheckResponse isDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
+
+        return new UsernameCheckResponse(memberRepository.existsByUsername(usernameCheckRequest.username()));
     }
 }
