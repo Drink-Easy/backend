@@ -25,4 +25,5 @@ public interface PartyService {
     List<PartyResponseDTO> searchPartiesByName(String searchName, PrincipalDetail principalDetail);
     void increaseBookmarkCount(Long partyId);
     void decreaseBookmarkCount(Long partyId);
+    List<PartyResponseDTO> getPartiesByMemberId(PrincipalDetail principalDetail);
 }
