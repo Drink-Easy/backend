@@ -1,6 +1,7 @@
-package com.drinkeg.drinkeg.party.repository;
+package com.drinkeg.drinkeg.domain.party.repository;
 
-import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
+
+import com.drinkeg.drinkeg.domain.party.dto.PartyResponseDTO;
 
 import java.util.List;
 
