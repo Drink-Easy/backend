@@ -74,18 +74,9 @@ public class AppleLoginService {
 
         }
 
-        return buildLoginResponseDTO(member);
+        return LoginResponseDTO.create(member.getId(), member.getUsername(), member.getRole(),member.getIsFirst() );
     }
 
-
-    private LoginResponseDTO buildLoginResponseDTO(Member member) {
-        return LoginResponseDTO.builder()
-                .username(member.getUsername())
-                .role(member.getRole())
-                .isFirst(member.getIsFirst())
-                .build();
-
-    }
 
     private Claims getClaimsFromIdentityToken(String identityToken) throws InvalidKeySpecException, JsonProcessingException,AuthenticationException, NoSuchAlgorithmException{
 

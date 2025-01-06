@@ -42,14 +42,5 @@ public class MemberConverter {
                 .build();
     }
 
-    public static UserDTO toUserDTO (Member member) {
-        return UserDTO.builder()
-                .username(member.getUsername())
-                .password(member.getPassword())
-                .role(member.getRole())
-                .isFirst(member.getIsFirst())
-                .build();
-    }
-
 
 }

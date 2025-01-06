@@ -155,6 +155,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "comments/**").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "comments/**").hasRole("USER")
 
+                        // myPage 인가
+                        .requestMatchers(HttpMethod.PATCH,"member/info").hasRole("USER")
+
                         // PartyJoinMember 인가
                         .requestMatchers(HttpMethod.POST, "partyJoin/**").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "partyJoin/**").hasRole("USER")

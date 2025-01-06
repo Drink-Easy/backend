@@ -9,6 +9,7 @@ import com.drinkeg.drinkeg.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,8 @@ public class JoinService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberConverter memberConverter;
 
+
+    @Transactional
     public void join(JoinDTO joinDTO) {
 
         String username = joinDTO.getUsername();
@@ -34,9 +37,11 @@ public class JoinService {
             throw new GeneralException(ErrorStatus.PASSWORD_NOT_INVALID);
         }
 
-        Member member = Member.createMember(username,(bCryptPasswordEncoder.encode(password) ),true);
+        Member member = Member.createMember( username,(bCryptPasswordEncoder.encode(password) ),true);
 
         memberRepository.save(member);
+        System.out.println("Saved Member: " );
+
     }
 
     public MemberResponseDTO addMemberDetail(MemberRequestDTO memberRequestDTO, String username) {
