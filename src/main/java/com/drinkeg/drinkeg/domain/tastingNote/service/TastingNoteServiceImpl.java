@@ -3,13 +3,11 @@ package com.drinkeg.drinkeg.domain.tastingNote.service;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
-import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteNoseRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
@@ -32,7 +30,6 @@ import java.util.stream.Collectors;
 public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final TastingNoteRepository tastingNoteRepository;
-    private final TastingNoteNoseRepository tastingNoteNoseRepository;
     private final WineRepository wineRepository;
     private final MemberRepository memberRepository;
 
@@ -169,26 +166,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
     }
 
-    @Override
-    public List<Map<Long, String>> showMemberNoseMapList(String username) {
-
-        // 사용자가 작성한 TastingNoteNose 리스트 가져오기
-        List<TastingNoteNose> tastingNoteNoseList = tastingNoteNoseRepository.getTastingNoteNoseListByUsername(username);
-
-        // TastingNoteNose 리스트를 Map<Long, String>으로 변환
-        return tastingNoteNoseList.stream()
-                .map(nose -> Map.of(nose.getId(), nose.getNoseElement()))
-                .collect(Collectors.toList());
-
-    }
 
     // 회원 탈퇴 시 탈퇴한 회원의 테이스팅 노트의 member_id null 로 설정
     @Override
     public void setTastingNoteMemberNull(String username) {
         tastingNoteRepository.updateTastingNoteMemberNull(username);
-    }
-
-    private void removeNoseElement(Long tastingNoteId, Long noseElementId){
-        tastingNoteNoseRepository.deleteByIdAndTastingNoteId(tastingNoteId, noseElementId);
     }
 }
