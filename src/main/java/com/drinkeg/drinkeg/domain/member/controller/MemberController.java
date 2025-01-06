@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.member.controller;
 
 import com.drinkeg.drinkeg.domain.member.dto.*;
-
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -73,4 +72,10 @@ public class MemberController {
         return ApiResponse.onSuccess("정보 수정 성공");
     }
 
+    @PostMapping("/join/check")
+    @Operation(summary = "이메일 중복 검사", description = "이메일(username) 중복 여부를 반환합니다.")
+    public ApiResponse<UsernameCheckResponse> checkUsername(@RequestBody UsernameCheckRequest usernameCheckRequest) {
+        UsernameCheckResponse usernameCheckResponse = joinService.isDuplicatedUsername(usernameCheckRequest);
+        return ApiResponse.onSuccess(usernameCheckResponse);
+    }
 }

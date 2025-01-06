@@ -1,5 +1,8 @@
 package com.drinkeg.drinkeg.domain.comment.dto;
 
+import com.drinkeg.drinkeg.domain.comment.domain.Comment;
+import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.party.domain.Party;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,4 +15,14 @@ import lombok.NoArgsConstructor;
 public class CommentRequestDTO {
     private Long partyId;
     private String content;
+
+
+    public static Comment toEntity(CommentRequestDTO commentRequest, Party party, Member member) {
+        return Comment.builder()
+                .party(party)
+                .member(member)
+                .content(commentRequest.getContent())
+                .isDeleted(false) // 기본값 설정
+                .build();
+    }
 }
