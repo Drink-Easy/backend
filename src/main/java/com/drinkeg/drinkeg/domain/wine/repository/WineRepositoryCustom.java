@@ -10,7 +10,6 @@ import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
 import java.util.List;
 
 public interface WineRepositoryCustom {
-    WineWithThreeReviewsResponse findWineResponseByWineId(Long wineId, Long memberID);
 
     List<WineReviewResponse> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest);
 

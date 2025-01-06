@@ -15,7 +15,7 @@ public interface WineService {
 
     public void updateWineNoteStatics(Long wineId);
 
-    public WineWithThreeReviewsResponse getWineResponseByWineId(Long wineId, String username);
+    public WineWithThreeReviewsResponse getWineInfoWithThreeReviews(Long windId, String username);
 
     public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, boolean orderByLatest);
 

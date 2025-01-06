@@ -9,7 +9,10 @@ import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
+import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
+import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +33,8 @@ class WineServiceImplTest extends IntegrationTestSupport {
     MemberRepository memberRepository;
     @Autowired
     TastingNoteRepository tastingNoteRepository;
+    @Autowired
+    WineWishlistRepository wineWishlistRepository;
 
     @DisplayName("와인 이름을 받아서 이름을 포함하는 모든 와인을 조회한다.")
     @Test
@@ -113,6 +118,89 @@ class WineServiceImplTest extends IntegrationTestSupport {
                         "건포도", "오렌지", "시트러스");
     }
 
+    @DisplayName("와인 아이디를 받아서 와인의 상세 정보를 최근 리뷰 3개와 함꼐 반환한다.")
+    @Test
+    void findWineInfoWithThreeLatestReviews() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
+        wineWishlistRepository.save(WineWishlist.create(member, wine));
+
+        TastingNote tastingNote1 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 0, "가성비 좋아요")
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(2));
+        TastingNote tastingNote2 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 5, "나쁘지 않아요")
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(1))
+                .addNoseElement(noseList.get(2));
+        TastingNote tastingNote3 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 10, "맛있어요!")
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(2))
+                .addNoseElement(noseList.get(4));
+        TastingNote tastingNote4 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 10, "고기랑 먹기 좋아요!");
+        TastingNote tastingNote5 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 10, "다시 구매할 것 같아요");
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
+        wineService.updateWineNoteStatics(wine.getId());
+        // when
+        WineWithThreeReviewsResponse wineInfo = wineService.getWineInfoWithThreeReviews(wine.getId(), member.getUsername());
+        // then
+        assertThat(wineInfo.getWineInfoResponse())
+                .extracting(
+                        "wineId", "name", "imageUrl", "price", "sort", "area", "variety", "vivinoRating",
+                        "avgSugarContent", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol",
+                        "nose1", "nose2", "nose3", "avgMemberRating", "liked"
+                )
+                .containsExactly(wine.getId(), wine.getName(), wine.getImageUrl(), wine.getPrice(), wine.getSort(),
+                        wine.getArea(), wine.getVariety(), wine.getVivinoRating(),
+                        50.0f, 30.0f, 20.0f, 40.0f, 30.0f,
+                        "건포도", "오렌지", "시트러스", 7.0f, true
+                );
+
+        assertThat(wineInfo.getRecentReviews())
+                .extracting("review", "rating")
+                .containsExactly(
+                        tuple("가성비 좋아요", 0.0f),
+                        tuple("나쁘지 않아요", 5.0f),
+                        tuple("맛있어요!", 10.0f)
+                );
+    }
+
+    @DisplayName("와인 리뷰가 존재하지 않는 경우 리뷰가 반환되지 않는다.")
+    @Test
+    void findWineInfoWithNoLatestReviews() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
+        wineWishlistRepository.save(WineWishlist.create(member, wine));
+
+        wineService.updateWineNoteStatics(wine.getId());
+        // when
+        WineWithThreeReviewsResponse wineInfo = wineService.getWineInfoWithThreeReviews(wine.getId(), member.getUsername());
+        // then
+        assertThat(wineInfo.getWineInfoResponse())
+                .extracting(
+                        "wineId", "name", "imageUrl", "price", "sort", "area", "variety", "vivinoRating",
+                        "avgSugarContent", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol",
+                        "nose1", "nose2", "nose3", "avgMemberRating", "liked"
+                )
+                .containsExactly(wine.getId(), wine.getName(), wine.getImageUrl(), wine.getPrice(), wine.getSort(),
+                        wine.getArea(), wine.getVariety(), wine.getVivinoRating(),
+                        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                        null, null, null, 0.0f, true
+                );
+
+        assertThat(wineInfo.getRecentReviews()).isEmpty();
+    }
+
+    // 편의 메서드
+
     private Wine createWine(String name) {
         return Wine.builder()
                 .name(name)
@@ -127,10 +215,24 @@ class WineServiceImplTest extends IntegrationTestSupport {
     private TastingNote createTastingNote(Member member, Wine wine,
                                           int sugarContent, int acidity, int tannin, int body, int alcohol,
                                           float rating) {
+        return createTastingNote(member, wine, "빨간색",
+                sugarContent, acidity, tannin, body, alcohol,
+                rating, "나쁘지 않아요");
+    }
+
+
+
+    private TastingNote createTastingNote(Member member, Wine wine) {
+        return createTastingNote(member, wine, 0, 0, 0, 0, 0, 0);
+    }
+
+    private TastingNote createTastingNote(Member member, Wine wine, String color,
+                                          int sugarContent, int acidity, int tannin, int body, int alcohol,
+                                          float rating, String review) {
         return TastingNote.builder()
                 .member(member)
                 .wine(wine)
-                .color("빨간색")
+                .color(color)
                 .tasteDate(LocalDate.of(2025, 1, 6))
                 .sugarContent(sugarContent)
                 .acidity(acidity)
@@ -138,11 +240,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .body(body)
                 .alcohol(alcohol)
                 .rating(rating)
-                .review("나쁘지 않아요").build();
-    }
-
-    private TastingNote createTastingNote(Member member, Wine wine) {
-        return createTastingNote(member, wine, 0, 0, 0, 0, 0, 0);
+                .review(review).build();
     }
 
     private Member createMember(String username) {

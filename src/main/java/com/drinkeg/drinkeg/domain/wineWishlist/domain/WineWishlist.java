@@ -11,8 +11,6 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WineWishlist extends BaseEntity {
     @Id
@@ -27,7 +25,12 @@ public class WineWishlist extends BaseEntity {
     @JoinColumn(name = "wine_id")
     private Wine wine;
 
-    // WineWishlist 생성 매서드
+    @Builder
+    public WineWishlist(Member member, Wine wine) {
+        this.member = member;
+        this.wine = wine;
+    }
+
     public static WineWishlist create(Member member, Wine wine) {
         return WineWishlist.builder()
                 .member(member)

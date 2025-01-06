@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@Tag(name = "Wine", description = "와인 관련 CRUD API")
+@Tag(name = "Wine", description = "와인 유저 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/wine")
@@ -34,14 +34,12 @@ public class WineController {
         return ApiResponse.onSuccess(winePreviewResponses);
     }
 
-    // 선택한 와인 정보 출력
     @GetMapping("/{wineId}")
-    @Operation(summary = "선택 와인 정보 열람", description = "선택한 와인의 정보를 wineResponseDTO에 담아 반환")
-    public ApiResponse<WineWithThreeReviewsResponse> showWine(@AuthenticationPrincipal PrincipalDetail principalDetail,
+    @Operation(summary = "와인 상세정보 조회", description = "와인의 상세정보를 최근 리뷰 3개와 함께 반환한다. nose1,2,3는 값이 존재하지 않으면 null 값이 들어간다.")
+    public ApiResponse<WineWithThreeReviewsResponse> findWineById(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                               @PathVariable("wineId") Long wineId) {
-
         WineWithThreeReviewsResponse wineWithThreeReviewsResponse =
-                wineService.getWineResponseByWineId(wineId, principalDetail.getUsername());
+                wineService.getWineInfoWithThreeReviews(wineId, principalDetail.getUsername());
 
         return ApiResponse.onSuccess(wineWithThreeReviewsResponse);
     }

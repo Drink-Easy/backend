@@ -1,5 +1,7 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
@@ -32,6 +34,7 @@ public class WineServiceImpl implements WineService {
     private final MemberRepository memberRepository;
 
     private final WineWishlistRepository wineWishlistRepository;
+    private final TastingNoteRepository tastingNoteRepository;
     private final StorageService storageService;
 
     @Override
@@ -57,12 +60,16 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public WineWithThreeReviewsResponse getWineResponseByWineId(Long wineId, String username){
-        // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(username).orElseThrow(
-                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+    public WineWithThreeReviewsResponse getWineInfoWithThreeReviews(Long wineId, String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        return wineRepository.findWineResponseByWineId(wineId, member.getId());
+        Wine wine = wineRepository.findById(wineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
+        boolean isLiked = wineWishlistRepository.existsByMemberAndWine(member, wine);
+        List<TastingNote> recentThreeTastingNote = tastingNoteRepository.findRecentThreeTastingNoteBy(wineId);
+
+        return WineWithThreeReviewsResponse.of(wine, recentThreeTastingNote, isLiked);
     }
 
     @Override

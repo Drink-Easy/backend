@@ -24,59 +24,6 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    // 선택한 와인 정보와 최근 리뷰 3개 가져오기
-    @Override
-    public WineWithThreeReviewsResponse findWineResponseByWineId(Long wineId, Long memberId) {
-
-        // Wine 데이터를 가져옴
-        WineResponse wineResponse = queryFactory
-                .select(new QWineResponse(
-                        wine.id.as("wineId"),
-                        wine.name,
-                        wine.imageUrl,
-                        wine.price.multiply(1400).divide(100).multiply(100).as("price"),
-                        wine.sort,
-                        wine.area,
-                        wine.variety,
-                        wine.vivinoRating,
-
-                        wine.wineNoteStatistics.avgSugarContent,
-                        wine.wineNoteStatistics.avgAcidity,
-                        wine.wineNoteStatistics.avgTannin,
-                        wine.wineNoteStatistics.avgBody,
-                        wine.wineNoteStatistics.avgAlcohol,
-
-                        wine.wineNoteStatistics.nose1,
-                        wine.wineNoteStatistics.nose2,
-                        wine.wineNoteStatistics.nose3,
-
-                        wine.wineNoteStatistics.avgMemberRating,
-                        wineWishlist.id.isNotNull().as("isLiked") // memberId와 wineId에 따라 isLiked 여부
-                ))
-                .from(wine)
-                .leftJoin(wineWishlist)
-                .on(wineWishlist.wine.eq(wine).and(wineWishlist.member.id.eq(memberId)))
-                .where(wine.id.eq(wineId))
-                .fetchOne();
-
-        // 최근 생성된 3개의 TastingNote
-        List<WineReviewResponse> recentReviews = queryFactory
-                .select(new QWineReviewResponse(
-                        tastingNote.member.name,
-                        tastingNote.review,
-                        tastingNote.rating,
-                        tastingNote.createdAt
-                ))
-                .from(tastingNote)
-                .where(tastingNote.wine.id.eq(wineId))
-                .orderBy(tastingNote.createdAt.desc()) // 최신순 정렬
-                .limit(3) // 상위 3개 제한
-                .fetch();
-
-        return new WineWithThreeReviewsResponse(wineResponse, recentReviews);
-    }
-
-
     // 선택한 와인의 전체 리뷰 볼 때 사용
     @Override
     public List<WineReviewResponse> findWineReviewsByWineIdAndMemberId(Long wineId, boolean orderByLatest) {
@@ -96,7 +43,6 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
         return recentReviews;
     }
-
 
     // 홈하면 추천 와인 반환 시 사용
     @Override
