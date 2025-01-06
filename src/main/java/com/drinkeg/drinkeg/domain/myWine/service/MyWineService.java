@@ -13,4 +13,6 @@ public interface MyWineService {
     List<MyWineResponse> getMyWinesByUsername(String username);
 
     void updateMyWine(Long wineWishlistId, MyWineUpdateRequest myWineUpdateRequest, String username);
+
+    void deleteWineWishlistById(Long myWineId, String username);
 }

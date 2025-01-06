@@ -38,13 +38,19 @@ public class MyWineController {
         return ApiResponse.onSuccess(myWineResponseList);
     }
 
-
     @Operation(summary = "보유 와인 수정", description = "wineId와 MyWineUpdateRequest 로 보유 와인을 수정한다.")
-    @PatchMapping("/{wineWishlistId}")
-    public ApiResponse<String>  updateWineWishlist(@PathVariable("wineWishlistId") Long wineWishlistId,
+    @PatchMapping("/{myWindId}")
+    public ApiResponse<String>  updateMyWine(@PathVariable("myWindId") Long wineWishlistId,
                                                    @RequestBody MyWineUpdateRequest myWineUpdateRequest,
                                                    @AuthenticationPrincipal PrincipalDetail principalDetail) {
         myWineService.updateMyWine(wineWishlistId, myWineUpdateRequest, principalDetail.getUsername());
-        return ApiResponse.onSuccess("와인 위시리스트 수정 완료");
+        return ApiResponse.onSuccess("보유 와인 수정 완료");
+    }
+
+    @Operation(summary = "위시리스트에 담긴 와인 삭제", description = "wineId로 위시리스트에 담긴 와인을 삭제한다.")
+    @DeleteMapping("/{myWineId}")
+    public ApiResponse<String>  deleteMyWine(@PathVariable("myWineId") Long myWineId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        myWineService.deleteWineWishlistById(myWineId, principalDetail.getUsername());
+        return ApiResponse.onSuccess("보유 와인 삭제 완료");
     }
 }

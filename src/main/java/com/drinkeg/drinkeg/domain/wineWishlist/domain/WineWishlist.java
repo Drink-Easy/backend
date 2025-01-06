@@ -19,11 +19,11 @@ public class WineWishlist extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = LAZY, cascade = REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = LAZY, cascade = REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "wine_id")
     private Wine wine;
 
