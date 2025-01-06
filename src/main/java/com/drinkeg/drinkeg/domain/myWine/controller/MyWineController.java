@@ -47,7 +47,7 @@ public class MyWineController {
         return ApiResponse.onSuccess("보유 와인 수정 완료");
     }
 
-    @Operation(summary = "위시리스트에 담긴 와인 삭제", description = "wineId로 위시리스트에 담긴 와인을 삭제한다.")
+    @Operation(summary = "보유 와인 삭제", description = "보유 와인 Id로 보유 와인을 삭제한다.")
     @DeleteMapping("/{myWineId}")
     public ApiResponse<String>  deleteMyWine(@PathVariable("myWineId") Long myWineId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         myWineService.deleteWineWishlistById(myWineId, principalDetail.getUsername());
