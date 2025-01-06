@@ -1,9 +1,11 @@
-package com.drinkeg.drinkeg.party.repository;
+package com.drinkeg.drinkeg.domain.party.repository;
 
-import com.drinkeg.drinkeg.member.domain.QMember;
-import com.drinkeg.drinkeg.party.domain.QParty;
-import com.drinkeg.drinkeg.party.dto.PartyResponseDTO;
-import com.drinkeg.drinkeg.partyJoinMember.domain.QPartyJoinMember;
+import com.drinkeg.drinkeg.domain.member.domain.QMember;
+import com.drinkeg.drinkeg.domain.party.domain.QParty;
+import com.drinkeg.drinkeg.domain.party.dto.PartyResponseDTO;
+import com.drinkeg.drinkeg.domain.party.repository.PartyRepositoryCustom;
+
+import com.drinkeg.drinkeg.domain.partyJoinMember.domain.QPartyJoinMember;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
