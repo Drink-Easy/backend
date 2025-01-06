@@ -4,10 +4,10 @@ package com.drinkeg.drinkeg.global.exception;
 import com.drinkeg.drinkeg.global.apipayLoad.code.ReasonDTO;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import lombok.Getter;
+import org.springframework.http.ResponseEntity;
 
 @Getter
 public class GeneralException extends RuntimeException {
-
     private final ErrorStatus errorStatus;
 
     public GeneralException(ErrorStatus errorStatus) {
@@ -18,5 +18,4 @@ public class GeneralException extends RuntimeException {
     public ReasonDTO getErrorStatus() {
         return this.errorStatus.getReason();
     }
-
 }

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain;
+package com.drinkeg.drinkeg.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

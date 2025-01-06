@@ -3,19 +3,18 @@ package com.drinkeg.drinkeg.domain.wine.domain;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.wineNote.domain.WineNote;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Wine {
 
     @Id

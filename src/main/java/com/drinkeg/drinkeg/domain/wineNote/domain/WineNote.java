@@ -1,18 +1,15 @@
 package com.drinkeg.drinkeg.domain.wineNote.domain;
 
-import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WineNote extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

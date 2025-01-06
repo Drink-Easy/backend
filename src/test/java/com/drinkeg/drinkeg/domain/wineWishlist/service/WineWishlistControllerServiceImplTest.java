@@ -1,5 +1,6 @@
-package com.drinkeg.drinkeg.wineWishlist.service;
+package com.drinkeg.drinkeg.domain.wineWishlist.service;
 
+import com.drinkeg.drinkeg.IntegrationTestSupport;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
@@ -15,9 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-@Transactional
-class WineWishlistControllerServiceImplTest {
+class WineWishlistControllerServiceImplTest extends IntegrationTestSupport {
 
     @Autowired
     WineWishlistRepository wineWishlistRepository;
@@ -38,6 +37,5 @@ class WineWishlistControllerServiceImplTest {
                 .toList();
 
         assertEquals(list, new ArrayList<>());
-
     }
 }

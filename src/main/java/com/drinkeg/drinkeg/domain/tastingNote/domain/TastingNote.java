@@ -1,14 +1,11 @@
 package com.drinkeg.drinkeg.domain.tastingNote.domain;
 
-import com.drinkeg.drinkeg.domain.BaseEntity;
+import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,7 +17,7 @@ import static jakarta.persistence.FetchType.*;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TastingNote extends BaseEntity {
 
     @Id

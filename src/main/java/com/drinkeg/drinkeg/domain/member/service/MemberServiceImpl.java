@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.member.service;
 
 import com.drinkeg.drinkeg.domain.member.dto.MemberInfoResponse;
 import com.drinkeg.drinkeg.domain.member.dto.MemberUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.event.RemoveTastingNoteMemberEvent;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
@@ -10,6 +11,7 @@ import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.infra.storage.StoragePathName;
 import com.drinkeg.drinkeg.infra.storage.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final StorageService storageService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public Member getMemberById(Long memberId) {
@@ -42,6 +45,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void deleteMemberByUsername(String username){
+        eventPublisher.publishEvent(new RemoveTastingNoteMemberEvent(username));
         memberRepository.deleteByUsername(username);
     }
 
@@ -87,7 +91,6 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = loadMemberByPrincipalDetail(principalDetail);
 
-
         if (multipartFile != null ) {
 
             String profileImage = storageService.uploadFile(multipartFile, StoragePathName.MEMBER_PROFILE);
@@ -96,7 +99,6 @@ public class MemberServiceImpl implements MemberService {
                 member.updateImageUrl(profileImage);
             }
         }
-
         if (memberUpdateRequest.getCity() != null) {
             member.updateRegion(memberUpdateRequest.getCity());
         }
@@ -104,7 +106,6 @@ public class MemberServiceImpl implements MemberService {
         if (memberUpdateRequest.getUsername() != null) {
             member.updateName(memberUpdateRequest.getUsername());
         }
-
 
     }
 }
