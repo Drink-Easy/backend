@@ -9,10 +9,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static jakarta.persistence.FetchType.*;
 
@@ -127,23 +124,19 @@ public class TastingNote extends BaseEntity {
     }
 
     public void updateTastingNoteNoseList(List<String> updateNoseList) {
-        // Set으로 중복 제거
+        // updateNoseList를 Set으로 변환하여 빠르게 검색
         Set<String> uniqueNoseElements = new HashSet<>(updateNoseList);
 
-        // updateNoseList의 요소 중 기존에 없는 것 추가
-        uniqueNoseElements.forEach(noseElement -> {
+        // 기존 noseList에서 updateNoseList에 없는 항목 삭제
+        this.noseList.removeIf(nose -> !uniqueNoseElements.contains(nose.getNoseElement()));
+
+        // updateNoseList에 있는 항목 추가
+        for (String noseElement : uniqueNoseElements) {
+            // noseList에서 해당 항목이 없는 경우에만 추가
             if (this.noseList.stream().noneMatch(nose -> nose.getNoseElement().equals(noseElement))) {
                 this.addNoseElement(noseElement);
             }
-        });
-
-        // 기존 noseList에서 updateNoseList에 없는 것 삭제
-        List<TastingNoteNose> noseToDelete = this.noseList.stream()
-                .filter(nose -> !updateNoseList.contains(nose.getNoseElement()))
-                .toList();
-
-        // 삭제된 항목을 noseList에서 제거
-        this.noseList.removeAll(noseToDelete);
+        }
     }
 
 }
