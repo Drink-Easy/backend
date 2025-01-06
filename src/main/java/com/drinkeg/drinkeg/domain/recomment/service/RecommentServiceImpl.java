@@ -1,5 +1,7 @@
 package com.drinkeg.drinkeg.domain.recomment.service;
 
+import com.drinkeg.drinkeg.domain.comment.repository.CommentRepository;
+import com.drinkeg.drinkeg.domain.recomment.dto.RecommentResponseDTO;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.recomment.RecommentConverter;
@@ -11,6 +13,7 @@ import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import com.drinkeg.drinkeg.domain.recomment.repository.RecommentRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +26,8 @@ public class RecommentServiceImpl implements RecommentService{
     private final RecommentRepository recommentRepository;
     private final RecommentConverter recommentConverter;
     private final MemberService memberService;
+    private final CommentRepository commentRepository;
 
-
-    // 댓글 ID로 대댓글을 조회하는 메서드
-    @Override
-    public List<Recomment> findByCommentId(Long commentId) {
-        return recommentRepository.findByCommentId(commentId);
-    }
-
-    // 특정 댓글(commentId)에 대댓글이 존재하는지 확인하는 메서드
-    @Override
-    public boolean existsByCommentId(Long commentId) {
-        return recommentRepository.existsByCommentId(commentId);
-    }
 
     // 특정 댓글에 포함되는 대댓글의 개수를 반환하는 메서드
     @Override
@@ -45,7 +37,9 @@ public class RecommentServiceImpl implements RecommentService{
     }
 
 
+
     @Override
+    @Transactional
     public void createRecomment(Comment comment, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail) {
 
         // 회원 존재 여부 검증
@@ -54,12 +48,16 @@ public class RecommentServiceImpl implements RecommentService{
         // 대댓글 엔티티 생성
         Recomment recomment = recommentConverter.fromRequest(recommentRequest, comment, member);
 
-        // 대댓글 저장
-        Recomment savedRecomment = recommentRepository.save(recomment);
+        // 부모 엔티티에 대댓글 추가 (CascadeType.ALL로 인해 자식도 자동 저장됨)
+        comment.addRecomment(recomment);
+
+        // 부모 엔티티 저장
+        commentRepository.save(comment); // 자식은 자동 저장됨
 
     }
 
     @Override
+    @Transactional
     public void deleteRecomment(PrincipalDetail principalDetail, Long recommentId) {
 
         // 대댓글 존재 여부 검증
@@ -72,7 +70,10 @@ public class RecommentServiceImpl implements RecommentService{
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }
 
-        // 대댓글 삭제
-        recommentRepository.delete(recomment);
+        // 부모(Comment) 엔티티에서 해당 대댓글 제거
+        Comment parentComment = recomment.getComment();
+        if (parentComment != null) {
+            parentComment.removeRecomment(recomment); // 부모의 컬렉션에서 제거
+        }
     }
 }

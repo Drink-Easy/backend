@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.domain.recomment.domain;
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.party.domain.Party;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,4 +30,8 @@ public class Recomment extends BaseEntity {
     private Member member;
 
     private String content;
+
+    public void setParentComment(Comment comment) {
+        this.comment = comment;
+    }
 }
