@@ -27,20 +27,6 @@ public class MemberConverter {
     }
 
 
-    public static MemberResponseDTO toMemberResponseDTO(Member member) {
-        return MemberResponseDTO.builder()
-                .id(member.getId())
-                .name(member.getName())
-                .username(member.getUsername())
-                .role(member.getRole())
-                .isNewbie(member.getIsNewbie())
-                .isFirst(member.getIsFirst())
-                .monthPriceMax(member.getMonthPriceMax())
-                .wineSort(member.getWineSort())
-                .wineArea(member.getWineArea())
-                .region(member.getRegion())
-                .build();
-    }
 
 
 }

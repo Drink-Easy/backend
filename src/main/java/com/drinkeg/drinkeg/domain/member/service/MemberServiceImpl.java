@@ -54,28 +54,9 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = memberRepository.findMemberByUsername(username);
 
-        String imageUrl;
-        String email;
-        String city;
 
 
-        if(member.getImageUrl() == null){
-            imageUrl = "미입력";
-        }else{
-            imageUrl = member.getImageUrl();
-        }
-        if(member.getEmail() == null){
-            email = "미입력";
-        }else{
-            email = member.getEmail();
-        }
-        if(member.getRegion() == null){
-            city = "미입력";
-        }else{
-            city = member.getRegion();
-        }
-
-        return MemberInfoResponse.create(member,imageUrl, email,city);
+        return MemberInfoResponse.create(member);
     }
 
     @Override
