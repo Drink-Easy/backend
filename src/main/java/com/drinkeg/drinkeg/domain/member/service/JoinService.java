@@ -6,10 +6,13 @@ import com.drinkeg.drinkeg.domain.member.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
+import com.drinkeg.drinkeg.infra.storage.StoragePathName;
+import com.drinkeg.drinkeg.infra.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +20,7 @@ public class JoinService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final MemberConverter memberConverter;
+    private final StorageService storageService;
 
 
     @Transactional
@@ -27,7 +30,7 @@ public class JoinService {
         String password = joinDTO.getPassword();
         String rePassword = joinDTO.getRePassword();
 
-        if (memberRepository.existsByUsername(username)) {
+        if (memberRepository.existsByUsername("drinkeg "+ username)) {
             throw new GeneralException(ErrorStatus.MEMBER_ALREADY_EXIST);
         }
         if (!password.equals(rePassword)){
@@ -44,20 +47,26 @@ public class JoinService {
 
     }
 
-    public MemberResponseDTO addMemberDetail(MemberRequestDTO memberRequestDTO, String username) {
+    public MemberResponseDTO addMemberDetail(MemberRequestDTO memberRequestDTO, String username, MultipartFile multipartFile) {
 
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.SESSION_UNAUTHORIZED));
 
+        String profileImage = null;
+
+        if (multipartFile != null ) {
+            profileImage = storageService.uploadFile(multipartFile, StoragePathName.MEMBER_PROFILE);
+        }
+
         // 회원이 입력한 정보로 update 하고 isFirst = false 로 변경
         member.updateFirstUser(memberRequestDTO.getName(), memberRequestDTO.getIsNewbie(), memberRequestDTO.getMonthPrice(),
-                memberRequestDTO.getWineSort(), memberRequestDTO.getWineArea(), memberRequestDTO.getRegion());
+                memberRequestDTO.getWineSort(), memberRequestDTO.getWineArea(), memberRequestDTO.getRegion(),
+                profileImage);
 
         memberRepository.save(member);
 
-        MemberResponseDTO memberResponseDTO = MemberConverter.toMemberResponseDTO(member);
 
-        return memberResponseDTO;
+        return MemberResponseDTO.create(member);
     }
 
     public boolean isValidPassword(String password) {

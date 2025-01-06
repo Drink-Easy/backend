@@ -35,9 +35,9 @@ public class MemberController {
 
     @PatchMapping("/member")
     @Operation(summary = "사용자 초기 정보 추가", description = "첫 로그인 여부에 따라 isFirst 속성이 true인 경우 사용자 초기 정보를 추가합니다.")
-    public ApiResponse<MemberResponseDTO> addMemberDetail(@RequestBody MemberRequestDTO memberRequestDTO, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+    public ApiResponse<MemberResponseDTO> addMemberDetail(@RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile,  @RequestPart("memberRequest")  MemberRequestDTO memberRequestDTO, @AuthenticationPrincipal PrincipalDetail principalDetail) {
 
-        MemberResponseDTO memberResponseDTO = joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername());
+        MemberResponseDTO memberResponseDTO = joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername(),multipartFile);
         return ApiResponse.onSuccess(memberResponseDTO);
     }
 

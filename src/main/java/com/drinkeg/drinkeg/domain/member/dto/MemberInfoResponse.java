@@ -20,13 +20,13 @@ public class MemberInfoResponse {
     private String authType;
     private boolean isAdult;
 
-    public static MemberInfoResponse create(Member member,String imageUrl, String email, String city){
+    public static MemberInfoResponse create(Member member){
 
         return  MemberInfoResponse.builder()
-                .imageUrl(imageUrl)
+                .imageUrl(member.getImageUrl())
                 .username(member.getName())
-                .email(email)
-                .city(city)
+                .email(member.getEmail())
+                .city(member.getRegion())
                 .authType(member.getProvider().getValue())
                 .isAdult(member.isAdult())
                 .build();

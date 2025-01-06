@@ -123,13 +123,14 @@ public class Member {
 
 
     public void updateFirstUser(String name, Boolean isNewbie, Long monthPrice,
-                                List<String> wineSort, List<String> wineArea, String region){
+                                List<String> wineSort, List<String> wineArea, String region, String profileUrl){
         if(name != null) this.name = name;
         if(isNewbie != null) this.isNewbie = isNewbie;
         if(monthPrice != null) this.monthPriceMax = monthPrice;
         if(wineSort != null) this.wineSort = wineSort;
         if(wineArea != null) this.wineArea = wineArea;
         if(region != null) this.region = region;
+        if(profileUrl != null) this.imageUrl = profileUrl;
         this.isFirst = false;
     }
 }
