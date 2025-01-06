@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.domain.wine.dto.response;
 
-import com.drinkeg.drinkeg.domain.wineNote.domain.WineNoteNose;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

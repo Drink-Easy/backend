@@ -1,14 +1,11 @@
 package com.drinkeg.drinkeg.domain.wine.domain;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.wineNote.domain.WineNote;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
@@ -23,22 +20,18 @@ public class Wine {
 
     private String imageUrl;
 
-    // 종류
-    private String sort;
+    private String sort; // 종류
 
-    // 원산지
-    private String area;
+    private String area; // 원산지
 
-    // 품종
-    private String variety;
+    private String variety; // 품종
 
     private float vivinoRating;
 
     private int price;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wine_note_id")
-    private WineNote wineNote;
+    @Embedded
+    private WineNoteStatics wineNoteStatics;
 
     @OneToMany
     @JoinColumn(name = "wine_id")
@@ -49,7 +42,7 @@ public class Wine {
     }
 
     @Builder
-    public Wine(String name, String imageUrl, String sort, String area, String variety, float vivinoRating, int price, WineNote wineNote) {
+    public Wine(String name, String imageUrl, String sort, String area, String variety, float vivinoRating, int price, WineNoteStatics wineNoteStatics) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.sort = sort;
@@ -57,6 +50,8 @@ public class Wine {
         this.variety = variety;
         this.vivinoRating = vivinoRating;
         this.price = price;
-        this.wineNote = wineNote;
+        this.wineNoteStatics = wineNoteStatics;
     }
 }
+
+

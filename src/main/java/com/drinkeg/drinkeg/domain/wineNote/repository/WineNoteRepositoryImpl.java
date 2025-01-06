@@ -1,7 +1,6 @@
 
 package com.drinkeg.drinkeg.domain.wineNote.repository;
 
-import com.drinkeg.drinkeg.domain.wineNote.domain.WineNoteNose;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
