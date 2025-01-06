@@ -123,7 +123,9 @@ public class TastingNote extends BaseEntity {
         this.noseList.add(new TastingNoteNose(this, noseElement));
     }
 
+    // todo : 업데이트 기능 리팩토링 필요
     public void updateTastingNoteNoseList(List<String> updateNoseList) {
+
         // updateNoseList를 Set으로 변환하여 빠르게 검색
         Set<String> uniqueNoseElements = new HashSet<>(updateNoseList);
 
