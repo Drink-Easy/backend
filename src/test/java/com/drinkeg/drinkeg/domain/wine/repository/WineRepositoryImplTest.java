@@ -173,7 +173,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         assertThat(mostLikedWines)
                 .hasSize(10)
                 .extracting("name")
-                .containsExactlyInAnyOrder("와인2", "와인3", "와인9", "와인1", "와인4", "와인8", "와인5", "와인6", "와인10", "와인19");
+                .containsExactly("와인2", "와인3", "와인9", "와인1", "와인4", "와인8", "와인5", "와인6", "와인10", "와인19");
     }
 
     private WineWishlist createWineWishlist(Wine wine) {
