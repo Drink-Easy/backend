@@ -35,10 +35,11 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
         TastingNote note2 = createTastingNote(wine, member, "나쁘지 않아요");
         TastingNote note3 = createTastingNote(wine, member, "맛있어요!");
         TastingNote note4 = createTastingNote(wine, member, "좋아요!");
-        tastingNoteRepository.save(note4);
-        tastingNoteRepository.save(note3);
-        tastingNoteRepository.save(note2);
         tastingNoteRepository.save(note1);
+        tastingNoteRepository.save(note2);
+        tastingNoteRepository.save(note3);
+        tastingNoteRepository.save(note4);
+
 
         // when
         List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteBy(wine.getId());

@@ -167,8 +167,8 @@ class WineServiceImplTest extends IntegrationTestSupport {
         assertThat(wineInfo.getRecentReviews())
                 .extracting("review", "rating")
                 .containsExactly(
-                        tuple("가성비 좋아요", 0.0f),
-                        tuple("나쁘지 않아요", 5.0f),
+                        tuple("다시 구매할 것 같아요", 10.0f),
+                        tuple("고기랑 먹기 좋아요!", 10.0f),
                         tuple("맛있어요!", 10.0f)
                 );
     }

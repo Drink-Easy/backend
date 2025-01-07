@@ -5,6 +5,8 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.wine.controller.SortType;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -112,9 +114,18 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
 
     @Override
     public List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort) {
-        return null;
-//        return queryFactory.selectFrom(tastingNote)
-//                .where(tastingNote.wine.id.eq(wineId))
-//                .orderBy();
+        return queryFactory.selectFrom(tastingNote)
+                .where(tastingNote.wine.id.eq(wineId))
+                .orderBy(orderCondition(sort), tastingNote.id.desc())
+                .fetch();
+    }
+
+    private OrderSpecifier<?> orderCondition(SortType sortType) {
+        return switch (sortType) {
+            case LATEST -> new OrderSpecifier<>(Order.DESC, tastingNote.updatedAt);
+            case OLDEST -> new OrderSpecifier<>(Order.ASC, tastingNote.updatedAt);
+            case HIGH_RATING -> new OrderSpecifier<>(Order.DESC, tastingNote.rating);
+            case LOW_RATING -> new OrderSpecifier<>(Order.ASC, tastingNote.rating);
+        };
     }
 }
