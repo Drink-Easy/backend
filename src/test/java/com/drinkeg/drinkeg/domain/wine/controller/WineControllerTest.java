@@ -2,27 +2,20 @@ package com.drinkeg.drinkeg.domain.wine.controller;
 
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.UserDTO;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineInfoResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,7 +33,6 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("와인 이름으로 와인을 검색한다.")
     @Test
-    @WithMockUser(username = "user")
     void searchWineByWineName() throws Exception {
         // given
         String wineName = "와인";
@@ -60,7 +52,6 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("와인 이름으로 와인을 검색하는데 일치하는 와인이 없다면 빈 리스트를 반환한다.")
     @Test
-    @WithMockUser(username = "user")
     void searchWineByNotExistingWineName() throws Exception {
         // given
         String wineName = "존재하지 않는 와인 이름";
@@ -76,7 +67,6 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("검색 파라미터를 넣지 않으면 기본값으로 빈 문자열이 들어간다.")
     @Test
-    @WithMockUser(username = "user")
     void searchWineByBlankSearchWineParameter() throws Exception {
         // given
         String wineName = "";
@@ -96,7 +86,6 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("와인 아이디로 와인 상세 정보를 조회한다.")
     @Test
-    @WithMockUser(username = "user")
     void findWineInfoByWineId() throws Exception {
         // given
         WineWithThreeReviewsResponse wineWithThreeReviewsResponse = createWineWithThreeReviewsResponse();
@@ -201,6 +190,39 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("ARGUMENT_ERROR"))
                 .andExpect(jsonPath("$.message").value("유효하지 않은 정렬 타입입니다."));
+    }
+
+    @DisplayName("멤버의 취향 정보를 기반으로 추천 와인 리스트를 조회한다.")
+    @Test
+    @WithMockUser(username = "user")
+    void findRecommendWineList() throws Exception {
+        // given
+        when(wineService.getRecommendWineList("user"))
+                .thenReturn(List.of(
+                        createHomeWineResponse("와인1"),
+                        createHomeWineResponse("와인2"),
+                        createHomeWineResponse("와인3"))
+                );
+        // when // then
+        mockMvc.perform(get("/wine/recommend")
+                        .principal(() -> "user"))
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.result[0].wineName").value("와인1"))
+                .andExpect(jsonPath("$.result[1].wineName").value("와인2"))
+                .andExpect(jsonPath("$.result[2].wineName").value("와인3"));
+    }
+
+    private HomeWineResponse createHomeWineResponse(String name) {
+        return HomeWineResponse.builder()
+                .wineId(1L)
+                .imageUrl("https://test-image-url.png")
+                .wineName(name)
+                .sort("레드")
+                .price(30000)
+                .vivinoRating(4.3f)
+                .build();
     }
 
     private WineWithThreeReviewsResponse createWineWithThreeReviewsResponse() {
