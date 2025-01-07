@@ -28,7 +28,7 @@ public class WineController {
 
     // todo: 페이징 구현하기
     @GetMapping
-    @Operation(summary = "와인 검색", description = "와인 이름으로 검색하여 와인의 기본 정보를 조회한다.")
+    @Operation(summary = "와인 검색", description = "와인 이름 또는 영어 이름으로 검색하여 와인의 기본 정보를 조회한다.")
     public ApiResponse<List<WinePreviewResponse>> searchWine(@RequestParam(defaultValue = "") String searchName) {
 
         List<WinePreviewResponse> winePreviewResponses = wineService.searchWinesByName(searchName);
@@ -46,7 +46,7 @@ public class WineController {
         return ApiResponse.onSuccess(wineWithThreeReviewsResponse);
     }
 
-    // todo: 페이징 구현하기, IOS 에 sort 타입 설명하기.
+    // todo: 페이징 구현하기
     @GetMapping("/review/{wineId}")
     @Operation(summary = "와인 리뷰 전체 조회", description = "선택한 와인의 리뷰들을 List에 담아서 반환한다." +
             " 정렬 기준(sortType)은 \"최신순\", \"오래된 순\",\" 별점 높은 순\", \"별점 낮은 순\"으로 설정할 수 있다.")
