@@ -138,6 +138,31 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 .hasMessage(ErrorStatus.TASTING_NOTE_NOT_FOUND.getMessage());
     }
 
+    @DisplayName("테이스팅 노트가 없는 경우 전체 테이스팅 노트를 조회한다.")
+    @Test
+    void findAllTastingNote_WithNoTastingNote() {
+        // given
+        Member member = memberRepository.save(createMember("user1", "password", false));
+
+        // when
+        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote("all", member.getUsername());
+        List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
+        TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
+
+        // then
+        Assertions.assertThat(notePriviewList).isEmpty();
+
+        assertAll(
+                () -> Assertions.assertThat(sortCount.getTotalCount()).isEqualTo(0),
+                () -> Assertions.assertThat(sortCount.getRedCount()).isEqualTo(0),
+                () -> Assertions.assertThat(sortCount.getWhiteCount()).isEqualTo(0),
+                () -> Assertions.assertThat(sortCount.getSparklingCount()).isEqualTo(0),
+                () -> Assertions.assertThat(sortCount.getRoseCount()).isEqualTo(0),
+                () -> Assertions.assertThat(sortCount.getEtcCount()).isEqualTo(0)
+        );
+
+    }
+
     @DisplayName("전체 테이스팅 노트를 조회한다.")
     @Test
     void findAllTastingNote() {
@@ -269,6 +294,18 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 () -> Assertions.assertThat(sortCount.getEtcCount()).isEqualTo(3)
         );
 
+    }
+
+    @DisplayName("없는 와인 종류로 전체 테이스팅 노트를 조회하면 SORT_NOT_FOUND 에러가 발생한다.")
+    @Test
+    void findAllTastingNoteByWriongSort() {
+        // given
+        Member member = memberRepository.save(createMember("user1", "password", false));
+
+        // when & then
+        assertThatThrownBy(() -> tastingNoteService.findAllTastingNote("sort", member.getUsername()))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage(ErrorStatus.SORT_NOT_FOUND.getMessage());
     }
 
     @DisplayName("테이스팅 노트를 id와 username으로 삭제한다.")
