@@ -77,27 +77,12 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     @Override
     public AllTastingNoteResponse findAllTastingNote(String sort, String username) {
-
-        // sort에 따라 테이스팅 노트를 찾는다.
-        List<TastingNote> foundNotes = new ArrayList<>();
-        if(sort.equals("all")) {
-            foundNotes= tastingNoteRepository.findTastingNotesWithWineAndNoseByUsername(username);
-        }
-        else if (sort.equals("red") || sort.equals("white") || sort.equals("sparkling") || sort.equals("rose")) {
-            String wineSort = getWineSort(sort);
-            foundNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(wineSort, username);
-        }
-        else{
-            foundNotes = tastingNoteRepository.findETCTastingNoteUsername(username);
-        }
-
-
+        List<TastingNote> tastingNoteList = tastingNoteRepository.findTastingNoteBySortAndUsername(sort, username);
         TastingNoteSortCountResponse tastingNoteSortCountResponse = tastingNoteRepository.findTastingNoteSortCountsByUsername(username);
 
-        // 테이스팅노트와 sortCount로 TastingNotePreviewDTO로 생성
-        List<TastingNotePreviewResponse> tastingNotePreviewResponseList = foundNotes.stream()
+        List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteList.stream()
                 .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
-                .map(note -> TastingNotePreviewResponse.create(note.getId(), note.getWine().getName(), note.getWine().getImageUrl(), note.getWine().getSort()))
+                .map(TastingNotePreviewResponse::of)
                 .toList();
 
         return AllTastingNoteResponse.create(tastingNoteSortCountResponse, tastingNotePreviewResponseList);

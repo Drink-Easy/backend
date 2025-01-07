@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import lombok.*;
 
 @Getter
@@ -19,12 +20,12 @@ public class TastingNotePreviewResponse {
                 this.sort = sort;
         }
 
-        public static TastingNotePreviewResponse create(Long noteId, String name, String imageUrl, String sort){
+        public static TastingNotePreviewResponse of(TastingNote tastingNote){
                 return TastingNotePreviewResponse.builder()
-                        .noteId(noteId)
-                        .wineName(name)
-                        .imageUrl(imageUrl)
-                        .sort(sort)
+                        .noteId(tastingNote.getId())
+                        .wineName(tastingNote.getWine().getName())
+                        .imageUrl(tastingNote.getWine().getImageUrl())
+                        .sort(tastingNote.getWine().getSort())
                         .build();
         }
 

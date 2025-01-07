@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface TastingNoteRepositoryCustom {
 
-
+    List<TastingNote> findTastingNoteBySortAndUsername(String sort, String username);
 }
