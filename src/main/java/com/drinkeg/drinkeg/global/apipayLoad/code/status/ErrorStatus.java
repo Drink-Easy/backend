@@ -16,6 +16,7 @@ public enum ErrorStatus implements BaseCode {
     // TastingNote Error
     TASTING_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTE4001", "테이스팅 노트가 없습니다."),
     TASTING_NOTE_FORBIDDEN(HttpStatus.FORBIDDEN, "NOTE4002", "본인의 노트가 아닙니다."),
+    SORT_NOT_FOUND(HttpStatus.FORBIDDEN, "NOTE4003", "옳바른 와인 종류가 아닙니다."),
 
     // WineNote Error
     WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),

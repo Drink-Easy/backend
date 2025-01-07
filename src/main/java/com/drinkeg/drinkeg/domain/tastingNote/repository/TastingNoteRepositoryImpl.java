@@ -5,6 +5,8 @@ import com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNoteNose;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.wine.domain.QWine;
+import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +54,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
             case "white" -> "화이트";
             case "sparkling" -> "스파클링";
             case "rose" -> "로제";
-            default -> throw new IllegalArgumentException("Invalid sort value: " + sort);
+            default -> throw new GeneralException(ErrorStatus.SORT_NOT_FOUND);
         };
     }
 
