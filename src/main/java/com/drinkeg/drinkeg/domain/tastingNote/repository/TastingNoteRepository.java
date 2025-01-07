@@ -34,6 +34,23 @@ public interface TastingNoteRepository extends JpaRepository<TastingNote, Long>,
             "WHERE t.member.username = :username")
     List<TastingNote> findTastingNotesWithWineAndNoseByUsername(@Param("username") String username);
 
+    @Query("SELECT DISTINCT t " +
+            "FROM TastingNote t " +
+            "LEFT JOIN FETCH t.wine w " +
+            "LEFT JOIN FETCH t.noseList n " +
+            "WHERE t.member.username = :username AND t.wine.sort = :sort")
+    List<TastingNote> findTastingNoteBySortAndUsername(@Param("sort") String sort, @Param("username") String username);
+
+
+
+    @Query("SELECT DISTINCT t " +
+            "FROM TastingNote t " +
+            "LEFT JOIN FETCH t.wine w " +
+            "LEFT JOIN FETCH t.noseList n " +
+            "WHERE t.member.username = :username " +
+            "AND (w.sort = '주정강화' OR w.sort = '기타')")
+    List<TastingNote> findETCTastingNoteUsername(@Param("username") String username);
+
 
     @Query("SELECT new com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse( " +
             "COUNT(t), " +

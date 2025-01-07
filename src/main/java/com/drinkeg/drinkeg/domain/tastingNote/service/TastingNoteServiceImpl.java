@@ -78,7 +78,19 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     @Override
     public AllTastingNoteResponse findAllTastingNote(String sort, String username) {
 
-        List<TastingNote> foundNotes= tastingNoteRepository.findTastingNotesWithWineAndNoseByUsername(username);
+        // sort에 따라 테이스팅 노트를 찾는다.
+        List<TastingNote> foundNotes = new ArrayList<>();
+        if(sort.equals("all")) {
+            foundNotes= tastingNoteRepository.findTastingNotesWithWineAndNoseByUsername(username);
+        }
+        else if (sort.equals("red") || sort.equals("white") || sort.equals("sparkling") || sort.equals("rose")) {
+            String wineSort = getWineSort(sort);
+            foundNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(wineSort, username);
+        }
+        else{
+            foundNotes = tastingNoteRepository.findETCTastingNoteUsername(username);
+        }
+
 
         TastingNoteSortCountResponse tastingNoteSortCountResponse = tastingNoteRepository.findTastingNoteSortCountsByUsername(username);
 
@@ -206,5 +218,21 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     private void removeNoseElement(Long noseElementId){
         tastingNoteNoseRepository.deleteById(noseElementId);
+    }
+
+    // sort 값을 와인 종류로 변환하는 메서드
+    private String getWineSort(String sort) {
+        switch (sort) {
+            case "red":
+                return "레드";
+            case "white":
+                return "화이트";
+            case "sparkling":
+                return "스파클링";
+            case "rose":
+                return "로제";
+            default:
+                return null; // 혹은 기본값을 반환할 수 있음 (예: "기타")
+        }
     }
 }

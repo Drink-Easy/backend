@@ -38,8 +38,14 @@ public class TastingNoteController {
 
     // 전체 노트 보기
     @GetMapping("/all")
-    @Operation(summary = "전체 테이스팅 노트 확인", description = "sort(red, white, sparkling, rose, all) 를 RequestParam 으로 조회")
+    @Operation(summary = "전체 테이스팅 노트 확인", description = "sort(all, red, white, sparkling, rose, etc) 를 RequestParam 으로 조회")
     public ApiResponse<AllTastingNoteResponse> showAllTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestParam("sort") String sort) {
+
+        // 유효하지 않은 sort 값일 경우 예외 처리
+        List<String> validSorts = List.of("red", "white", "sparkling", "rose", "all", "etc");
+        if (!validSorts.contains(sort)) {
+            throw new IllegalArgumentException("Invalid sort value: " + sort);
+        }
 
         AllTastingNoteResponse allTastingNote =
                 tastingNoteService.findAllTastingNote(sort, principalDetail.getUsername());
