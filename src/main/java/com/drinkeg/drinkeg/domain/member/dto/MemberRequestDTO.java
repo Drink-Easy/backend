@@ -17,12 +17,17 @@ public class MemberRequestDTO {
     private String name;
 
     private Boolean isNewbie;
+
     private Long monthPrice;
 
     @Builder.Default
     private List<String> wineSort = new ArrayList<>();
+
     @Builder.Default
     private List<String> wineArea = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> wineVariety = new ArrayList<>();
 
     private String region;
 }
