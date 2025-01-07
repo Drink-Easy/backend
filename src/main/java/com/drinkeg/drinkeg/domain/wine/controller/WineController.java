@@ -26,7 +26,7 @@ import java.util.List;
 public class WineController {
     private final WineService wineService;
 
-    // todo: 페이징 구현
+    // todo: 페이징 구현하기
     @GetMapping
     @Operation(summary = "와인 검색", description = "와인 이름으로 검색하여 와인의 기본 정보를 조회한다.")
     public ApiResponse<List<WinePreviewResponse>> searchWine(@RequestParam(defaultValue = "") String searchName) {

@@ -8,6 +8,7 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -139,6 +141,23 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.result.recentReviews[2].review").value("세 번째 리뷰 내용"))
                 .andExpect(jsonPath("$.result.recentReviews[2].name").value("user3"))
                 .andExpect(jsonPath("$.result.recentReviews[2].rating").value(5));
+    }
+
+    @DisplayName("존재하지 않는 와인 아이디로 와인 상세 정보를 조회하면 예외를 반환한다.")
+    @Test
+    void findWineInfoWithWrongWineId() throws Exception {
+        // given
+        GeneralException generalException = new GeneralException(ErrorStatus.WINE_NOT_FOUND);
+        when(wineService.getWineInfoWithThreeReviews(any(Long.class), any(String.class)))
+                .thenThrow(generalException);
+
+        // when // then
+        mockMvc.perform(get("/wine/{wineId}", 1L)
+                        .principal(() -> "user"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("WINE4001"))
+                .andExpect(jsonPath("$.message").value("와인이 없습니다."));
     }
 
     private WineWithThreeReviewsResponse createWineWithThreeReviewsResponse() {
