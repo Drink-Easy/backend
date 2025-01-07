@@ -60,7 +60,7 @@ public class JoinService {
 
         // 회원이 입력한 정보로 update 하고 isFirst = false 로 변경
         member.updateFirstUser(memberRequestDTO.getName(), memberRequestDTO.getIsNewbie(), memberRequestDTO.getMonthPrice(),
-                memberRequestDTO.getWineSort(), memberRequestDTO.getWineArea(), memberRequestDTO.getRegion(),
+                memberRequestDTO.getWineSort(), memberRequestDTO.getWineArea(), memberRequestDTO.getWineVariety(),memberRequestDTO.getRegion(),
                 profileImage);
 
         memberRepository.save(member);
