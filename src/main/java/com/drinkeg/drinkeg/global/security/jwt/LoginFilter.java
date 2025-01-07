@@ -58,7 +58,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             jwtExceptionHandler(response, ErrorStatus.PASSWORD_NOT_FUND);
             return null;
         }
-        String username = requestBody.get("username");
+        String username = "drinkeg "+ requestBody.get("username");
         String password = requestBody.get("password");
 
         // 스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
@@ -75,6 +75,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         PrincipalDetail principalDetail = (PrincipalDetail) authentication.getPrincipal();
 
         String username = principalDetail.getUsername();
+        Long id = principalDetail.getId();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -99,11 +100,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 첫 로그인 여부 가져오기
         Boolean isFirst = principalDetail.getIsFirst();
 
-        LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
-                .username(username)
-                .role(Role.fromValue(role))
-                .isFirst(isFirst)
-                .build();
+
+        LoginResponseDTO loginResponseDTO = LoginResponseDTO.create(id,username,Role.fromValue(role),isFirst);
 
 
         // ApiResponse 생성

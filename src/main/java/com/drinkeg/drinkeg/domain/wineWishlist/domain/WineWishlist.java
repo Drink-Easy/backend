@@ -19,11 +19,11 @@ public class WineWishlist extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "wine_id", nullable = false)
+    @JoinColumn(name = "wine_id")
     private Wine wine;
 
     @Builder

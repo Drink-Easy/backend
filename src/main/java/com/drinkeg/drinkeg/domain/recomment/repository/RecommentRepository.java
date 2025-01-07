@@ -12,7 +12,7 @@ public interface RecommentRepository extends JpaRepository<Recomment, Long> {
 
     Optional<Long> countByCommentId(Long commentId);
 
-    Optional<Recomment> findByIdAndCommentId(Long recommentId, Long commentId);
+    //Optional<Recomment> findByIdAndCommentId(Long recommentId, Long commentId);
 
     List<Recomment> findByCommentId(Long commentId);
 

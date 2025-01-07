@@ -41,7 +41,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
             web.ignoring()
-                    .requestMatchers("/join","/login/apple/**","/login/kakao/**",
+                    .requestMatchers("/join/**","/login/apple/**","/login/kakao/**",
                             "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**");// 필터를 타면 안되는 경로
         };
     }
@@ -117,7 +117,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
-                        .requestMatchers("/", "/join", "/login", "/reissue","/login/apple","/login/kakao").permitAll()
+                        .requestMatchers("/", "/join/**", "/login", "/reissue","/login/apple","/login/kakao").permitAll()
 
                         // home 인가
                         .requestMatchers(HttpMethod.GET,"/home").hasRole("USER")
@@ -154,6 +154,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "comments/**").hasRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "comments/**").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "comments/**").hasRole("USER")
+
+                        // myPage 인가
+                        .requestMatchers(HttpMethod.PATCH,"member/info").hasRole("USER")
 
                         // PartyJoinMember 인가
                         .requestMatchers(HttpMethod.POST, "partyJoin/**").hasRole("USER")
