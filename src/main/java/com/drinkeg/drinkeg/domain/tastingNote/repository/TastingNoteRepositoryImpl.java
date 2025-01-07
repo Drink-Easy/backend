@@ -76,7 +76,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                         tastingNote.getWine().getId(),
                         tastingNote.getWine().getName(),
                         tastingNote.getWine().getSort(),
-                        tastingNote.getWine().getArea(),
+                        tastingNote.getWine().getCountry(),
                         tastingNote.getWine().getImageUrl(),
                         tastingNote.getColor(),
                         tastingNote.getTasteDate(),

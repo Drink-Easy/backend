@@ -19,8 +19,6 @@ public class WineReviewResponse {
 
     private LocalDateTime createdAt;
 
-
-    @QueryProjection
     @Builder
     public WineReviewResponse(String name, String review, float rating, LocalDateTime createdAt) {
         this.name = name;

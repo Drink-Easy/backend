@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.wine.domain;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,19 +16,23 @@ public class Wine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String imageUrl;
+
     private String name;
 
-    private String imageUrl;
+    private String nameEng; // 추가
+
+    private int price;
 
     private String sort; // 종류
 
-    private String area; // 원산지
+    private String country; // 국가
+
+    private String region; // 생산지
 
     private String variety; // 품종
 
     private float vivinoRating;
-
-    private int price;
 
     @Embedded
     private WineNoteStatistics wineNoteStatistics;
@@ -43,11 +46,13 @@ public class Wine {
     }
 
     @Builder
-    public Wine(String name, String imageUrl, String sort, String area, String variety, float vivinoRating, int price, WineNoteStatistics wineNoteStatistics) {
+    public Wine(String name, String nameEng, String imageUrl, String sort, String country, String region, String variety, float vivinoRating, int price, WineNoteStatistics wineNoteStatistics) {
         this.name = name;
+        this.nameEng = nameEng;
         this.imageUrl = imageUrl;
         this.sort = sort;
-        this.area = area;
+        this.country = country;
+        this.region = region;
         this.variety = variety;
         this.vivinoRating = vivinoRating;
         this.price = price;

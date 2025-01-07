@@ -13,12 +13,14 @@ public class WineInfoResponse {
     private Long wineId;
 
     private String name;
+    private String nameEng;
 
     private String imageUrl;
 
     private int price;
     private String sort;
-    private String area;
+    private String country;
+    private String region;
     private String variety;
     private float vivinoRating;
 
@@ -40,10 +42,12 @@ public class WineInfoResponse {
         return WineInfoResponse.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())
+                .nameEng(wine.getNameEng())
                 .imageUrl(wine.getImageUrl())
                 .price(wine.getPrice())
                 .sort(wine.getSort())
-                .area(wine.getArea())
+                .country(wine.getCountry())
+                .region(wine.getRegion())
                 .variety(wine.getVariety())
                 .vivinoRating(wine.getVivinoRating())
                 .avgSugarContent(wine.getWineNoteStatistics().getAvgSugarContent())
@@ -60,16 +64,18 @@ public class WineInfoResponse {
 
     @Builder
     public WineInfoResponse(
-            Long wineId, String name, String imageUrl, int price, String sort, String area, String variety, float vivinoRating,
-            float avgSugarContent, float avgAcidity, float avgTannin, float avgBody, float avgAlcohol,
-            String nose1, String nose2, String nose3, float avgMemberRating, boolean liked) {
+            Long wineId, String name, String nameEng, String imageUrl, int price, String sort, String country, String region,
+            String variety, float vivinoRating, float avgSugarContent, float avgAcidity, float avgTannin, float avgBody,
+            float avgAlcohol, String nose1, String nose2, String nose3, float avgMemberRating, boolean liked) {
 
         this.wineId = wineId;
         this.name = name;
+        this.nameEng = nameEng;
         this.imageUrl = imageUrl;
         this.price = price;
         this.sort = sort;
-        this.area = area;
+        this.country = country;
+        this.region = region;
         this.variety = variety;
         this.vivinoRating = vivinoRating;
 

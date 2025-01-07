@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface WineRepository extends JpaRepository<Wine, Long>, WineRepositoryCustom {
     List<Wine> findAllByNameContainingIgnoreCaseOrderByName(String name);
-
 }

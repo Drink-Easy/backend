@@ -155,12 +155,12 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // then
         assertThat(wineInfo.getWineInfoResponse())
                 .extracting(
-                        "wineId", "name", "imageUrl", "price", "sort", "area", "variety", "vivinoRating",
+                        "wineId", "name", "imageUrl", "price", "sort", "country", "variety", "vivinoRating",
                         "avgSugarContent", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol",
                         "nose1", "nose2", "nose3", "avgMemberRating", "liked"
                 )
                 .containsExactly(wine.getId(), wine.getName(), wine.getImageUrl(), wine.getPrice(), wine.getSort(),
-                        wine.getArea(), wine.getVariety(), wine.getVivinoRating(),
+                        wine.getCountry(), wine.getVariety(), wine.getVivinoRating(),
                         50.0f, 30.0f, 20.0f, 40.0f, 30.0f,
                         "건포도", "오렌지", "시트러스", 7.0f, true
                 );
@@ -189,12 +189,12 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // then
         assertThat(wineInfo.getWineInfoResponse())
                 .extracting(
-                        "wineId", "name", "imageUrl", "price", "sort", "area", "variety", "vivinoRating",
+                        "wineId", "name", "imageUrl", "price", "sort", "country", "variety", "vivinoRating",
                         "avgSugarContent", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol",
                         "nose1", "nose2", "nose3", "avgMemberRating", "liked"
                 )
                 .containsExactly(wine.getId(), wine.getName(), wine.getImageUrl(), wine.getPrice(), wine.getSort(),
-                        wine.getArea(), wine.getVariety(), wine.getVivinoRating(),
+                        wine.getCountry(), wine.getVariety(), wine.getVivinoRating(),
                         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                         null, null, null, 0.0f, true
                 );
@@ -329,12 +329,12 @@ class WineServiceImplTest extends IntegrationTestSupport {
         return createWine(name,"레드","프랑스",10000, "샤도네이",4.1f);
     }
 
-    private Wine createWine(String name, String sort, String area, int price, String variety, float vivinoRating) {
+    private Wine createWine(String name, String sort, String country, int price, String variety, float vivinoRating) {
         return Wine.builder()
                 .name(name)
                 .imageUrl("http://default.image")
                 .sort(sort)
-                .area(area)
+                .country(country)
                 .variety(variety)
                 .vivinoRating(vivinoRating)
                 .wineNoteStatistics(WineNoteStatistics.builder().build())

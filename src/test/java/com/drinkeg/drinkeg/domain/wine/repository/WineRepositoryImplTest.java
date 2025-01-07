@@ -182,12 +182,12 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private Wine createWine(String name, String sort, String area, int price, String variety, float vivinoRating) {
+    private Wine createWine(String name, String sort, String country, int price, String variety, float vivinoRating) {
         return Wine.builder()
                 .name(name)
                 .imageUrl("http://default.image")
                 .sort(sort)
-                .area(area)
+                .country(country)
                 .variety(variety)
                 .vivinoRating(vivinoRating)
                 .wineNoteStatistics(WineNoteStatistics.builder().build())

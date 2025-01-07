@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -107,7 +106,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.result.wineInfoResponse.imageUrl").value("https://test-image-url.png"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.price").value(30000))
                 .andExpect(jsonPath("$.result.wineInfoResponse.sort").value("레드"))
-                .andExpect(jsonPath("$.result.wineInfoResponse.area").value("프랑스"))
+                .andExpect(jsonPath("$.result.wineInfoResponse.country").value("프랑스"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.variety").value("Merlot"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.vivinoRating").value(4.3))
                 .andExpect(jsonPath("$.result.wineInfoResponse.avgSugarContent").value(5.0))
@@ -274,7 +273,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .imageUrl("https://test-image-url.png")
                 .price(30000)
                 .sort("레드")
-                .area("프랑스")
+                .country("프랑스")
                 .variety("Merlot")
                 .vivinoRating(4.3f)
                 .avgSugarContent(5.0f)
@@ -305,7 +304,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .name(name)
                 .imageUrl("default")
                 .sort("default")
-                .area("default")
+                .country("default")
                 .variety("default")
                 .vivinoRating(4.1f)
                 .price(100).build();

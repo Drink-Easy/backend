@@ -92,7 +92,7 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
                 .name(name)
                 .imageUrl("http://default.image")
                 .sort("레드")
-                .area("프랑스")
+                .country("프랑스")
                 .variety("샤도네이")
                 .vivinoRating(4.1f)
                 .wineNoteStatistics(WineNoteStatistics.builder().build())

@@ -5,31 +5,34 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 @Getter
-@Builder
 @NoArgsConstructor
 public class WinePreviewResponse {
 
     private Long wineId;
     private String name;
+    private String nameEng;
     private String imageUrl;
 
     private String sort;
-    private String area;
+    private String country;
+    private String region;
     private String variety;
 
     private float vivinoRating;
 
     private int price;
 
-    @QueryProjection // 생성자에 추가
-    public WinePreviewResponse(Long wineId, String name, String imageUrl,
-                               String sort, String area, String variety,
+    @Builder
+    public WinePreviewResponse(Long wineId, String name, String nameEng, String imageUrl,
+                               String sort, String country, String region,  String variety,
                                float vivinoRating, int price) {
         this.wineId = wineId;
         this.name = name;
+        this.nameEng = nameEng;
         this.imageUrl = imageUrl;
         this.sort = sort;
-        this.area = area;
+        this.country = country;
+        this.region = region;
         this.variety = variety;
         this.vivinoRating = vivinoRating;
         this.price = price;
@@ -38,11 +41,15 @@ public class WinePreviewResponse {
     public static WinePreviewResponse of(Wine wine) {
         return WinePreviewResponse.builder()
                 .wineId(wine.getId())
+
                 .name(wine.getName())
+                .nameEng(wine.getNameEng())
+
                 .imageUrl(wine.getImageUrl())
 
                 .sort(wine.getSort())
-                .area(wine.getArea())
+                .country(wine.getCountry())
+                .region(wine.getRegion())
                 .variety(wine.getVariety())
 
                 .vivinoRating(wine.getVivinoRating())

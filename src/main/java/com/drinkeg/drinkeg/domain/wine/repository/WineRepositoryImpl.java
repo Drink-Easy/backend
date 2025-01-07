@@ -42,7 +42,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     }
 
     private BooleanExpression wineAreaIn(List<String> wineAreaList) {
-        return wineAreaList != null && !wineAreaList.isEmpty() ? wine.area.in(wineAreaList) : null;
+        return wineAreaList != null && !wineAreaList.isEmpty() ? wine.country.in(wineAreaList) : null;
     }
 
     private BooleanExpression wineSortIn(List<String> wineSortList) {

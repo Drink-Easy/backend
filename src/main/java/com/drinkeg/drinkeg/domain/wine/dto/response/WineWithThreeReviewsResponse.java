@@ -12,8 +12,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class WineWithThreeReviewsResponse {
-    WineInfoResponse wineInfoResponse;
-    List<WineReviewResponse> recentReviews;
+    private WineInfoResponse wineInfoResponse;
+    private List<WineReviewResponse> recentReviews;
 
     @Builder
     public WineWithThreeReviewsResponse(WineInfoResponse wineInfoResponse, List<WineReviewResponse> recentReviews) {
