@@ -194,7 +194,6 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("멤버의 취향 정보를 기반으로 추천 와인 리스트를 조회한다.")
     @Test
-    @WithMockUser(username = "user")
     void findRecommendWineList() throws Exception {
         // given
         when(wineService.getRecommendWineList("user"))
@@ -212,6 +211,38 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.result[0].wineName").value("와인1"))
                 .andExpect(jsonPath("$.result[1].wineName").value("와인2"))
                 .andExpect(jsonPath("$.result[2].wineName").value("와인3"));
+    }
+
+    @DisplayName("가장 인기있는 와인 10개를 조회한다.")
+    @Test
+    void findMostLikedWineList() throws Exception {
+        // given
+        when(wineService.getMostLikedWineList())
+                .thenReturn(List.of(createHomeWineResponse("와인1"),
+                        createHomeWineResponse("와인2"),
+                        createHomeWineResponse("와인3"),
+                        createHomeWineResponse("와인4"),
+                        createHomeWineResponse("와인5"),
+                        createHomeWineResponse("와인6"),
+                        createHomeWineResponse("와인7"),
+                        createHomeWineResponse("와인8"),
+                        createHomeWineResponse("와인9"),
+                        createHomeWineResponse("와인10")));
+        // when // then
+        mockMvc.perform(get("/wine/most-liked"))
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.result[0].wineName").value("와인1"))
+                .andExpect(jsonPath("$.result[1].wineName").value("와인2"))
+                .andExpect(jsonPath("$.result[2].wineName").value("와인3"))
+                .andExpect(jsonPath("$.result[3].wineName").value("와인4"))
+                .andExpect(jsonPath("$.result[4].wineName").value("와인5"))
+                .andExpect(jsonPath("$.result[5].wineName").value("와인6"))
+                .andExpect(jsonPath("$.result[6].wineName").value("와인7"))
+                .andExpect(jsonPath("$.result[7].wineName").value("와인8"))
+                .andExpect(jsonPath("$.result[8].wineName").value("와인9"))
+                .andExpect(jsonPath("$.result[9].wineName").value("와인10"));
     }
 
     private HomeWineResponse createHomeWineResponse(String name) {
