@@ -20,7 +20,7 @@ public class Wine {
 
     private String name;
 
-    private String nameEng; // 추가
+    private String nameEng;
 
     private int price;
 

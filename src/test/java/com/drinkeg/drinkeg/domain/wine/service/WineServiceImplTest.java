@@ -70,6 +70,35 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("와인 이름을 영어로 받으면 영어로 된 와인 이름을 포함하는 모든 와인을 조회한다.")
+    @Test
+    void searchWineByNameEng() {
+        // given
+        Wine wine1 = createWine("대중적인 레드 와인 10년", "popular red wine 10 years");
+        Wine wine2 = createWine("대중적인 화이트 와인 13년", "popular white wine 13 years");
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년", "popular white sparkling wine 20 years");
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년", "red wine that manias find 30 years");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        // when
+        List<WinePreviewResponse> winePreviewList1 = wineService.searchWinesByName("0 years");
+        List<WinePreviewResponse> winePreviewList2 = wineService.searchWinesByName("popular");
+        // then
+        assertThat(winePreviewList1).hasSize(3)
+                .extracting("name")
+                .containsExactlyInAnyOrder(
+                        "대중적인 레드 와인 10년",
+                        "대중적인 화이트 스파클링 와인 20년",
+                        "매니아들이 찾는 레드 와인 30년"
+                );
+        assertThat(winePreviewList2).hasSize(3)
+                .extracting("name")
+                .containsExactlyInAnyOrder(
+                        "대중적인 레드 와인 10년",
+                        "대중적인 화이트 와인 13년",
+                        "대중적인 화이트 스파클링 와인 20년"
+                );
+    }
+
     @DisplayName("존재하지 않는 와인 이름을 받으면 빈 리스트를 반환한다.")
     @Test
     void searchWineByNotExistingName() {
@@ -326,12 +355,20 @@ class WineServiceImplTest extends IntegrationTestSupport {
     }
 
     private Wine createWine(String name) {
-        return createWine(name,"레드","프랑스",10000, "샤도네이",4.1f);
+        return createWine(name, "영어", "레드","프랑스",10000, "샤도네이",4.1f);
     }
 
+    private Wine createWine(String name, String nameEng) {
+        return createWine(name, nameEng, "레드","프랑스",10000, "샤도네이",4.1f);
+    }
     private Wine createWine(String name, String sort, String country, int price, String variety, float vivinoRating) {
+        return createWine(name, "영어", sort, country, price, variety, vivinoRating);
+    }
+
+    private Wine createWine(String name, String nameEng, String sort, String country, int price, String variety, float vivinoRating) {
         return Wine.builder()
                 .name(name)
+                .nameEng(nameEng)
                 .imageUrl("http://default.image")
                 .sort(sort)
                 .country(country)
