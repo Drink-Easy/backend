@@ -6,6 +6,8 @@ import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
+import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
+import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
@@ -250,17 +252,43 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .hasMessage("와인이 없습니다.");
     }
 
-    // 편의 메서드
+    @DisplayName("사용자의 취향으로 추천 와인을 반환한다.")
+    @Test
+    void findRecommendWineByMemberPreferences() {
+        // given
+        Member member = memberRepository.save(createMember("user", List.of("레드", "화이트"), List.of("프랑스", "이탈리아"), 60000L));
+        Wine wine1 = createWine("와인1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8", "화이트", "독일", 250000, "리슬링", 4.3f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8));
+        // when
+        List<HomeWineResponse> recommendWineList = wineService.getRecommendWineList(member.getUsername());
+        // then
+        assertThat(recommendWineList).hasSize(4)
+                .extracting("wineName")
+                .containsExactlyInAnyOrder("와인1", "와인2", "와인4", "와인5");
+    }
 
+    // 편의 메서드
     private Wine createWine(String name) {
+        return createWine(name,"레드","프랑스",10000, "샤도네이",4.1f);
+    }
+
+    private Wine createWine(String name, String sort, String area, int price, String variety, float vivinoRating) {
         return Wine.builder()
                 .name(name)
                 .imageUrl("http://default.image")
-                .sort("레드")
-                .area("프랑스")
-                .variety("샤도네이")
-                .vivinoRating(4.1f)
-                .price(100).build();
+                .sort(sort)
+                .area(area)
+                .variety(variety)
+                .vivinoRating(vivinoRating)
+                .wineNoteStatistics(WineNoteStatistics.builder().build())
+                .price(price).build();
     }
 
     private TastingNote createTastingNote(Member member, Wine wine,
@@ -292,6 +320,17 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .alcohol(alcohol)
                 .rating(rating)
                 .review(review).build();
+    }
+
+    private Member createMember(String username, List<String> wineSort, List<String> wineArea, Long monthPriceMax) {
+        return Member.builder()
+                .username(username)
+                .role(Role.ROLE_USER)
+                .isFirst(false)
+                .wineSort(wineSort)
+                .wineArea(wineArea)
+                .monthPriceMax(monthPriceMax)
+                .build();
     }
 
     private Member createMember(String username) {

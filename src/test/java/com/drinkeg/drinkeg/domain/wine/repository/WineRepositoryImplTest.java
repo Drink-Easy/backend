@@ -126,6 +126,8 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
                 .containsExactlyInAnyOrder("와인1", "와인2", "와인4", "와인5");
     }
 
+
+
     private Wine createWine(String name, String sort, String area, int price, String variety, float vivinoRating) {
         return Wine.builder()
                 .name(name)

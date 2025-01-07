@@ -93,7 +93,7 @@ public class WineServiceImpl implements WineService {
         List<Wine> recommendWines = wineRepository.findRecommendWinesBy(member.getWineArea(), member.getWineSort(), member.getMonthPriceMax());
 
         Collections.shuffle(recommendWines);
-        recommendWines = recommendWines.subList(0, 10);
+        recommendWines = recommendWines.subList(0, Math.min(recommendWines.size(), 10));
 
         return recommendWines.stream()
                 .map(HomeWineResponse::of)

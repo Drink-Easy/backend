@@ -18,7 +18,7 @@ import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
 public class WineRepositoryImpl implements WineRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    @Override // todo : 테스팅 코드 작성하기
+    @Override
     public List<Wine> findRecommendWinesBy(List<String> wineArea, List<String> wineSort, Long price) {
         return queryFactory.selectFrom(wine)
                 .where(
