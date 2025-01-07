@@ -39,10 +39,10 @@ class MyWineServiceTest {
     @Test
     void 올바른Request로들어온요청() {
         // given
-        Member member = new Member();
+        Member member = Member.createMember("user1", "password", false);
         memberRepository.save(member);
 
-        Wine wine = new Wine();
+        Wine wine = createWine("와인1");
         wineRepository.save(wine);
 
         LocalDate localDate = LocalDate.now();
@@ -64,6 +64,16 @@ class MyWineServiceTest {
 
     }
 
+    private Wine createWine(String name) {
+        return Wine.builder()
+                .name(name)
+                .imageUrl("http://default.image")
+                .sort("레드")
+                .area("프랑스")
+                .variety("샤도네이")
+                .vivinoRating(4.1f)
+                .price(100).build();
+    }
 
 
 }

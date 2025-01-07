@@ -11,15 +11,15 @@ import java.util.Map;
 
 public interface TastingNoteService {
 
-    void saveTastingNote(TastingNoteRequest tastingNote, String username);
+    Long saveTastingNote(TastingNoteRequest tastingNote, String username);
 
-    TastingNoteResponse showTastingNoteById(Long noteId, String username);
+    TastingNoteResponse showTastingNoteByIdAndUsername(Long noteId, String username);
 
     AllTastingNoteResponse findAllTastingNote(String sort, String username);
 
     void updateTastingNote(Long noteId, TastingNoteUpdateRequest tastingNoteUpdateRequest, String username);
 
-    void deleteTastingNote(Long noteId, String username);
+    Long deleteTastingNote(Long noteId, String username);
 
     List<Map<Long, String>> showMemberNoseMapList(String username);
 

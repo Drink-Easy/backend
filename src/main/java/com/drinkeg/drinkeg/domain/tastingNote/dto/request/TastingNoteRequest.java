@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class TastingNoteRequest {
 
     @NotNull(message = "와인 ID는 필수입니다.")
@@ -51,8 +48,6 @@ public class TastingNoteRequest {
     @Max(value = 100, message = "알콜도는 0 이상 100 이하의 정수 값이어야 합니다.")
     private int alcohol;
 
-
-    @Builder.Default
     @NotEmpty(message = "향 선택은 필수입니다.")
     private List<String> nose = new ArrayList<>();
 
@@ -63,5 +58,37 @@ public class TastingNoteRequest {
     private float rating;
 
     private String review;
+
+    @Builder
+    public TastingNoteRequest(Long wineId, String color, LocalDate tasteDate, int sugarContent, int acidity, int tannin, int body, int alcohol, List<String> nose, float rating, String review) {
+        this.wineId = wineId;
+        this.color = color;
+        this.tasteDate = tasteDate;
+        this.sugarContent = sugarContent;
+        this.acidity = acidity;
+        this.tannin = tannin;
+        this.body = body;
+        this.alcohol = alcohol;
+        this.nose = nose;
+        this.rating = rating;
+        this.review = review;
+    }
+
+    public TastingNoteRequest toEntity(Long wineId, String color, LocalDate tasteDate, int sugarContent, int acidity, int tannin, int body, int alcohol, List<String> nose, float rating, String review) {
+        return TastingNoteRequest.builder()
+                .wineId(wineId)
+                .color(color)
+                .tasteDate(tasteDate)
+                .sugarContent(sugarContent)
+                .acidity(acidity)
+                .tannin(tannin)
+                .body(body)
+                .alcohol(alcohol)
+                .nose(nose)
+                .rating(rating)
+                .review(review)
+                .build();
+    }
+
 
 }

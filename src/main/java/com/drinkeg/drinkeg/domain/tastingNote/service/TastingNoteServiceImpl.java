@@ -41,7 +41,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
 
     @Override
-    public void saveTastingNote(TastingNoteRequest tastingNoteRequest, String username) {
+    public Long saveTastingNote(TastingNoteRequest tastingNoteRequest, String username) {
 
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(username).orElseThrow(
@@ -54,13 +54,15 @@ public class TastingNoteServiceImpl implements TastingNoteService {
                 () -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
         // TastingNote를 저장한다.
-        tastingNoteRepository.save(TastingNote.create(member, wine, tastingNoteRequest));
+        TastingNote save = tastingNoteRepository.save(TastingNote.create(member, wine, tastingNoteRequest));
 
         eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
+
+        return save.getId();
     }
 
     @Override
-    public TastingNoteResponse showTastingNoteById(Long noteId, String username) {
+    public TastingNoteResponse showTastingNoteByIdAndUsername(Long noteId, String username) {
         // noteId로 TastingNote를 찾는다.
         TastingNote tastingNote = tastingNoteRepository
                 .findTastingNoteWithWineAndNoseAndMemberById(noteId)
@@ -157,7 +159,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void deleteTastingNote(Long noteId, String username) {
+    public Long deleteTastingNote(Long noteId, String username) {
 
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(username).orElseThrow(
@@ -180,6 +182,8 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         tastingNoteRepository.delete(foundNote);
 
         eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
+
+        return noteId;
     }
 
     @Override

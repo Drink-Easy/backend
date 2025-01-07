@@ -54,7 +54,7 @@ public class TastingNoteController {
                                                             @PathVariable("noteId") Long noteId) {
 
         TastingNoteResponse tastingNoteResponse =
-                tastingNoteService.showTastingNoteById(noteId, principalDetail.getUsername());
+                tastingNoteService.showTastingNoteByIdAndUsername(noteId, principalDetail.getUsername());
         return ApiResponse.onSuccess(tastingNoteResponse);
     }
 
