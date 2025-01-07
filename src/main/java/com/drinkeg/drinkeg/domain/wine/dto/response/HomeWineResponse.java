@@ -1,6 +1,8 @@
 package com.drinkeg.drinkeg.domain.wine.dto.response;
 
+import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,15 +19,24 @@ public class HomeWineResponse {
 
     private float vivinoRating;
 
-    @QueryProjection
+    @Builder
     public HomeWineResponse(Long wineId, String imageUrl, String wineName, String sort, int price, float vivinoRating){
         this.wineId = wineId;
         this.imageUrl = imageUrl;
-
         this.wineName = wineName;
         this.sort = sort;
         this.price = price;
-
         this.vivinoRating = vivinoRating;
+    }
+
+    public static HomeWineResponse of(Wine wine){
+        return HomeWineResponse.builder()
+                .wineId(wine.getId())
+                .imageUrl(wine.getImageUrl())
+                .wineName(wine.getName())
+                .sort(wine.getSort())
+                .price(wine.getPrice())
+                .vivinoRating(wine.getVivinoRating())
+                .build();
     }
 }

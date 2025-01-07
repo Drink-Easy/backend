@@ -85,23 +85,19 @@ public class WineServiceImpl implements WineService {
                 .toList();
     }
 
-    // 추천와인 10개 반환
     @Override
     public List<HomeWineResponse> getRecommendWineList(String username) {
-        // 회원을 조회한다.
         Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // max 20개의 추천 와인을 찾는다.
-        List<HomeWineResponse> recommendWines = wineRepository.findRecommendWinesByMember(member);
+        List<Wine> recommendWines = wineRepository.findRecommendWinesBy(member.getWineArea(), member.getWineSort(), member.getMonthPriceMax());
 
-        // 만약 추천 와인의 수가 10개를 넘어간다면, 랜덤으로 10개의 와인만 반환한다.
-        if (recommendWines.size() > 10) {
-            Collections.shuffle(recommendWines);
-            recommendWines = recommendWines.subList(0, 10);
-        }
+        Collections.shuffle(recommendWines);
+        recommendWines = recommendWines.subList(0, 10);
 
-        return recommendWines;
+        return recommendWines.stream()
+                .map(HomeWineResponse::of)
+                .toList();
     }
 
     @Override

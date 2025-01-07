@@ -55,18 +55,6 @@ public class WineController {
         return ApiResponse.onSuccess(wineReviewResponseList);
     }
 
-    // 와인 이미지 업로드
-    @PostMapping("/upload")
-    @Operation(summary = "와인 이미지 업로드", description = "백엔드에세 와인 이미지 업로드 하기 위한 API")
-    public ApiResponse<?> uploadWineImage() {
-        try {
-            wineService.uploadWineImage();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return ApiResponse.onSuccess("업로드 성공");
-    }
-
     // 홈화면 추천 와인 반환
     @GetMapping("/recommend")
     @Operation(summary = "홈화면 페이지", description = "추천 와인 10개를 List로 반환")
@@ -94,5 +82,17 @@ public class WineController {
         // 응답 헤더에 Cache-Control 추가
         response.setHeader("Cache-Control", "max-age=3600, public");
         return ApiResponse.onSuccess(mostLikedWineList);
+    }
+
+    // 와인 이미지 업로드
+    @PostMapping("/upload")
+    @Operation(summary = "와인 이미지 업로드", description = "백엔드에세 와인 이미지 업로드 하기 위한 API")
+    public ApiResponse<?> uploadWineImage() {
+        try {
+            wineService.uploadWineImage();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ApiResponse.onSuccess("업로드 성공");
     }
 }

@@ -227,7 +227,6 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 );
     }
 
-
     private TastingNote createTastingNote(Member member, Wine wine,
                                           int sugarContent, int acidity, int tannin, int body, int alcohol,
                                           float rating, String review) {
