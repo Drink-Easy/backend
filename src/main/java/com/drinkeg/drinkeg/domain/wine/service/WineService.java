@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
-import com.drinkeg.drinkeg.domain.wine.controller.SortType;
+import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;

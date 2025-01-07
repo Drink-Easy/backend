@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.wine.controller;
+package com.drinkeg.drinkeg.domain.wine.repository.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

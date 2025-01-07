@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.tastingNote.repository;
 
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.wine.controller.SortType;
+import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
 
 import java.util.List;
