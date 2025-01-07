@@ -1,13 +1,13 @@
-package com.drinkeg.drinkeg.domain.wine.repository;
+package com.drinkeg.drinkeg.domain.tastingNote.repository;
 
 import com.drinkeg.drinkeg.IntegrationTestSupport;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
+import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-class WineRepositoryImplTest extends IntegrationTestSupport {
+class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
     @Autowired
     TastingNoteRepository tastingNoteRepository;
     @Autowired
@@ -48,7 +48,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
         // when
-        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = wineRepository.findWineNoteStatisticsByWineId(wine.getId());
+        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineNoteStatisticsByWineId(wine.getId());
         // then
         assertThat(wineNoteStatisticsAvgDto).extracting(
                         "avgSugarContent", "avgAcidity", "avgTannin",
@@ -62,9 +62,8 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("레드 와인"));
-
         // when
-        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = wineRepository.findWineNoteStatisticsByWineId(wine.getId());
+        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineNoteStatisticsByWineId(wine.getId());
         // then
         assertThat(wineNoteStatisticsAvgDto).extracting(
                         "avgSugarContent", "avgAcidity", "avgTannin",
@@ -79,7 +78,6 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("레드 와인"));
-
 
         TastingNote tastingNote1 = createTastingNote(member, wine)
                 .addNoseElement(noseList.get(0))
@@ -97,7 +95,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
         // when
-        List<String> wineTopThreeNoses = wineRepository.findTopThreeNoseByWineId(wine.getId());
+        List<String> wineTopThreeNoses = tastingNoteRepository.findTopThreeNoseByWineId(wine.getId());
         // then
         assertThat(wineTopThreeNoses)
                 .containsExactly("건포도", "오렌지", "시트러스");
@@ -117,11 +115,14 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
         tastingNoteRepository.save(tastingNote1);
         // when
-        List<String> wineTopThreeNoses = wineRepository.findTopThreeNoseByWineId(wine.getId());
+        List<String> wineTopThreeNoses = tastingNoteRepository.findTopThreeNoseByWineId(wine.getId());
         // then
         assertThat(wineTopThreeNoses)
                 .containsExactly("건포도", "오렌지");
     }
+
+
+
 
     private TastingNote createTastingNote(Member member, Wine wine,
                                           int sugarContent, int acidity, int tannin, int body, int alcohol,

@@ -6,9 +6,11 @@ import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
+import com.drinkeg.drinkeg.domain.wine.controller.SortType;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
@@ -197,6 +199,37 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 );
 
         assertThat(wineInfo.getRecentReviews()).isEmpty();
+    }
+
+    @DisplayName("와인 아이디로 와인 리뷰를 전체 조회한다. 정렬 순서는 최신순이다.")
+    @Test
+    void findWineReviewByWineId() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
+
+        TastingNote tastingNote1 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 0, "가성비 좋아요")
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(2));
+        TastingNote tastingNote2 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 5, "나쁘지 않아요")
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(1))
+                .addNoseElement(noseList.get(2));
+        TastingNote tastingNote3 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 10, "맛있어요!")
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(2))
+                .addNoseElement(noseList.get(4));
+        TastingNote tastingNote4 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 10, "고기랑 먹기 좋아요!");
+        TastingNote tastingNote5 = createTastingNote(member, wine, "빨간색",
+                50, 30, 20, 40, 30, 10, "다시 구매할 것 같아요");
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
+        // when
+        List<WineReviewResponse> wineReviews = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST);
     }
 
     // 편의 메서드

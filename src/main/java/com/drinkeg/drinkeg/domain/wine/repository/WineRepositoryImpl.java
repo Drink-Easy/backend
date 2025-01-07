@@ -127,33 +127,4 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .limit(10)
                 .fetch();
     }
-
-    @Override
-    public WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId) {
-        return queryFactory
-                .select(Projections.fields(WineNoteStatisticsAvgDto.class,
-                        tastingNote.sugarContent.avg().coalesce(0.0).floatValue().as("avgSugarContent"),
-                        tastingNote.acidity.avg().coalesce(0.0).floatValue().as("avgAcidity"),
-                        tastingNote.tannin.avg().coalesce(0.0).floatValue().as("avgTannin"),
-                        tastingNote.body.avg().coalesce(0.0).floatValue().as("avgBody"),
-                        tastingNote.alcohol.avg().coalesce(0.0).floatValue().as("avgAlcohol"),
-                        tastingNote.rating.avg().coalesce(0.0).floatValue().as("avgMemberRating")
-                ))
-                .from(tastingNote)
-                .where(tastingNote.wine.id.eq(wineId))
-                .fetchOne();
-    }
-
-    @Override
-    public List<String> findTopThreeNoseByWineId(Long wineId) {
-        return queryFactory
-                .select(tastingNoteNose.noseElement)
-                .from(tastingNoteNose)
-                .where(tastingNoteNose.tastingNote.wine.id.eq(wineId))
-                .groupBy(tastingNoteNose.noseElement)
-                .orderBy(tastingNoteNose.noseElement.count().desc())
-                .orderBy(tastingNoteNose.noseElement.asc())
-                .limit(3)
-                .fetch();
-    }
 }

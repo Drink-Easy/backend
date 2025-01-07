@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.wine.service;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
+import com.drinkeg.drinkeg.domain.wine.controller.SortType;
 import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
@@ -51,8 +52,8 @@ public class WineServiceImpl implements WineService {
         Wine wine = wineRepository.findById(wineId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
-        WineNoteStatisticsAvgDto avgDto = wineRepository.findWineNoteStatisticsByWineId(wineId);
-        List<String> topThreeNose = wineRepository.findTopThreeNoseByWineId(wineId);
+        WineNoteStatisticsAvgDto avgDto = tastingNoteRepository.findWineNoteStatisticsByWineId(wineId);
+        List<String> topThreeNose = tastingNoteRepository.findTopThreeNoseByWineId(wineId);
 
         wine.getWineNoteStatistics()
                 .updateAvgStatistics(avgDto)
@@ -73,9 +74,13 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, boolean orderByLatest){
+    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType sortType){
+        List<TastingNote> tastingNoteList = tastingNoteRepository.findAllTastingNoteBy(wineId, sortType);
 
-        return wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
+        return tastingNoteList.stream()
+                .map(WineReviewResponse::of)
+                .toList();
+//        return wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
     }
 
     // 추천와인 10개 반환

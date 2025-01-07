@@ -16,8 +16,4 @@ public interface WineRepositoryCustom {
     List<HomeWineResponse> findRecommendWinesByMember(Member member);
 
     List<HomeWineResponse> findMostLikedWines();
-
-    WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId);
-
-    List<String> findTopThreeNoseByWineId(Long wineId);
 }

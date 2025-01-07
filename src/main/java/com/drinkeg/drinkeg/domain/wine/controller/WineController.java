@@ -1,6 +1,8 @@
 package com.drinkeg.drinkeg.domain.wine.controller;
 
 
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
@@ -25,8 +27,9 @@ import java.util.List;
 public class WineController {
     private final WineService wineService;
 
+    // todo: 페이징 구현
     @GetMapping
-    @Operation(summary = "와인 검색", description = "와인 이름으로 와인 검색하여 List<WinePreviewResponseDTO> 반환")
+    @Operation(summary = "와인 검색", description = "와인 이름으로 검색하여 와인의 기본 정보를 조회한다.")
     public ApiResponse<List<WinePreviewResponse>> searchWine(@RequestParam(defaultValue = "") String searchName) {
 
         List<WinePreviewResponse> winePreviewResponses = wineService.searchWinesByName(searchName);
@@ -35,7 +38,7 @@ public class WineController {
     }
 
     @GetMapping("/{wineId}")
-    @Operation(summary = "와인 상세정보 조회", description = "와인의 상세정보를 최근 리뷰 3개와 함께 반환한다. nose1,2,3는 값이 존재하지 않으면 null 값이 들어간다.")
+    @Operation(summary = "와인 상세정보 조회", description = "와인의 상세정보를 최근 리뷰 3개와 함께 반환한다. nose1,2,3 값은 존재하지 않으면 null이 들어간다.")
     public ApiResponse<WineWithThreeReviewsResponse> findWineById(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                               @PathVariable("wineId") Long wineId) {
         WineWithThreeReviewsResponse wineWithThreeReviewsResponse =
@@ -44,13 +47,11 @@ public class WineController {
         return ApiResponse.onSuccess(wineWithThreeReviewsResponse);
     }
 
-    // 전체 와인 리뷰 보기
+    // todo: 페이징 구현하기, IOS 에 sort 타입 설명하기.
     @GetMapping("/review/{wineId}")
-    @Operation(summary = "선택 와인 리뷰 열람", description = "선택한 와인 리뷰를 List로 반환")
-    public ApiResponse<List<WineReviewResponse>> showWineReview(@PathVariable("wineId") Long wineId, @RequestParam Boolean orderByLatest) {
-
-        List<WineReviewResponse> wineReviewResponseList =
-                wineService.getWineReviewsAndIsLikedByWineId(wineId, orderByLatest);
+    @Operation(summary = "와인 리뷰 전체 조회", description = "선택한 와인의 리뷰들을 List에 담아서 반환한다.")
+    public ApiResponse<List<WineReviewResponse>> showWineReview(@PathVariable("wineId") Long wineId, @RequestParam String sortType) {
+        List<WineReviewResponse> wineReviewResponseList = wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType));
 
         return ApiResponse.onSuccess(wineReviewResponseList);
     }

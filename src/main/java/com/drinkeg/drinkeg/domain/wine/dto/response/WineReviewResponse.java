@@ -37,5 +37,4 @@ public class WineReviewResponse {
                 .createdAt(tastingNote.getCreatedAt())
                 .build();
     }
-
 }
