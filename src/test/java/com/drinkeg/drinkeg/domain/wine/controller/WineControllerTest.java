@@ -6,6 +6,7 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.WineInfoResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
+import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.assertj.core.api.Assertions;
@@ -158,6 +159,48 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("WINE4001"))
                 .andExpect(jsonPath("$.message").value("와인이 없습니다."));
+    }
+
+    @DisplayName("와인 아이디와 정렬 기준으로 와인의 리뷰를 전체조회한다.")
+    @Test
+    void findWineReviewByWineIdAndSortType() throws Exception {
+        // given
+        Long wineId = 1L;
+        String sortType = "최신순";
+        when(wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType)))
+                .thenReturn(List.of(
+                        createReviewResponse("첫 번째 리뷰 내용", "user1", 5, LocalDateTime.of(2025, 1, 6, 0, 0)),
+                        createReviewResponse("두 번째 리뷰 내용", "user2", 4, LocalDateTime.of(2025, 1, 6, 0, 0)),
+                        createReviewResponse("세 번째 리뷰 내용", "user3", 5, LocalDateTime.of(2025, 1, 6, 0, 0))
+                ));
+        // when // then
+        mockMvc.perform(get("/wine/review/{wineId}?sortType={sortType}", wineId, sortType))
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.result[0].review").value("첫 번째 리뷰 내용"))
+                .andExpect(jsonPath("$.result[0].name").value("user1"))
+                .andExpect(jsonPath("$.result[0].rating").value(5))
+                .andExpect(jsonPath("$.result[1].review").value("두 번째 리뷰 내용"))
+                .andExpect(jsonPath("$.result[1].name").value("user2"))
+                .andExpect(jsonPath("$.result[1].rating").value(4))
+                .andExpect(jsonPath("$.result[2].review").value("세 번째 리뷰 내용"))
+                .andExpect(jsonPath("$.result[2].name").value("user3"))
+                .andExpect(jsonPath("$.result[2].rating").value(5));
+    }
+
+    @DisplayName("올바르지 않은 정렬 기준으로 와인의 리뷰를 전체조회하면 예외가 반환된다.")
+    @Test
+    void findWineReviewByWineIdAndWrongSortType() throws Exception {
+        // given
+        Long wineId = 1L;
+        String sortType = "올바르지 않은 정렬 기준";
+        // when // then
+        mockMvc.perform(get("/wine/review/{wineId}?sortType={sortType}", wineId, sortType))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("ARGUMENT_ERROR"))
+                .andExpect(jsonPath("$.message").value("유효하지 않은 정렬 타입입니다."));
     }
 
     private WineWithThreeReviewsResponse createWineWithThreeReviewsResponse() {
