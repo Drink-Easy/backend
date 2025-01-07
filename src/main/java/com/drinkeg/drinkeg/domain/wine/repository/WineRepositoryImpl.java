@@ -11,12 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
+import static com.drinkeg.drinkeg.domain.wineWishlist.domain.QWineWishlist.wineWishlist;
 
 @Repository
 @RequiredArgsConstructor
 @Transactional
 public class WineRepositoryImpl implements WineRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+
+    @Override
+    public List<Wine> findMostLikedWines() {
+        return queryFactory.selectFrom(wine)
+                .leftJoin(wineWishlist).on(wineWishlist.wine.eq(wine))
+                .groupBy(wine.id)
+                .orderBy(wineWishlist.count().desc(), wine.vivinoRating.desc())
+                .limit(10)
+                .fetch();
+    }
 
     @Override
     public List<Wine> findRecommendWinesBy(List<String> wineArea, List<String> wineSort, Long price) {
@@ -28,31 +39,6 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wine.vivinoRating.goe(4.0f))
                 .limit(20)
                 .fetch();
-    }
-
-    // 홈하면 인기 와인 반환 시 사용
-    @Override
-    public List<HomeWineResponse> findMostLikedWines() {
-//        return queryFactory.select(new QHomeWineResponse(
-//                        wine.id,
-//                        wine.imageUrl,
-//                        wine.name.as("wineName"),
-//                        wine.sort,
-//                        wine.price.multiply(1400).divide(100).multiply(100),
-//                        wine.vivinoRating
-//                ))
-//                .from(wine)
-//                .leftJoin(wineWishlist).on(wineWishlist.wine.eq(wine))
-//                .groupBy(wine.id)
-//                .orderBy(
-//                        // 먼저 wineWishlist의 개수를 기준으로 내림차순 정렬
-//                        wineWishlist.count().desc(),
-//                        // wineWishlist의 개수가 같은 경우 vivinoRating 순으로 정렬
-//                        wine.vivinoRating.desc()
-//                )
-//                .limit(10)
-//                .fetch();
-        return null;
     }
 
     private BooleanExpression wineAreaIn(List<String> wineAreaList) {

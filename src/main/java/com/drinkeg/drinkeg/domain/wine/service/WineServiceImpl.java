@@ -102,10 +102,13 @@ public class WineServiceImpl implements WineService {
 
     @Override
     public List<HomeWineResponse> getMostLikedWineList() {
-        return wineRepository.findMostLikedWines();
+        List<Wine> mostLikedWines = wineRepository.findMostLikedWines();
+        return mostLikedWines.stream()
+                .map(HomeWineResponse::of)
+                .toList();
     }
 
-    @Override
+    @Override // todo : 와인 초기데이터 업로드 후 관리자 기능으로 이관 필요.
     public void uploadWineImage() throws IOException {
         List<Wine> wines = wineRepository.findAll();
 

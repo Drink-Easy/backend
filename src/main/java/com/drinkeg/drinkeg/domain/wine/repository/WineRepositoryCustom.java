@@ -10,5 +10,5 @@ import java.util.List;
 public interface WineRepositoryCustom {
     List<Wine> findRecommendWinesBy(List<String> wineArea, List<String> wineSort, Long price);
 
-    List<HomeWineResponse> findMostLikedWines();
+    List<Wine> findMostLikedWines();
 }
