@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.comment.service;
 
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
-import com.drinkeg.drinkeg.domain.comment.dto.*;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentRequestDTO;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentResponseDTO;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -17,11 +16,11 @@ public interface CommentService {
 
     void createComment(PrincipalDetail principalDetail, CommentRequestDTO commentRequest);
 
+    List<CommentResponseDTO> getCommentsByPartyId(Long partyId);
+
     void deleteComment(PrincipalDetail principalDetail, Long commentId);
 
     void updateCommentStatus(PrincipalDetail principalDetail, Long commentId);
-
-    List<CommentResponseDTO> getCommentsByPartyId(Long partyId) ;
 
     String calculateTimeAgo(LocalDateTime createdAt);
 

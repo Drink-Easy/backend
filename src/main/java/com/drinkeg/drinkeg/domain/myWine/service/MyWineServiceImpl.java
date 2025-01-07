@@ -75,4 +75,19 @@ public class MyWineServiceImpl implements MyWineService{
 
         myWineRepository.save(myWine);
     }
+
+    @Override
+    public void deleteWineWishlistById(Long myWineId, String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        MyWine myWine = myWineRepository.findById(myWineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MY_WINE_NOT_FOUND));
+
+        if(myWine.getMember().equals(member)) {
+            myWineRepository.delete(myWine);
+        } else {
+            throw new GeneralException(ErrorStatus.MY_WINE_UNAUTHORIZED);
+        }
+    }
 }
