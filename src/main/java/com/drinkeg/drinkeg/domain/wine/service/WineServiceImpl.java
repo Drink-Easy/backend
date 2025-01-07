@@ -75,12 +75,14 @@ public class WineServiceImpl implements WineService {
 
     @Override
     public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType sortType){
+        if (!wineRepository.existsById(wineId))
+            throw new GeneralException(ErrorStatus.WINE_NOT_FOUND);
+
         List<TastingNote> tastingNoteList = tastingNoteRepository.findAllTastingNoteBy(wineId, sortType);
 
         return tastingNoteList.stream()
                 .map(WineReviewResponse::of)
                 .toList();
-//        return wineRepository.findWineReviewsByWineIdAndMemberId(wineId, orderByLatest);
     }
 
     // 추천와인 10개 반환

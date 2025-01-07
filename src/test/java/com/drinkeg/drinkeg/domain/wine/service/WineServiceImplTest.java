@@ -8,14 +8,13 @@ import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.controller.SortType;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
-import org.assertj.core.api.Assertions;
+import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -230,6 +229,25 @@ class WineServiceImplTest extends IntegrationTestSupport {
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
         // when
         List<WineReviewResponse> wineReviews = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST);
+        // then
+        assertThat(wineReviews).hasSize(5)
+                .extracting("review", "rating")
+                .containsExactly(
+                        tuple("다시 구매할 것 같아요", 10.0f),
+                        tuple("고기랑 먹기 좋아요!", 10.0f),
+                        tuple("맛있어요!", 10.0f),
+                        tuple("나쁘지 않아요", 5.0f),
+                        tuple("가성비 좋아요", 0.0f)
+                );
+    }
+
+    @DisplayName("잘못된 와인 아이디로 와인 리뷰를 전체 조회하면 예외가 발생한다.")
+    @Test
+    void findWineReviewByWrongWineId() {
+        // given // when // then
+        assertThatThrownBy(() -> wineService.getWineReviewsAndIsLikedByWineId(-1L, SortType.LATEST))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage("와인이 없습니다.");
     }
 
     // 편의 메서드
