@@ -209,19 +209,4 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         tastingNoteNoseRepository.deleteById(noseElementId);
     }
 
-    // sort 값을 와인 종류로 변환하는 메서드
-    private String getWineSort(String sort) {
-        switch (sort) {
-            case "red":
-                return "레드";
-            case "white":
-                return "화이트";
-            case "sparkling":
-                return "스파클링";
-            case "rose":
-                return "로제";
-            default:
-                return null; // 혹은 기본값을 반환할 수 있음 (예: "기타")
-        }
-    }
 }
