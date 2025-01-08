@@ -6,6 +6,7 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.response.QTastingNoteSortCount
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -65,9 +66,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                                 getWineCount("화이트"),
                                 getWineCount("스파클링"),
                                 getWineCount("로제"),
-                                new CaseBuilder()
-                                        .when(tastingNote.wine.sort.in("주정강화", "기타")).then(1).otherwise(0)
-                                        .sum().as("etcCount")
+                                getWineCount("기타")
                         )
                 )
                 .from(tastingNote)
@@ -78,23 +77,18 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     private BooleanExpression wineSortIn(TastingNoteWineSort wineSort) {
         if (wineSort.equals(TastingNoteWineSort.ALL)) return null;
         else if (wineSort.equals(TastingNoteWineSort.ETCETERA)) return wine.sort.in("주정강화", "기타");
-        else return wine.sort.eq(convertSort(wineSort));
+        else return wine.sort.eq(wineSort.getValue());
     }
 
-    private String convertSort(TastingNoteWineSort wineSort) {
-        return switch (wineSort) {
-            case RED -> "레드";
-            case WHITE -> "화이트";
-            case SPARKLING -> "스파클링";
-            case ROSE -> "로제";
-            default -> throw new GeneralException(ErrorStatus.SORT_NOT_FOUND);
-        };
-    }
 
     // 와인 종류에 따른 개수 반환
     private NumberExpression<Integer> getWineCount(String wineSort) {
+        Predicate condition = wineSort.equals("기타")
+                ? tastingNote.wine.sort.in("주정강화", "기타")
+                : tastingNote.wine.sort.eq(wineSort);
+
         return new CaseBuilder()
-                .when(tastingNote.wine.sort.eq(wineSort)).then(1).otherwise(0)
+                .when(condition).then(1).otherwise(0)
                 .sum();
     }
 

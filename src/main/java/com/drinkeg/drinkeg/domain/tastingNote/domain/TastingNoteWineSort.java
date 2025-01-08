@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum TastingNoteWineSort {
-    ALL("all"), RED("red"), WHITE("white"), SPARKLING("sparkling"), ROSE("rose"),ETCETERA("etc");
+    ALL("전체"), RED("레드"), WHITE("화이트"), SPARKLING("스파클링"), ROSE("로제"), ETCETERA("기타");
     private final String value;
 
     public static TastingNoteWineSort of(String value) {
