@@ -1,26 +1,29 @@
 package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class TastingNoteSortCountResponse {
 
-    private long totalCount;     // 전체 TastingNote 개수
-    private long redCount;       // 레드 와인 개수
-    private long whiteCount;     // 화이트 와인 개수
-    private long sparklingCount; // 스파클링 와인 개수
-    private long roseCount;      // 로제 와인 개수
-    private long etcCount;       // 기타 와인 개수
+    private int totalCount;     // 전체 TastingNote 개수
+    private int redCount;       // 레드 와인 개수
+    private int whiteCount;     // 화이트 와인 개수
+    private int sparklingCount; // 스파클링 와인 개수
+    private int roseCount;      // 로제 와인 개수
+    private int etcCount;       // 기타 와인 개수
 
-    public TastingNoteSortCountResponse(Long totalCount, Long redCount, Long whiteCount, Long sparklingCount, Long roseCount, Long etcCount) {
-        this.totalCount = totalCount != null ? totalCount : 0;
-        this.redCount = redCount != null ? redCount : 0;
-        this.whiteCount = whiteCount != null ? whiteCount : 0;
-        this.sparklingCount = sparklingCount != null ? sparklingCount : 0;
-        this.roseCount = roseCount != null ? roseCount : 0;
-        this.etcCount = etcCount != null ? etcCount : 0;
+    @QueryProjection
+    public TastingNoteSortCountResponse(int totalCount, int redCount, int whiteCount, int sparklingCount, int roseCount, int etcCount) {
+        this.totalCount = totalCount;
+        this.redCount = redCount;
+        this.whiteCount = whiteCount;
+        this.sparklingCount = sparklingCount;
+        this.roseCount = roseCount;
+        this.etcCount = etcCount;
     }
 }

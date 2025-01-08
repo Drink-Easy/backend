@@ -1,10 +1,9 @@
 package com.drinkeg.drinkeg.domain.tastingNote.dto.request;
 
+import com.querydsl.core.annotations.QueryProjection;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -74,7 +73,7 @@ public class TastingNoteRequest {
         this.review = review;
     }
 
-    public TastingNoteRequest toEntity(Long wineId, String color, LocalDate tasteDate, int sugarContent, int acidity, int tannin, int body, int alcohol, List<String> nose, float rating, String review) {
+    public TastingNoteRequest of(Long wineId, String color, LocalDate tasteDate, int sugarContent, int acidity, int tannin, int body, int alcohol, List<String> nose, float rating, String review) {
         return TastingNoteRequest.builder()
                 .wineId(wineId)
                 .color(color)
