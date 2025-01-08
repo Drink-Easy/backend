@@ -34,8 +34,6 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
     @Autowired
     WineRepository wineRepository;
     @Autowired
-    WineService wineService;
-    @Autowired
     MemberRepository memberRepository;
     @Autowired
     TastingNoteRepository tastingNoteRepository;

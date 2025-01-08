@@ -37,6 +37,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                         tastingNote.member.username.eq(username),
                         wineSortIn(sort)
                 )
+                .orderBy(tastingNote.id.desc())
                 .fetch();
     }
 

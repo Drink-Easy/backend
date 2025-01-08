@@ -83,7 +83,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         TastingNoteSortCountResponse tastingNoteSortCountResponse = tastingNoteRepository.findTastingNoteSortCountsByUsername(username);
 
         List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteList.stream()
-                .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
                 .map(TastingNotePreviewResponse::of)
                 .toList();
 

@@ -2,8 +2,6 @@ package com.drinkeg.drinkeg.domain.tastingNote.repository;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
-import feign.Param;
-
 import java.util.List;
 
 public interface TastingNoteRepositoryCustom {
