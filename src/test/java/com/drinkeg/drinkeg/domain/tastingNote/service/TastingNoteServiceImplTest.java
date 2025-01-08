@@ -15,7 +15,6 @@ import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.member.domain.Member.createMember;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -53,10 +53,10 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
 
         // then
         Optional<TastingNote> tastingNote = tastingNoteRepository.findById(noteId);
-        Assertions.assertThat(tastingNote).isPresent();
+        assertThat(tastingNote).isPresent();
         tastingNote.ifPresent(note -> {
-            Assertions.assertThat(note.getMember().getId()).isEqualTo(member.getId());
-            Assertions.assertThat(note.getWine().getId()).isEqualTo(wine.getId());
+            assertThat(note.getMember().getId()).isEqualTo(member.getId());
+            assertThat(note.getWine().getId()).isEqualTo(wine.getId());
         });
     }
 
@@ -102,7 +102,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         TastingNoteResponse tastingNoteResponse = tastingNoteService.showTastingNoteByIdAndUsername(tastingNote.getId(), member.getUsername());
 
         // then
-        Assertions.assertThat(tastingNoteResponse.getNoteId()).isEqualTo(tastingNote.getId());
+        assertThat(tastingNoteResponse.getNoteId()).isEqualTo(tastingNote.getId());
     }
 
 
@@ -128,7 +128,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote1 = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
 
         // when & then
         assertThatThrownBy(() -> tastingNoteService.showTastingNoteByIdAndUsername(-1L, member.getUsername()))
@@ -148,16 +148,18 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
         // then
-        Assertions.assertThat(notePriviewList).isEmpty();
+        assertThat(notePriviewList).isEmpty();
 
-        assertAll(
-                () -> Assertions.assertThat(sortCount.getTotalCount()).isEqualTo(0),
-                () -> Assertions.assertThat(sortCount.getRedCount()).isEqualTo(0),
-                () -> Assertions.assertThat(sortCount.getWhiteCount()).isEqualTo(0),
-                () -> Assertions.assertThat(sortCount.getSparklingCount()).isEqualTo(0),
-                () -> Assertions.assertThat(sortCount.getRoseCount()).isEqualTo(0),
-                () -> Assertions.assertThat(sortCount.getEtcCount()).isEqualTo(0)
-        );
+        assertThat(sortCount)
+                .extracting(
+                        TastingNoteSortCountResponse::getTotalCount,
+                        TastingNoteSortCountResponse::getRedCount,
+                        TastingNoteSortCountResponse::getWhiteCount,
+                        TastingNoteSortCountResponse::getSparklingCount,
+                        TastingNoteSortCountResponse::getRoseCount,
+                        TastingNoteSortCountResponse::getEtcCount
+                )
+                .containsExactly(0, 0, 0, 0, 0, 0);
 
     }
 
@@ -183,11 +185,12 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
 
         // when
         AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ALL, member.getUsername());
+
+        // then
         List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
-        // then
-        Assertions.assertThat(notePriviewList).hasSize(6)
+        assertThat(notePriviewList).hasSize(6)
                 .extracting("noteId", "wineName", "imageUrl", "sort")
                 .containsExactly(
                         tuple(note6.getId(), "와인6", "http://default.image6", "기타"),
@@ -198,14 +201,16 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                         tuple(note1.getId(), "와인1", "http://default.image1", "레드")
                 );
 
-        assertAll(
-                () -> Assertions.assertThat(sortCount.getTotalCount()).isEqualTo(6),
-                () -> Assertions.assertThat(sortCount.getRedCount()).isEqualTo(1),
-                () -> Assertions.assertThat(sortCount.getWhiteCount()).isEqualTo(1),
-                () -> Assertions.assertThat(sortCount.getSparklingCount()).isEqualTo(1),
-                () -> Assertions.assertThat(sortCount.getRoseCount()).isEqualTo(1),
-                () -> Assertions.assertThat(sortCount.getEtcCount()).isEqualTo(2)
-        );
+        assertThat(sortCount)
+                .extracting(
+                        TastingNoteSortCountResponse::getTotalCount,
+                        TastingNoteSortCountResponse::getRedCount,
+                        TastingNoteSortCountResponse::getWhiteCount,
+                        TastingNoteSortCountResponse::getSparklingCount,
+                        TastingNoteSortCountResponse::getRoseCount,
+                        TastingNoteSortCountResponse::getEtcCount
+                )
+                .containsExactly(6, 1, 1, 1, 1, 2);
 
     }
 
@@ -230,25 +235,28 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
 
         // when
         AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.RED, member.getUsername());
+
+        // then
         List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
-        // then
-        Assertions.assertThat(notePriviewList).hasSize(2)
+        assertThat(notePriviewList).hasSize(2)
                 .extracting("noteId", "wineName", "imageUrl", "sort")
                 .containsExactly(
                         tuple(note2.getId(), "와인2", "http://default.image2", "레드"),
                         tuple(note1.getId(), "와인1", "http://default.image1", "레드")
                 );
 
-        assertAll(
-                () -> Assertions.assertThat(sortCount.getTotalCount()).isEqualTo(6),
-                () -> Assertions.assertThat(sortCount.getRedCount()).isEqualTo(2),
-                () -> Assertions.assertThat(sortCount.getWhiteCount()).isEqualTo(0),
-                () -> Assertions.assertThat(sortCount.getSparklingCount()).isEqualTo(1),
-                () -> Assertions.assertThat(sortCount.getRoseCount()).isEqualTo(1),
-                () -> Assertions.assertThat(sortCount.getEtcCount()).isEqualTo(2)
-        );
+        assertThat(sortCount)
+                .extracting(
+                        TastingNoteSortCountResponse::getTotalCount,
+                        TastingNoteSortCountResponse::getRedCount,
+                        TastingNoteSortCountResponse::getWhiteCount,
+                        TastingNoteSortCountResponse::getSparklingCount,
+                        TastingNoteSortCountResponse::getRoseCount,
+                        TastingNoteSortCountResponse::getEtcCount
+                )
+                .containsExactly(6, 2, 0, 1, 1, 2);
 
     }
 
@@ -273,23 +281,24 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
 
         // when
         AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ETCETERA, member.getUsername());
+
+        // then
         List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
-        // then
-        Assertions.assertThat(notePriviewList).hasSize(3)
+        assertThat(notePriviewList).hasSize(3)
                 .extracting("noteId", "wineName", "imageUrl", "sort")
                 .containsExactly(
                         tuple(note6.getId(), "와인6", "http://default.image6", "기타"),
                         tuple(note5.getId(), "와인5", "http://default.image5", "주정강화"),
                         tuple(note4.getId(), "와인4", "http://default.image4", "주정강화"));
         assertAll(
-                () -> Assertions.assertThat(sortCount.getTotalCount()).isEqualTo(6),
-                () -> Assertions.assertThat(sortCount.getRedCount()).isEqualTo(1),
-                () -> Assertions.assertThat(sortCount.getWhiteCount()).isEqualTo(1),
-                () -> Assertions.assertThat(sortCount.getSparklingCount()).isEqualTo(1),
-                () -> Assertions.assertThat(sortCount.getRoseCount()).isEqualTo(0),
-                () -> Assertions.assertThat(sortCount.getEtcCount()).isEqualTo(3)
+                () -> assertThat(sortCount.getTotalCount()).isEqualTo(6),
+                () -> assertThat(sortCount.getRedCount()).isEqualTo(1),
+                () -> assertThat(sortCount.getWhiteCount()).isEqualTo(1),
+                () -> assertThat(sortCount.getSparklingCount()).isEqualTo(1),
+                () -> assertThat(sortCount.getRoseCount()).isEqualTo(0),
+                () -> assertThat(sortCount.getEtcCount()).isEqualTo(3)
         );
 
     }
@@ -318,7 +327,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Long deletedTastingNoteId = tastingNoteService.deleteTastingNote(tastingNote.getId(), member.getUsername());
 
         //then
-        Assertions.assertThat(deletedTastingNoteId).isEqualTo(tastingNote.getId());
+        assertThat(deletedTastingNoteId).isEqualTo(tastingNote.getId());
     }
 
     @DisplayName("다른 사람의 테이스팅 노트를 삭제하는 경우 TASTING_NOTE_FORBIDDEN 에러가 발생한다.")
