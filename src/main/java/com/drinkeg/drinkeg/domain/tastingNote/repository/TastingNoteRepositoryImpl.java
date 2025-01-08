@@ -30,19 +30,6 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<TastingNote> findTastingNoteWithWineAndNoseAndMemberById(Long noteId) {
-        return Optional.ofNullable(
-                queryFactory
-                        .selectFrom(tastingNote)
-                        .leftJoin(tastingNote.wine, wine).fetchJoin()
-                        .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
-                        .leftJoin(tastingNote.member).fetchJoin()
-                        .where(tastingNote.id.eq(noteId))
-                        .fetchOne()
-        );
-    }
-
-    @Override
     public List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username) {
         return queryFactory
                 .selectFrom(tastingNote)

@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface TastingNoteRepositoryCustom {
 
-    Optional<TastingNote> findTastingNoteWithWineAndNoseAndMemberById(Long noteId);
-
     List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username);
 
     TastingNoteSortCountResponse findTastingNoteSortCountsByUsername(String username);
