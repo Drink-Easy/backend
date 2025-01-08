@@ -53,8 +53,7 @@ public class TastingNoteController {
     public ApiResponse<TastingNoteResponse> showTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                             @PathVariable("noteId") Long noteId) {
 
-        TastingNoteResponse tastingNoteResponse =
-                tastingNoteService.showTastingNoteById(noteId, principalDetail.getUsername());
+        TastingNoteResponse tastingNoteResponse = tastingNoteService.showTastingNoteById(noteId, principalDetail.getUsername());
         return ApiResponse.onSuccess(tastingNoteResponse);
     }
 

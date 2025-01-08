@@ -58,41 +58,6 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     }
 
     @Override
-    public Optional<TastingNoteResponse> findTastingNoteWithWineAndNoseByTastingNoteIdAndUsername(Long tastingNoteId, String username) {
-        TastingNote tastingNote = queryFactory.selectFrom(QTastingNote.tastingNote)
-                .leftJoin(QTastingNote.tastingNote.wine, wine).fetchJoin()
-                .leftJoin(QTastingNote.tastingNote.noseList, tastingNoteNose).fetchJoin()
-                .where(QTastingNote.tastingNote.id.eq(tastingNoteId)
-                        .and(QTastingNote.tastingNote.member.username.eq(username)))
-                .fetchOne();
-
-        if (tastingNote == null) {
-            return Optional.empty();
-        }
-
-        return Optional.of(
-                new TastingNoteResponse(
-                        tastingNote.getId(),
-                        tastingNote.getWine().getId(),
-                        tastingNote.getWine().getName(),
-                        tastingNote.getWine().getSort(),
-                        tastingNote.getWine().getCountry(),
-                        tastingNote.getWine().getImageUrl(),
-                        tastingNote.getColor(),
-                        tastingNote.getTasteDate(),
-                        tastingNote.getSugarContent(),
-                        tastingNote.getAcidity(),
-                        tastingNote.getTannin(),
-                        tastingNote.getBody(),
-                        tastingNote.getAlcohol(),
-                        tastingNote.getNoseList(),
-                        tastingNote.getRating(),
-                        tastingNote.getReview()
-                )
-        );
-    }
-
-    @Override
     public Optional<TastingNote> findTastingNoteWithNoseById(Long tastingNoteId) {
         return Optional.ofNullable(
                 queryFactory.selectFrom(tastingNote)

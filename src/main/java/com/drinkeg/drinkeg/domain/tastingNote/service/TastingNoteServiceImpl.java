@@ -60,12 +60,18 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     @Override
     public TastingNoteResponse showTastingNoteById(Long noteId, String username) {
-        // noteId로 TastingNote를 찾는다.
-        return tastingNoteRepository
-                .findTastingNoteWithWineAndNoseByTastingNoteIdAndUsername(noteId, username)
-                .orElseThrow(()
-                -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
-        );
+        // 회원을 조회한다.
+        Member member = memberRepository.findByUsername(username).orElseThrow(
+                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        TastingNote tastingNote = tastingNoteRepository.findById(noteId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND));
+
+        if (!tastingNote.getMember().equals(member)) {
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
+        }
+
+        return TastingNoteResponse.of(tastingNote);
 
     }
 
