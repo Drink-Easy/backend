@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.service;
 
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
@@ -78,8 +79,8 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public AllTastingNoteResponse findAllTastingNote(String sort, String username) {
-        List<TastingNote> tastingNoteList = tastingNoteRepository.findTastingNoteBySortAndUsername(sort, username);
+    public AllTastingNoteResponse findAllTastingNote(TastingNoteWineSort wineSort, String username) {
+        List<TastingNote> tastingNoteList = tastingNoteRepository.findTastingNoteBySortAndUsername(wineSort, username);
         TastingNoteSortCountResponse tastingNoteSortCountResponse = tastingNoteRepository.findTastingNoteSortCountsByUsername(username);
 
         List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteList.stream()

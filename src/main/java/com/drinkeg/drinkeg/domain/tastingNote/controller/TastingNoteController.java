@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.controller;
 
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
@@ -42,7 +43,7 @@ public class TastingNoteController {
     public ApiResponse<AllTastingNoteResponse> showAllTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestParam("sort") String sort) {
 
         AllTastingNoteResponse allTastingNote =
-                tastingNoteService.findAllTastingNote(sort, principalDetail.getUsername());
+                tastingNoteService.findAllTastingNote(TastingNoteWineSort.of(sort), principalDetail.getUsername());
         return ApiResponse.onSuccess(allTastingNote);
     }
 

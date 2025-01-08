@@ -4,6 +4,7 @@ import com.drinkeg.drinkeg.IntegrationTestSupport;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
@@ -12,7 +13,6 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountR
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
-import com.drinkeg.drinkeg.domain.wine.service.WineService;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.assertj.core.api.Assertions;
@@ -143,7 +143,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember("user1", "password", false));
 
         // when
-        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote("all", member.getUsername());
+        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ALL, member.getUsername());
         List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
@@ -182,7 +182,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wine6, createTastingNoteRequest(wine6)));
 
         // when
-        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote("all", member.getUsername());
+        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ALL, member.getUsername());
         List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
@@ -229,7 +229,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wine6, createTastingNoteRequest(wine6)));
 
         // when
-        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote("red", member.getUsername());
+        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.RED, member.getUsername());
         List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
@@ -272,7 +272,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wine6, createTastingNoteRequest(wine6)));
 
         // when
-        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote("etc", member.getUsername());
+        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ETCETERA, member.getUsername());
         List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
@@ -294,16 +294,16 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
 
     }
 
-    @DisplayName("없는 와인 종류로 전체 테이스팅 노트를 조회하면 SORT_NOT_FOUND 에러가 발생한다.")
+    @DisplayName("없는 와인 종류로 전체 테이스팅 노트를 조회하면 IllegalArgumentException이 발생한다.")
     @Test
     void findAllTastingNoteByWriongSort() {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
 
         // when & then
-        assertThatThrownBy(() -> tastingNoteService.findAllTastingNote("sort", member.getUsername()))
-                .isInstanceOf(GeneralException.class)
-                .hasMessage(ErrorStatus.SORT_NOT_FOUND.getMessage());
+        assertThatThrownBy(() -> tastingNoteService.findAllTastingNote(TastingNoteWineSort.of("WrongType"), member.getUsername()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("유효하지 않은 와인 종류입니다.");
     }
 
     @DisplayName("테이스팅 노트를 id와 username으로 삭제한다.")
