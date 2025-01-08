@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNoteNose.tastingNoteNose;
@@ -26,6 +27,18 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
 
+    @Override
+    public Optional<TastingNote> findTastingNoteWithWineAndNoseAndMemberById(Long noteId) {
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(tastingNote)
+                        .leftJoin(tastingNote.wine, wine).fetchJoin()
+                        .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
+                        .leftJoin(tastingNote.member).fetchJoin()
+                        .where(tastingNote.id.eq(noteId))
+                        .fetchOne()
+        );
+    }
 
     @Override
     public List<TastingNote> findTastingNoteBySortAndUsername(String sort, String username) {

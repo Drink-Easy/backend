@@ -15,15 +15,4 @@ public interface TastingNoteRepository extends JpaRepository<TastingNote, Long>,
     @Query("UPDATE TastingNote t SET t.member = null WHERE t.member.username = :username")
     void updateTastingNoteMemberNull(@Param("username") String username);
 
-
-    @Query("SELECT DISTINCT t " +
-            "FROM TastingNote t " +
-            "LEFT JOIN FETCH t.member m " +
-            "LEFT JOIN FETCH t.wine w " +
-            "LEFT JOIN FETCH t.noseList n " +
-            "WHERE t.id = :tastingNoteId ")
-    Optional<TastingNote> findTastingNoteWithWineAndNoseAndMemberById(
-            @Param("tastingNoteId") Long tastingNoteId);
-
-
 }
