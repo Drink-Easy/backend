@@ -68,7 +68,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     @Override
     public AllTastingNoteResponse findAllTastingNote(TastingNoteWineSort wineSort, String username) {
-        System.out.println("wineSort = " + wineSort);
         List<TastingNote> tastingNoteList = tastingNoteRepository.findTastingNoteBySortAndUsername(wineSort, username);
         TastingNoteSortCountResponse tastingNoteSortCountResponse = tastingNoteRepository.findTastingNoteSortCountsByUsername(username);
 
