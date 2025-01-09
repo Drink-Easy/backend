@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
-
 import static jakarta.persistence.FetchType.*;
 
 @Entity
@@ -114,9 +112,6 @@ public class TastingNote extends BaseEntity {
         if (updateNoseList != null) this.updateTastingNoteNoseList(updateNoseList);
         if (rating != null) this.rating = rating;
         if (review != null) this.review = review;
-        if (rating != null) this.rating = rating;
-        if (review != null) this.review = review;
-        if (updateNoseList != null) this.updateTastingNoteNoseList(updateNoseList);
     }
 
     public void updateTastingNoteNoseList(List<String> updateNoseList) {
