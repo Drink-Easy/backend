@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.FetchType.*;
 
@@ -86,11 +87,9 @@ public class TastingNote extends BaseEntity {
                 .review(tastingNoteRequest.getReview())
                 .build();
 
-        // Set으로 중복 제거
         Set<String> uniqueNoseElements = new HashSet<>(tastingNoteRequest.getNose());
-        for (String noseElement : uniqueNoseElements) {
-            tastingNote.addNoseElement(noseElement);
-        }
+        uniqueNoseElements.forEach(tastingNote::addNoseElement);
+
         return tastingNote;
     }
 
@@ -98,6 +97,12 @@ public class TastingNote extends BaseEntity {
     public TastingNote addNoseElement(String noseElement) {
         TastingNoteNose nose = TastingNoteNose.create(this, noseElement);
         this.noseList.add(nose);
+        return this;
+    }
+
+    public TastingNote removeNose(TastingNoteNose nose) {
+        this.noseList.remove(nose);
+        nose.updateTastingNote(null);
         return this;
     }
 
@@ -112,67 +117,16 @@ public class TastingNote extends BaseEntity {
         if (tannin != null) this.tannin = tannin;
         if (body != null) this.body = body;
         if (alcohol != null) this.alcohol = alcohol;
-
-        if (updateNoseList != null) {
-            this.updateTastingNoteNoseList(updateNoseList);
-        }
-
         if (rating != null) this.rating = rating;
         if (review != null) this.review = review;
+        if (updateNoseList != null) this.updateTastingNoteNoseList(updateNoseList);
     }
 
-    public TastingNote removeTastingNoteNose(TastingNoteNose tastingNoteNose) {
-        noseList.remove(tastingNoteNose);
-        tastingNoteNose.updateTastingNote(null);
-        return this;
-    }
-
-    public void updateColor(String color) {
-        this.color = color;
-    }
-    public void updateTasteDate(LocalDate tasteDate) {
-        this.tasteDate = tasteDate;
-    }
-    public void updateSugarContent(int sugarContent) {
-        this.sugarContent = sugarContent;
-    }
-    public void updateAcidity(int acidity) {
-        this.acidity = acidity;
-    }
-    public void updateTannin(int tannin) {
-        this.tannin = tannin;
-    }
-    public void updateBody(int body) {
-        this.body = body;
-    }
-    public void updateAlcohol(int alcohol) {
-        this.alcohol = alcohol;
-    }
-
-
-    // todo : 업데이트 기능 리팩토링 필요
     public void updateTastingNoteNoseList(List<String> updateNoseList) {
-
-        // updateNoseList를 Set으로 변환하여 빠르게 검색
+        // 기존 noseList 전체 삭제
+        noseList.forEach(this::removeNose);
+        // updateNoseList로 대체
         Set<String> uniqueNoseElements = new HashSet<>(updateNoseList);
-
-        // 기존 noseList에서 updateNoseList에 없는 항목 삭제
-        this.noseList.removeIf(nose -> !uniqueNoseElements.contains(nose.getNoseElement()));
-
-        // updateNoseList에 있는 항목 추가
-        for (String noseElement : uniqueNoseElements) {
-            // noseList에서 해당 항목이 없는 경우에만 추가
-            if (this.noseList.stream().noneMatch(nose -> nose.getNoseElement().equals(noseElement))) {
-                this.addNoseElement(noseElement);
-            }
-        }
+        uniqueNoseElements.forEach(this::addNoseElement);
     }
-
-    public void updateRating(float rating) {
-        this.rating = rating;
-    }
-    public void updateReview(String review) {
-        this.review = review;
-    }
-
 }
