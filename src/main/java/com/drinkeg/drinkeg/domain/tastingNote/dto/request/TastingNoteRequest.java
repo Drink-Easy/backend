@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TastingNoteRequest {
 
@@ -55,5 +54,37 @@ public class TastingNoteRequest {
     private float rating;
 
     private String review;
+
+    @Builder
+    public TastingNoteRequest(Long wineId, String color, LocalDate tasteDate, int sugarContent, int acidity, int tannin, int body, int alcohol, List<String> nose, float rating, String review) {
+        this.wineId = wineId;
+        this.color = color;
+        this.tasteDate = tasteDate;
+        this.sugarContent = sugarContent;
+        this.acidity = acidity;
+        this.tannin = tannin;
+        this.body = body;
+        this.alcohol = alcohol;
+        this.nose = nose;
+        this.rating = rating;
+        this.review = review;
+    }
+
+    public TastingNoteRequest of(Long wineId, String color, LocalDate tasteDate, int sugarContent, int acidity, int tannin, int body, int alcohol, List<String> nose, float rating, String review) {
+        return TastingNoteRequest.builder()
+                .wineId(wineId)
+                .color(color)
+                .tasteDate(tasteDate)
+                .sugarContent(sugarContent)
+                .acidity(acidity)
+                .tannin(tannin)
+                .body(body)
+                .alcohol(alcohol)
+                .nose(nose)
+                .rating(rating)
+                .review(review)
+                .build();
+    }
+
 
 }

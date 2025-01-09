@@ -39,7 +39,7 @@ public class MyWineResponse {
                 .wineId(wine.getId())
                 .wineName(wine.getName())
                 .wineSort(wine.getSort())
-                .wineArea(wine.getArea())
+                .wineArea(wine.getCountry())
                 .wineVariety(wine.getVariety())
 
                 .purchaseDate(purchaseDate)

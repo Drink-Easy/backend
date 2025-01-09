@@ -59,6 +59,9 @@ public class Member {
     @Convert(converter = StringListConverter.class)
     private List<String> wineArea = new ArrayList<>();
 
+    @Convert(converter = StringListConverter.class)
+    private List<String> wineVariety = new ArrayList<>();
+
     private boolean agreement;
 
     @OneToMany(mappedBy = "member")
@@ -123,12 +126,13 @@ public class Member {
 
 
     public void updateFirstUser(String name, Boolean isNewbie, Long monthPrice,
-                                List<String> wineSort, List<String> wineArea, String region, String profileUrl){
+                                List<String> wineSort, List<String> wineArea,List<String> wineVariety, String region, String profileUrl){
         if(name != null) this.name = name;
         if(isNewbie != null) this.isNewbie = isNewbie;
         if(monthPrice != null) this.monthPriceMax = monthPrice;
         if(wineSort != null) this.wineSort = wineSort;
         if(wineArea != null) this.wineArea = wineArea;
+        if(wineVariety != null) this.wineVariety = wineVariety;
         if(region != null) this.region = region;
         if(profileUrl != null) this.imageUrl = profileUrl;
         this.isFirst = false;

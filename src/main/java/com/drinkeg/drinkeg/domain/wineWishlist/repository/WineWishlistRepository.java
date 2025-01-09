@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface WineWishlistRepository extends JpaRepository<WineWishlist, Long>, WineWishlistRepositoryCustom {
 
-    WineWishlist findWineWishlistByMemberAndWine(Member member, Wine wine);
+    Optional<WineWishlist> findWineWishlistByMemberAndWine(Member member, Wine wine);
 
     Boolean existsByMemberAndWine(Member member, Wine wine);
 

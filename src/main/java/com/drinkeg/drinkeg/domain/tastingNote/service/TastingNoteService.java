@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.service;
 
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
@@ -11,15 +12,15 @@ import java.util.Map;
 
 public interface TastingNoteService {
 
-    void saveTastingNote(TastingNoteRequest tastingNote, String username);
+    Long saveTastingNote(TastingNoteRequest tastingNote, String username);
 
-    TastingNoteResponse showTastingNoteById(Long noteId, String username);
+    TastingNoteResponse showTastingNoteByIdAndUsername(Long noteId, String username);
 
-    AllTastingNoteResponse findAllTastingNote(String sort, String username);
+    AllTastingNoteResponse findAllTastingNote(TastingNoteWineSort wineSort, String username);
 
     void updateTastingNote(Long noteId, TastingNoteUpdateRequest tastingNoteUpdateRequest, String username);
 
-    void deleteTastingNote(Long noteId, String username);
+    Long deleteTastingNote(Long noteId, String username);
 
     public void setTastingNoteMemberNull(String username);
 

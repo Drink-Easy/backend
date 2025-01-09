@@ -15,7 +15,6 @@ import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class TastingNote extends BaseEntity {
@@ -29,7 +28,7 @@ public class TastingNote extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "wine_id", nullable = false)
+    @JoinColumn(name = "wine_id")
     private Wine wine;
 
     private String color;
@@ -75,7 +74,6 @@ public class TastingNote extends BaseEntity {
     public static TastingNote create(Member member, Wine wine, TastingNoteRequest tastingNoteRequest) {
         TastingNote tastingNote = TastingNote.builder()
                 .member(member)
-
                 .wine(wine)
                 .color(tastingNoteRequest.getColor())
                 .tasteDate(tastingNoteRequest.getTasteDate())
@@ -93,35 +91,64 @@ public class TastingNote extends BaseEntity {
         for (String noseElement : uniqueNoseElements) {
             tastingNote.addNoseElement(noseElement);
         }
-
         return tastingNote;
     }
+
+    // 연관관계 편의 메소드
+    public TastingNote addNoseElement(String noseElement) {
+        TastingNoteNose nose = TastingNoteNose.create(this, noseElement);
+        this.noseList.add(nose);
+        return this;
+    }
+
 
     public void updateTastingNote(String color, LocalDate tasteDate,
                                   Integer sugarContent, Integer acidity, Integer tannin, Integer body, Integer alcohol,
                                   List<String> updateNoseList, Float rating, String review){
-        if(color != null) this.color = color;
-        if(tasteDate != null) this.tasteDate = tasteDate;
+        if (color != null) this.color = color;
+        if (tasteDate != null) this.tasteDate = tasteDate;
+        if (sugarContent != null) this.sugarContent = sugarContent;
+        if (acidity != null) this.acidity = acidity;
+        if (tannin != null) this.tannin = tannin;
+        if (body != null) this.body = body;
+        if (alcohol != null) this.alcohol = alcohol;
 
-        if(sugarContent != null) this.sugarContent = sugarContent;
-        if(acidity != null) this.acidity = acidity;
-        if(tannin != null) this.tannin = tannin;
-        if(body != null) this.body = body;
-        if(alcohol != null) this.alcohol = alcohol;
-
-        if(updateNoseList != null) {
+        if (updateNoseList != null) {
             this.updateTastingNoteNoseList(updateNoseList);
         }
 
-        if(rating != null) this.rating = rating;
-        if(review != null) this.review = review;
+        if (rating != null) this.rating = rating;
+        if (review != null) this.review = review;
     }
 
-
-    // nose 요소 추가 메서드
-    public void addNoseElement(String noseElement) {
-        this.noseList.add(new TastingNoteNose(this, noseElement));
+    public TastingNote removeTastingNoteNose(TastingNoteNose tastingNoteNose) {
+        noseList.remove(tastingNoteNose);
+        tastingNoteNose.updateTastingNote(null);
+        return this;
     }
+
+    public void updateColor(String color) {
+        this.color = color;
+    }
+    public void updateTasteDate(LocalDate tasteDate) {
+        this.tasteDate = tasteDate;
+    }
+    public void updateSugarContent(int sugarContent) {
+        this.sugarContent = sugarContent;
+    }
+    public void updateAcidity(int acidity) {
+        this.acidity = acidity;
+    }
+    public void updateTannin(int tannin) {
+        this.tannin = tannin;
+    }
+    public void updateBody(int body) {
+        this.body = body;
+    }
+    public void updateAlcohol(int alcohol) {
+        this.alcohol = alcohol;
+    }
+
 
     // todo : 업데이트 기능 리팩토링 필요
     public void updateTastingNoteNoseList(List<String> updateNoseList) {
@@ -139,6 +166,13 @@ public class TastingNote extends BaseEntity {
                 this.addNoseElement(noseElement);
             }
         }
+    }
+
+    public void updateRating(float rating) {
+        this.rating = rating;
+    }
+    public void updateReview(String review) {
+        this.review = review;
     }
 
 }

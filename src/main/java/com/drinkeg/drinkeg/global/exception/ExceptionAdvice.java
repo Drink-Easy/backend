@@ -23,6 +23,17 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(generalException, errorReasonHttpStatus, null, request);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
+        ReasonDTO errorReasonHttpStatus = ReasonDTO.builder()
+                .isSuccess(false)
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage())
+                .code("ARGUMENT_ERROR")
+                .build();
+        return handleExceptionInternal(e, errorReasonHttpStatus, null, request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ReasonDTO errorReasonHttpStatus = ReasonDTO.builder()
