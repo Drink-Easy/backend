@@ -383,7 +383,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 .name(name)
                 .imageUrl(imageUrl)
                 .sort(sort)
-                .area("프랑스")
+                .country("프랑스")
                 .variety("샤도네이")
                 .vivinoRating(4.1f)
                 .price(100).build();

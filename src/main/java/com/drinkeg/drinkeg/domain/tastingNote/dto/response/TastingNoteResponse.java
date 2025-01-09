@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
+import lombok.Builder;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
@@ -23,7 +24,8 @@ public class TastingNoteResponse {
     private Long wineId;
     private String wineName;
     private String sort;
-    private String area;
+    private String country;
+    private String region;
     private String imageUrl;
 
     private String color;
@@ -44,14 +46,15 @@ public class TastingNoteResponse {
 
     @Builder
     public TastingNoteResponse(Long noteId, Long wineId, String wineName, String sort,
-                               String area, String imageUrl, String color, LocalDate tasteDate,
+                               String country, String region, String imageUrl, String color, LocalDate tasteDate,
                                int sugarContent, int acidity, int tannin, int body, int alcohol,
                                List<TastingNoteNose> noseList, float rating, String review){
         this.noteId = noteId;
         this.wineId = wineId;
         this.wineName = wineName;
         this.sort = sort;
-        this.area = area;
+        this.country = country;
+        this.region = region;
         this.imageUrl = imageUrl;
         this.color = color;
         this.tasteDate = tasteDate;
@@ -67,18 +70,15 @@ public class TastingNoteResponse {
         this.review = review;
     }
 
-    public static TastingNoteResponse of(TastingNote tastingNote){
-        Wine wine = tastingNote.getWine();
-
+    public static TastingNoteResponse of(TastingNote tastingNote) {
         return TastingNoteResponse.builder()
                 .noteId(tastingNote.getId())
-
-                .wineId(wine.getId())
-                .wineName(wine.getName())
-                .sort(wine.getSort())
-                .area(wine.getArea())
-                .imageUrl(wine.getImageUrl())
-
+                .wineId(tastingNote.getWine().getId())
+                .wineName(tastingNote.getWine().getName())
+                .sort(tastingNote.getWine().getSort())
+                .country(tastingNote.getWine().getCountry())
+                .region(tastingNote.getWine().getRegion())
+                .imageUrl(tastingNote.getWine().getImageUrl())
                 .color(tastingNote.getColor())
                 .tasteDate(tastingNote.getTasteDate())
                 .sugarContent(tastingNote.getSugarContent())
@@ -91,5 +91,4 @@ public class TastingNoteResponse {
                 .review(tastingNote.getReview())
                 .build();
     }
-
 }

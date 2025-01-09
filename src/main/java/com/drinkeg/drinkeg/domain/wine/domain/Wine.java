@@ -1,19 +1,14 @@
 package com.drinkeg.drinkeg.domain.wine.domain;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.wineNote.domain.WineNote;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static lombok.AccessLevel.*;
-
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Wine {
 
@@ -21,37 +16,48 @@ public class Wine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
     private String imageUrl;
 
-    // 종 : 레드, 화이트 등등
-    private String sort;
+    private String name;
 
-    // 지역
-    private String area;
+    private String nameEng;
 
-    // 품종 : 카베르네소비뇽, 샤도네이 등등
-    private String variety;
-
-    // vivino 평점
-    private float vivinoRating;
-
-    // 가격
     private int price;
 
-    // cascade = CascadeType.ALL : 와인이 저장될 때 같이 저장됨
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wine_note_id")
-    private WineNote wineNote;
+    private String sort; // 종류
 
-    @Builder.Default
+    private String country; // 국가
+
+    private String region; // 생산지
+
+    private String variety; // 품종
+
+    private float vivinoRating;
+
+    @Embedded
+    private WineNoteStatistics wineNoteStatistics;
+
     @OneToMany
     @JoinColumn(name = "wine_id")
-    private List<TastingNote> tastingNoteList = new ArrayList<>();
+    private final List<TastingNote> tastingNoteList = new ArrayList<>();
 
     public void updateImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
     }
 
+    @Builder
+    public Wine(String name, String nameEng, String imageUrl, String sort, String country, String region, String variety, float vivinoRating, int price, WineNoteStatistics wineNoteStatistics) {
+        this.name = name;
+        this.nameEng = nameEng;
+        this.imageUrl = imageUrl;
+        this.sort = sort;
+        this.country = country;
+        this.region = region;
+        this.variety = variety;
+        this.vivinoRating = vivinoRating;
+        this.price = price;
+        this.wineNoteStatistics = wineNoteStatistics != null ? wineNoteStatistics : WineNoteStatistics.create();
+    }
 }
+
+

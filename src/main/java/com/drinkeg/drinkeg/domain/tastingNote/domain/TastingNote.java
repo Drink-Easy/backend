@@ -15,8 +15,6 @@ import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TastingNote extends BaseEntity {
 
@@ -45,7 +43,6 @@ public class TastingNote extends BaseEntity {
     private int alcohol;
 
     // nose를 TastingNote와 OneToMany 관계로 설정
-    @Builder.Default
     @OneToMany(mappedBy = "tastingNote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TastingNoteNose> noseList = new ArrayList<>();
 
@@ -54,45 +51,45 @@ public class TastingNote extends BaseEntity {
 
     private String review;
 
-    // TastingNote 생성 매서드
     public static TastingNote create(Member member, Wine wine, TastingNoteRequest tastingNoteRequest) {
         TastingNote tastingNote = TastingNote.builder()
                 .member(member)
-
                 .wine(wine)
                 .color(tastingNoteRequest.getColor())
                 .tasteDate(tastingNoteRequest.getTasteDate())
-
                 .sugarContent(tastingNoteRequest.getSugarContent())
                 .acidity(tastingNoteRequest.getAcidity())
                 .tannin(tastingNoteRequest.getTannin())
                 .body(tastingNoteRequest.getBody())
                 .alcohol(tastingNoteRequest.getAlcohol())
-
-
                 .rating(tastingNoteRequest.getRating())
                 .review(tastingNoteRequest.getReview())
                 .build();
-
-        for(String noseElement : tastingNoteRequest.getNose()){
+        for (String noseElement : tastingNoteRequest.getNose()){
             tastingNote.addNoseElement(noseElement);
         }
-
         return tastingNote;
     }
 
+    // 연관관계 편의 메소드
+    public TastingNote addNoseElement(String noseElement) {
+        TastingNoteNose nose = TastingNoteNose.create(this, noseElement);
+        this.noseList.add(nose);
+        return this;
+    }
 
-    // 색상 업데이트
+    public TastingNote removeTastingNoteNose(TastingNoteNose tastingNoteNose) {
+        noseList.remove(tastingNoteNose);
+        tastingNoteNose.updateTastingNote(null);
+        return this;
+    }
+
     public void updateColor(String color) {
         this.color = color;
     }
-
-    // 시음 날짜 업데이트
     public void updateTasteDate(LocalDate tasteDate) {
         this.tasteDate = tasteDate;
     }
-
-    // 맛 업데이트
     public void updateSugarContent(int sugarContent) {
         this.sugarContent = sugarContent;
     }
@@ -108,24 +105,28 @@ public class TastingNote extends BaseEntity {
     public void updateAlcohol(int alcohol) {
         this.alcohol = alcohol;
     }
-
-
-    // nose 요소 추가 메서드
-    public void addNoseElement(String noseElement) {
-        TastingNoteNose nose = TastingNoteNose.builder()
-                .tastingNote(this)
-                .noseElement(noseElement)
-                .build();
-        this.noseList.add(nose);
-    }
-
-    // 만족도 업데이트
     public void updateRating(float rating) {
         this.rating = rating;
     }
-    // 메모 업데이트
-    public void updateMemo(String review) {
+    public void updateReview(String review) {
         this.review = review;
     }
 
+    @Builder
+    public TastingNote(Member member, Wine wine, String color, LocalDate tasteDate,
+                       int sugarContent, int acidity, int tannin, int body, int alcohol,
+                       List<TastingNoteNose> noseList, float rating, String review) {
+        this.member = member;
+        this.wine = wine;
+        this.color = color;
+        this.tasteDate = tasteDate;
+        this.sugarContent = sugarContent;
+        this.acidity = acidity;
+        this.tannin = tannin;
+        this.body = body;
+        this.alcohol = alcohol;
+        this.noseList = noseList != null ? noseList : new ArrayList<>();
+        this.rating = rating;
+        this.review = review;
+    }
 }

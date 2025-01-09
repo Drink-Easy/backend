@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.service;
 
+import com.drinkeg.drinkeg.domain.tastingNote.event.TastingNoteUpdateEvent;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
@@ -15,7 +16,6 @@ import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteNoseReposito
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
-import com.drinkeg.drinkeg.domain.wineNote.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +57,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         // TastingNote를 저장한다.
         TastingNote save = tastingNoteRepository.save(TastingNote.create(member, wine, tastingNoteRequest));
 
-        eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
+        eventPublisher.publishEvent(new TastingNoteUpdateEvent(wineId));
 
         return save.getId();
     }
@@ -147,7 +147,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
             foundNote.updateRating(tastingNoteUpdateRequest.getRating());
         }
         if(tastingNoteUpdateRequest.getReview() != null) {
-            foundNote.updateMemo(tastingNoteUpdateRequest.getReview());
+            foundNote.updateReview(tastingNoteUpdateRequest.getReview());
         }
 
         tastingNoteRepository.save(foundNote);
@@ -177,7 +177,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         // TastingNote를 삭제한다.
         tastingNoteRepository.delete(foundNote);
 
-        eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
+        eventPublisher.publishEvent(new TastingNoteUpdateEvent(wineId));
 
         return noteId;
     }
@@ -204,5 +204,4 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     private void removeNoseElement(Long noseElementId){
         tastingNoteNoseRepository.deleteById(noseElementId);
     }
-
 }
