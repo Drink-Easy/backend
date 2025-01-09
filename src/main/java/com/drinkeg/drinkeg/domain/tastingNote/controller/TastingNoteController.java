@@ -63,7 +63,6 @@ public class TastingNoteController {
                                                  @PathVariable("noteId") Long noteId,
                                                  @RequestBody @Valid TastingNoteUpdateRequest tastingNoteUpdateRequest) {
 
-        System.out.println("principalDetail.getUsername() = " + principalDetail.getUsername());
         tastingNoteService.updateTastingNote(noteId, tastingNoteUpdateRequest, principalDetail.getUsername());
         return ApiResponse.onSuccess("노트 수정 완료");
     }
