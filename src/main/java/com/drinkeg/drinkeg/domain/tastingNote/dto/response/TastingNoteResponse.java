@@ -3,6 +3,9 @@ package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import lombok.Builder;
+import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,7 +38,7 @@ public class TastingNoteResponse {
     private int body;
     private int alcohol;
 
-    private List<Map<Long, String>> noseMapList = new ArrayList<>();
+    private List<String> noseList = new ArrayList<>();
 
     private float rating;
 
@@ -60,8 +63,8 @@ public class TastingNoteResponse {
         this.tannin = tannin;
         this.body = body;
         this.alcohol = alcohol;
-        this.noseMapList = noseList.stream()
-                .map(nose -> Map.of(nose.getId(), nose.getNoseElement()))
+        this.noseList = noseList.stream()
+                .map(TastingNoteNose::getNoseElement)
                 .collect(Collectors.toList());
         this.rating = rating;
         this.review = review;

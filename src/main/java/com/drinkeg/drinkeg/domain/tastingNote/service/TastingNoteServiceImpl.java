@@ -1,6 +1,8 @@
 package com.drinkeg.drinkeg.domain.tastingNote.service;
 
 import com.drinkeg.drinkeg.domain.tastingNote.event.TastingNoteUpdateEvent;
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
@@ -40,7 +42,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
 
     @Override
-    public void saveTastingNote(TastingNoteRequest tastingNoteRequest, String username) {
+    public Long saveTastingNote(TastingNoteRequest tastingNoteRequest, String username) {
 
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(username).orElseThrow(
@@ -53,72 +55,37 @@ public class TastingNoteServiceImpl implements TastingNoteService {
                 () -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
         // TastingNote를 저장한다.
-        tastingNoteRepository.save(TastingNote.create(member, wine, tastingNoteRequest));
+        TastingNote save = tastingNoteRepository.save(TastingNote.create(member, wine, tastingNoteRequest));
 
         eventPublisher.publishEvent(new TastingNoteUpdateEvent(wineId));
+
+        return save.getId();
     }
 
     @Override
-    public TastingNoteResponse showTastingNoteById(Long noteId, String username) {
-        // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(username).orElseThrow(
-                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+    public TastingNoteResponse showTastingNoteByIdAndUsername(Long noteId, String username) {
+        TastingNote tastingNote = tastingNoteRepository.findById(noteId).orElseThrow(()
+                -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
+        );
 
-        TastingNote tastingNote = tastingNoteRepository.findById(noteId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND));
-
-        if (!tastingNote.getMember().equals(member)) {
+        if(!tastingNote.getMember().getUsername().equals(username))
             throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
-        }
 
         return TastingNoteResponse.of(tastingNote);
-
     }
 
     @Override
-    public AllTastingNoteResponse findAllTastingNote(String sort, String username) {
+    public AllTastingNoteResponse findAllTastingNote(TastingNoteWineSort wineSort, String username) {
+        List<TastingNote> tastingNoteList = tastingNoteRepository.findTastingNoteBySortAndUsername(wineSort, username);
+        TastingNoteSortCountResponse tastingNoteSortCountResponse = tastingNoteRepository.findTastingNoteSortCountsByUsername(username);
 
-        // username 을 이용해서 TastingNotes 조회
-        // TastingNotes 조회 시 Wine, WineNose fetch join 하여 최적화
-        List<TastingNote> foundNotes= tastingNoteRepository.findTastingNotesWithWineAndNoseByUsername(username);
-
-        int total = foundNotes.size();
-        int red = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("레드")).count();
-        int white = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("화이트")).count();
-        int sparkling = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("스파클링")).count();
-        int rose = (int) foundNotes.stream().filter((note) -> note.getWine().getSort().contains("로제")).count();
-        int etc = total - (red + white + sparkling + rose);
-
-        // 필터링된 노트를 TastingNotePreviewDTO로 변환
-        List<TastingNotePreviewResponse> tastingNotePreviewResponseList = foundNotes.stream()
-                .filter(note -> filterBySort(note, sort))
-                .sorted(Comparator.comparing(TastingNote::getCreatedAt).reversed())
-                .map(note -> TastingNotePreviewResponse.create(note.getId(), note.getWine().getName(), note.getWine().getImageUrl()))
+        List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteList.stream()
+                .map(TastingNotePreviewResponse::of)
                 .toList();
 
-        return AllTastingNoteResponse.create(tastingNotePreviewResponseList, total, red, white, sparkling, rose, etc);
+        return AllTastingNoteResponse.create(tastingNoteSortCountResponse, tastingNotePreviewResponseList);
     }
 
-    // 와인 타입별 필터링 로직
-    private boolean filterBySort(TastingNote note, String sort) {
-        String wineSort = note.getWine().getSort();
-
-        switch (sort) {
-            case "red":
-                return wineSort.contains("레드");
-            case "white":
-                return wineSort.contains("화이트");
-            case "sparkling":
-                return wineSort.contains("스파클링");
-            case "rose":
-                return wineSort.contains("로제");
-            case "all":
-                return true; // 전체 보기
-            default:
-                return !wineSort.contains("레드") && !wineSort.contains("화이트")
-                        && !wineSort.contains("스파클링") && !wineSort.contains("로제");
-        }
-    }
 
     @Override
     public void updateTastingNote(Long noteId, TastingNoteUpdateRequest tastingNoteUpdateRequest, String username) {
@@ -188,7 +155,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public void deleteTastingNote(Long noteId, String username) {
+    public Long deleteTastingNote(Long noteId, String username) {
 
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(username).orElseThrow(
@@ -196,7 +163,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         );
 
         // noteId로 TastingNote 를 찾는다.
-        TastingNote foundNote = tastingNoteRepository.findTastingNoteWithNoseById(noteId).orElseThrow(
+        TastingNote foundNote = tastingNoteRepository.findById(noteId).orElseThrow(
                 () -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
         );
 
@@ -211,6 +178,8 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         tastingNoteRepository.delete(foundNote);
 
         eventPublisher.publishEvent(new TastingNoteUpdateEvent(wineId));
+
+        return noteId;
     }
 
     @Override

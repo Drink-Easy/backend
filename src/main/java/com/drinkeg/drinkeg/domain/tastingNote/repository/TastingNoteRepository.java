@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface TastingNoteRepository extends JpaRepository<TastingNote, Long>, TastingNoteRepositoryCustom {
+
     @Modifying
     @Query("UPDATE TastingNote t SET t.member = null WHERE t.member.username = :username")
     void updateTastingNoteMemberNull(@Param("username") String username);
