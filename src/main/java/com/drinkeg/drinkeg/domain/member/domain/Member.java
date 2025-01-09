@@ -41,11 +41,16 @@ public class Member {
 
     private Boolean isNewbie;
 
+    private boolean isAdult;
+
     // 처음 회원가입 한 사용자면 true이다가 회원 가입하면 false로 변함
     private Boolean isFirst;
 
     // 월 평균 와인 소비가의 범위중 최댓값
     private Long monthPriceMax;
+
+    // 프로필 이미지
+    private String imageUrl;
 
     // 선호 종류, 품종, 국가
     @Convert(converter = StringListConverter.class)
@@ -53,6 +58,9 @@ public class Member {
 
     @Convert(converter = StringListConverter.class)
     private List<String> wineArea = new ArrayList<>();
+
+    @Convert(converter = StringListConverter.class)
+    private List<String> wineVariety = new ArrayList<>();
 
     private boolean agreement;
 
@@ -70,7 +78,7 @@ public class Member {
     @Builder
     public Member(String name, String email, Role role, Provider provider, String username, String password,
                    String region, Boolean isNewbie, Boolean isFirst, Long monthPriceMax,
-                   List<String> wineSort, List<String> wineArea, boolean agreement) {
+                   List<String> wineSort, List<String> wineArea, boolean agreement, boolean isAdult) {
         this.name = name;
         this.email = email;
         this.role = role;
@@ -86,15 +94,21 @@ public class Member {
         this.wineSort = wineSort != null ? wineSort : new ArrayList<>();
         this.wineArea = wineArea != null ? wineArea : new ArrayList<>();
         this.agreement = agreement;
+        this.isAdult = isAdult;
     }
 
 
     public void updateEmail(String email) { this.email = email; };
+    public void updateImageUrl(String imageUrl){this.imageUrl=imageUrl;};
+    public void updateRegion(String region){this.region=region;};
+    public void updateName(String name){this.name = name;};
 
     public static Member createMember(String username, String password, boolean isFirst) {
         return Member.builder()
-                .username(username)
+                .username("drinkeg "+username)
                 .password(password)
+                .email(username)
+                .provider(Provider.DRINKEG)
                 .role(Role.ROLE_USER)
                 .isFirst(isFirst)
                 .build();
@@ -112,13 +126,15 @@ public class Member {
 
 
     public void updateFirstUser(String name, Boolean isNewbie, Long monthPrice,
-                                List<String> wineSort, List<String> wineArea, String region){
+                                List<String> wineSort, List<String> wineArea,List<String> wineVariety, String region, String profileUrl){
         if(name != null) this.name = name;
         if(isNewbie != null) this.isNewbie = isNewbie;
         if(monthPrice != null) this.monthPriceMax = monthPrice;
         if(wineSort != null) this.wineSort = wineSort;
         if(wineArea != null) this.wineArea = wineArea;
+        if(wineVariety != null) this.wineVariety = wineVariety;
         if(region != null) this.region = region;
+        if(profileUrl != null) this.imageUrl = profileUrl;
         this.isFirst = false;
     }
 }

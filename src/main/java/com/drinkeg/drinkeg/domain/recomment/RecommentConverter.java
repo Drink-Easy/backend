@@ -24,6 +24,7 @@ public class RecommentConverter {
                 .id(recomment.getId())
                 .commentId(recomment.getComment().getId())
                 .memberName(recomment.getMember().getUsername())
+                .memberId(recomment.getMember().getId())
                 .content(recomment.getContent())
                 .build();
     }

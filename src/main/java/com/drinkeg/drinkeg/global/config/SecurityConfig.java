@@ -41,7 +41,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
             web.ignoring()
-                    .requestMatchers("/join","/login/apple/**","/login/kakao/**",
+                    .requestMatchers("/join/**","/login/apple/**","/login/kakao/**",
                             "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**");// 필터를 타면 안되는 경로
         };
     }
@@ -117,49 +117,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         //.requestMatchers("/my").authenticated()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
-                        .requestMatchers("/", "/join", "/login", "/reissue","/login/apple","/login/kakao").permitAll()
+                        .requestMatchers("/", "/join/**", "/login", "/reissue","/login/apple","/login/kakao").permitAll()
 
-                        // home 인가
                         .requestMatchers(HttpMethod.GET,"/home").hasRole("USER")
+                        .requestMatchers("/wine/**").hasRole("USER")
+                        .requestMatchers("/tasting-note/**").hasRole("USER")
+                        .requestMatchers("/wine-note/**").hasRole("USER")
+                        .requestMatchers("/wine-class/**").hasRole("USER")
+                        .requestMatchers("/parties/**").hasRole("USER")
+                        .requestMatchers("/comments/**").hasRole("USER")
+                        .requestMatchers("/partyJoin/**").hasRole("USER")
 
-                        // wine 인가
-                        .requestMatchers(HttpMethod.GET,"/wine/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST,"/wine/**").hasRole("USER")
-
-                        // tasting note 인가
-                        .requestMatchers(HttpMethod.GET, "/tasting-note/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/tasting-note/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "/tasting-note/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/tasting-note/**").hasRole("USER")
-
-                        // wine note 인가
-                        .requestMatchers(HttpMethod.GET, "/wine-note/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/wine-note/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "/wine-note/**").hasRole("USER")
-
-                        // wine class 인가
-                        .requestMatchers(HttpMethod.POST, "wine-class/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "wine-class/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "wine-class/**").hasRole("ADMIN")
-
-
-                        // Parties 인가
-                        .requestMatchers(HttpMethod.GET, "parties/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "parties/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.PUT, "parties/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "parties/**").hasRole("USER")
-
-                        // comments 인가
-                        .requestMatchers(HttpMethod.GET, "comments/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "comments/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "comments/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "comments/**").hasRole("USER")
-
-                        // PartyJoinMember 인가
-                        .requestMatchers(HttpMethod.POST, "partyJoin/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "partyJoin/**").hasRole("USER")
-
-                        // 관리자 기능 인가
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated());

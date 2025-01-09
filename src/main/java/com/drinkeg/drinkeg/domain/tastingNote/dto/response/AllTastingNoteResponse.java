@@ -5,33 +5,23 @@ import lombok.*;
 import java.util.List;
 
 @Getter
-@Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AllTastingNoteResponse {
 
-    int total;
-
-    int red;
-    int white;
-    int sparkling;
-    int rose;
-    int etc;
+    TastingNoteSortCountResponse sortCount;
 
     List<TastingNotePreviewResponse> NotePriviewList;
 
-    public static AllTastingNoteResponse create(List<TastingNotePreviewResponse> tastingNotePreviewResponseList,
-                                                int total, int red, int white, int sparkling, int rose, int etc){
+    @Builder
+    public AllTastingNoteResponse(TastingNoteSortCountResponse sortCount, List<TastingNotePreviewResponse> NotePriviewList){
+        this.sortCount = sortCount;
+        this.NotePriviewList = NotePriviewList;
+    }
 
+    public static AllTastingNoteResponse create(TastingNoteSortCountResponse sortCount, List<TastingNotePreviewResponse> tastingNotePreviewResponseList){
         return AllTastingNoteResponse.builder()
+                .sortCount(sortCount)
                 .NotePriviewList(tastingNotePreviewResponseList)
-                .total(total)
-                .red(red)
-                .white(white)
-                .sparkling(sparkling)
-                .rose(rose)
-                .etc(etc)
                 .build();
     }
 }

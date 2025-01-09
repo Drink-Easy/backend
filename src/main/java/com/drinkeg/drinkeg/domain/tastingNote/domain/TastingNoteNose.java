@@ -5,7 +5,6 @@ import lombok.*;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
         uniqueConstraints = @UniqueConstraint(columnNames = {"tasting_note_id", "nose_element"})
@@ -25,9 +24,19 @@ public class TastingNoteNose {
     @Column(nullable = false)
     private String noseElement;
 
+    public void updateTastingNote(TastingNote tastingNote) {
+        this.tastingNote = tastingNote;
+    }
+
     @Builder
-    public TastingNoteNose(TastingNote tastingNote, String noseElement){
+    public TastingNoteNose(TastingNote tastingNote, String noseElement) {
         this.tastingNote = tastingNote;
         this.noseElement = noseElement;
+    }
+
+    public static TastingNoteNose create(TastingNote tastingNote, String noseElement) {
+        return TastingNoteNose.builder()
+                .tastingNote(tastingNote)
+                .noseElement(noseElement).build();
     }
 }

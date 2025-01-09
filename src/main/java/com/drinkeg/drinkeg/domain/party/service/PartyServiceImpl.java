@@ -197,6 +197,15 @@ public class PartyServiceImpl implements PartyService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<PartyResponseDTO> getPartiesByMemberId(PrincipalDetail principalDetail) {
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+
+        List<PartyResponseDTO> parties = partyRepository.findPartiesByMemberId(member.getId());
+
+        return parties;
+    }
+
     // 모임 정보를 정상적으로 받아왔는지 확인하는 메소드
     public void validatePartyRequest(PartyRequestDTO partyRequest) {
         if (partyRequest.getName() == null || partyRequest.getName().isEmpty()) {

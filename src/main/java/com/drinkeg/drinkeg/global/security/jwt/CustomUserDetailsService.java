@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.member.service;
+package com.drinkeg.drinkeg.global.security.jwt;
 
 import com.drinkeg.drinkeg.domain.member.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<Member> existData = memberRepository.findByUsername(username);
         Member userData = existData.get();
 
-        UserDTO userDTO = MemberConverter.toUserDTO(userData);
+        UserDTO userDTO = UserDTO.create(userData);
 
         if (userDTO != null) {
 
