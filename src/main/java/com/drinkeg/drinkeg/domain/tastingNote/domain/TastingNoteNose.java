@@ -6,6 +6,9 @@ import lombok.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"tasting_note_id", "nose_element"})
+)
 public class TastingNoteNose {
 
     @Id

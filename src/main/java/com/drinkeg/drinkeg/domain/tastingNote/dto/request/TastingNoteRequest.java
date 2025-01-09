@@ -1,15 +1,14 @@
 package com.drinkeg.drinkeg.domain.tastingNote.dto.request;
 
-import com.querydsl.core.annotations.QueryProjection;
 import jakarta.validation.constraints.*;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TastingNoteRequest {
 
     @NotNull(message = "와인 ID는 필수입니다.")

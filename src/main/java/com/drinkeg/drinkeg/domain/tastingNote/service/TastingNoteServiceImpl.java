@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -87,6 +86,26 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         return AllTastingNoteResponse.create(tastingNoteSortCountResponse, tastingNotePreviewResponseList);
     }
 
+    // 와인 타입별 필터링 로직
+    private boolean filterBySort(TastingNote note, String sort) {
+        String wineSort = note.getWine().getSort();
+
+        switch (sort) {
+            case "red":
+                return wineSort.contains("레드");
+            case "white":
+                return wineSort.contains("화이트");
+            case "sparkling":
+                return wineSort.contains("스파클링");
+            case "rose":
+                return wineSort.contains("로제");
+            case "all":
+                return true; // 전체 보기
+            default:
+                return !wineSort.contains("레드") && !wineSort.contains("화이트")
+                        && !wineSort.contains("스파클링") && !wineSort.contains("로제");
+        }
+    }
 
     @Override
     public void updateTastingNote(Long noteId, TastingNoteUpdateRequest t, String username) {
@@ -144,7 +163,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         return noteId;
     }
-
 
     // 회원 탈퇴 시 탈퇴한 회원의 테이스팅 노트의 member_id null 로 설정
     @Override
