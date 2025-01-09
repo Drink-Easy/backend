@@ -64,19 +64,19 @@ public class Member {
 
     private boolean agreement;
 
-
-    // CascadeType.ALL: Member 엔티티가 삭제되면 연관된 TastingNote 엔티티도 삭제
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member")
     private List<TastingNote> tastingNotes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    // CascadeType.REMOVE: Member 엔티티가 삭제되면 연관된 WineWishlist 엔티티도 삭제
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<WineWishlist> wineWishlists = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    // CascadeType.REMOVE: Member 엔티티가 삭제되면 연관된 MyWine 엔티티도 삭제
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MyWine> myWines = new ArrayList<>();
 
     @Builder
-    private Member(String name, String email, Role role, Provider provider, String username, String password,
+    public Member(String name, String email, Role role, Provider provider, String username, String password,
                    String region, Boolean isNewbie, Boolean isFirst, Long monthPriceMax,
                    List<String> wineSort, List<String> wineArea, boolean agreement, boolean isAdult) {
         this.name = name;

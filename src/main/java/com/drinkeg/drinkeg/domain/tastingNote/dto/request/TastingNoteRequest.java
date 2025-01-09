@@ -1,15 +1,14 @@
 package com.drinkeg.drinkeg.domain.tastingNote.dto.request;
 
-import com.querydsl.core.annotations.QueryProjection;
 import jakarta.validation.constraints.*;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TastingNoteRequest {
 
     @NotNull(message = "와인 ID는 필수입니다.")
@@ -20,7 +19,6 @@ public class TastingNoteRequest {
 
     @NotNull(message = "시음 날짜는 필수입니다")
     private LocalDate tasteDate;
-
 
     @NotNull(message = "당도 선택은 필수입니다.")
     @Min(value = 0, message = "당도는 0 이상 100 이하의 정수 값이어야 합니다.")
@@ -49,7 +47,6 @@ public class TastingNoteRequest {
 
     @NotEmpty(message = "향 선택은 필수입니다.")
     private List<String> nose = new ArrayList<>();
-
 
     @NotNull(message = "만족도 선택은 필수입니다.")
     @Min(value = 0, message = "만족도는 0 이상 5 이하의 실수 값이어야 합니다.")

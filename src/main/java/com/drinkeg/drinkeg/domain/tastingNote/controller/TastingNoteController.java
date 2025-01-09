@@ -78,14 +78,4 @@ public class TastingNoteController {
         return ApiResponse.onSuccess("노트 삭제 완료");
     }
 
-    // 선택한 노트 보기
-    @GetMapping("/nose")
-    @Operation(summary = "사용자가 선택/직접입력 한 Nose List 보여주기", description = "사용자가 선택/집접입력 한 Noes List 보여주기")
-
-    public ApiResponse<List<Map<Long, String>>> showMemberNoseMapList(@AuthenticationPrincipal PrincipalDetail principalDetail) {
-
-        List<Map<Long, String>> noseMapList =
-                tastingNoteService.showMemberNoseMapList(principalDetail.getUsername());
-        return ApiResponse.onSuccess(noseMapList);
-    }
 }

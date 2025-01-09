@@ -33,8 +33,7 @@ public class TastingNoteUpdateRequest {
     @Max(value = 100, message = "알콜도는 0 이상 100 이하의 정수 값이어야 합니다.")
     private Integer alcohol;
 
-    private final List<String> addNoseList = new ArrayList<>();
-    private final List<Long> removeNoseList = new ArrayList<>();
+    private final List<String> updateNoseList = new ArrayList<>();
 
     @Min(0)
     @Max(5)

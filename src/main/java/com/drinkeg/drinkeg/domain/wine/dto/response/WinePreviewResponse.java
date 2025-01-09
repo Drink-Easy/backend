@@ -5,7 +5,8 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 @Getter
-@NoArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WinePreviewResponse {
 
     private Long wineId;

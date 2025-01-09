@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.wine.repository;
 
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

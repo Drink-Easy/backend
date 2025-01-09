@@ -3,13 +3,14 @@ package com.drinkeg.drinkeg.domain.wine.dto.response;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WineReviewResponse {
     private String name;
 

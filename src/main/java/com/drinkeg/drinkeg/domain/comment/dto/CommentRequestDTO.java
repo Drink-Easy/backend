@@ -18,11 +18,6 @@ public class CommentRequestDTO {
 
 
     public static Comment toEntity(CommentRequestDTO commentRequest, Party party, Member member) {
-        return Comment.builder()
-                .party(party)
-                .member(member)
-                .content(commentRequest.getContent())
-                .isDeleted(false) // 기본값 설정
-                .build();
+        return Comment.create(member, party, commentRequest.getContent());
     }
 }
