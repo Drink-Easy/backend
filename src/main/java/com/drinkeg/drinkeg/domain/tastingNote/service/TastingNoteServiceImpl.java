@@ -60,13 +60,13 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public TastingNoteResponse showTastingNoteById(Long noteId, String username) {
+    public TastingNoteResponse showTastingNoteByIdAndUsername(Long noteId, String username) {
         // noteId로 TastingNote를 찾는다.
-        return tastingNoteRepository
-                .findTastingNoteWithWineAndNoseByTastingNoteIdAndUsername(noteId, username)
+        TastingNote tastingNote = tastingNoteRepository
+                .findById(noteId)
                 .orElseThrow(()
-                -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
-        );
+                        -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND)
+                );
 
         if(!tastingNote.getMember().getUsername().equals(username))
             throw new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN);
@@ -76,6 +76,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     @Override
     public AllTastingNoteResponse findAllTastingNote(TastingNoteWineSort wineSort, String username) {
+        System.out.println("wineSort = " + wineSort);
         List<TastingNote> tastingNoteList = tastingNoteRepository.findTastingNoteBySortAndUsername(wineSort, username);
         TastingNoteSortCountResponse tastingNoteSortCountResponse = tastingNoteRepository.findTastingNoteSortCountsByUsername(username);
 

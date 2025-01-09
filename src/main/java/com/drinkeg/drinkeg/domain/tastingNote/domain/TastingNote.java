@@ -31,21 +31,17 @@ public class TastingNote extends BaseEntity {
 
     private String color;
 
-    // 시음 날짜
     private LocalDate tasteDate;
 
-    // 점수 0 ~ 5
     private int sugarContent;
     private int acidity;
     private int tannin;
     private int body;
     private int alcohol;
 
-    // nose를 TastingNote와 OneToMany 관계로 설정
     @OneToMany(mappedBy = "tastingNote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TastingNoteNose> noseList = new ArrayList<>();
 
-    // 만족도 0 ~ 5, 소수점 가능
     private float rating;
 
     private String review;
@@ -65,8 +61,7 @@ public class TastingNote extends BaseEntity {
                 .review(tastingNoteRequest.getReview())
                 .build();
 
-        // Set으로 중복 제거
-        Set<String> uniqueNoseElements = new HashSet<>(tastingNoteRequest.getNose());
+        Set<String> uniqueNoseElements = new LinkedHashSet<>(tastingNoteRequest.getNose());
         for (String noseElement : uniqueNoseElements) {
             tastingNote.addNoseElement(noseElement);
         }
@@ -90,20 +85,16 @@ public class TastingNote extends BaseEntity {
                                   List<String> updateNoseList, Float rating, String review){
         if(color != null) this.color = color;
 
-        if(tasteDate != null) this.tasteDate = tasteDate;
-        if(sugarContent != null) this.sugarContent = sugarContent;
-        if(acidity != null) this.acidity = acidity;
-        if(tannin != null) this.tannin = tannin;
-        if(body != null) this.body = body;
-        if(alcohol != null) this.alcohol = alcohol;
-        if(updateNoseList != null) {
-            this.updateTastingNoteNoseList(updateNoseList);
-        }
-
-        if(rating != null) this.rating = rating;
-        if(review != null) this.review = review;
+        if (tasteDate != null) this.tasteDate = tasteDate;
+        if (sugarContent != null) this.sugarContent = sugarContent;
+        if (acidity != null) this.acidity = acidity;
+        if (tannin != null) this.tannin = tannin;
+        if (body != null) this.body = body;
+        if (alcohol != null) this.alcohol = alcohol;
+        if (updateNoseList != null) this.updateTastingNoteNoseList(updateNoseList);
+        if (rating != null) this.rating = rating;
+        if (review != null) this.review = review;
     }
-
 
     @Builder
     public TastingNote(Member member, Wine wine, String color, LocalDate tasteDate,
@@ -123,26 +114,14 @@ public class TastingNote extends BaseEntity {
         this.review = review;
     }
 
-//    // nose 요소 추가 메서드
-//    public void addNoseElement(String noseElement) {
-//        this.noseList.add(new TastingNoteNose(this, noseElement));
-//    }
-
-    // todo : 업데이트 기능 리팩토링 필요
     public void updateTastingNoteNoseList(List<String> updateNoseList) {
 
-        // updateNoseList를 Set으로 변환하여 빠르게 검색
-        Set<String> uniqueNoseElements = new HashSet<>(updateNoseList);
+        this.noseList.removeIf(nose->{
+            nose.updateTastingNote(null);
+            return true;
+        });
 
-        // 기존 noseList에서 updateNoseList에 없는 항목 삭제
-        this.noseList.removeIf(nose -> !uniqueNoseElements.contains(nose.getNoseElement()));
-
-        // updateNoseList에 있는 항목 추가
-        for (String noseElement : uniqueNoseElements) {
-            // noseList에서 해당 항목이 없는 경우에만 추가
-            if (this.noseList.stream().noneMatch(nose -> nose.getNoseElement().equals(noseElement))) {
-                this.addNoseElement(noseElement);
-            }
-        }
+        Set<String> uniqueNoseElements = new LinkedHashSet<>(updateNoseList);
+        uniqueNoseElements.forEach(this::addNoseElement);
     }
 }
