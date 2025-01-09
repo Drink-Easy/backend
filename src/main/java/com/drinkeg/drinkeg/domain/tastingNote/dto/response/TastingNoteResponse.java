@@ -1,7 +1,10 @@
 package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
+import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,13 +36,13 @@ public class TastingNoteResponse {
     private int body;
     private int alcohol;
 
-    private List<Map<Long, String>> noseMapList = new ArrayList<>();
+    private List<String> noseList = new ArrayList<>();
 
     private float rating;
 
     private String review;
 
-    @QueryProjection
+    @Builder
     public TastingNoteResponse(Long noteId, Long wineId, String wineName, String sort,
                                String area, String imageUrl, String color, LocalDate tasteDate,
                                int sugarContent, int acidity, int tannin, int body, int alcohol,
@@ -57,11 +60,36 @@ public class TastingNoteResponse {
         this.tannin = tannin;
         this.body = body;
         this.alcohol = alcohol;
-        this.noseMapList = noseList.stream()
-                .map(nose -> Map.of(nose.getId(), nose.getNoseElement()))
+        this.noseList = noseList.stream()
+                .map(TastingNoteNose::getNoseElement)
                 .collect(Collectors.toList());
         this.rating = rating;
         this.review = review;
+    }
+
+    public static TastingNoteResponse of(TastingNote tastingNote){
+        Wine wine = tastingNote.getWine();
+
+        return TastingNoteResponse.builder()
+                .noteId(tastingNote.getId())
+
+                .wineId(wine.getId())
+                .wineName(wine.getName())
+                .sort(wine.getSort())
+                .area(wine.getArea())
+                .imageUrl(wine.getImageUrl())
+
+                .color(tastingNote.getColor())
+                .tasteDate(tastingNote.getTasteDate())
+                .sugarContent(tastingNote.getSugarContent())
+                .acidity(tastingNote.getAcidity())
+                .tannin(tastingNote.getTannin())
+                .body(tastingNote.getBody())
+                .alcohol(tastingNote.getAlcohol())
+                .noseList(tastingNote.getNoseList())
+                .rating(tastingNote.getRating())
+                .review(tastingNote.getReview())
+                .build();
     }
 
 }

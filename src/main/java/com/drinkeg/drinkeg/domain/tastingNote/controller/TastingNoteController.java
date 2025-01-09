@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.controller;
 
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
@@ -38,11 +39,11 @@ public class TastingNoteController {
 
     // 전체 노트 보기
     @GetMapping("/all")
-    @Operation(summary = "전체 테이스팅 노트 확인", description = "sort(red, white, sparkling, rose, all) 를 RequestParam 으로 조회")
+    @Operation(summary = "전체 테이스팅 노트 확인", description = "sort(전체, 레드, 화이트, 스파클링, 로제, 기타) 를 RequestParam 으로 조회")
     public ApiResponse<AllTastingNoteResponse> showAllTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestParam("sort") String sort) {
 
         AllTastingNoteResponse allTastingNote =
-                tastingNoteService.findAllTastingNote(sort, principalDetail.getUsername());
+                tastingNoteService.findAllTastingNote(TastingNoteWineSort.of(sort), principalDetail.getUsername());
         return ApiResponse.onSuccess(allTastingNote);
     }
 
@@ -54,7 +55,7 @@ public class TastingNoteController {
                                                             @PathVariable("noteId") Long noteId) {
 
         TastingNoteResponse tastingNoteResponse =
-                tastingNoteService.showTastingNoteById(noteId, principalDetail.getUsername());
+                tastingNoteService.showTastingNoteByIdAndUsername(noteId, principalDetail.getUsername());
         return ApiResponse.onSuccess(tastingNoteResponse);
     }
 
