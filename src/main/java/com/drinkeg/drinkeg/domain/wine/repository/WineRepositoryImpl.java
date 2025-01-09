@@ -30,6 +30,16 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     }
 
     @Override
+    public List<Wine> searchByName(String name) {
+        return queryFactory.selectFrom(wine)
+                .where(
+                        wine.name.containsIgnoreCase(name)
+                        .or(wine.nameEng.containsIgnoreCase(name))
+                )
+                .fetch();
+    }
+
+    @Override
     public List<Wine> findRecommendWinesBy(List<String> wineArea, List<String> wineSort, Long price) {
         return queryFactory.selectFrom(wine)
                 .where(

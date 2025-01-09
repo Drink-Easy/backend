@@ -125,7 +125,6 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(recommendWines)
-//                .hasSize(8)
                 .extracting("name")
                 .containsExactlyInAnyOrder("와인1", "와인2", "와인4", "와인5");
     }
@@ -180,6 +179,98 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         return WineWishlist.builder()
                 .wine(wine)
                 .build();
+    }
+
+    @DisplayName("와인 이름을 받아서 이름을 포함하는 모든 와인을 조회한다.")
+    @Test
+    void searchWineByName() {
+        // given
+        Wine wine1 = createWine("대중적인 레드 와인 10년");
+        Wine wine2 = createWine("대중적인 화이트 와인 13년");
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+
+        // when
+        List<Wine> wineList1 = wineRepository.searchByName("0년");
+        List<Wine> wineList2 = wineRepository.searchByName("대중적");
+        // then
+        assertThat(wineList1).hasSize(3)
+                .extracting("name")
+                .containsExactlyInAnyOrder(
+                        "대중적인 레드 와인 10년",
+                        "대중적인 화이트 스파클링 와인 20년",
+                        "매니아들이 찾는 레드 와인 30년"
+                );
+
+        assertThat(wineList2).hasSize(3)
+                .extracting("name")
+                .containsExactlyInAnyOrder(
+                        "대중적인 레드 와인 10년",
+                        "대중적인 화이트 와인 13년",
+                        "대중적인 화이트 스파클링 와인 20년"
+                );
+    }
+
+    @DisplayName("와인 이름을 영어로 받으면 영어로 된 와인 이름을 포함하는 모든 와인을 조회한다.")
+    @Test
+    void searchWineByNameEng() {
+        // given
+        Wine wine1 = createWine("대중적인 레드 와인 10년", "popular red wine 10 years");
+        Wine wine2 = createWine("대중적인 화이트 와인 13년", "popular white wine 13 years");
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년", "popular white sparkling wine 20 years");
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년", "red wine that manias find 30 years");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        // when
+        List<Wine> wineList1 = wineRepository.searchByName("0 years");
+        List<Wine> wineList2 = wineRepository.searchByName("popular");
+        // then
+        assertThat(wineList1).hasSize(3)
+                .extracting("name")
+                .containsExactlyInAnyOrder(
+                        "대중적인 레드 와인 10년",
+                        "대중적인 화이트 스파클링 와인 20년",
+                        "매니아들이 찾는 레드 와인 30년"
+                );
+        assertThat(wineList2).hasSize(3)
+                .extracting("name")
+                .containsExactlyInAnyOrder(
+                        "대중적인 레드 와인 10년",
+                        "대중적인 화이트 와인 13년",
+                        "대중적인 화이트 스파클링 와인 20년"
+                );
+    }
+
+    @DisplayName("존재하지 않는 와인 이름을 받으면 빈 리스트를 반환한다.")
+    @Test
+    void searchWineByNotExistingName() {
+        // given
+        Wine wine1 = createWine("대중적인 레드 와인 10년");
+        Wine wine2 = createWine("대중적인 화이트 와인 13년");
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        // when
+        List<Wine> wineList = wineRepository.searchByName("존재하지 않는 와인 이름으로 검색하기");
+        // then
+        assertThat(wineList).isEmpty();
+    }
+
+    private Wine createWine(String name) {
+        return createWine(name, "default nameEng");
+    }
+
+    private Wine createWine(String name, String nameEng) {
+        return Wine.builder()
+                .name(name)
+                .nameEng(nameEng)
+                .imageUrl("http://default.image")
+                .sort("레드")
+                .country("프랑스")
+                .variety("피노누아")
+                .vivinoRating(4.5f)
+                .wineNoteStatistics(WineNoteStatistics.builder().build())
+                .price(10000).build();
     }
 
     private Wine createWine(String name, String sort, String country, int price, String variety, float vivinoRating) {

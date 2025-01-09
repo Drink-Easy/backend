@@ -40,10 +40,7 @@ public class WineServiceImpl implements WineService {
 
     @Override
     public List<WinePreviewResponse> searchWinesByName(String searchName) {
-        List<Wine> searchWines = wineRepository.findAllByNameContainingIgnoreCaseOrderByName(searchName);
-        List<Wine> searchWineByEng = wineRepository.findAllByNameEngContainingIgnoreCaseOrderByNameEng(searchName);
-
-        searchWines.addAll(searchWineByEng);
+        List<Wine> searchWines = wineRepository.searchByName(searchName);
 
         return searchWines.stream()
                 .map(WinePreviewResponse::of)
