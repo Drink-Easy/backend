@@ -96,9 +96,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         foundNote.updateTastingNote(t.getColor(), t.getTastingDate(),
                 t.getSugarContent(), t.getAcidity(), t.getTannin(), t.getBody(), t.getAlcohol(),
                 t.getUpdateNoseList(), t.getRating(), t.getReview());
-
-        tastingNoteRepository.save(foundNote);
-
     }
 
     @Override
@@ -119,7 +116,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         }
 
         Long wineId = foundNote.getWine().getId();
-
         tastingNoteRepository.delete(foundNote);
 
         eventPublisher.publishEvent(new TastingNoteUpdateEvent(wineId));
