@@ -49,9 +49,6 @@ public class JoinService {
         // 회원이 입력한 정보로 update 하고 isFirst = false 로 변경
         member.updateFirstUser(memberRequest);
 
-        memberRepository.save(member);
-
-
         return MemberResponseDTO.of(member);
     }
 
