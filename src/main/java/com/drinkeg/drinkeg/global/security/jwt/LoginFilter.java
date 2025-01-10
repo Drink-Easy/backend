@@ -58,7 +58,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             jwtExceptionHandler(response, ErrorStatus.PASSWORD_NOT_FUND);
             return null;
         }
-        String username = "drinkeg "+ requestBody.get("username");
+        String username = requestBody.get("username");
         String password = requestBody.get("password");
 
         // 스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
