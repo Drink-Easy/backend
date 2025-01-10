@@ -94,7 +94,7 @@ public class TastingNote extends BaseEntity {
     }
 
     public TastingNote removeTastingNoteNose(TastingNoteNose tastingNoteNose) {
-        noseList.remove(tastingNoteNose);
+        this.noseList.remove(tastingNoteNose);
         tastingNoteNose.updateTastingNote(null);
         return this;
     }
