@@ -51,6 +51,7 @@ public class MemberRepositoryTest extends IntegrationTestSupport {
 
     }
 
+
     @DisplayName("존재하는 username으로 조회 했을 때 true를 반환한다.")
     @Test
     void existByusernameTest(){
@@ -66,14 +67,17 @@ public class MemberRepositoryTest extends IntegrationTestSupport {
 
     }
 
+
     @DisplayName("존재하지 않는 username으로 조회 했을 때 false를 반환한다.")
     @Test
     void notExistByusernameTest(){
 
         //given
         Member member1 = memberRepository.save(createMember("user1","윤따" ));
+
         //when
         Boolean result = memberRepository.existsByUsername("user2");
+
         //then
         assertThat(result).isFalse();
 

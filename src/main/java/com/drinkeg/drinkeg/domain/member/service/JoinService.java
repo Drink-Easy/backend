@@ -23,13 +23,13 @@ public class JoinService {
 
 
     @Transactional
-    public void join(JoinDTO joinDTO) {
+    public void join(JoinRequest joinRequest) {
 
-        String username = joinDTO.getUsername();
-        String password = joinDTO.getPassword();
-        String rePassword = joinDTO.getRePassword();
+        String username = joinRequest.getUsername();
+        String password = joinRequest.getPassword();
+        String rePassword = joinRequest.getRePassword();
 
-        if (memberRepository.existsByUsername("drinkeg "+ username)) {
+        if (memberRepository.existsByUsername(username)) {
             throw new GeneralException(ErrorStatus.MEMBER_ALREADY_EXIST);
         }
         if (!password.equals(rePassword)){

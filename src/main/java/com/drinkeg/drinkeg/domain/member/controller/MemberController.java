@@ -26,9 +26,9 @@ public class MemberController {
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "username과 password를 입력받아 회원가입을 진행합니다.")
-    public ApiResponse<?> joinProcess(@RequestBody JoinDTO joinDTO) {
+    public ApiResponse<?> joinProcess(@RequestBody JoinRequest joinRequest) {
 
-        joinService.join(joinDTO);
+        joinService.join(joinRequest);
         return ApiResponse.onSuccess("회원가입 성공");
     }
 
