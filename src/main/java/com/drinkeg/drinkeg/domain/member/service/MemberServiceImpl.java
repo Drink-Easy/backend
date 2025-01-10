@@ -53,9 +53,8 @@ public class MemberServiceImpl implements MemberService {
         @Override
         public MemberInfoResponse showMemberInfo(String username){
 
-            Member member = memberRepository.findMemberByUsername(username);
-
-
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
             return MemberInfoResponse.create(member);
         }

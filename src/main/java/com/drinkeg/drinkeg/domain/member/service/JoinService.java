@@ -2,7 +2,6 @@ package com.drinkeg.drinkeg.domain.member.service;
 
 import com.drinkeg.drinkeg.domain.member.dto.*;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.domain.member.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
@@ -24,13 +23,13 @@ public class JoinService {
 
 
     @Transactional
-    public void join(JoinDTO joinDTO) {
+    public void join(JoinRequest joinRequest) {
 
-        String username = joinDTO.getUsername();
-        String password = joinDTO.getPassword();
-        String rePassword = joinDTO.getRePassword();
+        String username = joinRequest.getUsername();
+        String password = joinRequest.getPassword();
+        String rePassword = joinRequest.getRePassword();
 
-        if (memberRepository.existsByUsername("drinkeg "+ username)) {
+        if (memberRepository.existsByUsername(username)) {
             throw new GeneralException(ErrorStatus.MEMBER_ALREADY_EXIST);
         }
         if (!password.equals(rePassword)){
