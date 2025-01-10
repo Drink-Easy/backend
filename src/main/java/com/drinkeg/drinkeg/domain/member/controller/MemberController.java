@@ -10,7 +10,6 @@ import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -78,5 +77,12 @@ public class MemberController {
     public ApiResponse<UsernameCheckResponse> checkUsername(@RequestBody UsernameCheckRequest usernameCheckRequest) {
         UsernameCheckResponse usernameCheckResponse = joinService.isDuplicatedUsername(usernameCheckRequest);
         return ApiResponse.onSuccess(usernameCheckResponse);
+    }
+
+    @PostMapping("/member/profileImage")
+    @Operation(summary = "프로필 이미지 업로드", description = "프로필 이미지를 업로드합니다.")
+    public ApiResponse<?> uploadProfileImage(@RequestPart("profileImg") MultipartFile profileImg, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        joinService.uploadProfileImage(profileImg, principalDetail.getUsername());
+        return ApiResponse.onSuccess("프로필 이미지 업로드 성공");
     }
 }

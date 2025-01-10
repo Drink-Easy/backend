@@ -86,4 +86,10 @@ public class JoinService {
 
         return new UsernameCheckResponse(memberRepository.existsByUsername(usernameCheckRequest.username()));
     }
+
+    public void uploadProfileImage(MultipartFile profileImg, String username) {
+        // 이미지 업로드
+        // 멤버 프로필 이미지 변경
+        // 기존 이미지 삭제
+    }
 }
