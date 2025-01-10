@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.member.domain;
 
 
 import com.drinkeg.drinkeg.domain.member.converter.StringListConverter;
+import com.drinkeg.drinkeg.domain.member.dto.MemberUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
 import com.drinkeg.drinkeg.domain.member.enums.Provider;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
@@ -98,10 +99,15 @@ public class Member {
     }
 
 
+    public void updateMemberInfo(MemberUpdateRequest memberUpdateRequest) {
+        if (memberUpdateRequest.getName() != null) name = memberUpdateRequest.getName();
+        if (memberUpdateRequest.getRegion() != null) region = memberUpdateRequest.getRegion();
+    }
+
     public void updateEmail(String email) { this.email = email; };
-    public void updateImageUrl(String imageUrl){this.imageUrl=imageUrl;};
-    public void updateRegion(String region){this.region=region;};
-    public void updateName(String name){this.name = name;};
+    public void updateImageUrl(String imageUrl) {
+        if (imageUrl != null) this.imageUrl = imageUrl;
+    };
 
     public static Member createMember(String username, String password, boolean isFirst) {
         return Member.builder()

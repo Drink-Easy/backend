@@ -13,12 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberUpdateRequest {
-
-    private String username;
-
-    private String city;
-
-
-
-
+    private String name;
+    private String region;
 }

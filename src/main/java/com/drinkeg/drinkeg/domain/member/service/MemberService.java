@@ -8,9 +8,6 @@ import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
-
-    public Member getMemberById(Long memberId);
-
     public Member loadMemberByPrincipalDetail(PrincipalDetail principalDetail);
 
     public void deleteMemberByUsername(String username);
@@ -19,5 +16,7 @@ public interface MemberService {
 
     public NameCheckResponse isNicknameAvailable(String nickname);
 
-    public void updateMemberInfo(PrincipalDetail principalDetail, MemberUpdateRequest memberUpdateRequest, MultipartFile multipartFile);
+    public void updateMemberInfo(MemberUpdateRequest memberUpdateRequest, String username);
+
+    public String uploadProfileImage(MultipartFile multipartFile, String username);
 }

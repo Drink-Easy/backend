@@ -21,18 +21,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final StorageService storageService;
     private final ApplicationEventPublisher eventPublisher;
-
-    @Override
-    public Member getMemberById(Long memberId) {
-
-        return memberRepository.findById(memberId).orElseThrow(()
-                -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-    }
 
     @Override
     public Member loadMemberByPrincipalDetail(PrincipalDetail principalDetail) {
@@ -43,52 +37,42 @@ public class MemberServiceImpl implements MemberService {
                 -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
-        @Override
-        @Transactional
-        public void deleteMemberByUsername(String username){
-            eventPublisher.publishEvent(new RemoveTastingNoteMemberEvent(username));
-            memberRepository.deleteByUsername(username);
-        }
-
-        @Override
-        public MemberInfoResponse showMemberInfo(String username){
-
-            Member member = memberRepository.findMemberByUsername(username);
-
-
-
-            return MemberInfoResponse.create(member);
-        }
-
-        @Override
-        public NameCheckResponse isNicknameAvailable(String nickname){
-
-
-            return NameCheckResponse.create(!memberRepository.existsByName(nickname));
-        }
-
-        @Override
-        @Transactional
-        public void updateMemberInfo(PrincipalDetail principalDetail, MemberUpdateRequest memberUpdateRequest, MultipartFile multipartFile){
-
-
-            Member member = loadMemberByPrincipalDetail(principalDetail);
-
-            if (multipartFile != null ) {
-
-                String profileImage = storageService.uploadFile(multipartFile, StoragePathName.MEMBER_PROFILE);
-
-                if (profileImage != null) {
-                    member.updateImageUrl(profileImage);
-                }
-            }
-            if (memberUpdateRequest.getCity() != null) {
-                member.updateRegion(memberUpdateRequest.getCity());
-            }
-
-            if (memberUpdateRequest.getUsername() != null) {
-                member.updateName(memberUpdateRequest.getUsername());
-            }
-
-        }
+    @Override
+    @Transactional
+    public void deleteMemberByUsername(String username){
+        eventPublisher.publishEvent(new RemoveTastingNoteMemberEvent(username));
+        memberRepository.deleteByUsername(username);
     }
+
+    @Override
+    public MemberInfoResponse showMemberInfo(String username){
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        return MemberInfoResponse.create(member);
+    }
+
+    @Override
+    public NameCheckResponse isNicknameAvailable(String nickname){
+        return NameCheckResponse.create(!memberRepository.existsByName(nickname));
+    }
+
+    @Override
+    @Transactional
+    public void updateMemberInfo(MemberUpdateRequest memberUpdateRequest, String username){
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        member.updateMemberInfo(memberUpdateRequest);
+    }
+
+    @Override
+    public String uploadProfileImage(MultipartFile profileImg, String username) {
+        String profileImgUrl = storageService.uploadFile(profileImg, StoragePathName.MEMBER_PROFILE);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        if (member.getImageUrl() != null)
+            storageService.deleteFile(member.getImageUrl());
+        member.updateImageUrl(profileImgUrl);
+        return profileImgUrl;
+    }
+}

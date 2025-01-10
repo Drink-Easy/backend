@@ -85,14 +85,4 @@ public class JoinService {
 
         return new UsernameCheckResponse(memberRepository.existsByUsername(usernameCheckRequest.username()));
     }
-
-    public String uploadProfileImage(MultipartFile profileImg, String username) {
-        String profileImgUrl = storageService.uploadFile(profileImg, StoragePathName.MEMBER_PROFILE);
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-        if (member.getImageUrl() != null)
-            storageService.deleteFile(member.getImageUrl());
-        member.updateImageUrl(profileImgUrl);
-        return profileImgUrl;
-    }
 }

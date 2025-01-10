@@ -32,6 +32,13 @@ public class MemberController {
         return ApiResponse.onSuccess("회원가입 성공");
     }
 
+    @DeleteMapping("/member/delete")
+    @Operation(summary = "사용자 탈퇴", description = "사용자 정보를 삭제합니다.")
+    public ApiResponse<?> deleteProcess(@AuthenticationPrincipal PrincipalDetail principalDetail,  HttpServletResponse response){
+        memberService.deleteMemberByUsername(principalDetail.getUsername());
+        tokenService.deleteRefreshTokenAndAccessToken(response, principalDetail.getUsername());
+        return ApiResponse.onSuccess("회원 탈퇴 성공");
+    }
 
     @PatchMapping("/member")
     @Operation(summary = "사용자 초기 정보 추가", description = "첫 로그인 여부에 따라 isFirst 속성이 true인 경우 사용자 초기 정보를 추가합니다.")
@@ -39,17 +46,6 @@ public class MemberController {
 
         MemberResponseDTO memberResponseDTO = joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername(),multipartFile);
         return ApiResponse.onSuccess("사용자 초기 정보 추가 완료");
-    }
-
-    @DeleteMapping("/member/delete")
-    @Operation(summary = "사용자 탈퇴", description = "사용자 정보를 삭제합니다.")
-
-    public ApiResponse<?> deleteProcess(@AuthenticationPrincipal PrincipalDetail principalDetail,  HttpServletResponse response){
-            memberService.deleteMemberByUsername(principalDetail.getUsername());
-            tokenService.deleteRefreshTokenAndAccessToken(response, principalDetail.getUsername());
-        return ApiResponse.onSuccess("회원 탈퇴 성공");
-
-
     }
 
     @GetMapping("/member/info")
@@ -66,9 +62,9 @@ public class MemberController {
 
     @PatchMapping("/member/info")
     @Operation(summary = "마이페이지 정보 수정 ", description = "마이페이지의 정보를 수정합니다.")
-    public ApiResponse<?> updateMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile,  @RequestPart("memberUpdateRequest")  MemberUpdateRequest memberUpdateRequest){
+    public ApiResponse<?> updateMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody MemberUpdateRequest memberUpdateRequest){
 
-        memberService.updateMemberInfo(principalDetail,memberUpdateRequest, multipartFile);
+        memberService.updateMemberInfo(memberUpdateRequest, principalDetail.getUsername());
         return ApiResponse.onSuccess("정보 수정 성공");
     }
 
@@ -82,7 +78,7 @@ public class MemberController {
     @PostMapping("/member/profileImage")
     @Operation(summary = "프로필 이미지 업로드", description = "프로필 이미지를 업로드합니다.")
     public ApiResponse<?> uploadProfileImage(@RequestPart(value = "profileImg") MultipartFile profileImg, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        String imageUrl = joinService.uploadProfileImage(profileImg, principalDetail.getUsername());
+        String imageUrl = memberService.uploadProfileImage(profileImg, principalDetail.getUsername());
         return ApiResponse.onSuccess(imageUrl);
     }
 }
