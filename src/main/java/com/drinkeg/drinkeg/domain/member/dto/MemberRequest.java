@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberRequestDTO {
+public class MemberRequest {
 
     private String name;
 

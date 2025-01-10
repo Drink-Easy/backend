@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.member.domain;
 
 
 import com.drinkeg.drinkeg.domain.member.converter.StringListConverter;
+import com.drinkeg.drinkeg.domain.member.dto.MemberRequest;
 import com.drinkeg.drinkeg.domain.member.dto.MemberUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
 import com.drinkeg.drinkeg.domain.member.enums.Provider;
@@ -16,7 +17,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -132,16 +132,14 @@ public class Member {
     }
 
 
-    public void updateFirstUser(String name, Boolean isNewbie, Long monthPrice,
-                                List<String> wineSort, List<String> wineArea,List<String> wineVariety, String region, String profileUrl){
-        if(name != null) this.name = name;
-        if(isNewbie != null) this.isNewbie = isNewbie;
-        if(monthPrice != null) this.monthPriceMax = monthPrice;
-        if(wineSort != null) this.wineSort = wineSort;
-        if(wineArea != null) this.wineArea = wineArea;
-        if(wineVariety != null) this.wineVariety = wineVariety;
-        if(region != null) this.region = region;
-        if(profileUrl != null) this.imageUrl = profileUrl;
+    public void updateFirstUser(MemberRequest memberRequest){
+        if(memberRequest.getName() != null) this.name = memberRequest.getName();
+        if(memberRequest.getIsNewbie() != null) this.isNewbie = memberRequest.getIsNewbie();
+        if(memberRequest.getMonthPrice() != null) this.monthPriceMax = memberRequest.getMonthPrice();
+        if(memberRequest.getWineSort() != null) this.wineSort = memberRequest.getWineSort();
+        if(memberRequest.getWineArea() != null) this.wineArea = memberRequest.getWineArea();
+        if(memberRequest.getWineVariety() != null) this.wineVariety = memberRequest.getWineVariety();
+        if(memberRequest.getRegion() != null) this.region =memberRequest.getRegion();
         this.isFirst = false;
     }
 }

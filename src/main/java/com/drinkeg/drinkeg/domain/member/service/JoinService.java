@@ -5,13 +5,11 @@ import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import com.drinkeg.drinkeg.infra.storage.StoragePathName;
 import com.drinkeg.drinkeg.infra.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -37,28 +35,19 @@ public class JoinService {
             throw new GeneralException(ErrorStatus.PASSWORD_NOT_MATCH);
         }
 
-
         Member member = Member.createMember( username,(bCryptPasswordEncoder.encode(password) ),true);
-
         memberRepository.save(member);
 
     }
 
-    public MemberResponseDTO addMemberDetail(MemberRequestDTO memberRequestDTO, String username, MultipartFile multipartFile) {
+    public MemberResponseDTO addMemberDetail(MemberRequest memberRequest, String username) {
 
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.SESSION_UNAUTHORIZED));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        String profileImage = null;
-
-        if (multipartFile != null ) {
-            profileImage = storageService.uploadFile(multipartFile, StoragePathName.MEMBER_PROFILE);
-        }
 
         // 회원이 입력한 정보로 update 하고 isFirst = false 로 변경
-        member.updateFirstUser(memberRequestDTO.getName(), memberRequestDTO.getIsNewbie(), memberRequestDTO.getMonthPrice(),
-                memberRequestDTO.getWineSort(), memberRequestDTO.getWineArea(), memberRequestDTO.getWineVariety(),memberRequestDTO.getRegion(),
-                profileImage);
+        member.updateFirstUser(memberRequest);
 
         memberRepository.save(member);
 

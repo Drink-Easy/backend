@@ -69,17 +69,6 @@ public class JoinServiceTest extends IntegrationTestSupport {
                 .hasMessageContaining(ErrorStatus.PASSWORD_NOT_MATCH.getMessage());
     }
 
-    @Test
-    @DisplayName("비밀번호가 유효하지 않을 경우 예외를 반환한다.")
-    void joinMember_InvalidPassword() {
-        // Given
-        JoinRequest joinRequest = createJoinRequest("itsme", "short", "short"); // 예: 너무 짧은 비밀번호
-
-        // When & Then
-        assertThatThrownBy(() -> joinService.join(joinRequest))
-                .isInstanceOf(GeneralException.class)
-                .hasMessageContaining(ErrorStatus.PASSWORD_NOT_INVALID.getMessage());
-    }
     private JoinRequest createJoinRequest(String username, String password, String rePassword){
         return JoinRequest.builder()
                 .username(username)

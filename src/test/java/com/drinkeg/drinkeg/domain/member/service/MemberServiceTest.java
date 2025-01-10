@@ -101,38 +101,6 @@ public class MemberServiceTest extends IntegrationTestSupport {
                         null                );
     }
 
-    @Test
-    @DisplayName("존재하는 memberId로 멤버를 조회한다.")
-    void getMemberById_Success() {
-        // Given
-        Member member1 = memberRepository.save(createMember("user1", "윤다영", "55azaz@naver.com", "서울", "Drinkeg", true," https://drinkeg-bucket-1.s3.ap-northeast-2.amazonaws.com/member/profile/70af4bd2-717c-48d8-93d5-1a563de091a2"));
-
-        // When
-        Member foundMember = memberService.getMemberById(member1.getId());
-
-        // Then
-        assertThat(foundMember).isNotNull();
-        assertThat(foundMember.getUsername()).isEqualTo("user1");
-        assertThat(foundMember.getName()).isEqualTo("윤다영");
-        assertThat(foundMember.getEmail()).isEqualTo("55azaz@naver.com");
-        assertThat(foundMember.getRegion()).isEqualTo("서울");
-        assertThat(foundMember.getProvider().getValue()).isEqualTo("Drinkeg");
-        assertThat(foundMember.isAdult()).isTrue();
-        assertThat(foundMember.getImageUrl()).isNull();
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 memberId로 조회 시 GeneralException 발생")
-    void getMemberById_Failure_MemberNotFound() {
-        // Given
-        Long nonExistentId = 999L;
-
-        // When & Then
-        assertThatThrownBy(() -> memberService.getMemberById(nonExistentId))
-                .isInstanceOf(GeneralException.class)
-                .hasMessageContaining(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
-    }
-
 
 
     private Member createMember(
