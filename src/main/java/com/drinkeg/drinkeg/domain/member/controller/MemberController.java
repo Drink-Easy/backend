@@ -81,8 +81,8 @@ public class MemberController {
 
     @PostMapping("/member/profileImage")
     @Operation(summary = "프로필 이미지 업로드", description = "프로필 이미지를 업로드합니다.")
-    public ApiResponse<?> uploadProfileImage(@RequestPart("profileImg") MultipartFile profileImg, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        joinService.uploadProfileImage(profileImg, principalDetail.getUsername());
-        return ApiResponse.onSuccess("프로필 이미지 업로드 성공");
+    public ApiResponse<?> uploadProfileImage(@RequestPart(value = "profileImg") MultipartFile profileImg, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        String imageUrl = joinService.uploadProfileImage(profileImg, principalDetail.getUsername());
+        return ApiResponse.onSuccess(imageUrl);
     }
 }

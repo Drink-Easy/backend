@@ -2,7 +2,6 @@ package com.drinkeg.drinkeg.domain.member.service;
 
 import com.drinkeg.drinkeg.domain.member.dto.*;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
-import com.drinkeg.drinkeg.domain.member.converter.MemberConverter;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
@@ -87,9 +86,13 @@ public class JoinService {
         return new UsernameCheckResponse(memberRepository.existsByUsername(usernameCheckRequest.username()));
     }
 
-    public void uploadProfileImage(MultipartFile profileImg, String username) {
-        // 이미지 업로드
-        // 멤버 프로필 이미지 변경
-        // 기존 이미지 삭제
+    public String uploadProfileImage(MultipartFile profileImg, String username) {
+        String profileImgUrl = storageService.uploadFile(profileImg, StoragePathName.MEMBER_PROFILE);
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        if (member.getImageUrl() != null)
+            storageService.deleteFile(member.getImageUrl());
+        member.updateImageUrl(profileImgUrl);
+        return profileImgUrl;
     }
 }
