@@ -7,10 +7,14 @@ import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.service.JoinService;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,8 +79,9 @@ public class MemberController {
         return ApiResponse.onSuccess(usernameCheckResponse);
     }
 
-    @PostMapping("/member/profileImage")
-    @Operation(summary = "프로필 이미지 업로드", description = "프로필 이미지를 업로드합니다.")
+    @PostMapping(value = "/member/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "프로필 이미지 업로드",
+            description = "프로필 이미지를 업로드합니다.")
     public ApiResponse<?> uploadProfileImage(@RequestPart(value = "profileImg") MultipartFile profileImg, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         String imageUrl = memberService.uploadProfileImage(profileImg, principalDetail.getUsername());
         return ApiResponse.onSuccess(imageUrl);
