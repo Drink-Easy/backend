@@ -9,7 +9,6 @@ import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +25,9 @@ public class MemberController {
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "username과 password를 입력받아 회원가입을 진행합니다.")
-    public ApiResponse<?> joinProcess(@RequestBody JoinDTO joinDTO) {
+    public ApiResponse<?> joinProcess(@RequestBody JoinRequest joinRequest) {
 
-        joinService.join(joinDTO);
+        joinService.join(joinRequest);
         return ApiResponse.onSuccess("회원가입 성공");
     }
 

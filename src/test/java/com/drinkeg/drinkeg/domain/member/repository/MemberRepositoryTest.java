@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.member;
+package com.drinkeg.drinkeg.domain.member.repository;
 
 
 import com.drinkeg.drinkeg.IntegrationTestSupport;
@@ -81,19 +81,20 @@ public class MemberRepositoryTest extends IntegrationTestSupport {
 
     }
 
-    @DisplayName("username으로 null 값이 들어오면 에러 메세지를 반환한다.")
+    @DisplayName("존재하는 username으로 멤버를 삭제한다")
     @Test
-    void existByUsername_nullInput_throwsExceptionTest(){
+    void deleteByUsername_existingUserTest() {
 
-        //given
-        Member member1 = memberRepository.save(createMember("user1","윤따" ));
+        // given
+        Member member = memberRepository.save(createMember("user1", "윤따"));
+        assertThat(memberRepository.existsByUsername("user1")).isTrue();
 
-        //when
-        Boolean result = memberRepository.existsByUsername("user2");
 
-        //then
-        assertThat(result).isFalse();
+        // when
+        memberRepository.deleteByUsername("user1");
 
+        // then
+        assertThat(memberRepository.existsByUsername("user1")).isFalse();
     }
 
 

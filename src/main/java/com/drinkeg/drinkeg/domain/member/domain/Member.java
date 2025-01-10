@@ -78,7 +78,7 @@ public class Member {
     @Builder
     private Member(String name, String email, Role role, Provider provider, String username, String password,
                    String region, Boolean isNewbie, Boolean isFirst, Long monthPriceMax,
-                   List<String> wineSort, List<String> wineArea, boolean agreement, boolean isAdult) {
+                   List<String> wineSort, List<String> wineArea, boolean agreement, boolean isAdult, String imageUrl) {
         this.name = name;
         this.email = email;
         this.role = role;
@@ -95,6 +95,7 @@ public class Member {
         this.wineArea = wineArea != null ? wineArea : new ArrayList<>();
         this.agreement = agreement;
         this.isAdult = isAdult;
+        this.imageUrl = imageUrl;
     }
 
 
@@ -105,7 +106,7 @@ public class Member {
 
     public static Member createMember(String username, String password, boolean isFirst) {
         return Member.builder()
-                .username("drinkeg "+username)
+                .username(username)
                 .password(password)
                 .email(username)
                 .provider(Provider.DRINKEG)
