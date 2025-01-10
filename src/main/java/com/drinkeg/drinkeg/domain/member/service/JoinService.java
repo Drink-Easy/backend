@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class JoinService {
 
     private final MemberRepository memberRepository;
@@ -22,7 +23,7 @@ public class JoinService {
     private final StorageService storageService;
 
 
-    @Transactional
+
     public void join(JoinRequest joinRequest) {
 
         String username = joinRequest.getUsername();
@@ -35,14 +36,11 @@ public class JoinService {
         if (!password.equals(rePassword)){
             throw new GeneralException(ErrorStatus.PASSWORD_NOT_MATCH);
         }
-        if(!isValidPassword(password)){
-            throw new GeneralException(ErrorStatus.PASSWORD_NOT_INVALID);
-        }
+
 
         Member member = Member.createMember( username,(bCryptPasswordEncoder.encode(password) ),true);
 
         memberRepository.save(member);
-        System.out.println("Saved Member: " );
 
     }
 
@@ -65,24 +63,13 @@ public class JoinService {
         memberRepository.save(member);
 
 
-        return MemberResponseDTO.create(member);
+        return MemberResponseDTO.of(member);
     }
 
-    public boolean isValidPassword(String password) {
 
-        // 영문자, 숫자, 특수문자 각각에 대한 패턴
-        String letterPattern = ".*[A-Za-z].*";
-        String digitPattern = ".*\\d.*";
+    @Transactional(readOnly = true)
+    public boolean isDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
 
-        boolean hasLetter = password.matches(letterPattern);
-        boolean hasDigit = password.matches(digitPattern);
-
-        // 세 가지 조건이 모두 충족되는지 확인
-        return hasLetter && hasDigit;
-    }
-
-    public UsernameCheckResponse isDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
-
-        return new UsernameCheckResponse(memberRepository.existsByUsername(usernameCheckRequest.username()));
+        return memberRepository.existsByUsername(usernameCheckRequest.username());
     }
 }

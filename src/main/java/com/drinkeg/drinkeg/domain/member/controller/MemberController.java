@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +31,7 @@ public class MemberController {
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "username과 password를 입력받아 회원가입을 진행합니다.")
-    public ApiResponse<?> joinProcess(@RequestBody JoinRequest joinRequest) {
+    public ApiResponse<?> joinProcess(@Valid @RequestBody JoinRequest joinRequest) {
 
         joinService.join(joinRequest);
         return ApiResponse.onSuccess("회원가입 성공");
@@ -60,7 +61,7 @@ public class MemberController {
 
     @PostMapping("/member/{nickname}")
     @Operation(summary = "마이페이지내에 닉네임 중복 검사 ", description = "중복된 닉네임이면 False, 사용 가능한 닉네임이면 True를 반환합니다.")
-    public ApiResponse<NameCheckResponse> checkNickname(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable String nickname){
+    public ApiResponse<Boolean> checkNickname(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable String nickname){
         return ApiResponse.onSuccess(memberService.isNicknameAvailable(nickname));
     }
 
@@ -74,9 +75,8 @@ public class MemberController {
 
     @PostMapping("/join/check")
     @Operation(summary = "이메일 중복 검사", description = "이메일(username) 중복 여부를 반환합니다.")
-    public ApiResponse<UsernameCheckResponse> checkUsername(@RequestBody UsernameCheckRequest usernameCheckRequest) {
-        UsernameCheckResponse usernameCheckResponse = joinService.isDuplicatedUsername(usernameCheckRequest);
-        return ApiResponse.onSuccess(usernameCheckResponse);
+    public ApiResponse<Boolean> checkUsername(@RequestBody UsernameCheckRequest usernameCheckRequest) {
+        return ApiResponse.onSuccess(joinService.isDuplicatedUsername(usernameCheckRequest));
     }
 
     @PostMapping(value = "/member/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
