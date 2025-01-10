@@ -23,7 +23,6 @@ public class WineWishlistController {
     @PostMapping("/{wineId}")
     public ApiResponse<String> createWineWishlist(@PathVariable("wineId") Long wineId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
         wineWishlistService.createWineWishlist(wineId, principalDetail.getUsername());
-
         return ApiResponse.onSuccess("와인 위시리스트 담기 성공");
     }
 
@@ -37,7 +36,7 @@ public class WineWishlistController {
     @Operation(summary = "위시리스트에 담긴 와인 삭제", description = "wineId로 위시리스트에 담긴 와인을 삭제한다.")
     @DeleteMapping("/{wineId}")
     public ApiResponse<String>  deleteWineWishlist(@PathVariable("wineId") Long wineId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        wineWishlistService.deleteWineWishlistById(wineId, principalDetail.getUsername());
+        wineWishlistService.deleteWineWishlist(wineId, principalDetail.getUsername());
         return ApiResponse.onSuccess("와인 위시리스트 삭제 완료");
     }
 

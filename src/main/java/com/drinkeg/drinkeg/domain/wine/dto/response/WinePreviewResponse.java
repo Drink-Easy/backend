@@ -12,14 +12,11 @@ public class WinePreviewResponse {
     private String name;
     private String nameEng;
     private String imageUrl;
-
     private String sort;
     private String country;
     private String region;
     private String variety;
-
     private float vivinoRating;
-
     private int price;
 
     @Builder
@@ -41,21 +38,15 @@ public class WinePreviewResponse {
     public static WinePreviewResponse of(Wine wine) {
         return WinePreviewResponse.builder()
                 .wineId(wine.getId())
-
                 .name(wine.getName())
                 .nameEng(wine.getNameEng())
-
                 .imageUrl(wine.getImageUrl())
-
                 .sort(wine.getSort())
                 .country(wine.getCountry())
                 .region(wine.getRegion())
                 .variety(wine.getVariety())
-
                 .vivinoRating(wine.getVivinoRating())
-                .price(((wine.getPrice() * 1300) / 1000) * 1000)
-
+                .price(wine.getPrice())
                 .build();
     }
-
 }

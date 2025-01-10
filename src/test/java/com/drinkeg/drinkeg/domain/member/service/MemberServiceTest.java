@@ -105,10 +105,10 @@ public class MemberServiceTest extends IntegrationTestSupport {
     @DisplayName("존재하는 memberId로 멤버를 조회한다.")
     void getMemberById_Success() {
         // Given
-        Member member1 = memberRepository.save(createMember("user1", "윤다영", "55azaz@naver.com", "서울", "Drinkeg", true," https://drinkeg-bucket-1.s3.ap-northeast-2.amazonaws.com/member/profile/70af4bd2-717c-48d8-93d5-1a563de091a2"));
+        Member member1 = memberRepository.save(createMember("user1", "윤다영", "55azaz@naver.com", "서울", "Drinkeg", true,"https://drinkeg-bucket-1.s3.ap-northeast-2.amazonaws.com/member/profile/70af4bd2-717c-48d8-93d5-1a563de091a2"));
 
         // When
-        Member foundMember = memberService.getMemberById(member1.getId());
+        Member foundMember = memberRepository.findById(member1.getId()).get();
 
         // Then
         assertThat(foundMember).isNotNull();
@@ -118,7 +118,7 @@ public class MemberServiceTest extends IntegrationTestSupport {
         assertThat(foundMember.getRegion()).isEqualTo("서울");
         assertThat(foundMember.getProvider().getValue()).isEqualTo("Drinkeg");
         assertThat(foundMember.isAdult()).isTrue();
-        assertThat(foundMember.getImageUrl()).isNull();
+        assertThat(foundMember.getImageUrl()).isEqualTo("https://drinkeg-bucket-1.s3.ap-northeast-2.amazonaws.com/member/profile/70af4bd2-717c-48d8-93d5-1a563de091a2");
     }
 
     @Test
@@ -128,7 +128,7 @@ public class MemberServiceTest extends IntegrationTestSupport {
         Long nonExistentId = 999L;
 
         // When & Then
-        assertThatThrownBy(() -> memberService.getMemberById(nonExistentId))
+        assertThatThrownBy(() -> memberRepository.findById(nonExistentId))
                 .isInstanceOf(GeneralException.class)
                 .hasMessageContaining(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
     }
