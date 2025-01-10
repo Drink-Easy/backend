@@ -6,19 +6,14 @@ import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.party.domain.Party;
 import com.drinkeg.drinkeg.domain.recomment.domain.Recomment;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
     @Id
@@ -36,10 +31,26 @@ public class Comment extends BaseEntity {
     private String content;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Recomment> recomments = new ArrayList<>();
+    private List<Recomment> recomments;
 
-    @Builder.Default
     private boolean isDeleted = false;
+
+    public static Comment create(Member member, Party party, String content) {
+        return Comment.builder()
+                .member(member)
+                .party(party)
+                .content(content)
+                .build();
+    }
+
+    @Builder
+    public Comment(Party party, Member member, String content, List<Recomment> recomments) {
+        this.party = party;
+        this.member = member;
+        this.content = content;
+        this.recomments = recomments != null ? recomments : new ArrayList<>();
+        this.isDeleted = false;
+    }
 
     public void addRecomment(Recomment recomment) {
         this.recomments.add(recomment);

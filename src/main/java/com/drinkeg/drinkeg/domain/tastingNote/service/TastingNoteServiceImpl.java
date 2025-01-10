@@ -6,13 +6,11 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountR
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
-import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteNoseRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,7 +31,6 @@ import java.util.stream.Collectors;
 public class TastingNoteServiceImpl implements TastingNoteService {
 
     private final TastingNoteRepository tastingNoteRepository;
-    private final TastingNoteNoseRepository tastingNoteNoseRepository;
     private final WineRepository wineRepository;
     private final MemberRepository memberRepository;
 
@@ -86,9 +82,29 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         return AllTastingNoteResponse.create(tastingNoteSortCountResponse, tastingNotePreviewResponseList);
     }
 
+    // 와인 타입별 필터링 로직
+    private boolean filterBySort(TastingNote note, String sort) {
+        String wineSort = note.getWine().getSort();
+
+        switch (sort) {
+            case "red":
+                return wineSort.contains("레드");
+            case "white":
+                return wineSort.contains("화이트");
+            case "sparkling":
+                return wineSort.contains("스파클링");
+            case "rose":
+                return wineSort.contains("로제");
+            case "all":
+                return true; // 전체 보기
+            default:
+                return !wineSort.contains("레드") && !wineSort.contains("화이트")
+                        && !wineSort.contains("스파클링") && !wineSort.contains("로제");
+        }
+    }
 
     @Override
-    public void updateTastingNote(Long noteId, TastingNoteUpdateRequest tastingNoteUpdateRequest, String username) {
+    public void updateTastingNote(Long noteId, TastingNoteUpdateRequest t, String username) {
 
         // 회원을 조회한다.
         Member member = memberRepository.findByUsername(username).orElseThrow(
@@ -106,49 +122,9 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         }
 
         // TastingNote를 업데이트한다.
-        if(tastingNoteUpdateRequest.getColor() != null) {
-            foundNote.updateColor(tastingNoteUpdateRequest.getColor());
-        }
-        if(tastingNoteUpdateRequest.getTastingDate() != null) {
-            foundNote.updateTasteDate(tastingNoteUpdateRequest.getTastingDate());
-        }
-
-        if(tastingNoteUpdateRequest.getSugarContent() != null) {
-            foundNote.updateSugarContent(tastingNoteUpdateRequest.getSugarContent());
-        }
-        if(tastingNoteUpdateRequest.getAcidity() != null) {
-            foundNote.updateAcidity(tastingNoteUpdateRequest.getAcidity());
-        }
-        if(tastingNoteUpdateRequest.getTannin() != null) {
-            foundNote.updateTannin(tastingNoteUpdateRequest.getTannin());
-        }
-        if(tastingNoteUpdateRequest.getBody() != null) {
-            foundNote.updateBody(tastingNoteUpdateRequest.getBody());
-        }
-        if(tastingNoteUpdateRequest.getAlcohol() != null) {
-            foundNote.updateAlcohol(tastingNoteUpdateRequest.getAlcohol());
-        }
-
-        List<String> addNoseList = tastingNoteUpdateRequest.getAddNoseList();
-        if(!addNoseList.isEmpty()){
-            for(String addNose: addNoseList){
-                foundNote.addNoseElement(addNose);
-            }
-        }
-
-        List<Long> removeNoseList = tastingNoteUpdateRequest.getRemoveNoseList();
-        if(!removeNoseList.isEmpty()){
-            for(Long removeNoseId: removeNoseList){
-                removeNoseElement(removeNoseId);
-            }
-        }
-
-        if(tastingNoteUpdateRequest.getRating() != null) {
-            foundNote.updateRating(tastingNoteUpdateRequest.getRating());
-        }
-        if(tastingNoteUpdateRequest.getReview() != null) {
-            foundNote.updateReview(tastingNoteUpdateRequest.getReview());
-        }
+        foundNote.updateTastingNote(t.getColor(), t.getTastingDate(),
+                t.getSugarContent(), t.getAcidity(), t.getTannin(), t.getBody(), t.getAlcohol(),
+                t.getUpdateNoseList(), t.getRating(), t.getReview());
 
         tastingNoteRepository.save(foundNote);
 
@@ -182,26 +158,9 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         return noteId;
     }
 
-    @Override
-    public List<Map<Long, String>> showMemberNoseMapList(String username) {
-
-        // 사용자가 작성한 TastingNoteNose 리스트 가져오기
-        List<TastingNoteNose> tastingNoteNoseList = tastingNoteNoseRepository.getTastingNoteNoseListByUsername(username);
-
-        // TastingNoteNose 리스트를 Map<Long, String>으로 변환
-        return tastingNoteNoseList.stream()
-                .map(nose -> Map.of(nose.getId(), nose.getNoseElement()))
-                .collect(Collectors.toList());
-
-    }
-
     // 회원 탈퇴 시 탈퇴한 회원의 테이스팅 노트의 member_id null 로 설정
     @Override
     public void setTastingNoteMemberNull(String username) {
         tastingNoteRepository.updateTastingNoteMemberNull(username);
-    }
-
-    private void removeNoseElement(Long noseElementId){
-        tastingNoteNoseRepository.deleteById(noseElementId);
     }
 }

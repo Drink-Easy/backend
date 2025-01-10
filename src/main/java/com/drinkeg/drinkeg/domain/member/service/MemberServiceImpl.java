@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.member.service;
 
 import com.drinkeg.drinkeg.domain.member.dto.MemberInfoResponse;
 import com.drinkeg.drinkeg.domain.member.dto.MemberUpdateRequest;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.NameCheckResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.event.RemoveTastingNoteMemberEvent;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
@@ -42,50 +43,51 @@ public class MemberServiceImpl implements MemberService {
                 -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
-    @Override
-    @Transactional
-    public void deleteMemberByUsername(String username){
-        eventPublisher.publishEvent(new RemoveTastingNoteMemberEvent(username));
-        memberRepository.deleteByUsername(username);
-    }
+        @Override
+        @Transactional
+        public void deleteMemberByUsername(String username){
+            eventPublisher.publishEvent(new RemoveTastingNoteMemberEvent(username));
+            memberRepository.deleteByUsername(username);
+        }
 
-    @Override
-    public MemberInfoResponse showMemberInfo(String username){
+        @Override
+        public MemberInfoResponse showMemberInfo(String username){
 
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        return MemberInfoResponse.create(member);
-    }
+            return MemberInfoResponse.create(member);
+        }
 
-    @Override
-    public boolean isNicknameAvailable(String nickname){
-
-        return !memberRepository.existsByName(nickname);
-    }
-
-    @Override
-    @Transactional
-    public void updateMemberInfo(PrincipalDetail principalDetail, MemberUpdateRequest memberUpdateRequest, MultipartFile multipartFile){
+        @Override
+        public NameCheckResponse isNicknameAvailable(String nickname){
 
 
-        Member member = loadMemberByPrincipalDetail(principalDetail);
+            return NameCheckResponse.create(!memberRepository.existsByName(nickname));
+        }
 
-        if (multipartFile != null ) {
+        @Override
+        @Transactional
+        public void updateMemberInfo(PrincipalDetail principalDetail, MemberUpdateRequest memberUpdateRequest, MultipartFile multipartFile){
 
-            String profileImage = storageService.uploadFile(multipartFile, StoragePathName.MEMBER_PROFILE);
 
-            if (profileImage != null) {
-                member.updateImageUrl(profileImage);
+            Member member = loadMemberByPrincipalDetail(principalDetail);
+
+            if (multipartFile != null ) {
+
+                String profileImage = storageService.uploadFile(multipartFile, StoragePathName.MEMBER_PROFILE);
+
+                if (profileImage != null) {
+                    member.updateImageUrl(profileImage);
+                }
             }
-        }
-        if (memberUpdateRequest.getCity() != null) {
-            member.updateRegion(memberUpdateRequest.getCity());
-        }
+            if (memberUpdateRequest.getCity() != null) {
+                member.updateRegion(memberUpdateRequest.getCity());
+            }
 
-        if (memberUpdateRequest.getUsername() != null) {
-            member.updateName(memberUpdateRequest.getUsername());
-        }
+            if (memberUpdateRequest.getUsername() != null) {
+                member.updateName(memberUpdateRequest.getUsername());
+            }
 
+        }
     }
-}

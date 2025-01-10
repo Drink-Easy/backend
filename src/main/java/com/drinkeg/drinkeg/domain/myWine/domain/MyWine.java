@@ -18,11 +18,11 @@ public class MyWine {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wine_id")
+    @JoinColumn(name = "wine_id", nullable = false)
     private Wine wine;
 
     private LocalDate purchaseDate;

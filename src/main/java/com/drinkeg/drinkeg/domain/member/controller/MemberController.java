@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain.member.controller;
 
 import com.drinkeg.drinkeg.domain.member.dto.*;
+import com.drinkeg.drinkeg.domain.member.dto.loginDTO.NameCheckResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -59,7 +60,7 @@ public class MemberController {
 
     @PostMapping("/member/{nickname}")
     @Operation(summary = "마이페이지내에 닉네임 중복 검사 ", description = "중복된 닉네임이면 False, 사용 가능한 닉네임이면 True를 반환합니다.")
-    public ApiResponse<?> checkNickname(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable String nickname){
+    public ApiResponse<NameCheckResponse> checkNickname(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable String nickname){
         return ApiResponse.onSuccess(memberService.isNicknameAvailable(nickname));
     }
 

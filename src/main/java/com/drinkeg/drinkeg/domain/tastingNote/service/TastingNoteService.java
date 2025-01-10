@@ -22,8 +22,6 @@ public interface TastingNoteService {
 
     Long deleteTastingNote(Long noteId, String username);
 
-    List<Map<Long, String>> showMemberNoseMapList(String username);
-
     public void setTastingNoteMemberNull(String username);
 
 }

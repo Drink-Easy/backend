@@ -5,6 +5,7 @@ import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import lombok.Builder;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TastingNoteResponse {
 
     private Long noteId;
