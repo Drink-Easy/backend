@@ -9,6 +9,7 @@ import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.wine.service.WineService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
+import com.opencsv.exceptions.CsvException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -75,17 +76,5 @@ public class WineController {
 
         response.setHeader("Cache-Control", "max-age=3600, public");
         return ApiResponse.onSuccess(mostLikedWineList);
-    }
-
-    // 와인 이미지 업로드
-    @PostMapping("/upload")
-    @Operation(summary = "와인 이미지 업로드", description = "백엔드에세 와인 이미지 업로드 하기 위한 API")
-    public ApiResponse<?> uploadWineImage() {
-        try {
-            wineService.uploadWineImage();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return ApiResponse.onSuccess("업로드 성공");
     }
 }

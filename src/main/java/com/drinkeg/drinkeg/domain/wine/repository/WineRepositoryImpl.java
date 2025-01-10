@@ -2,6 +2,8 @@ package com.drinkeg.drinkeg.domain.wine.repository;
 
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.drinkeg.drinkeg.domain.member.domain.QMember.member;
+import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
 import static com.drinkeg.drinkeg.domain.wineWishlist.domain.QWineWishlist.wineWishlist;
 

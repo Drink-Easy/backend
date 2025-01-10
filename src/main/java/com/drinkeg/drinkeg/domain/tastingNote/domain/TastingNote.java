@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
-
 import static jakarta.persistence.FetchType.*;
 
 @Entity
@@ -29,26 +27,22 @@ public class TastingNote extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "wine_id")
+    @JoinColumn(name = "wine_id", nullable = false)
     private Wine wine;
 
     private String color;
 
-    // 시음 날짜
     private LocalDate tasteDate;
 
-    // 점수 0 ~ 5
     private int sugarContent;
     private int acidity;
     private int tannin;
     private int body;
     private int alcohol;
 
-    // nose를 TastingNote와 OneToMany 관계로 설정
     @OneToMany(mappedBy = "tastingNote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TastingNoteNose> noseList = new ArrayList<>();
 
-    // 만족도 0 ~ 5, 소수점 가능
     private float rating;
 
     private String review;
@@ -87,9 +81,8 @@ public class TastingNote extends BaseEntity {
                 .review(tastingNoteRequest.getReview())
                 .build();
 
-        Set<String> uniqueNoseElements = new HashSet<>(tastingNoteRequest.getNose());
+        Set<String> uniqueNoseElements = new LinkedHashSet<>(tastingNoteRequest.getNose());
         uniqueNoseElements.forEach(tastingNote::addNoseElement);
-
         return tastingNote;
     }
 
@@ -100,12 +93,11 @@ public class TastingNote extends BaseEntity {
         return this;
     }
 
-    public TastingNote removeNose(TastingNoteNose nose) {
-        this.noseList.remove(nose);
-        nose.updateTastingNote(null);
+    public TastingNote removeTastingNoteNose(TastingNoteNose tastingNoteNose) {
+        this.noseList.remove(tastingNoteNose);
+        tastingNoteNose.updateTastingNote(null);
         return this;
     }
-
 
     public void updateTastingNote(String color, LocalDate tasteDate,
                                   Integer sugarContent, Integer acidity, Integer tannin, Integer body, Integer alcohol,
@@ -117,16 +109,19 @@ public class TastingNote extends BaseEntity {
         if (tannin != null) this.tannin = tannin;
         if (body != null) this.body = body;
         if (alcohol != null) this.alcohol = alcohol;
+        if (updateNoseList != null) this.updateTastingNoteNoseList(updateNoseList);
         if (rating != null) this.rating = rating;
         if (review != null) this.review = review;
-        if (updateNoseList != null) this.updateTastingNoteNoseList(updateNoseList);
     }
 
     public void updateTastingNoteNoseList(List<String> updateNoseList) {
-        // 기존 noseList 전체 삭제
-        noseList.forEach(this::removeNose);
-        // updateNoseList로 대체
-        Set<String> uniqueNoseElements = new HashSet<>(updateNoseList);
+
+        this.noseList.removeIf(nose->{
+            nose.updateTastingNote(null);
+            return true;
+        });
+
+        Set<String> uniqueNoseElements = new LinkedHashSet<>(updateNoseList);
         uniqueNoseElements.forEach(this::addNoseElement);
     }
 }

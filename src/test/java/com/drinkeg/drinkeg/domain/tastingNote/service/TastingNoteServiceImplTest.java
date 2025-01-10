@@ -4,8 +4,10 @@ import com.drinkeg.drinkeg.IntegrationTestSupport;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +60,31 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         tastingNote.ifPresent(note -> {
             assertThat(note.getMember().getId()).isEqualTo(member.getId());
             assertThat(note.getWine().getId()).isEqualTo(wine.getId());
+        });
+    }
+
+    @DisplayName("중복 노즈가 있는 경우 중복을 제거한 후 테이스팅 노트를 저장한다.")
+    @Test
+    void saveTastingNoteWithDuplicatedNoseElement() {
+        // given
+        Member member = memberRepository.save(createMember("user1", "password", false));
+        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        TastingNoteRequest tastingNoteRequest = new TastingNoteRequest(
+                wine.getId(), "레드", LocalDate.parse("2025-01-01"), 10, 10, 10, 10, 10,
+                List.of("장미", "장미", "장미", "우디", "시나몬"), 4.5f, "좋아요");
+
+        // when
+        Long noteId = tastingNoteService.saveTastingNote(tastingNoteRequest, member.getUsername());
+
+        // then
+        Optional<TastingNote> tastingNote = tastingNoteRepository.findById(noteId);
+        assertThat(tastingNote).isPresent();
+        tastingNote.ifPresent(note -> {
+            assertThat(note.getMember().getId()).isEqualTo(member.getId());
+            assertThat(note.getWine().getId()).isEqualTo(wine.getId());
+            assertThat(note.getNoseList()).hasSize(3)
+                    .extracting(TastingNoteNose::getNoseElement)
+                    .containsExactlyInAnyOrder("장미", "우디", "시나몬");
         });
     }
 
@@ -292,15 +320,17 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                         tuple(note6.getId(), "와인6", "http://default.image6", "기타"),
                         tuple(note5.getId(), "와인5", "http://default.image5", "주정강화"),
                         tuple(note4.getId(), "와인4", "http://default.image4", "주정강화"));
-        assertAll(
-                () -> assertThat(sortCount.getTotalCount()).isEqualTo(6),
-                () -> assertThat(sortCount.getRedCount()).isEqualTo(1),
-                () -> assertThat(sortCount.getWhiteCount()).isEqualTo(1),
-                () -> assertThat(sortCount.getSparklingCount()).isEqualTo(1),
-                () -> assertThat(sortCount.getRoseCount()).isEqualTo(0),
-                () -> assertThat(sortCount.getEtcCount()).isEqualTo(3)
-        );
 
+        assertThat(sortCount)
+                .extracting(
+                        TastingNoteSortCountResponse::getTotalCount,
+                        TastingNoteSortCountResponse::getRedCount,
+                        TastingNoteSortCountResponse::getWhiteCount,
+                        TastingNoteSortCountResponse::getSparklingCount,
+                        TastingNoteSortCountResponse::getRoseCount,
+                        TastingNoteSortCountResponse::getEtcCount
+                )
+                .containsExactly(6, 1, 1, 1, 0, 3);
     }
 
     @DisplayName("없는 와인 종류로 전체 테이스팅 노트를 조회하면 IllegalArgumentException이 발생한다.")
@@ -377,6 +407,192 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
     }
 
+    @DisplayName("테이스팅 노트를 수정한다.")
+    @Test
+    void updateTastingNote() {
+        //given
+        Member member = memberRepository.save(createMember("user1", "password", false));
+        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        TastingNoteUpdateRequest updateRequest = createTastingNoteUpdateRequest();
+
+        //when
+        tastingNoteService.updateTastingNote(tastingNote.getId(), updateRequest, member.getUsername());
+
+        //then
+        TastingNote updatedNote = tastingNoteRepository.findById(tastingNote.getId()).get();
+        assertThat(updatedNote)
+                .extracting(
+                        TastingNote::getColor, TastingNote::getTasteDate,
+                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getRating, TastingNote::getReview,
+                        (updateNote -> {
+                            List<TastingNoteNose> noseList = updateNote.getNoseList();
+                            return noseList.stream().map(TastingNoteNose::getNoseElement).toList();
+                        })
+                )
+                .containsExactly(
+                        "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20, 3.5f, "맛있어요",
+                        List.of("오렌지", "장미", "차", "아몬드")
+                );
+    }
+
+    @DisplayName("테이스팅 노트 수정 시 중복된 노즈가 있는 경우 중복을 제거하여 수정한다.")
+    @Test
+    void updateTastingNoteWithDuplicatedNoseElement() {
+        //given
+        Member member = memberRepository.save(createMember("user1", "password", false));
+        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
+                "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
+                List.of("장미", "장미", "차", "장미", "차"), 3.5f, "맛있어요"
+        );
+
+        //when
+        tastingNoteService.updateTastingNote(tastingNote.getId(), updateRequest, member.getUsername());
+
+        //then
+        TastingNote updatedNote = tastingNoteRepository.findById(tastingNote.getId()).get();
+        assertThat(updatedNote)
+                .extracting(
+                        TastingNote::getColor, TastingNote::getTasteDate,
+                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getRating, TastingNote::getReview,
+                        (updateNote -> {
+                            List<TastingNoteNose> noseList = updateNote.getNoseList();
+                            return noseList.stream().map(TastingNoteNose::getNoseElement).toList();
+                        })
+                )
+                .containsExactly(
+                        "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20, 3.5f, "맛있어요",
+                        List.of("장미", "차")
+                );
+    }
+
+    @DisplayName("테이스팅 노트 수정 시 노즈에 빈 리스트가 있는 경우 기존 노즈를 삭제한다.")
+    @Test
+    void updateTastingNoteWithEmptyNoseList() {
+        //given
+        Member member = memberRepository.save(createMember("user1", "password", false));
+        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
+                "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
+                new ArrayList<>(), 3.5f, "맛있어요"
+        );
+
+        //when
+        tastingNoteService.updateTastingNote(tastingNote.getId(), updateRequest, member.getUsername());
+
+        //then
+        TastingNote updatedNote = tastingNoteRepository.findById(tastingNote.getId()).get();
+        assertThat(updatedNote)
+                .extracting(
+                        TastingNote::getColor, TastingNote::getTasteDate,
+                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getRating, TastingNote::getReview,
+                        (updateNote -> {
+                            List<TastingNoteNose> noseList = updateNote.getNoseList();
+                            return noseList.stream().map(TastingNoteNose::getNoseElement).toList();
+                        })
+                )
+                .containsExactly(
+                        "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20, 3.5f, "맛있어요",
+                        new ArrayList<>()
+                );
+    }
+
+    @DisplayName("updateRequest가 모두 null인 경우 테이스팅 노트 수정 결과 기존과 동일하다.")
+    @Test
+    void updateTastingNoteWithNoChange() {
+        //given
+        Member member = memberRepository.save(createMember("user1", "password", false));
+        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
+                null, null, null, null, null,
+                null, null, null, null, null);
+
+        //when
+        tastingNoteService.updateTastingNote(tastingNote.getId(), updateRequest, member.getUsername());
+
+        //then
+        TastingNote updatedNote = tastingNoteRepository.findById(tastingNote.getId()).get();
+        assertThat(updatedNote)
+                .extracting(
+                        TastingNote::getColor, TastingNote::getTasteDate,
+                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getRating, TastingNote::getReview,
+                        (updateNote -> {
+                            List<TastingNoteNose> noseList = updateNote.getNoseList();
+                            return noseList.stream().map(TastingNoteNose::getNoseElement).toList();
+                        })
+                )
+                .containsExactly(
+                        "레드", LocalDate.parse("2025-01-01"), 10, 10, 10, 10, 10, 4.5f, "좋아요",
+                        List.of("오렌지", "시트러스", "건포도", "흙", "아몬드")
+                );
+    }
+
+    @DisplayName("없는 회원이 테이스팅 노트를 수정하면 MEMBER_NOT_FOUND 에러가 발생한다.")
+    @Test
+    void updateTastingNoteByWrongMember() {
+        //given
+        Member WrongMember = memberRepository.save(createMember("user1", "password", false));
+        memberRepository.delete(WrongMember);
+
+        Member member = memberRepository.save(createMember("user2", "password", false));
+        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
+                "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
+                List.of("장미", "장미", "차", "장미", "차"), 3.5f, "맛있어요"
+        );
+
+        //when && then
+        assertThatThrownBy(() -> tastingNoteService.updateTastingNote(tastingNote.getId(), updateRequest, WrongMember.getUsername()))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @DisplayName("없는 테이스팅 노트를 수정하면 TASTING_NOTE_NOT_FOUND 에러가 발생한다.")
+    @Test
+    void updateTastingNoteByWrongTastingNote() {
+        //given
+        Member member = memberRepository.save(createMember("user1", "password", false));
+        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        tastingNoteRepository.delete(tastingNote);
+        TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
+                "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
+                List.of("장미", "장미", "차", "장미", "차"), 3.5f, "맛있어요"
+        );
+
+        //when && then
+        assertThatThrownBy(() -> tastingNoteService.updateTastingNote(tastingNote.getId(), updateRequest, member.getUsername()))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage(ErrorStatus.TASTING_NOTE_NOT_FOUND.getMessage());
+    }
+
+    @DisplayName("다른 회원의 테이스팅 노트를 수정하면 TASTING_NOTE_NOT_FOUND 에러가 발생한다.")
+    @Test
+    void updateForbiddenTastingNote() {
+        //given
+        Member member1 = memberRepository.save(createMember("user1", "password", false));
+        Member member2 = memberRepository.save(createMember("user2", "password", false));
+        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member2, wine, createTastingNoteRequest(wine)));
+        TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
+                "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
+                List.of("장미", "장미", "차", "장미", "차"), 3.5f, "맛있어요"
+        );
+
+        //when && then
+        assertThatThrownBy(() -> tastingNoteService.updateTastingNote(tastingNote.getId(), updateRequest, member1.getUsername()))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage(ErrorStatus.TASTING_NOTE_FORBIDDEN.getMessage());
+    }
 
     private Wine createWine(String name, String sort, String imageUrl) {
         return Wine.builder()
@@ -395,7 +611,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         return TastingNoteRequest.builder()
                 .wineId(wine.getId())
                 .color("레드")
-                .tasteDate(LocalDate.now())
+                .tasteDate(LocalDate.parse("2025-01-01"))
                 .sugarContent(10)
                 .acidity(10)
                 .tannin(10)
@@ -406,4 +622,9 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 .review("좋아요").build();
     }
 
+    private TastingNoteUpdateRequest createTastingNoteUpdateRequest() {
+        return new TastingNoteUpdateRequest(
+                "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
+                List.of("오렌지", "장미", "차", "아몬드"), 3.5f, "맛있어요");
+    }
 }

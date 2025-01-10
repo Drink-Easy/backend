@@ -17,6 +17,11 @@ import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -106,24 +113,5 @@ public class WineServiceImpl implements WineService {
         return mostLikedWines.stream()
                 .map(HomeWineResponse::of)
                 .toList();
-    }
-
-    @Override // todo : 와인 초기데이터 업로드 후 관리자 기능으로 이관 필요.
-    public void uploadWineImage() throws IOException {
-        List<Wine> wines = wineRepository.findAll();
-
-        for (Wine wine : wines) {
-            if (wine.getImageUrl() == null) {
-                String imageName = wine.getName().toLowerCase().replace("'", "").replace(" ", "-") + ".jpg";
-                File imageFile = new File(System.getenv("IMAGE_PATH")+ imageName);
-
-                if (imageFile.exists()) {
-                    MultipartFile multipartFile = new CustomMultipartFile(imageFile);
-                    String imageUrl = storageService.uploadFile(multipartFile, StoragePathName.WINE);
-                    wine.updateImageUrl(imageUrl);
-                    wineRepository.save(wine);
-                }
-            }
-        }
     }
 }
