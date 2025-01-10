@@ -56,9 +56,6 @@ public class WineWishlistServiceImpl implements WineWishlistService{
         WineWishlist wineWishlist = wineWishlistRepository.findWineWishlistByMemberAndWine(member, wine).orElseThrow(
                 () -> new GeneralException(ErrorStatus.WINE_WISHLIST_NOT_FOUND));
 
-        if (!wineWishlist.getMember().equals(member))
-            throw new GeneralException(ErrorStatus.WINE_WISHLIST_UNAUTHORIZED);
-
         wineWishlistRepository.deleteById(wineWishlist.getId());
     }
 }

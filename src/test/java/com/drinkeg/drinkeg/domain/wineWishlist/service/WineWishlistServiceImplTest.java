@@ -57,7 +57,7 @@ class WineWishlistServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("존재하지 않는 회원으로 와인 위시리스트를 저장하면 MEMBER_NOT_FOUND 예외가 발생한다.")
     @Test
-    void createWineWishlist_MemberNotFound() {
+    void createWineWishlistByWrongMember() {
         //given
         Member member = memberRepository.save(createMember("user1"));
         memberRepository.delete(member);
@@ -71,7 +71,7 @@ class WineWishlistServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("존재하지 않는 와인으로 와인 위시리스트를 저장하면 WINE_NOT_FOUND 예외가 발생한다.")
     @Test
-    void createWineWishlist_WineNotFound() {
+    void createWineWishlistByWrongWine() {
         //given
         Member member = memberRepository.save(createMember("user1"));
 
@@ -83,7 +83,7 @@ class WineWishlistServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("이미 있는 와인 위시리스트를 다시 저장하면 WINE_WISHLIST_ALREADY_EXISTS 예외가 발생한다.")
     @Test
-    void createWineWishlist_WishlistAlreadyExixts() {
+    void createWineWishlistAlreadyExists() {
         //given
         Member member = memberRepository.save(createMember("user1"));
         Wine wine = wineRepository.save(createWine("wine1"));
@@ -124,7 +124,7 @@ class WineWishlistServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("회원의 와인 위시리스트가 비어있으면 빈 리스트를 반환한다.")
     @Test
-    void getAllWineWishlistByMember_EmptyWishlist() {
+    void getAllWineWishlistByMemberEmptyWishlist() {
         //given
         Member member = memberRepository.save(createMember("user1"));
 
@@ -137,7 +137,7 @@ class WineWishlistServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("존재하지 않는 회원으로 와인 위시리스트를 조회하면 MEMBER_NOT_FOUND 예외가 발생한다.")
     @Test
-    void getAllWineWishlistByMember_MemberNotFound() {
+    void getAllWineWishlistByMemberByWrongMember() {
         //given
         Member wrongMember = memberRepository.save(createMember("wrongUser"));
         memberRepository.delete(wrongMember);
@@ -170,7 +170,7 @@ class WineWishlistServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("존재하지 않는 회원으로 와인 위시리스트를 삭제하면 MEMBER_NOT_FOUND 예외가 발생한다.")
     @Test
-    void deleteWineWishlist_MemberNotFound() {
+    void deleteWineWishlistByWrongMember() {
         //given
         Member wrongMember = memberRepository.save(createMember("wrongUser"));
         memberRepository.delete(wrongMember);
@@ -187,7 +187,7 @@ class WineWishlistServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("존재하지 않는 와인으로 와인 위시리스트를 삭제하면 WINE_NOT_FOUND 예외가 발생한다.")
     @Test
-    void deleteWineWishlist_WineNotFound() {
+    void deleteWineWishlistByWrongWine() {
         //given
         Member member = memberRepository.save(createMember("user1"));
 
@@ -199,7 +199,7 @@ class WineWishlistServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("회원의 와인 위시리스트가 없는데 삭제하면 WINE_WISHLIST_NOT_FOUND 예외가 발생한다.")
     @Test
-    void deleteWineWishlist_WishlistNotFound() {
+    void deleteWrongWineWishlist() {
         //given
         Member member = memberRepository.save(createMember("user1"));
         Wine wine = wineRepository.save(createWine("wine1"));
