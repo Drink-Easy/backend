@@ -9,8 +9,6 @@ import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.domain.myWine.repository.MyWineRepository;
-import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
@@ -22,13 +20,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MyWineServiceImplTest extends IntegrationTestSupport {
     @Autowired
@@ -90,6 +86,75 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
                 .hasMessage(ErrorStatus.WINE_NOT_FOUND.getMessage());
     }
 
+    @DisplayName("특정 보유와인을 조회한다.")
+    @Test
+    void getMyWineById() {
+        // given
+        Member member = createMember("user");
+        memberRepository.save(member);
+        Wine wine = createWine("와인");
+        wineRepository.save(wine);
+        Long myWineId = saveMyWine(member, wine, LocalDate.parse("2025-01-11"), 100000);
+
+        // when
+        MyWineResponse myWine = myWineService.getMyWineById(myWineId, member.getUsername());
+
+        // then
+        assertThat(myWine)
+                .extracting("myWineId", "wineId", "wineName", "wineSort",
+                        "wineArea", "wineVariety", "purchaseDate", "purchasePrice", "period")
+                .containsExactly(myWineId, wine.getId(), wine.getName(), wine.getSort(),
+                        wine.getCountry(), wine.getVariety(), LocalDate.parse("2025-01-11"), 100000, 0);
+    }
+
+    @DisplayName("없는 보유와인을 조회하려고 하면 MY_WINE_NOT_FOUND 예외 발생")
+    @Test
+    void getMyWineByIdByWrongMyWine() {
+        // given
+        Member member = createMember("user");
+        memberRepository.save(member);
+
+        // when & then
+        assertThatThrownBy(() -> myWineService.getMyWineById(-1L, member.getUsername()))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage(ErrorStatus.MY_WINE_NOT_FOUND.getMessage());
+    }
+
+    @DisplayName("없는 멤버가 보유와인을 조회하려고 하면 MEMBER_NOT_FOUND 예외 발생")
+    @Test
+    void getMyWineByIdByWrongMember() {
+        // given
+        Member member = createMember("user");
+        memberRepository.save(member);
+        Wine wine = createWine("와인");
+        wineRepository.save(wine);
+        Long myWineId = saveMyWine(member, wine, LocalDate.parse("2025-01-11"), 100000);
+
+        // when & then
+        assertThatThrownBy(() -> myWineService.getMyWineById(myWineId, "wrongMember"))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @DisplayName("다른 멤버의 보유와인을 조회하려고 하면 MY_WINE_UNAUTHORIZED 예외 발생")
+    @Test
+    void getUnauthorizedMyWineById() {
+        // given
+        Member member1 = createMember("user");
+        memberRepository.save(member1);
+        Member member2 = createMember("user2");
+        memberRepository.save(member2);
+        Wine wine = createWine("와인");
+        wineRepository.save(wine);
+        Long myWineId = saveMyWine(member1, wine, LocalDate.parse("2025-01-11"), 100000);
+
+        // when & then
+        assertThatThrownBy(() -> myWineService.getMyWineById(myWineId, member2.getUsername()))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage(ErrorStatus.MY_WINE_UNAUTHORIZED.getMessage());
+    }
+
+
     @DisplayName("특정 멤버의 보유와인을 최근 추가한 순으로 조회한다.")
     @Test
     void getMyWinesByUsername() {
@@ -104,14 +169,14 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         saveMyWine(member, wine2, LocalDate.parse("2025-01-12"), 200000);
 
         // when
-        List<MyWine> myWines = myWineRepository.findByMemberOrderByPurchaseDate(member);
+        List<MyWineResponse> myWines = myWineService.getMyWinesByUsername(member.getUsername());
 
         // then
         assertThat(myWines).hasSize(2)
-                .extracting("member", "wine", "purchaseDate", "purchasePrice")
+                .extracting("wineId", "wineName", "wineSort", "wineArea", "wineVariety", "purchaseDate", "purchasePrice", "period")
                 .containsExactly(
-                        Assertions.tuple(member, wine2, LocalDate.parse("2025-01-12"), 200000),
-                        Assertions.tuple(member, wine1, LocalDate.parse("2025-01-11"), 100000)
+                        Assertions.tuple(wine2.getId(), wine2.getName(), wine2.getSort(), wine2.getCountry(), wine2.getVariety(), LocalDate.parse("2025-01-12"), 200000, 0),
+                        Assertions.tuple(wine1.getId(), wine1.getName(), wine1.getSort(), wine1.getCountry(), wine1.getVariety(), LocalDate.parse("2025-01-11"), 100000, 0)
                 );
     }
 
@@ -211,7 +276,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("특정 보유와인을 삭제한다.")
     @Test
-    void deleteWineWishlistById() {
+    void deleteMyWineById() {
         // given
         Member member = createMember("user");
         memberRepository.save(member);
@@ -220,7 +285,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Long myWineId = saveMyWine(member, wine, LocalDate.parse("2024-12-11"), 100000);
 
         // when
-        myWineService.deleteWineWishlistById(myWineId, member.getUsername());
+        myWineService.deleteMyWineById(myWineId, member.getUsername());
 
         // then
         Optional<MyWine> deletedMyWine = myWineRepository.findById(myWineId);
@@ -229,20 +294,20 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
 
     @DisplayName("없는 보유와인을 삭제하려고 하면 MY_WINE_NOT_FOUND 예외 발생")
     @Test
-    void deleteWineWishlistByIdByWrongMyWine() {
+    void deleteWineWishlistByIdByWrongMyMyWine() {
         // given
         Member member = createMember("user");
         memberRepository.save(member);
 
         // when & then
-        assertThatThrownBy(() -> myWineService.deleteWineWishlistById(-1L, member.getUsername()))
+        assertThatThrownBy(() -> myWineService.deleteMyWineById(-1L, member.getUsername()))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.MY_WINE_NOT_FOUND.getMessage());
     }
 
     @DisplayName("없는 멤버가 보유와인을 삭제하려고 하면 MEMBER_NOT_FOUND 예외 발생")
     @Test
-    void deleteWineWishlistByIdByWrongMember() {
+    void deleteMyWineByIdByWrongMember() {
         // given
         Member member = createMember("user");
         memberRepository.save(member);
@@ -251,14 +316,14 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Long myWineId = saveMyWine(member, wine, LocalDate.parse("2024-12-11"), 100000);
 
         // when & then
-        assertThatThrownBy(() -> myWineService.deleteWineWishlistById(myWineId, "wrongMember"))
+        assertThatThrownBy(() -> myWineService.deleteMyWineById(myWineId, "wrongMember"))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
     }
 
     @DisplayName("다른 멤버의 보유와인을 삭제하려고 하면 MY_WINE_UNAUTHORIZED 예외 발생")
     @Test
-    void deleteWineWishlistByIdByWrongMember2() {
+    void deleteMyWineByIdByWrongMember2() {
         // given
         Member member1 = createMember("user");
         memberRepository.save(member1);
@@ -269,7 +334,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Long myWineId = saveMyWine(member1, wine, LocalDate.parse("2024-12-11"), 100000);
 
         // when & then
-        assertThatThrownBy(() -> myWineService.deleteWineWishlistById(myWineId, member2.getUsername()))
+        assertThatThrownBy(() -> myWineService.deleteMyWineById(myWineId, member2.getUsername()))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.MY_WINE_UNAUTHORIZED.getMessage());
     }

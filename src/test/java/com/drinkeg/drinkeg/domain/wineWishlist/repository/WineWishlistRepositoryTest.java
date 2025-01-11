@@ -151,7 +151,7 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
     private WineWishlist createWineWishlist(Member member, String wineName) {
         Wine wine = createWine(wineName);
         wineRepository.save(wine);
-        return WineWishlist.create(member, wine);
+        return wineWishlistRepository.save(WineWishlist.create(member, wine));
     }
 
 }

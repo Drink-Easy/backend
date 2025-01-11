@@ -16,7 +16,7 @@ public class MyWineRequest {
     @NotNull(message = "구매 날짜 입력은 필수입니다.")
     private LocalDate purchaseDate;
 
-    private int purchasePrice;
+    private Integer purchasePrice;
 
     @Builder
     public MyWineRequest(Long wineId, LocalDate purchaseDate, int purchasePrice) {

@@ -27,7 +27,7 @@ public class MyWine extends BaseEntity {
     private Wine wine;
 
     private LocalDate purchaseDate;
-    private int purchasePrice;
+    private Integer purchasePrice;
 
     @Builder
     public MyWine(Member member, Wine wine, LocalDate purchaseDate, int purchasePrice){

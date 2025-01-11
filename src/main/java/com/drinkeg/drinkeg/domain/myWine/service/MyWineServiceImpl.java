@@ -28,18 +28,14 @@ public class MyWineServiceImpl implements MyWineService{
 
     @Override
     public Long saveMyWine(MyWineRequest myWineRequest, String username) {
-
-        // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(username).orElseThrow(
-                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
         );
 
-        // 와인을 찾는다.
         Long wineId = myWineRequest.getWineId();
-        Wine wine = wineRepository.findById(wineId).orElseThrow(
-                () -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
+        Wine wine = wineRepository.findById(wineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
-        // MyWine을 저장한다.
         MyWine myWine = MyWine.create(member, wine, myWineRequest.getPurchaseDate(), myWineRequest.getPurchasePrice());
 
         MyWine savedMyWine = myWineRepository.save(myWine);
@@ -47,10 +43,25 @@ public class MyWineServiceImpl implements MyWineService{
     }
 
     @Override
+    public MyWineResponse getMyWineById(Long myWineId, String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
+        );
+
+        MyWine myWine = myWineRepository.findById(myWineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MY_WINE_NOT_FOUND));
+
+        if (!member.equals(myWine.getMember())) {
+            throw new GeneralException(ErrorStatus.MY_WINE_UNAUTHORIZED);
+        } else {
+            return MyWineResponse.of(myWine);
+        }
+    }
+
+    @Override
     public List<MyWineResponse> getMyWinesByUsername(String username) {
-        // 회원을 조회한다.
-        Member member = memberRepository.findByUsername(username).orElseThrow(
-                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
         );
 
         List<MyWine> myWineList = myWineRepository.findByMemberOrderByPurchaseDate(member);
@@ -77,7 +88,7 @@ public class MyWineServiceImpl implements MyWineService{
     }
 
     @Override
-    public void deleteWineWishlistById(Long myWineId, String username) {
+    public void deleteMyWineById(Long myWineId, String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 

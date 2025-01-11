@@ -56,9 +56,8 @@ public class WineWishlistControllerTest extends WineWishlistControllerTestSuppor
     @Test
     void saveWineWishlistByWrongWine() throws Exception {
         // given
-        GeneralException generalException = new GeneralException(ErrorStatus.WINE_NOT_FOUND);
         when(wineWishlistService.createWineWishlist(-1L, "user"))
-                .thenThrow(generalException);
+                .thenThrow(new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
         // when // then
         mockMvc.perform(post("/wine-wishlist/{wineId}", -1L)
