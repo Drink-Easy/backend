@@ -7,8 +7,6 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyWineRequest {
 
@@ -19,4 +17,11 @@ public class MyWineRequest {
     private LocalDate purchaseDate;
 
     private int purchasePrice;
+
+    @Builder
+    public MyWineRequest(Long wineId, LocalDate purchaseDate, int purchasePrice) {
+        this.wineId = wineId;
+        this.purchaseDate = purchaseDate;
+        this.purchasePrice = purchasePrice;
+    }
 }
