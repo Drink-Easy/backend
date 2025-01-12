@@ -14,7 +14,7 @@ public interface MemberService {
 
     public MemberInfoResponse showMemberInfo(String username);
 
-    public NameCheckResponse isNicknameAvailable(String nickname);
+    public boolean isNicknameAvailable(String nickname);
 
     public void updateMemberInfo(MemberUpdateRequest memberUpdateRequest, String username);
 

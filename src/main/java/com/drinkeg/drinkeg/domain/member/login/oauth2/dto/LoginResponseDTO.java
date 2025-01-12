@@ -23,7 +23,7 @@ public class LoginResponseDTO {
     private Boolean isFirst;
     // private String refreshToken
 
-    public static LoginResponseDTO create(Long id, String username, Role role,Boolean isFirst){
+    public static LoginResponseDTO of(Long id, String username, Role role,Boolean isFirst){
         return LoginResponseDTO.builder()
                 .id(id)
                 .username(username)

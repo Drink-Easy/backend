@@ -5,16 +5,15 @@ import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import com.drinkeg.drinkeg.infra.storage.StoragePathName;
 import com.drinkeg.drinkeg.infra.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class JoinService {
 
     private final MemberRepository memberRepository;
@@ -22,7 +21,7 @@ public class JoinService {
     private final StorageService storageService;
 
 
-    @Transactional
+
     public void join(JoinRequest joinRequest) {
 
         String username = joinRequest.getUsername();
@@ -35,54 +34,28 @@ public class JoinService {
         if (!password.equals(rePassword)){
             throw new GeneralException(ErrorStatus.PASSWORD_NOT_MATCH);
         }
-        if(!isValidPassword(password)){
-            throw new GeneralException(ErrorStatus.PASSWORD_NOT_INVALID);
-        }
 
         Member member = Member.createMember( username,(bCryptPasswordEncoder.encode(password) ),true);
-
         memberRepository.save(member);
-        System.out.println("Saved Member: " );
 
     }
 
-    public MemberResponseDTO addMemberDetail(MemberRequestDTO memberRequestDTO, String username, MultipartFile multipartFile) {
+    public MemberResponseDTO addMemberDetail(MemberRequest memberRequest, String username) {
 
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.SESSION_UNAUTHORIZED));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        String profileImage = null;
-
-        if (multipartFile != null ) {
-            profileImage = storageService.uploadFile(multipartFile, StoragePathName.MEMBER_PROFILE);
-        }
 
         // 회원이 입력한 정보로 update 하고 isFirst = false 로 변경
-        member.updateFirstUser(memberRequestDTO.getName(), memberRequestDTO.getIsNewbie(), memberRequestDTO.getMonthPrice(),
-                memberRequestDTO.getWineSort(), memberRequestDTO.getWineArea(), memberRequestDTO.getWineVariety(),memberRequestDTO.getRegion(),
-                profileImage);
+        member.updateFirstUser(memberRequest);
 
-        memberRepository.save(member);
-
-
-        return MemberResponseDTO.create(member);
+        return MemberResponseDTO.of(member);
     }
 
-    public boolean isValidPassword(String password) {
 
-        // 영문자, 숫자, 특수문자 각각에 대한 패턴
-        String letterPattern = ".*[A-Za-z].*";
-        String digitPattern = ".*\\d.*";
+    @Transactional(readOnly = true)
+    public boolean isDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
 
-        boolean hasLetter = password.matches(letterPattern);
-        boolean hasDigit = password.matches(digitPattern);
-
-        // 세 가지 조건이 모두 충족되는지 확인
-        return hasLetter && hasDigit;
-    }
-
-    public UsernameCheckResponse isDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
-
-        return new UsernameCheckResponse(memberRepository.existsByUsername(usernameCheckRequest.username()));
+        return memberRepository.existsByUsername(usernameCheckRequest.username());
     }
 }

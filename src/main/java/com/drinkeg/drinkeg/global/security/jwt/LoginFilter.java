@@ -101,7 +101,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Boolean isFirst = principalDetail.getIsFirst();
 
 
-        LoginResponseDTO loginResponseDTO = LoginResponseDTO.create(id,username,Role.fromValue(role),isFirst);
+        LoginResponseDTO loginResponseDTO = LoginResponseDTO.of(id,username,Role.fromValue(role),isFirst);
 
 
         // ApiResponse 생성
