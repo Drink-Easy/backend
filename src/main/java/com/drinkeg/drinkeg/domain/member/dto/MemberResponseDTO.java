@@ -34,7 +34,7 @@ public class MemberResponseDTO {
 
     private String imageUrl;
 
-    public static MemberResponseDTO create(Member member){
+    public static MemberResponseDTO of(Member member){
 
         return  MemberResponseDTO.builder()
                 .id(member.getId())
