@@ -20,7 +20,7 @@ public class MemberInfoResponse {
     private String authType;
     private boolean isAdult;
 
-    public static MemberInfoResponse create(Member member){
+    public static MemberInfoResponse of(Member member){
 
         return  MemberInfoResponse.builder()
                 .imageUrl(member.getImageUrl())

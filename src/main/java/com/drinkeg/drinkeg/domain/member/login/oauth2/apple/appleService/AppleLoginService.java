@@ -74,7 +74,7 @@ public class AppleLoginService {
 
         }
 
-        return LoginResponseDTO.create(member.getId(), member.getUsername(), member.getRole(),member.getIsFirst() );
+        return LoginResponseDTO.of(member.getId(), member.getUsername(), member.getRole(),member.getIsFirst() );
     }
 
 

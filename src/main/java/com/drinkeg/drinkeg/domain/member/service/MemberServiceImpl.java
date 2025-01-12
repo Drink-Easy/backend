@@ -48,12 +48,12 @@ public class MemberServiceImpl implements MemberService {
     public MemberInfoResponse showMemberInfo(String username){
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-        return MemberInfoResponse.create(member);
+        return MemberInfoResponse.of(member);
     }
 
     @Override
-    public NameCheckResponse isNicknameAvailable(String nickname){
-        return NameCheckResponse.create(!memberRepository.existsByName(nickname));
+    public boolean isNicknameAvailable(String nickname){
+        return !memberRepository.existsByName(nickname);
     }
 
     @Override

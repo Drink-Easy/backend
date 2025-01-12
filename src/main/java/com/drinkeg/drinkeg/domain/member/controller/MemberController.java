@@ -1,18 +1,15 @@
 package com.drinkeg.drinkeg.domain.member.controller;
 
 import com.drinkeg.drinkeg.domain.member.dto.*;
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.NameCheckResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.service.JoinService;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
-import io.swagger.v3.oas.annotations.headers.Header;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +27,7 @@ public class MemberController {
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "username과 password를 입력받아 회원가입을 진행합니다.")
-    public ApiResponse<?> joinProcess(@RequestBody JoinRequest joinRequest) {
+    public ApiResponse<?> joinProcess(@Valid @RequestBody JoinRequest joinRequest) {
 
         joinService.join(joinRequest);
         return ApiResponse.onSuccess("회원가입 성공");
@@ -46,9 +43,9 @@ public class MemberController {
 
     @PatchMapping("/member")
     @Operation(summary = "사용자 초기 정보 추가", description = "첫 로그인 여부에 따라 isFirst 속성이 true인 경우 사용자 초기 정보를 추가합니다.")
-    public ApiResponse<?> addMemberDetail(@RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile,  @RequestPart("memberRequest")  MemberRequestDTO memberRequestDTO, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+    public ApiResponse<String> addMemberDetail(@RequestBody MemberRequest memberRequest, @AuthenticationPrincipal PrincipalDetail principalDetail) {
 
-        MemberResponseDTO memberResponseDTO = joinService.addMemberDetail(memberRequestDTO, principalDetail.getUsername(),multipartFile);
+        joinService.addMemberDetail(memberRequest, principalDetail.getUsername());
         return ApiResponse.onSuccess("사용자 초기 정보 추가 완료");
     }
 
@@ -60,13 +57,13 @@ public class MemberController {
 
     @PostMapping("/member/{nickname}")
     @Operation(summary = "마이페이지내에 닉네임 중복 검사 ", description = "중복된 닉네임이면 False, 사용 가능한 닉네임이면 True를 반환합니다.")
-    public ApiResponse<NameCheckResponse> checkNickname(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable String nickname){
+    public ApiResponse<Boolean> checkNickname(@AuthenticationPrincipal PrincipalDetail principalDetail, @PathVariable String nickname){
         return ApiResponse.onSuccess(memberService.isNicknameAvailable(nickname));
     }
 
     @PatchMapping("/member/info")
     @Operation(summary = "마이페이지 정보 수정 ", description = "마이페이지의 정보를 수정합니다.")
-    public ApiResponse<?> updateMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody MemberUpdateRequest memberUpdateRequest){
+    public ApiResponse<String> updateMemberInfo(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody MemberUpdateRequest memberUpdateRequest){
 
         memberService.updateMemberInfo(memberUpdateRequest, principalDetail.getUsername());
         return ApiResponse.onSuccess("정보 수정 성공");
@@ -74,9 +71,8 @@ public class MemberController {
 
     @PostMapping("/join/check")
     @Operation(summary = "이메일 중복 검사", description = "이메일(username) 중복 여부를 반환합니다.")
-    public ApiResponse<UsernameCheckResponse> checkUsername(@RequestBody UsernameCheckRequest usernameCheckRequest) {
-        UsernameCheckResponse usernameCheckResponse = joinService.isDuplicatedUsername(usernameCheckRequest);
-        return ApiResponse.onSuccess(usernameCheckResponse);
+    public ApiResponse<Boolean> checkUsername(@RequestBody UsernameCheckRequest usernameCheckRequest) {
+        return ApiResponse.onSuccess(joinService.isDuplicatedUsername(usernameCheckRequest));
     }
 
     @PostMapping(value = "/member/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
