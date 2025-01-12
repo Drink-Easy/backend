@@ -23,16 +23,23 @@ public class MyWineController {
 
     @Operation(summary = "보유 와인 추가", description = "MyWineRequest로 보유와인을 추가한다.")
     @PostMapping("")
-    public ApiResponse<String> getMyWines(@RequestBody @Valid MyWineRequest myWineRequest,
+    public ApiResponse<String> saveMyWine(@RequestBody @Valid MyWineRequest myWineRequest,
                                           @AuthenticationPrincipal PrincipalDetail principalDetail){
 
         myWineService.saveMyWine(myWineRequest, principalDetail.getUsername());
         return ApiResponse.onSuccess("보유 와인 저장 성공");
     }
 
-    @Operation(summary = "보유 와인 목록 열람", description = "보유 와인 목록을 열람한다.")
+    @Operation(summary = "보유 와인 조회", description = "보유 와인을 조회한다.")
+    @GetMapping("/{myWineId}")
+    public ApiResponse<MyWineResponse> getMyWine(@PathVariable("myWineId") Long myWineId, @AuthenticationPrincipal PrincipalDetail principalDetail){
+        MyWineResponse myWineResponse = myWineService.getMyWineById(myWineId, principalDetail.getUsername());
+        return ApiResponse.onSuccess(myWineResponse);
+    }
+
+    @Operation(summary = "보유 와인 목록 조회", description = "보유 와인 목록을 조회한다.")
     @GetMapping("")
-    public ApiResponse<List<MyWineResponse>> getMyWines(@AuthenticationPrincipal PrincipalDetail principalDetail){
+    public ApiResponse<List<MyWineResponse>> getMyWineList(@AuthenticationPrincipal PrincipalDetail principalDetail){
 
         List<MyWineResponse> myWineResponseList = myWineService.getMyWinesByUsername(principalDetail.getUsername());
         return ApiResponse.onSuccess(myWineResponseList);
@@ -50,7 +57,7 @@ public class MyWineController {
     @Operation(summary = "보유 와인 삭제", description = "보유 와인 Id로 보유 와인을 삭제한다.")
     @DeleteMapping("/{myWineId}")
     public ApiResponse<String>  deleteMyWine(@PathVariable("myWineId") Long myWineId, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        myWineService.deleteWineWishlistById(myWineId, principalDetail.getUsername());
+        myWineService.deleteMyWineById(myWineId, principalDetail.getUsername());
         return ApiResponse.onSuccess("보유 와인 삭제 완료");
     }
 }

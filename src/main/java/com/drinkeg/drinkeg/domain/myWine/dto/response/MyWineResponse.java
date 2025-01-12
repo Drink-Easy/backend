@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyWineResponse {
-    private Long myWineid;
+    private Long myWineId;
 
     private Long wineId;
     private String wineName;
@@ -35,7 +35,7 @@ public class MyWineResponse {
         int period = (int) ChronoUnit.DAYS.between(purchaseDate, currentDate);
 
         return MyWineResponse.builder()
-                .myWineid(myWine.getId())
+                .myWineId(myWine.getId())
                 .wineId(wine.getId())
                 .wineName(wine.getName())
                 .wineSort(wine.getSort())

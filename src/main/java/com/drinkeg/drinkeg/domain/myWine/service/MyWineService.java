@@ -10,9 +10,11 @@ public interface MyWineService {
 
     Long saveMyWine(MyWineRequest myWineRequest, String username);
 
+    MyWineResponse getMyWineById(Long myWineId, String username);
+
     List<MyWineResponse> getMyWinesByUsername(String username);
 
     void updateMyWine(Long wineWishlistId, MyWineUpdateRequest myWineUpdateRequest, String username);
 
-    void deleteWineWishlistById(Long myWineId, String username);
+    void deleteMyWineById(Long myWineId, String username);
 }

@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface WineWishlistService {
 
-    void createWineWishlist(Long wineId, String username);
+    Long createWineWishlist(Long wineId, String username);
 
     List<WinePreviewResponse> getAllWineWishlistByMember(String username);
 
-    void deleteWineWishlistById(Long wineWishlistId, String username);
+    void deleteWineWishlist(Long wineId, String username);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface WineWishlistRepository extends JpaRepository<WineWishlist, Long>, WineWishlistRepositoryCustom {
+public interface WineWishlistRepository extends JpaRepository<WineWishlist, Long> {
 
     Optional<WineWishlist> findWineWishlistByMemberAndWine(Member member, Wine wine);
 

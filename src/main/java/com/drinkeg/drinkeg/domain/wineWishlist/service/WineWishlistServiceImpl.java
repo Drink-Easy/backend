@@ -22,7 +22,7 @@ public class WineWishlistServiceImpl implements WineWishlistService{
     private final WineRepository wineRepository;
 
     @Override
-    public void createWineWishlist(Long wineId, String username) {
+    public Long createWineWishlist(Long wineId, String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
         Wine wine = wineRepository.findById(wineId)
@@ -31,7 +31,8 @@ public class WineWishlistServiceImpl implements WineWishlistService{
         if (wineWishlistRepository.existsByMemberAndWine(member, wine))
             throw new GeneralException(ErrorStatus.WINE_WISHLIST_ALREADY_EXISTS);
 
-        wineWishlistRepository.save(WineWishlist.create(member, wine));
+        WineWishlist wineWishlist = wineWishlistRepository.save(WineWishlist.create(member, wine));
+        return wineWishlist.getId();
     }
 
     @Override
@@ -46,7 +47,7 @@ public class WineWishlistServiceImpl implements WineWishlistService{
     }
 
     @Override
-    public void deleteWineWishlistById(Long wineId, String username) {
+    public void deleteWineWishlist(Long wineId, String username) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
         Wine wine = wineRepository.findById(wineId)
@@ -55,10 +56,6 @@ public class WineWishlistServiceImpl implements WineWishlistService{
         WineWishlist wineWishlist = wineWishlistRepository.findWineWishlistByMemberAndWine(member, wine).orElseThrow(
                 () -> new GeneralException(ErrorStatus.WINE_WISHLIST_NOT_FOUND));
 
-        if (!wineWishlist.getMember().equals(member))
-            throw new GeneralException(ErrorStatus.WINE_WISHLIST_UNAUTHORIZED);
-
         wineWishlistRepository.deleteById(wineWishlist.getId());
     }
-
 }

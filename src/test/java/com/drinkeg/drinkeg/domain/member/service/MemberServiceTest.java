@@ -101,8 +101,6 @@ public class MemberServiceTest extends IntegrationTestSupport {
                         null                );
     }
 
-
-
     private Member createMember(
             String username,
             String name,
