@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MyWineRepositoryTest extends IntegrationTestSupport {
 
@@ -31,7 +30,7 @@ class MyWineRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("특정 멤버의 전체 보유와인을 최신 생성 조회한다.")
     @Test
-    void findByMemberOrderByPurchaseDate() {
+    void findByMemberOrderByCreatedAt() {
         //given
         Member member = createMember("user");
         memberRepository.save(member);
@@ -40,7 +39,7 @@ class MyWineRepositoryTest extends IntegrationTestSupport {
         MyWine myWine3 = createMyWine(member, "wine3", LocalDate.parse("2025-01-03"), 30000);
 
         //when
-        List<MyWine> myWineList = myWineRepository.findByMemberOrderByPurchaseDate(member);
+        List<MyWine> myWineList = myWineRepository.findByMemberOrderByCreatedAt(member);
 
         //then
         Assertions.assertThat(myWineList).hasSize(3)
@@ -49,13 +48,13 @@ class MyWineRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("특정 멤버의 보유 와인이 없는 경우 빈 리스트를 반환한다.")
     @Test
-    void findByMemberOrderByPurchaseDate_notExists() {
+    void findByMemberOrderByCreatedAt_notExists() {
         //given
         Member member = createMember("user");
         memberRepository.save(member);
 
         //when
-        List<MyWine> myWineList = myWineRepository.findByMemberOrderByPurchaseDate(member);
+        List<MyWine> myWineList = myWineRepository.findByMemberOrderByCreatedAt(member);
 
         //then
         assertThat(myWineList).isEqualTo(new ArrayList<>());

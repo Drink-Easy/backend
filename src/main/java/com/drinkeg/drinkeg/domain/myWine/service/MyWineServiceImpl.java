@@ -64,7 +64,7 @@ public class MyWineServiceImpl implements MyWineService{
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
         );
 
-        List<MyWine> myWineList = myWineRepository.findByMemberOrderByPurchaseDate(member);
+        List<MyWine> myWineList = myWineRepository.findByMemberOrderByCreatedAt(member);
 
         return myWineList.stream().map(MyWineResponse::of).toList();
     }
