@@ -9,6 +9,7 @@ import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -35,7 +36,8 @@ class WineControllerTest extends WineControllerTestSupport {
     void searchWineByWineName() throws Exception {
         // given
         String wineName = "와인";
-        when(wineService.searchWinesByName(wineName)).thenReturn(
+        Pageable pageable = Pageable.unpaged();
+        when(wineService.searchWinesByName(wineName, pageable)).thenReturn(
                 List.of(creatWinePreviewResponse(1L, "와인1"),
                         creatWinePreviewResponse(2L, "와인2"),
                         creatWinePreviewResponse(3L, "와인3")));
@@ -54,7 +56,8 @@ class WineControllerTest extends WineControllerTestSupport {
     void searchWineByNotExistingWineName() throws Exception {
         // given
         String wineName = "존재하지 않는 와인 이름";
-        when(wineService.searchWinesByName(wineName)).thenReturn(
+        Pageable pageable = Pageable.unpaged();
+        when(wineService.searchWinesByName(wineName, pageable)).thenReturn(
                 List.of());
         // when // then
         mockMvc.perform(get("/wine?searchName=" + wineName))
@@ -69,7 +72,8 @@ class WineControllerTest extends WineControllerTestSupport {
     void searchWineByBlankSearchWineParameter() throws Exception {
         // given
         String wineName = "";
-        when(wineService.searchWinesByName(wineName)).thenReturn(
+        Pageable pageable = Pageable.unpaged();
+        when(wineService.searchWinesByName(wineName, pageable)).thenReturn(
                 List.of(creatWinePreviewResponse(1L, "와인1"),
                         creatWinePreviewResponse(2L, "와인2"),
                         creatWinePreviewResponse(3L, "와인3")));

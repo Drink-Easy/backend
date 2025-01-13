@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -43,7 +44,7 @@ public class MyWineServiceImpl implements MyWineService{
     }
 
     @Override
-    public MyWineResponse getMyWineById(Long myWineId, String username) {
+    public MyWineResponse getMyWineById(Long myWineId, String username, LocalDate now) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
         );
@@ -54,19 +55,20 @@ public class MyWineServiceImpl implements MyWineService{
         if (!member.equals(myWine.getMember())) {
             throw new GeneralException(ErrorStatus.MY_WINE_UNAUTHORIZED);
         } else {
-            return MyWineResponse.of(myWine);
+            return MyWineResponse.of(myWine, now);
         }
     }
 
     @Override
-    public List<MyWineResponse> getMyWinesByUsername(String username) {
+    public List<MyWineResponse> getMyWinesByUsername(String username, LocalDate now) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND)
         );
 
         List<MyWine> myWineList = myWineRepository.findByMemberOrderByCreatedAt(member);
 
-        return myWineList.stream().map(MyWineResponse::of).toList();
+        return myWineList.stream()
+                .map(myWine -> MyWineResponse.of(myWine, now)).toList();
     }
 
 

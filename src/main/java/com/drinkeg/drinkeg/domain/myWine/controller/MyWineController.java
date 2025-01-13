@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class MyWineController {
     @Operation(summary = "보유 와인 조회", description = "보유 와인을 조회한다.")
     @GetMapping("/{myWineId}")
     public ApiResponse<MyWineResponse> getMyWine(@PathVariable("myWineId") Long myWineId, @AuthenticationPrincipal PrincipalDetail principalDetail){
-        MyWineResponse myWineResponse = myWineService.getMyWineById(myWineId, principalDetail.getUsername());
+        MyWineResponse myWineResponse = myWineService.getMyWineById(myWineId, principalDetail.getUsername(), LocalDate.now());
         return ApiResponse.onSuccess(myWineResponse);
     }
 
@@ -41,7 +42,7 @@ public class MyWineController {
     @GetMapping("")
     public ApiResponse<List<MyWineResponse>> getMyWineList(@AuthenticationPrincipal PrincipalDetail principalDetail){
 
-        List<MyWineResponse> myWineResponseList = myWineService.getMyWinesByUsername(principalDetail.getUsername());
+        List<MyWineResponse> myWineResponseList = myWineService.getMyWinesByUsername(principalDetail.getUsername(), LocalDate.now());
         return ApiResponse.onSuccess(myWineResponseList);
     }
 
