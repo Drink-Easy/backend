@@ -67,26 +67,26 @@ public class CommentController {
 
 
     @PatchMapping("/{commentId}/soft-delete")
-    @Operation(summary = "댓글 소프트 삭제", description = "댓글 id로 대댓글이 있는 댓글에 대해 소프트삭제(isDelete변경)")
+    @Operation(summary = "댓글 소프트 삭제", description = "댓글 소프트삭제(isDelete변경)")
     public ApiResponse<String> updateCommentStatus(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("commentId") Long commentId) {
 
         commentService.softDeleteComment(principalDetail, commentId);
 
-        return ApiResponse.onSuccess("댓글 삭제 완료");
+        return ApiResponse.onSuccess("댓글 소프트 삭제 완료");
     }
 
 
     @DeleteMapping("/{commentId}")
-    @Operation(summary = "댓글 하드 삭제", description = "댓글 id로 하드삭제 - 대댓글이 없는 경우 사용")
+    @Operation(summary = "댓글 하드 삭제", description = "댓글 하드삭제 - 사용 X")
     public ApiResponse<String> hardDeleteComment(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("commentId") Long commentId) {
 
         commentService.hardDeleteComment(principalDetail, commentId);
 
-        return ApiResponse.onSuccess("댓글 삭제 완료");
+        return ApiResponse.onSuccess("댓글 하드 삭제 완료");
     }
 
 
