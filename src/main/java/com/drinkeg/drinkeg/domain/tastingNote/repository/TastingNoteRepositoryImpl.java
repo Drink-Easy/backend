@@ -19,7 +19,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
@@ -60,16 +59,6 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .orderBy(tastingNoteNose.noseElement.asc())
                 .limit(3)
                 .fetch();
-    }
-
-    @Override
-    public Optional<TastingNote> findTastingNoteWithNoseById(Long tastingNoteId) {
-        return Optional.ofNullable(
-                queryFactory.selectFrom(tastingNote)
-                        .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
-                        .where(tastingNote.id.eq(tastingNoteId))
-                        .fetchOne()
-        );
     }
 
     @Override

@@ -11,8 +11,6 @@ import java.util.Optional;
 
 public interface TastingNoteRepositoryCustom {
 
-    Optional<TastingNote> findTastingNoteWithNoseById(Long tastingNoteId);
-
     List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort);
 
     WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId);
