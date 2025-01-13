@@ -235,6 +235,32 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("와인 아이디로 테이스팅 노트를 별점 높은순 정렬 조회한다.(페이징)")
+    @Test
+    void findTastingNoteByWineIdHighestRatingWithPaging() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+
+        TastingNote tastingNote1 = createTastingNote(member, wine, 50, 30, 20, 40, 30, 4.0f, "Review 1");
+        TastingNote tastingNote2 = createTastingNote(member, wine, 60, 35, 30, 40, 0, 3.0f, "Review 2");
+        TastingNote tastingNote3 = createTastingNote(member, wine, 40, 40, 40, 40, 60, 5.0f, "Review 3");
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
+
+        Pageable pageable = PageRequest.of(0, 2);
+        // when
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.HIGH_RATING, pageable);
+
+        // then
+        assertThat(tastingNotes).hasSize(2)
+                .extracting("rating", "review")
+                .containsExactly(
+                        tuple(5.0f, "Review 3"),
+                        tuple(4.0f, "Review 1")
+                );
+    }
+
     private TastingNote createTastingNote(Member member, Wine wine,
                                           int sugarContent, int acidity, int tannin, int body, int alcohol,
                                           float rating, String review) {

@@ -87,7 +87,6 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .fetch();
     }
 
-
     @Override
     public List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable) {
         return queryFactory.selectFrom(tastingNote)
