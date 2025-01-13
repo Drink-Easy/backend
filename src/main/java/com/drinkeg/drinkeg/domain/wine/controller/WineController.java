@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +31,9 @@ public class WineController {
     // todo: 페이징 구현하기
     @GetMapping
     @Operation(summary = "와인 검색", description = "와인 이름 또는 영어 이름으로 검색하여 와인의 기본 정보를 조회한다.")
-    public ApiResponse<List<WinePreviewResponse>> searchWine(@RequestParam(defaultValue = "") String searchName) {
+    public ApiResponse<List<WinePreviewResponse>> searchWine(@RequestParam(defaultValue = "") String searchName, Pageable pageable) {
 
-        List<WinePreviewResponse> winePreviewResponses = wineService.searchWinesByName(searchName);
+        List<WinePreviewResponse> winePreviewResponses = wineService.searchWinesByName(searchName, pageable);
 
         return ApiResponse.onSuccess(winePreviewResponses);
     }
