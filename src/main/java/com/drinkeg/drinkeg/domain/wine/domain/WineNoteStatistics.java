@@ -10,7 +10,7 @@ import java.util.List;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WineNoteStatistics {
-    private float avgSugarContent;
+    private float avgSweetness;
     private float avgAcidity;
     private float avgTannin;
     private float avgBody;
@@ -22,7 +22,7 @@ public class WineNoteStatistics {
     private String nose3;
 
     public WineNoteStatistics updateAvgStatistics(WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto) {
-        this.avgSugarContent = wineNoteStatisticsAvgDto.getAvgSweetness();
+        this.avgSweetness = wineNoteStatisticsAvgDto.getAvgSweetness();
         this.avgAcidity = wineNoteStatisticsAvgDto.getAvgAcidity();
         this.avgTannin = wineNoteStatisticsAvgDto.getAvgTannin();
         this.avgBody = wineNoteStatisticsAvgDto.getAvgBody();
@@ -38,11 +38,11 @@ public class WineNoteStatistics {
         return this;
     }
 
-    public static WineNoteStatistics create(float avgSugarContent, float avgAcidity, float avgTannin,
+    public static WineNoteStatistics create(float avgSweetness, float avgAcidity, float avgTannin,
                                             float avgBody, float avgAlcohol, float avgMemberRating,
                                             String nose1, String nose2, String nose3) {
         return WineNoteStatistics.builder()
-                .avgSugarContent(avgSugarContent)
+                .avgSweetness(avgSweetness)
                 .avgAcidity(avgAcidity)
                 .avgTannin(avgTannin)
                 .avgBody(avgBody)
@@ -59,10 +59,10 @@ public class WineNoteStatistics {
     }
 
     @Builder
-    public WineNoteStatistics(float avgSugarContent, float avgAcidity, float avgTannin,
+    public WineNoteStatistics(float avgSweetness, float avgAcidity, float avgTannin,
                               float avgBody, float avgAlcohol, float avgMemberRating,
                               String nose1, String nose2, String nose3) {
-        this.avgSugarContent = avgSugarContent;
+        this.avgSweetness = avgSweetness;
         this.avgAcidity = avgAcidity;
         this.avgTannin = avgTannin;
         this.avgBody = avgBody;

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.drinkeg.drinkeg.domain.member.domain.Member.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class WineRepositoryImplTest extends IntegrationTestSupport {
@@ -177,6 +178,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
     private WineWishlist createWineWishlist(Wine wine) {
         return WineWishlist.builder()
+                .member(memberRepository.save(createMember("user1", "password", true)))
                 .wine(wine)
                 .build();
     }

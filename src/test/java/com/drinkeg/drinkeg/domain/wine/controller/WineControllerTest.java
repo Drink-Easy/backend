@@ -109,7 +109,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.result.wineInfoResponse.country").value("프랑스"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.variety").value("Merlot"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.vivinoRating").value(4.3))
-                .andExpect(jsonPath("$.result.wineInfoResponse.avgSugarContent").value(5.0))
+                .andExpect(jsonPath("$.result.wineInfoResponse.avgSweetness").value(5.0))
                 .andExpect(jsonPath("$.result.wineInfoResponse.avgAcidity").value(4.2))
                 .andExpect(jsonPath("$.result.wineInfoResponse.avgTannin").value(3.8))
                 .andExpect(jsonPath("$.result.wineInfoResponse.avgBody").value(4.0))

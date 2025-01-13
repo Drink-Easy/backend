@@ -143,7 +143,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // then
         assertThat(wine.getWineNoteStatistics())
                 .extracting(
-                        "avgSugarContent", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol", "avgMemberRating",
+                        "avgSweetness", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol", "avgMemberRating",
                         "nose1", "nose2", "nose3")
                 .containsExactly(
                         50.0f, 35.0f, 30.0f, 40.0f, 30.0f, 7.0f,
@@ -185,7 +185,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         assertThat(wineInfo.getWineInfoResponse())
                 .extracting(
                         "wineId", "name", "imageUrl", "price", "sort", "country", "variety", "vivinoRating",
-                        "avgSugarContent", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol",
+                        "avgSweetness", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol",
                         "nose1", "nose2", "nose3", "avgMemberRating", "liked"
                 )
                 .containsExactly(wine.getId(), wine.getName(), wine.getImageUrl(), wine.getPrice(), wine.getSort(),
@@ -219,7 +219,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         assertThat(wineInfo.getWineInfoResponse())
                 .extracting(
                         "wineId", "name", "imageUrl", "price", "sort", "country", "variety", "vivinoRating",
-                        "avgSugarContent", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol",
+                        "avgSweetness", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol",
                         "nose1", "nose2", "nose3", "avgMemberRating", "liked"
                 )
                 .containsExactly(wine.getId(), wine.getName(), wine.getImageUrl(), wine.getPrice(), wine.getSort(),
@@ -379,10 +379,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
     }
 
     private TastingNote createTastingNote(Member member, Wine wine,
-                                          int sugarContent, int acidity, int tannin, int body, int alcohol,
+                                          int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating) {
         return createTastingNote(member, wine, "빨간색",
-                sugarContent, acidity, tannin, body, alcohol,
+                sweetness, acidity, tannin, body, alcohol,
                 rating, "나쁘지 않아요");
     }
 
@@ -393,14 +393,14 @@ class WineServiceImplTest extends IntegrationTestSupport {
     }
 
     private TastingNote createTastingNote(Member member, Wine wine, String color,
-                                          int sugarContent, int acidity, int tannin, int body, int alcohol,
+                                          int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating, String review) {
         return TastingNote.builder()
                 .member(member)
                 .wine(wine)
                 .color(color)
                 .tasteDate(LocalDate.of(2025, 1, 6))
-                .sweetness(sugarContent)
+                .sweetness(sweetness)
                 .acidity(acidity)
                 .tannin(tannin)
                 .body(body)

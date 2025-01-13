@@ -50,7 +50,7 @@ public class WineInfoResponse {
                 .region(wine.getRegion())
                 .variety(wine.getVariety())
                 .vivinoRating(wine.getVivinoRating())
-                .avgSweetness(wine.getWineNoteStatistics().getAvgSugarContent())
+                .avgSweetness(wine.getWineNoteStatistics().getAvgSweetness())
                 .avgAcidity(wine.getWineNoteStatistics().getAvgAcidity())
                 .avgTannin(wine.getWineNoteStatistics().getAvgTannin())
                 .avgBody(wine.getWineNoteStatistics().getAvgBody())

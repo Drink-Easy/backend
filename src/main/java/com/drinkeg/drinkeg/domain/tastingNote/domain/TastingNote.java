@@ -100,11 +100,11 @@ public class TastingNote extends BaseEntity {
     }
 
     public void updateTastingNote(String color, LocalDate tasteDate,
-                                  Integer sugarContent, Integer acidity, Integer tannin, Integer body, Integer alcohol,
+                                  Integer sweetness, Integer acidity, Integer tannin, Integer body, Integer alcohol,
                                   List<String> updateNoseList, Float rating, String review){
         if (color != null) this.color = color;
         if (tasteDate != null) this.tasteDate = tasteDate;
-        if (sugarContent != null) this.sweetness = sugarContent;
+        if (sweetness != null) this.sweetness = sweetness;
         if (acidity != null) this.acidity = acidity;
         if (tannin != null) this.tannin = tannin;
         if (body != null) this.body = body;
