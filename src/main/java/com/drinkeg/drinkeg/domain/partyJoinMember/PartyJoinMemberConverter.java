@@ -1,0 +1,17 @@
+package com.drinkeg.drinkeg.domain.partyJoinMember;
+
+import com.drinkeg.drinkeg.domain.member.domain.Member;
+import com.drinkeg.drinkeg.domain.party.domain.Party;
+import com.drinkeg.drinkeg.domain.partyJoinMember.domain.PartyJoinMember;
+import org.springframework.stereotype.Component;
+
+@Component
+public class PartyJoinMemberConverter {
+    public PartyJoinMember toEntity(Member member, Party party, boolean isHost) {
+        return PartyJoinMember.builder()
+                .member(member)
+                .party(party)
+                .isHost(isHost)
+                .build();
+    }
+}
