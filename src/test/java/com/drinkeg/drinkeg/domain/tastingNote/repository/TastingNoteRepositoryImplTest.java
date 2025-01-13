@@ -13,6 +13,8 @@ import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -137,8 +139,10 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         tastingNoteRepository.save(tastingNote2);
         tastingNoteRepository.save(tastingNote3);
 
+        Pageable pageable = PageRequest.of(0, 10);
+
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.LATEST);
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.LATEST, pageable);
 
         // then
         assertThat(tastingNotes).hasSize(3)
@@ -162,8 +166,10 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
 
+        Pageable pageable = PageRequest.of(0, 10);
+
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.OLDEST);
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.OLDEST, pageable);
 
         // then
         assertThat(tastingNotes).hasSize(3)
@@ -188,8 +194,9 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
 
+        Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.HIGH_RATING);
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.HIGH_RATING, pageable);
 
         // then
         assertThat(tastingNotes).hasSize(3)
@@ -214,8 +221,9 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
 
+        Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.LOW_RATING);
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.LOW_RATING, pageable);
 
         // then
         assertThat(tastingNotes).hasSize(3)

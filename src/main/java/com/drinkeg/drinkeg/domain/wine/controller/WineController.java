@@ -61,7 +61,7 @@ public class WineController {
     public ApiResponse<List<WineReviewResponse>> showWineReview(
             @PathVariable("wineId") Long wineId,
             @RequestParam String sortType,
-            @ParameterObject @PageableDefault(size = 10, sort = "name") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
 
         List<WineReviewResponse> wineReviewResponseList = wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType), pageable);
 

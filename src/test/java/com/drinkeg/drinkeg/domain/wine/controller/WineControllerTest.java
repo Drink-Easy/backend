@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -71,7 +72,7 @@ class WineControllerTest extends WineControllerTestSupport {
     void searchWineByBlankSearchWineParameter() throws Exception {
         // given
         String wineName = "";
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("name"));
         when(wineService.searchWinesByName(wineName, pageable)).thenReturn(
                 List.of(creatWinePreviewResponse(1L, "와인1"),
                         creatWinePreviewResponse(2L, "와인2"),
@@ -158,14 +159,15 @@ class WineControllerTest extends WineControllerTestSupport {
         // given
         Long wineId = 1L;
         String sortType = "최신순";
-        when(wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType)))
+        Pageable pageable = PageRequest.of(0, 10);
+        when(wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType), pageable))
                 .thenReturn(List.of(
                         createReviewResponse("첫 번째 리뷰 내용", "user1", 5, LocalDateTime.of(2025, 1, 6, 0, 0)),
                         createReviewResponse("두 번째 리뷰 내용", "user2", 4, LocalDateTime.of(2025, 1, 6, 0, 0)),
                         createReviewResponse("세 번째 리뷰 내용", "user3", 5, LocalDateTime.of(2025, 1, 6, 0, 0))
                 ));
         // when // then
-        mockMvc.perform(get("/wine/review/{wineId}?sortType={sortType}", wineId, sortType))
+        mockMvc.perform(get("/wine/review/{wineId}?sortType={sortType}&page=0&size=10", wineId, sortType))
                 .andDo(print())
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"))

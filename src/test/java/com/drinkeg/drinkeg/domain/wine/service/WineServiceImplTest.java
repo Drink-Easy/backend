@@ -20,6 +20,7 @@ import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
@@ -49,8 +50,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
-        Pageable pageable = Pageable.unpaged();
-        
+        Pageable pageable = PageRequest.of(0, 10);
         // when
         List<WinePreviewResponse> winePreviewList1 = wineService.searchWinesByName("0년", pageable);
         List<WinePreviewResponse> winePreviewList2 = wineService.searchWinesByName("대중적", pageable);
@@ -81,7 +81,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년", "popular white sparkling wine 20 years");
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년", "red wine that manias find 30 years");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
-        Pageable pageable = Pageable.unpaged();
+        Pageable pageable = PageRequest.of(0, 10);
         // when
         List<WinePreviewResponse> winePreviewList1 = wineService.searchWinesByName("0 years", pageable);
         List<WinePreviewResponse> winePreviewList2 = wineService.searchWinesByName("popular", pageable);
@@ -111,7 +111,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
-        Pageable pageable = Pageable.unpaged();
+        Pageable pageable = PageRequest.of(0, 10);
         // when
         List<WinePreviewResponse> winePreviewList = wineService.searchWinesByName("존재하지 않는 와인 이름으로 검색하기", pageable);
         // then
@@ -262,8 +262,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
         TastingNote tastingNote5 = createTastingNote(member, wine, "빨간색",
                 50, 30, 20, 40, 30, 10, "다시 구매할 것 같아요");
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
+
+        Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<WineReviewResponse> wineReviews = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST);
+        List<WineReviewResponse> wineReviews = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST, pageable);
         // then
         assertThat(wineReviews).hasSize(5)
                 .extracting("review", "rating")
@@ -279,8 +281,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @DisplayName("잘못된 와인 아이디로 와인 리뷰를 전체 조회하면 예외가 발생한다.")
     @Test
     void findWineReviewByWrongWineId() {
-        // given // when // then
-        assertThatThrownBy(() -> wineService.getWineReviewsAndIsLikedByWineId(-1L, SortType.LATEST))
+        // given
+        Pageable pageable = PageRequest.of(0, 10);
+        // when // then
+        assertThatThrownBy(() -> wineService.getWineReviewsAndIsLikedByWineId(-1L, SortType.LATEST, pageable))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage("와인이 없습니다.");
     }

@@ -10,6 +10,7 @@ import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -191,7 +192,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
-        Pageable pageable = Pageable.unpaged();
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
         List<Wine> wineList1 = wineRepository.searchByName("0년", pageable);
@@ -223,7 +224,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년", "popular white sparkling wine 20 years");
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년", "red wine that manias find 30 years");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
-        Pageable pageable = Pageable.unpaged();
+        Pageable pageable = PageRequest.of(0, 10);
         // when
         List<Wine> wineList1 = wineRepository.searchByName("0 years", pageable);
         List<Wine> wineList2 = wineRepository.searchByName("popular", pageable);
@@ -253,7 +254,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
-        Pageable pageable = Pageable.unpaged();
+        Pageable pageable = PageRequest.of(0, 10);
         // when
         List<Wine> wineList = wineRepository.searchByName("존재하지 않는 와인 이름으로 검색하기", pageable);
         // then
