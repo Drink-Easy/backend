@@ -4,7 +4,6 @@ package com.drinkeg.drinkeg.domain.comment.domain;
 import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.party.domain.Party;
-import com.drinkeg.drinkeg.domain.recomment.domain.Recomment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +20,13 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> children = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id")
     private Party party;
 
@@ -30,8 +36,6 @@ public class Comment extends BaseEntity {
 
     private String content;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Recomment> recomments;
 
     private boolean isDeleted = false;
 
@@ -40,25 +44,30 @@ public class Comment extends BaseEntity {
                 .member(member)
                 .party(party)
                 .content(content)
+                .isDeleted(false)
                 .build();
     }
 
     @Builder
-    public Comment(Party party, Member member, String content, List<Recomment> recomments) {
+    public Comment(Comment parent, Party party, Member member, String content, boolean isDeleted) {
+        this.parent = parent;
         this.party = party;
         this.member = member;
         this.content = content;
-        this.recomments = recomments != null ? recomments : new ArrayList<>();
         this.isDeleted = false;
     }
 
-    public void addRecomment(Recomment recomment) {
-        this.recomments.add(recomment);
-        recomment.setParentComment(this); // 자식의 참조도 설정
+
+    public void addChild(Comment child) {
+        this.children.add(child);
+        child.parent = this;
     }
 
-    public void removeRecomment(Recomment recomment) {
-        this.recomments.remove(recomment);
-        recomment.setParentComment(null); // 자식의 부모 참조 제거
+    public void softDelete() {
+        this.isDeleted = true;
+    }
+
+    public void updateContent(String newContent) {
+        this.content = newContent;
     }
 }
