@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface RecommentService {
 
-    void createRecomment(Comment comment, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail);
-    void deleteRecomment(PrincipalDetail principalDetail, Long recommentId);
-    long countByCommentId(Long commentId);
+//    void createRecomment(Comment comment, RecommentRequestDTO recommentRequest, PrincipalDetail principalDetail);
+//    void deleteRecomment(PrincipalDetail principalDetail, Long recommentId);
+//    long countByCommentId(Long commentId);
 }

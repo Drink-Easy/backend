@@ -17,31 +17,31 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/recomments")
 public class RecommentController {
 
-    private final RecommentService recommentService;
-    private final CommentService commentService;
-    // 대댓글 생성
-    @PostMapping("/{commentId}")
-    @Operation(summary = "대댓글 생성", description = "PathVariable(댓글id)로 댓글 하위에 대댓글 생성")
-    public ApiResponse<String> createRecomment(
-            @AuthenticationPrincipal PrincipalDetail principalDetail,
-            @PathVariable("commentId") Long commentId,
-            @RequestBody RecommentRequestDTO recommentRequest) {
-        Comment comment = commentService.findByIdOrThrow(commentId);
-        recommentService.createRecomment(comment, recommentRequest, principalDetail);
-
-        return ApiResponse.onSuccess("대댓글 생성 완료");
-    }
-
-
-    // 대댓글 삭제
-    @DeleteMapping("/{recommentId}")
-    @Operation(summary = "대댓글 삭제", description = "대댓글 id로 대댓글 하드 삭제")
-    public ApiResponse<String> deleteRecomment(
-            @AuthenticationPrincipal PrincipalDetail principalDetail,
-            @PathVariable("recommentId") Long recommentId) {
-
-        recommentService.deleteRecomment(principalDetail, recommentId);
-
-        return ApiResponse.onSuccess("댓글 삭제 완료");
-    }
+//    private final RecommentService recommentService;
+//    private final CommentService commentService;
+//    // 대댓글 생성
+//    @PostMapping("/{commentId}")
+//    @Operation(summary = "대댓글 생성", description = "PathVariable(댓글id)로 댓글 하위에 대댓글 생성")
+//    public ApiResponse<String> createRecomment(
+//            @AuthenticationPrincipal PrincipalDetail principalDetail,
+//            @PathVariable("commentId") Long commentId,
+//            @RequestBody RecommentRequestDTO recommentRequest) {
+//        Comment comment = commentService.findByIdOrThrow(commentId);
+//        recommentService.createRecomment(comment, recommentRequest, principalDetail);
+//
+//        return ApiResponse.onSuccess("대댓글 생성 완료");
+//    }
+//
+//
+//    // 대댓글 삭제
+//    @DeleteMapping("/{recommentId}")
+//    @Operation(summary = "대댓글 삭제", description = "대댓글 id로 대댓글 하드 삭제")
+//    public ApiResponse<String> deleteRecomment(
+//            @AuthenticationPrincipal PrincipalDetail principalDetail,
+//            @PathVariable("recommentId") Long recommentId) {
+//
+//        recommentService.deleteRecomment(principalDetail, recommentId);
+//
+//        return ApiResponse.onSuccess("댓글 삭제 완료");
+//    }
 }

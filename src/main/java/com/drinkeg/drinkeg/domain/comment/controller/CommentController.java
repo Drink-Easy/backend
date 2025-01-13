@@ -54,30 +54,37 @@ public class CommentController {
         return ApiResponse.onSuccess("댓글 생성 완료");
     }
 
-
-
-
-    // 댓글 삭제 (대댓글 O)
     @PatchMapping("/{commentId}")
+    @Operation(summary = "댓글 내용 수정", description = "댓글 수정 API")
+    public ApiResponse<String> updateComment(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @PathVariable("commentId") Long commentId,
+            @RequestBody String newContent
+    ) {
+        commentService.updateComment(principalDetail, commentId, newContent);
+        return ApiResponse.onSuccess("댓글 수정 완료");
+    }
+
+
+    @PatchMapping("/{commentId}/soft-delete")
     @Operation(summary = "댓글 소프트 삭제", description = "댓글 id로 대댓글이 있는 댓글에 대해 소프트삭제(isDelete변경)")
     public ApiResponse<String> updateCommentStatus(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("commentId") Long commentId) {
 
-        commentService.updateCommentStatus(principalDetail, commentId);
+        commentService.softDeleteComment(principalDetail, commentId);
 
         return ApiResponse.onSuccess("댓글 삭제 완료");
     }
 
 
-    // 댓글 삭제 (대댓글 X)
     @DeleteMapping("/{commentId}")
     @Operation(summary = "댓글 하드 삭제", description = "댓글 id로 하드삭제 - 대댓글이 없는 경우 사용")
-    public ApiResponse<String> deleteComment(
+    public ApiResponse<String> hardDeleteComment(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("commentId") Long commentId) {
 
-        commentService.deleteComment(principalDetail, commentId);
+        commentService.hardDeleteComment(principalDetail, commentId);
 
         return ApiResponse.onSuccess("댓글 삭제 완료");
     }

@@ -1,8 +1,6 @@
 package com.drinkeg.drinkeg.domain.comment.repository;
-
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.comment.domain.QComment;
-import com.drinkeg.drinkeg.domain.recomment.domain.QRecomment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -19,36 +17,40 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     @Override
     public long countCommentsAndRecommentsByPartyId(Long partyId) {
         QComment comment = QComment.comment;
-        QRecomment recomment = QRecomment.recomment;
-
-        // 댓글 수 카운트 (삭제되지 않은 댓글만)
-        Long commentCount = queryFactory.select(comment.count())
+        Long count = queryFactory
+                .select(comment.count())
                 .from(comment)
-                .where(comment.party.id.eq(partyId)
-                        .and(comment.isDeleted.isFalse()))
+                .where(
+                        comment.party.id.eq(partyId),
+                        comment.isDeleted.isFalse()
+                )
                 .fetchOne();
-
-        // 대댓글 수 카운트 (부모 댓글의 삭제 여부와 관계없이 모든 대댓글)
-        Long recommentCount = queryFactory.select(recomment.count())
-                .from(recomment)
-                .where(recomment.comment.party.id.eq(partyId))
-                .fetchOne();
-
-        // null 방지
-        commentCount = commentCount != null ? commentCount : 0L;
-        recommentCount = recommentCount != null ? recommentCount : 0L;
-
-        return commentCount + recommentCount;
+        return count != null ? count : 0L;
     }
 
+
+//    @Override
+//    public List<Comment> findCommentsWithRecomments(Long partyId) {
+//        QComment comment = QComment.comment;
+//        QRecomment recomment = QRecomment.recomment;
+//
+//        return queryFactory.selectFrom(comment)
+//                .leftJoin(recomment).on(comment.id.eq(recomment.comment.id))
+//                .fetchJoin()
+//                .distinct()
+//                .fetch();
+//    }
     @Override
     public List<Comment> findCommentsWithRecomments(Long partyId) {
         QComment comment = QComment.comment;
-        QRecomment recomment = QRecomment.recomment;
-
-        return queryFactory.selectFrom(comment)
-                .leftJoin(recomment).on(comment.id.eq(recomment.comment.id))
-                .fetchJoin()
+        return queryFactory
+                .selectFrom(comment)
+                .leftJoin(comment.children, comment).fetchJoin()
+                .leftJoin(comment.member).fetchJoin()
+                .where(
+                        comment.party.id.eq(partyId),
+                        comment.parent.isNull() // 루트댓글ㄹ
+                )
                 .distinct()
                 .fetch();
     }

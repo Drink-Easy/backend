@@ -15,9 +15,13 @@ import lombok.NoArgsConstructor;
 public class CommentRequestDTO {
     private Long partyId;
     private String content;
+    private Long parentCommentId;
 
-
-    public static Comment toEntity(CommentRequestDTO commentRequest, Party party, Member member) {
-        return Comment.create(member, party, commentRequest.getContent());
+    public static Comment toEntity(CommentRequestDTO request, Party party, Member member, Comment parent) {
+        Comment newComment = Comment.create(member, party, request.getContent());
+        if (parent != null) {
+            parent.addChild(newComment);
+        }
+        return newComment;
     }
 }

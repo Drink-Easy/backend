@@ -6,6 +6,7 @@ import com.drinkeg.drinkeg.domain.recomment.dto.RecommentResponseDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,7 +20,7 @@ public class CommentResponseDTO {
     private String memberName;
     private String content;
     private boolean isDeleted;
-    private List<RecommentResponseDTO> recomments;
+    private List<CommentResponseDTO> children = new ArrayList<>();
     private String timeAgo;
     private String createdDate;
     //private String url;
@@ -33,25 +34,21 @@ public class CommentResponseDTO {
         this.isDeleted = isDeleted;
     }
 
-    public static CommentResponseDTO fromEntity(Comment comment, String timeAgo, String createdDate, List<RecommentResponseDTO> recommentDTOs) {
+    public static CommentResponseDTO fromEntity(Comment comment, String timeAgo, String createdDate) {
+        // isDeleted일시 content로 삭제된 댓글입니다 전달
+        String finalContent = comment.isDeleted() ? "삭제된 댓글입니다." : comment.getContent();
+
         return CommentResponseDTO.builder()
                 .id(comment.getId())
-                .memberId(comment.getMember().getId())
-                .memberName(comment.getMember().getUsername())
-                .content(comment.getContent())
+                .memberId(comment.getMember() != null ? comment.getMember().getId() : null)
+                .memberName(comment.getMember() != null ? comment.getMember().getUsername() : null)
+                .content(finalContent)
                 .isDeleted(comment.isDeleted())
                 .timeAgo(timeAgo)
                 .createdDate(createdDate)
-                .recomments(recommentDTOs)
+                .children(new ArrayList<>())
                 .build();
     }
 
-    public static Comment setDeleted(Comment comment) {
-        comment = Comment.builder()
-                .party(comment.getParty())
-                .member(comment.getMember())
-                .content("삭제된 댓글입니다.")
-                .build();
-        return comment;
-    }
+
 }

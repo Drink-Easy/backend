@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.domain.comment.service;
 
-import com.drinkeg.drinkeg.domain.recomment.repository.RecommentRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.comment.domain.Comment;
 import com.drinkeg.drinkeg.domain.comment.dto.CommentRequestDTO;
@@ -12,7 +11,7 @@ import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.service.MemberService;
 import com.drinkeg.drinkeg.domain.party.domain.Party;
 import com.drinkeg.drinkeg.domain.party.service.PartyService;
-import com.drinkeg.drinkeg.domain.recomment.dto.RecommentResponseDTO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,110 +37,122 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
     }
 
-    @Override
-    public long countCommentsAndRecommentsByPartyId(Long partyId) {
-        return commentRepository.countCommentsAndRecommentsByPartyId(partyId);
-    }
 
 
-
+    @Transactional
     @Override
     public void createComment(PrincipalDetail principalDetail, CommentRequestDTO commentRequest) {
-
-
-        // Party와 Member 존재 여부 검증
         Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
         Party party = partyService.findPartyById(commentRequest.getPartyId());
 
-        // Comment 엔티티 생성
-        Comment comment = CommentRequestDTO.toEntity(commentRequest, party, foundMember);
+        Comment parentComment = null;
+        if (commentRequest.getParentCommentId() != null) {
+            parentComment = commentRepository.findById(commentRequest.getParentCommentId())
+                    .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+        }
 
-        // 댓글 저장
-        Comment savedComment = commentRepository.save(comment);
+        Comment newComment = CommentRequestDTO.toEntity(commentRequest, party, foundMember, parentComment);
+        // parent.addChild는 내부에서 이미 처리
+
+        commentRepository.save(newComment);
     }
 
 
 
     @Override
     public List<CommentResponseDTO> getCommentsByPartyId(Long partyId) {
-        // 1. 파티 존재 여부 검증
+        // 파티 검증
         Party party = partyService.findPartyById(partyId);
 
-
-        // 2. 댓글과 대댓글 조회
-        List<Comment> comments = commentRepository.findCommentsWithRecomments(partyId);
-
-        if (comments.isEmpty()) {
+        // 루트 댓글 + 대댓글 fetch
+        List<Comment> rootComments = commentRepository.findCommentsWithRecomments(partyId);
+        if (rootComments.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // 3. DTO 매핑
-        List<CommentResponseDTO> commentDTOs = comments.stream().map(comment -> {
-            String timeAgo = calculateTimeAgo(comment.getCreatedAt());
-            String createdDate = calculateCreatedDate(comment.getCreatedAt());
+        return rootComments.stream()
+                .map(parent -> {
+                    // 부모 DTO
+                    CommentResponseDTO parentDTO = CommentResponseDTO.fromEntity(
+                            parent,
+                            calculateTimeAgo(parent.getCreatedAt()),
+                            calculateCreatedDate(parent.getCreatedAt())
+                    );
 
-            // 대댓글 매핑
-            List<RecommentResponseDTO> recommentDTOs = comment.getRecomments().stream().map(recomment -> {
-                String recommentTimeAgo = calculateTimeAgo(recomment.getCreatedAt());
-                String recommentCreatedDate = calculateCreatedDate(recomment.getCreatedAt());
-                return RecommentResponseDTO.fromEntity(recomment, recommentTimeAgo, recommentCreatedDate);
-            }).collect(Collectors.toList());
+                    // 자식 중 isDeleted=false만
+                    List<CommentResponseDTO> childDTOs = parent.getChildren().stream()
+                            .filter(child -> !child.isDeleted())
+                            .map(child -> {
+                                return CommentResponseDTO.fromEntity(
+                                        child,
+                                        calculateTimeAgo(child.getCreatedAt()),
+                                        calculateCreatedDate(child.getCreatedAt())
+                                );
+                            })
+                            .collect(Collectors.toList());
 
-            return CommentResponseDTO.fromEntity(comment, timeAgo, createdDate, recommentDTOs);
-        }).collect(Collectors.toList());
-
-        return commentDTOs;
+                    parentDTO.setChildren(childDTOs);
+                    return parentDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteComment(PrincipalDetail principalDetail, Long commentId) {
-        // 댓글 존재 여부 검증
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
-
-        // 현재 로그인 한 사용자가 작성자인지 확인
-        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
-        if(comment.getMember() == null || !comment.getMember().equals(foundMember)) {
-            throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
-        }
-
-        // 대댓글 여부 확인
-        boolean hasRecomments = !comment.getRecomments().isEmpty();
-
-        if (hasRecomments) {
-            throw new GeneralException(ErrorStatus.COMMENT_HAS_RECOMMENTS);
-        } else {
-            // 대댓글이 없는 경우: 댓글 삭제
-            commentRepository.delete(comment);
-        }
+    public long countCommentsAndRecommentsByPartyId(Long partyId) {
+        partyService.findPartyById(partyId); // 존재여부 검증
+        return commentRepository.countCommentsAndRecommentsByPartyId(partyId);
     }
 
+    @Transactional
     @Override
-    public void updateCommentStatus(PrincipalDetail principalDetail, Long commentId) {
-        // 댓글 존재 여부 검증
+    public void updateComment(PrincipalDetail principalDetail, Long commentId, String newContent) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
-        // 현재 로그인 한 사용자가 작성자인지 확인
         Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
-        if(comment.getMember() == null || !comment.getMember().equals(foundMember)) {
+        if (comment.getMember() == null || !comment.getMember().equals(foundMember)) {
             throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
         }
 
-        // 대댓글 여부 확인
-        boolean hasRecomments = !comment.getRecomments().isEmpty();
-
-        if (hasRecomments) {
-            // 대댓글이 있는 경우: isDeleted 상태를 true로 설정
-            Comment updatedComment = CommentResponseDTO.setDeleted(comment);
-            commentRepository.save(updatedComment);
-        } else {
-            throw new GeneralException(ErrorStatus.COMMENT_HAS_NO_RECOMMENTS);
+        // 소프트 딜리트된 댓글이면 수정 불가
+        if (comment.isDeleted()) {
+            throw new GeneralException(ErrorStatus.COMMENT_NOT_FOUND);
         }
+
+        //엔티티 비즈니스 로직
+        comment.updateContent(newContent);
     }
 
+    @Transactional
+    @Override
+    public void softDeleteComment(PrincipalDetail principalDetail, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
+        if (comment.getMember() == null || !comment.getMember().equals(foundMember)) {
+            throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
+        }
 
+        //엔티티 비즈니스 로직
+        comment.softDelete();
+    }
+
+    @Transactional
+    @Override
+    public void hardDeleteComment(PrincipalDetail principalDetail, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+
+        Member foundMember = memberService.loadMemberByPrincipalDetail(principalDetail);
+        if (comment.getMember() == null || !comment.getMember().equals(foundMember)) {
+            throw new GeneralException(ErrorStatus.NOT_YOUR_COMMENT);
+        }
+
+        // 대댓글 존재 시 정책 결정
+        // 여기서는 Cascade(연쇄 삭제)로 대댓글도 함께 삭제됨
+        commentRepository.delete(comment);
+    }
 
     // 시간 계산 메소드
     public String calculateTimeAgo(LocalDateTime createdAt) {

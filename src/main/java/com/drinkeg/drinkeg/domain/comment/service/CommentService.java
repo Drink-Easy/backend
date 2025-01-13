@@ -12,15 +12,17 @@ public interface CommentService {
 
     Comment findByIdOrThrow(Long commentId);
 
+    List<CommentResponseDTO> getCommentsByPartyId(Long partyId);
+
     long countCommentsAndRecommentsByPartyId(Long partyId);
 
     void createComment(PrincipalDetail principalDetail, CommentRequestDTO commentRequest);
 
-    List<CommentResponseDTO> getCommentsByPartyId(Long partyId);
+    void updateComment(PrincipalDetail principalDetail, Long commentId, String newContent);
 
-    void deleteComment(PrincipalDetail principalDetail, Long commentId);
+    void softDeleteComment(PrincipalDetail principalDetail, Long commentId);
 
-    void updateCommentStatus(PrincipalDetail principalDetail, Long commentId);
+    void hardDeleteComment(PrincipalDetail principalDetail, Long commentId);
 
     String calculateTimeAgo(LocalDateTime createdAt);
 
