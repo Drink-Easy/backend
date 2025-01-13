@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AppleProvider {
 
-    @Value("${apple.client-id}")
+    @Value("${spring.servlet.social-login.provider.apple.client-id}")
     private String clientId;
     private final AppleAuthClient appleClient;
 

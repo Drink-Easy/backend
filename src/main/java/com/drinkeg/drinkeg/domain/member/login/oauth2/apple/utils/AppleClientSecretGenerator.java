@@ -4,6 +4,7 @@ package com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,11 +21,11 @@ public class AppleClientSecretGenerator {
 
     private final ApplePrivateKeyGenerator applePrivateKeyGenerator;
 
-    @Value("${apple.key-id}")
+    @Value("${spring.servlet.social-login.provider.apple.key-id}")
     private String keyId;
-    @Value("${apple.team-id}")
+    @Value("${spring.servlet.social-login.provider.apple.team-id}")
     private String teamId;
-    @Value("${apple.client-id}")
+    @Value("${spring.servlet.social-login.provider.apple.client-id}")
     private String clientId;
 
     public String generateClientSecret() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
