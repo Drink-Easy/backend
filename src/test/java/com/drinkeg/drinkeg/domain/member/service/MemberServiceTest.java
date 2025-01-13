@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.domain.member.service;
 import com.drinkeg.drinkeg.IntegrationTestSupport;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.dto.MemberInfoResponse;
+import com.drinkeg.drinkeg.domain.member.dto.MemberUpdateRequest;
 import com.drinkeg.drinkeg.domain.member.enums.Provider;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
@@ -76,7 +77,7 @@ public class MemberServiceTest extends IntegrationTestSupport {
     void memberInfoResponse_is_null_Test(){
 
         //given
-          Member member2 = memberRepository.save(createMember("user1","주민영","44azaz@naver.com","광주","Kakao", true ,null));
+        Member member2 = memberRepository.save(createMember("user1","주민영","44azaz@naver.com","광주","Kakao", true ,null));
 
         //when
         MemberInfoResponse memberInfoResponse = memberService.showMemberInfo("user1");
@@ -98,7 +99,41 @@ public class MemberServiceTest extends IntegrationTestSupport {
                         "광주",
                         "Kakao",
                         true,
-                        null                );
+                        null );
+    }
+
+    @Test
+    @DisplayName("회원 정보가 정상적으로 업데이트된다.")
+    void updateMemberInfo_success() {
+        // Given
+        String username = "itsme";
+        Member existingMember = memberRepository.save(createMember("itsme","주민영","44azaz@naver.com","광주","Kakao", true ,null));
+
+
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("윤다영", "서울");
+
+        // When
+        memberService.updateMemberInfo(updateRequest, username);
+
+        // Then
+        Member updatedMember = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new AssertionError("Member not found after update"));
+
+        assertThat(updatedMember.getName()).isEqualTo("윤다영");
+        assertThat(updatedMember.getRegion()).isEqualTo("서울");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원 업데이트 시 MEMBER_NOT_FOUND 에러가 발생한다.")
+    void updateMemberInfo_fail() {
+        // Given
+        String username = "nonexistent";
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("윤다영", "서울");
+
+        // When & Then
+        assertThatThrownBy(() -> memberService.updateMemberInfo(updateRequest, username))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
     }
 
     private Member createMember(

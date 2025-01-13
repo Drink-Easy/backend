@@ -54,8 +54,8 @@ public class JoinService {
 
 
     @Transactional(readOnly = true)
-    public boolean isDuplicatedUsername(UsernameCheckRequest usernameCheckRequest) {
+    public boolean isDuplicatedEmail(UsernameCheckRequest usernameCheckRequest) {
 
-        return memberRepository.existsByUsername(usernameCheckRequest.username());
+        return memberRepository.existsByEmail(usernameCheckRequest.username());
     }
 }

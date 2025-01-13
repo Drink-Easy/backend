@@ -15,4 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberUpdateRequest {
     private String name;
     private String region;
+
+
+    public MemberUpdateRequest of(String name, String region){
+        return MemberUpdateRequest.builder()
+                .name(name)
+                .region(region)
+                .build();
+    }
 }

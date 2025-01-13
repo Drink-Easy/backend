@@ -1,5 +1,7 @@
 package com.drinkeg.drinkeg.domain.member.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,10 +16,13 @@ import java.util.List;
 @NoArgsConstructor
 public class MemberRequest {
 
+    @NotBlank
     private String name;
 
+    @NotNull
     private Boolean isNewbie;
 
+    @NotNull
     private Long monthPrice;
 
     @Builder.Default
@@ -29,5 +34,6 @@ public class MemberRequest {
     @Builder.Default
     private List<String> wineVariety = new ArrayList<>();
 
+    @NotBlank
     private String region;
 }

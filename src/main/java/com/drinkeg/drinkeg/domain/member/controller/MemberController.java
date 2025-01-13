@@ -43,7 +43,7 @@ public class MemberController {
 
     @PatchMapping("/member")
     @Operation(summary = "사용자 초기 정보 추가", description = "첫 로그인 여부에 따라 isFirst 속성이 true인 경우 사용자 초기 정보를 추가합니다.")
-    public ApiResponse<String> addMemberDetail(@RequestBody MemberRequest memberRequest, @AuthenticationPrincipal PrincipalDetail principalDetail) {
+    public ApiResponse<String> addMemberDetail(@Valid @RequestBody MemberRequest memberRequest, @AuthenticationPrincipal PrincipalDetail principalDetail) {
 
         joinService.addMemberDetail(memberRequest, principalDetail.getUsername());
         return ApiResponse.onSuccess("사용자 초기 정보 추가 완료");
@@ -72,7 +72,7 @@ public class MemberController {
     @PostMapping("/join/check")
     @Operation(summary = "이메일 중복 검사", description = "이메일(username) 중복 여부를 반환합니다.")
     public ApiResponse<Boolean> checkUsername(@RequestBody UsernameCheckRequest usernameCheckRequest) {
-        return ApiResponse.onSuccess(joinService.isDuplicatedUsername(usernameCheckRequest));
+        return ApiResponse.onSuccess(joinService.isDuplicatedEmail(usernameCheckRequest));
     }
 
     @PostMapping(value = "/member/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
