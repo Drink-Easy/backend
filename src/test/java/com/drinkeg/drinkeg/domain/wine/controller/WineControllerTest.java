@@ -276,7 +276,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .country("프랑스")
                 .variety("Merlot")
                 .vivinoRating(4.3f)
-                .avgSugarContent(5.0f)
+                .avgSweetness(5.0f)
                 .avgAcidity(4.2f)
                 .avgTannin(3.8f)
                 .avgBody(4.0f)

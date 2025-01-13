@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.tastingNote.domain;
 
 import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,7 +34,7 @@ public class TastingNote extends BaseEntity {
 
     private LocalDate tasteDate;
 
-    private int sugarContent;
+    private int sweetness;
     private int acidity;
     private int tannin;
     private int body;
@@ -49,13 +49,13 @@ public class TastingNote extends BaseEntity {
 
     @Builder
     public TastingNote(Member member, Wine wine, String color, LocalDate tasteDate,
-                       int sugarContent, int acidity, int tannin, int body, int alcohol,
+                       int sweetness, int acidity, int tannin, int body, int alcohol,
                        List<TastingNoteNose> noseList, float rating, String review) {
         this.member = member;
         this.wine = wine;
         this.color = color;
         this.tasteDate = tasteDate;
-        this.sugarContent = sugarContent;
+        this.sweetness = sweetness;
         this.acidity = acidity;
         this.tannin = tannin;
         this.body = body;
@@ -72,7 +72,7 @@ public class TastingNote extends BaseEntity {
                 .wine(wine)
                 .color(tastingNoteRequest.getColor())
                 .tasteDate(tastingNoteRequest.getTasteDate())
-                .sugarContent(tastingNoteRequest.getSugarContent())
+                .sweetness(tastingNoteRequest.getSweetness())
                 .acidity(tastingNoteRequest.getAcidity())
                 .tannin(tastingNoteRequest.getTannin())
                 .body(tastingNoteRequest.getBody())
@@ -104,7 +104,7 @@ public class TastingNote extends BaseEntity {
                                   List<String> updateNoseList, Float rating, String review){
         if (color != null) this.color = color;
         if (tasteDate != null) this.tasteDate = tasteDate;
-        if (sugarContent != null) this.sugarContent = sugarContent;
+        if (sugarContent != null) this.sweetness = sugarContent;
         if (acidity != null) this.acidity = acidity;
         if (tannin != null) this.tannin = tannin;
         if (body != null) this.body = body;

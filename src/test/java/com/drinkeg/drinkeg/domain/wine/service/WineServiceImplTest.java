@@ -400,7 +400,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .wine(wine)
                 .color(color)
                 .tasteDate(LocalDate.of(2025, 1, 6))
-                .sugarContent(sugarContent)
+                .sweetness(sugarContent)
                 .acidity(acidity)
                 .tannin(tannin)
                 .body(body)

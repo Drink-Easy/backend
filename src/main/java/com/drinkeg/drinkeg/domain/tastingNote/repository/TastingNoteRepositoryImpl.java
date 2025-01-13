@@ -37,7 +37,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     public WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId) {
         return queryFactory
                 .select(Projections.fields(WineNoteStatisticsAvgDto.class,
-                        tastingNote.sugarContent.avg().coalesce(0.0).floatValue().as("avgSugarContent"),
+                        tastingNote.sweetness.avg().coalesce(0.0).floatValue().as("avgSugarContent"),
                         tastingNote.acidity.avg().coalesce(0.0).floatValue().as("avgAcidity"),
                         tastingNote.tannin.avg().coalesce(0.0).floatValue().as("avgTannin"),
                         tastingNote.body.avg().coalesce(0.0).floatValue().as("avgBody"),

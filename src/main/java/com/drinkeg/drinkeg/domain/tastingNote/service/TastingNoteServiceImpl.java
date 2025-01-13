@@ -6,8 +6,8 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountR
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
@@ -94,7 +94,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         }
 
         foundNote.updateTastingNote(t.getColor(), t.getTastingDate(),
-                t.getSugarContent(), t.getAcidity(), t.getTannin(), t.getBody(), t.getAlcohol(),
+                t.getSweetness(), t.getAcidity(), t.getTannin(), t.getBody(), t.getAlcohol(),
                 t.getUpdateNoseList(), t.getRating(), t.getReview());
     }
 

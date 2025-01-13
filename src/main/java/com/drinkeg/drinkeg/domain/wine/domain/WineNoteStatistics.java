@@ -22,7 +22,7 @@ public class WineNoteStatistics {
     private String nose3;
 
     public WineNoteStatistics updateAvgStatistics(WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto) {
-        this.avgSugarContent = wineNoteStatisticsAvgDto.getAvgSugarContent();
+        this.avgSugarContent = wineNoteStatisticsAvgDto.getAvgSweetness();
         this.avgAcidity = wineNoteStatisticsAvgDto.getAvgAcidity();
         this.avgTannin = wineNoteStatisticsAvgDto.getAvgTannin();
         this.avgBody = wineNoteStatisticsAvgDto.getAvgBody();

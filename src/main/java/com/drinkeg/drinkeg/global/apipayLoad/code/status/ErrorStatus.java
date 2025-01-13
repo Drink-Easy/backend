@@ -18,9 +18,6 @@ public enum ErrorStatus implements BaseCode {
     TASTING_NOTE_FORBIDDEN(HttpStatus.FORBIDDEN, "NOTE4002", "본인의 노트가 아닙니다."),
     SORT_NOT_FOUND(HttpStatus.FORBIDDEN, "NOTE4003", "옳바른 와인 종류가 아닙니다."),
 
-    // WineNote Error
-    WINE_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_NOTE4001", "와인 노트가 없습니다."),
-
     // Party Error
     PARTY_NOT_FOUND(HttpStatus.NOT_FOUND, "PARTY4001", "모임이 없습니다."),
     INVALID_PARTY_REQUEST(HttpStatus.BAD_REQUEST, "PARTY4002", "모든 모임 정보가 입력되지 않았습니다."),

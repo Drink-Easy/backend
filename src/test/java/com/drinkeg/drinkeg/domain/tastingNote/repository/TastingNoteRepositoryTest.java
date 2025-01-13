@@ -57,7 +57,7 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
                 .member(member)
                 .review(review)
                 .color("레드")
-                .sugarContent(50)
+                .sweetness(50)
                 .acidity(30)
                 .tannin(20)
                 .body(40)
@@ -67,14 +67,14 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
     }
 
     private TastingNote createTastingNote(Member member, Wine wine,
-                                          int sugarContent, int acidity, int tannin, int body, int alcohol,
+                                          int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating) {
         return TastingNote.builder()
                 .member(member)
                 .wine(wine)
                 .color("빨간색")
                 .tasteDate(LocalDate.of(2025, 1, 6))
-                .sugarContent(sugarContent)
+                .sweetness(sweetness)
                 .acidity(acidity)
                 .tannin(tannin)
                 .body(body)

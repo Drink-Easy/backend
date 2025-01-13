@@ -312,7 +312,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
         // given
         Long myWineId = 1L;
 
-        // when
+        // when // then
         mockMvc.perform(MockMvcRequestBuilders.delete("/my-wine/{id}", myWineId)
                         .with(csrf()))
                 .andDo(print())
@@ -321,7 +321,6 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
                 .andExpect(jsonPath("$.message").value("OK"))
                 .andExpect(jsonPath("$.result").value("보유 와인 삭제 완료"));
 
-        // then
         verify(myWineService).deleteMyWineById(eq(myWineId), eq("user"));
     }
 

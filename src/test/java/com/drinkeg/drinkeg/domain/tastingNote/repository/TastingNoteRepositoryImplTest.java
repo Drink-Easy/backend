@@ -52,7 +52,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineNoteStatisticsByWineId(wine.getId());
         // then
         assertThat(wineNoteStatisticsAvgDto).extracting(
-                        "avgSugarContent", "avgAcidity", "avgTannin",
+                        "avgSweetness", "avgAcidity", "avgTannin",
                         "avgBody", "avgAlcohol", "avgMemberRating")
                 .containsExactly(50.0f, 35.0f, 30.0f, 40.0f, 30.0f, 7.0f);
     }
@@ -67,7 +67,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineNoteStatisticsByWineId(wine.getId());
         // then
         assertThat(wineNoteStatisticsAvgDto).extracting(
-                        "avgSugarContent", "avgAcidity", "avgTannin",
+                        "avgSweetness", "avgAcidity", "avgTannin",
                         "avgBody", "avgAlcohol", "avgMemberRating")
                 .containsExactly(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     }
@@ -228,14 +228,14 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
     }
 
     private TastingNote createTastingNote(Member member, Wine wine,
-                                          int sugarContent, int acidity, int tannin, int body, int alcohol,
+                                          int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating, String review) {
         return TastingNote.builder()
                 .member(member)
                 .wine(wine)
                 .color("빨간색")
                 .tasteDate(LocalDate.of(2025, 1, 6))
-                .sugarContent(sugarContent)
+                .sweetness(sweetness)
                 .acidity(acidity)
                 .tannin(tannin)
                 .body(body)
@@ -245,14 +245,14 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
     }
 
     private TastingNote createTastingNote(Member member, Wine wine,
-                                          int sugarContent, int acidity, int tannin, int body, int alcohol,
+                                          int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating) {
         return TastingNote.builder()
                 .member(member)
                 .wine(wine)
                 .color("빨간색")
                 .tasteDate(LocalDate.of(2025, 1, 6))
-                .sugarContent(sugarContent)
+                .sweetness(sweetness)
                 .acidity(acidity)
                 .tannin(tannin)
                 .body(body)

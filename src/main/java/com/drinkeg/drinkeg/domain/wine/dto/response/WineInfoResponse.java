@@ -24,7 +24,7 @@ public class WineInfoResponse {
     private String variety;
     private float vivinoRating;
 
-    private float avgSugarContent;
+    private float avgSweetness;
     private float avgAcidity;
     private float avgTannin;
     private float avgBody;
@@ -50,7 +50,7 @@ public class WineInfoResponse {
                 .region(wine.getRegion())
                 .variety(wine.getVariety())
                 .vivinoRating(wine.getVivinoRating())
-                .avgSugarContent(wine.getWineNoteStatistics().getAvgSugarContent())
+                .avgSweetness(wine.getWineNoteStatistics().getAvgSugarContent())
                 .avgAcidity(wine.getWineNoteStatistics().getAvgAcidity())
                 .avgTannin(wine.getWineNoteStatistics().getAvgTannin())
                 .avgBody(wine.getWineNoteStatistics().getAvgBody())
@@ -65,7 +65,7 @@ public class WineInfoResponse {
     @Builder
     public WineInfoResponse(
             Long wineId, String name, String nameEng, String imageUrl, int price, String sort, String country, String region,
-            String variety, float vivinoRating, float avgSugarContent, float avgAcidity, float avgTannin, float avgBody,
+            String variety, float vivinoRating, float avgSweetness, float avgAcidity, float avgTannin, float avgBody,
             float avgAlcohol, String nose1, String nose2, String nose3, float avgMemberRating, boolean liked) {
 
         this.wineId = wineId;
@@ -79,7 +79,7 @@ public class WineInfoResponse {
         this.variety = variety;
         this.vivinoRating = vivinoRating;
 
-        this.avgSugarContent = avgSugarContent;
+        this.avgSweetness = avgSweetness;
         this.avgAcidity = avgAcidity;
         this.avgTannin = avgTannin;
         this.avgBody = avgBody;

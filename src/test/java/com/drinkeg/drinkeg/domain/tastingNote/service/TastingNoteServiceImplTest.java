@@ -6,8 +6,8 @@ import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
@@ -424,7 +424,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         assertThat(updatedNote)
                 .extracting(
                         TastingNote::getColor, TastingNote::getTasteDate,
-                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getSweetness, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
                         TastingNote::getRating, TastingNote::getReview,
                         (updateNote -> {
                             List<TastingNoteNose> noseList = updateNote.getNoseList();
@@ -457,7 +457,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         assertThat(updatedNote)
                 .extracting(
                         TastingNote::getColor, TastingNote::getTasteDate,
-                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getSweetness, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
                         TastingNote::getRating, TastingNote::getReview,
                         (updateNote -> {
                             List<TastingNoteNose> noseList = updateNote.getNoseList();
@@ -490,7 +490,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         assertThat(updatedNote)
                 .extracting(
                         TastingNote::getColor, TastingNote::getTasteDate,
-                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getSweetness, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
                         TastingNote::getRating, TastingNote::getReview,
                         (updateNote -> {
                             List<TastingNoteNose> noseList = updateNote.getNoseList();
@@ -522,7 +522,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         assertThat(updatedNote)
                 .extracting(
                         TastingNote::getColor, TastingNote::getTasteDate,
-                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getSweetness, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
                         TastingNote::getRating, TastingNote::getReview,
                         (updateNote -> {
                             List<TastingNoteNose> noseList = updateNote.getNoseList();
@@ -612,7 +612,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 .wineId(wine.getId())
                 .color("레드")
                 .tasteDate(LocalDate.parse("2025-01-01"))
-                .sugarContent(10)
+                .sweetness(10)
                 .acidity(10)
                 .tannin(10)
                 .body(10)

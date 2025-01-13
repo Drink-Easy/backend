@@ -3,17 +3,13 @@ package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import lombok.Builder;
-import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
@@ -33,7 +29,7 @@ public class TastingNoteResponse {
     private LocalDate tasteDate;
 
     // 점수 0 ~ 5
-    private int sugarContent;
+    private int sweetness;
     private int acidity;
     private int tannin;
     private int body;
@@ -48,7 +44,7 @@ public class TastingNoteResponse {
     @Builder
     public TastingNoteResponse(Long noteId, Long wineId, String wineName, String sort,
                                String country, String region, String imageUrl, String color, LocalDate tasteDate,
-                               int sugarContent, int acidity, int tannin, int body, int alcohol,
+                               int sweetness, int acidity, int tannin, int body, int alcohol,
                                List<TastingNoteNose> noseList, float rating, String review){
         this.noteId = noteId;
         this.wineId = wineId;
@@ -59,7 +55,7 @@ public class TastingNoteResponse {
         this.imageUrl = imageUrl;
         this.color = color;
         this.tasteDate = tasteDate;
-        this.sugarContent = sugarContent;
+        this.sweetness = sweetness;
         this.acidity = acidity;
         this.tannin = tannin;
         this.body = body;
@@ -82,7 +78,7 @@ public class TastingNoteResponse {
                 .imageUrl(tastingNote.getWine().getImageUrl())
                 .color(tastingNote.getColor())
                 .tasteDate(tastingNote.getTasteDate())
-                .sugarContent(tastingNote.getSugarContent())
+                .sweetness(tastingNote.getSweetness())
                 .acidity(tastingNote.getAcidity())
                 .tannin(tastingNote.getTannin())
                 .body(tastingNote.getBody())

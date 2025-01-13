@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,7 +105,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
                 .extracting("myWineId", "wineId", "wineName", "wineSort",
                         "wineArea", "wineVariety", "purchaseDate", "purchasePrice", "period")
                 .containsExactly(myWineId, wine.getId(), wine.getName(), wine.getSort(),
-                        wine.getCountry(), wine.getVariety(), LocalDate.parse("2025-01-11"), 100000, 0);
+                        wine.getCountry(), wine.getVariety(), LocalDate.parse("2025-01-11"), 100000, (int) ChronoUnit.DAYS.between(LocalDate.parse("2025-01-11"), LocalDate.now()));
     }
 
     @DisplayName("없는 보유와인을 조회하려고 하면 MY_WINE_NOT_FOUND 예외 발생")
@@ -175,8 +176,8 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         assertThat(myWines).hasSize(2)
                 .extracting("wineId", "wineName", "wineSort", "wineArea", "wineVariety", "purchaseDate", "purchasePrice", "period")
                 .containsExactly(
-                        Assertions.tuple(wine2.getId(), wine2.getName(), wine2.getSort(), wine2.getCountry(), wine2.getVariety(), LocalDate.parse("2025-01-12"), 200000, 0),
-                        Assertions.tuple(wine1.getId(), wine1.getName(), wine1.getSort(), wine1.getCountry(), wine1.getVariety(), LocalDate.parse("2025-01-11"), 100000, 0)
+                        Assertions.tuple(wine2.getId(), wine2.getName(), wine2.getSort(), wine2.getCountry(), wine2.getVariety(), LocalDate.parse("2025-01-12"), 200000, (int) ChronoUnit.DAYS.between(LocalDate.parse("2025-01-12"), LocalDate.now())),
+                        Assertions.tuple(wine1.getId(), wine1.getName(), wine1.getSort(), wine1.getCountry(), wine1.getVariety(), LocalDate.parse("2025-01-11"), 100000, (int) ChronoUnit.DAYS.between(LocalDate.parse("2025-01-11"), LocalDate.now()))
                 );
     }
 
