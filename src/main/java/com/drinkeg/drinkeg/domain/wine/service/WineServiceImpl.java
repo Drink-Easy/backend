@@ -82,11 +82,11 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType sortType){
+    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType sortType, Pageable pageable){
         if (!wineRepository.existsById(wineId))
             throw new GeneralException(ErrorStatus.WINE_NOT_FOUND);
 
-        List<TastingNote> tastingNoteList = tastingNoteRepository.findAllTastingNoteBy(wineId, sortType);
+        List<TastingNote> tastingNoteList = tastingNoteRepository.findAllTastingNoteBy(wineId, sortType, pageable);
 
         return tastingNoteList.stream()
                 .map(WineReviewResponse::of)

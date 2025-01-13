@@ -47,6 +47,7 @@ public class WineController {
     public ApiResponse<WineWithThreeReviewsResponse> findWineById(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
             @PathVariable("wineId") Long wineId) {
+
         WineWithThreeReviewsResponse wineWithThreeReviewsResponse =
                 wineService.getWineInfoWithThreeReviews(wineId, principalDetail.getUsername());
 
@@ -59,8 +60,10 @@ public class WineController {
             " 정렬 기준(sortType)은 \"최신순\", \"오래된 순\",\" 별점 높은 순\", \"별점 낮은 순\"으로 설정할 수 있다.")
     public ApiResponse<List<WineReviewResponse>> showWineReview(
             @PathVariable("wineId") Long wineId,
-            @RequestParam String sortType) {
-        List<WineReviewResponse> wineReviewResponseList = wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType));
+            @RequestParam String sortType,
+            @ParameterObject @PageableDefault(size = 10, sort = "name") Pageable pageable) {
+
+        List<WineReviewResponse> wineReviewResponseList = wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType), pageable);
 
         return ApiResponse.onSuccess(wineReviewResponseList);
     }

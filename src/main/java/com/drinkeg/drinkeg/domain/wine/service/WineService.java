@@ -19,7 +19,7 @@ public interface WineService {
 
     public WineWithThreeReviewsResponse getWineInfoWithThreeReviews(Long windId, String username);
 
-    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType orderByLatest);
+    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType orderByLatest, Pageable pageable);
 
     public List<HomeWineResponse> getRecommendWineList(String username);
 

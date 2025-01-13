@@ -15,6 +15,7 @@ import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,9 +89,11 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
 
 
     @Override
-    public List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort) {
+    public List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable) {
         return queryFactory.selectFrom(tastingNote)
                 .where(tastingNote.wine.id.eq(wineId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .orderBy(orderCondition(sort), tastingNote.id.desc())
                 .fetch();
     }
