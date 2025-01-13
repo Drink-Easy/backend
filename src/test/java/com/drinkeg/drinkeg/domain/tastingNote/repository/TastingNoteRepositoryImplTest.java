@@ -5,6 +5,8 @@ import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
@@ -227,6 +229,143 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("회원이 보유한 테이스팅 노트의 와인의 종류 수를 조회한다.")
+    @Test
+    void findTastingNoteSortCountsByUsername() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine1 = wineRepository.save(createWineWithSort("wine1", "레드"));
+        Wine wine2 = wineRepository.save(createWineWithSort("wine2", "화이트"));
+        Wine wine3 = wineRepository.save(createWineWithSort("wine3", "스파클링"));
+        Wine wine4 = wineRepository.save(createWineWithSort("wine4", "로제"));
+        Wine wine5 = wineRepository.save(createWineWithSort("wine5", "기타"));
+        Wine wine6 = wineRepository.save(createWineWithSort("wine6", "기타"));
+
+
+        TastingNote tastingNote1 = createTastingNote(member, wine1);
+        TastingNote tastingNote2 = createTastingNote(member, wine2);
+        TastingNote tastingNote3 = createTastingNote(member, wine3);
+        TastingNote tastingNote4 = createTastingNote(member, wine4);
+        TastingNote tastingNote5 = createTastingNote(member, wine5);
+        TastingNote tastingNote6 = createTastingNote(member, wine6);
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
+
+        // when
+        TastingNoteSortCountResponse tastingNoteSortCountsByUsername = tastingNoteRepository.findTastingNoteSortCountsByUsername(member.getUsername());
+
+        // then
+        assertThat(tastingNoteSortCountsByUsername).extracting(
+                        "totalCount", "redCount", "whiteCount",
+                        "sparklingCount", "roseCount", "etcCount")
+                .containsExactly(6, 1, 1, 1, 1, 2);
+    }
+
+    @DisplayName("회원의 테이스팅 노트가 없는 경우 모든 와인의 종류 수는 0이다.")
+    @Test
+    void findTastingNoteSortCountsByUsernameWithNoTastingNote() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+
+        // when
+        TastingNoteSortCountResponse tastingNoteSortCountsByUsername = tastingNoteRepository.findTastingNoteSortCountsByUsername(member.getUsername());
+
+        // then
+        assertThat(tastingNoteSortCountsByUsername).extracting(
+                        "totalCount", "redCount", "whiteCount",
+                        "sparklingCount", "roseCount", "etcCount")
+                .containsExactly(0, 0, 0, 0, 0, 0);
+    }
+
+    @DisplayName("회원이 보유한 테이스트를 와인 종류별로 조회한다.")
+    @Test
+    void findTastingNoteBySortAndUsernameAll() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine1 = wineRepository.save(createWineWithSort("wine1", "레드"));
+        Wine wine2 = wineRepository.save(createWineWithSort("wine2", "화이트"));
+        Wine wine3 = wineRepository.save(createWineWithSort("wine3", "스파클링"));
+        Wine wine4 = wineRepository.save(createWineWithSort("wine4", "로제"));
+        Wine wine5 = wineRepository.save(createWineWithSort("wine5", "주정강화"));
+        Wine wine6 = wineRepository.save(createWineWithSort("wine6", "기타"));
+
+        TastingNote tastingNote1 = createTastingNote(member, wine1);
+        TastingNote tastingNote2 = createTastingNote(member, wine2);
+        TastingNote tastingNote3 = createTastingNote(member, wine3);
+        TastingNote tastingNote4 = createTastingNote(member, wine4);
+        TastingNote tastingNote5 = createTastingNote(member, wine5);
+        TastingNote tastingNote6 = createTastingNote(member, wine6);
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
+
+        // when
+        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ALL, member.getUsername());
+
+        // then
+        assertThat(tastingNotes).hasSize(6)
+                .extracting("wine.sort")
+                .containsExactly("기타", "주정강화", "로제", "스파클링", "화이트", "레드");
+    }
+
+    @DisplayName("회원이 보유한 테이스트를 와인 종류별로 조회한다.")
+    @Test
+    void findTastingNoteBySortAndUsernameRed() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine1 = wineRepository.save(createWineWithSort("wine1", "레드"));
+        Wine wine2 = wineRepository.save(createWineWithSort("wine2", "화이트"));
+        Wine wine3 = wineRepository.save(createWineWithSort("wine3", "스파클링"));
+        Wine wine4 = wineRepository.save(createWineWithSort("wine4", "로제"));
+        Wine wine5 = wineRepository.save(createWineWithSort("wine5", "기타"));
+        Wine wine6 = wineRepository.save(createWineWithSort("wine6", "기타"));
+
+        TastingNote tastingNote1 = createTastingNote(member, wine1);
+        TastingNote tastingNote2 = createTastingNote(member, wine2);
+        TastingNote tastingNote3 = createTastingNote(member, wine3);
+        TastingNote tastingNote4 = createTastingNote(member, wine4);
+        TastingNote tastingNote5 = createTastingNote(member, wine5);
+        TastingNote tastingNote6 = createTastingNote(member, wine6);
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
+
+        // when
+        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.RED, member.getUsername());
+
+        // then
+        assertThat(tastingNotes).hasSize(1)
+                .extracting("wine.sort")
+                .containsExactly("레드");
+    }
+    @DisplayName("회원이 보유한 테이스트를 와인 종류별로 조회한다.")
+    @Test
+    void findTastingNoteBySortAndUsernameEtc() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine1 = wineRepository.save(createWineWithSort("wine1", "레드"));
+        Wine wine2 = wineRepository.save(createWineWithSort("wine2", "화이트"));
+        Wine wine3 = wineRepository.save(createWineWithSort("wine3", "스파클링"));
+        Wine wine4 = wineRepository.save(createWineWithSort("wine4", "로제"));
+        Wine wine5 = wineRepository.save(createWineWithSort("wine5", "주정강화"));
+        Wine wine6 = wineRepository.save(createWineWithSort("wine6", "기타"));
+
+        TastingNote tastingNote1 = createTastingNote(member, wine1);
+        TastingNote tastingNote2 = createTastingNote(member, wine2);
+        TastingNote tastingNote3 = createTastingNote(member, wine3);
+        TastingNote tastingNote4 = createTastingNote(member, wine4);
+        TastingNote tastingNote5 = createTastingNote(member, wine5);
+        TastingNote tastingNote6 = createTastingNote(member, wine6);
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
+
+        // when
+        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ETCETERA, member.getUsername());
+
+        // then
+        assertThat(tastingNotes).hasSize(2)
+                .extracting("wine.sort")
+                .containsExactly("기타", "주정강화");
+    }
+
     private TastingNote createTastingNote(Member member, Wine wine,
                                           int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating, String review) {
@@ -270,6 +409,19 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 .name(name)
                 .imageUrl("http://default.image")
                 .sort("레드")
+                .country("프랑스")
+                .region("보르도")
+                .variety("샤도네이")
+                .vivinoRating(4.1f)
+                .wineNoteStatistics(WineNoteStatistics.builder().build())
+                .price(100).build();
+    }
+
+    private Wine createWineWithSort(String name, String sort) {
+        return Wine.builder()
+                .name(name)
+                .imageUrl("http://default.image")
+                .sort(sort)
                 .country("프랑스")
                 .region("보르도")
                 .variety("샤도네이")
