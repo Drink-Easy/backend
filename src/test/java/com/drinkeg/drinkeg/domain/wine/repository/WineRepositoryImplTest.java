@@ -182,12 +182,6 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
                 .containsExactly("와인2", "와인3", "와인9", "와인1", "와인4", "와인8", "와인5", "와인6", "와인10", "와인19");
     }
 
-    private Member creatMember(String username) {
-        return Member.builder()
-                .username(username)
-                .build();
-    }
-
     @DisplayName("와인 이름을 받아서 이름을 포함하는 모든 와인을 조회한다.")
     @Test
     void searchWineByName() {
@@ -264,6 +258,30 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         List<Wine> wineList = wineRepository.searchByName("존재하지 않는 와인 이름으로 검색하기", pageable);
         // then
         assertThat(wineList).isEmpty();
+    }
+
+    @DisplayName("와인 이름을 받아서 이름을 포함하는 모든 와인을 조회한다. (페이징)")
+    @Test
+    void searchWineByNameWithPaging() {
+        // given
+        Wine wine1 = createWine("대중적인 레드 와인 10년");
+        Wine wine2 = createWine("대중적인 화이트 와인 13년");
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        Pageable pageable = Pageable.ofSize(2).withPage(1);
+        // when
+        List<Wine> wineList = wineRepository.searchByName("0년", pageable);
+        // then
+        assertThat(wineList).hasSize(1)
+                .extracting("name")
+                .containsExactly("매니아들이 찾는 레드 와인 30년");
+    }
+
+    private Member creatMember(String username) {
+        return Member.builder()
+                .username(username)
+                .build();
     }
 
     private WineWishlist createWineWishlist(Wine wine, Member member) {
