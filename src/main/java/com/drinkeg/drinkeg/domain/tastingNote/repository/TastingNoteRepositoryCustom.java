@@ -6,6 +6,8 @@ import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +15,7 @@ public interface TastingNoteRepositoryCustom {
 
     Optional<TastingNote> findTastingNoteWithNoseById(Long tastingNoteId);
 
-    List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort);
+    List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable);
 
     WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId);
 

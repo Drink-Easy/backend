@@ -14,6 +14,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,20 +31,24 @@ import java.util.List;
 public class WineController {
     private final WineService wineService;
 
-    // todo: 페이징 구현하기
     @GetMapping
-    @Operation(summary = "와인 검색", description = "와인 이름 또는 영어 이름으로 검색하여 와인의 기본 정보를 조회한다.")
-    public ApiResponse<List<WinePreviewResponse>> searchWine(@RequestParam(defaultValue = "") String searchName) {
+    @Operation(summary = "와인 검색", description = "와인 이름 또는 영어 이름으로 검색하여 와인의 기본 정보를 조회한다. " +
+            "paging 기능의 sort는 디폴트 값(name)을 사용하는 것을 권장한다.")
+    public ApiResponse<List<WinePreviewResponse>> searchWine(
+            @RequestParam(defaultValue = "") String searchName,
+            @ParameterObject @PageableDefault(size = 10, sort = "name") Pageable pageable) {
 
-        List<WinePreviewResponse> winePreviewResponses = wineService.searchWinesByName(searchName);
+        List<WinePreviewResponse> winePreviewResponses = wineService.searchWinesByName(searchName, pageable);
 
         return ApiResponse.onSuccess(winePreviewResponses);
     }
 
     @GetMapping("/{wineId}")
     @Operation(summary = "와인 상세정보 조회", description = "와인의 상세정보를 최근 리뷰 3개와 함께 반환한다. nose1,2,3 값은 존재하지 않으면 null이 들어간다.")
-    public ApiResponse<WineWithThreeReviewsResponse> findWineById(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                                              @PathVariable("wineId") Long wineId) {
+    public ApiResponse<WineWithThreeReviewsResponse> findWineById(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @PathVariable("wineId") Long wineId) {
+
         WineWithThreeReviewsResponse wineWithThreeReviewsResponse =
                 wineService.getWineInfoWithThreeReviews(wineId, principalDetail.getUsername());
 
@@ -49,10 +57,15 @@ public class WineController {
 
     // todo: 페이징 구현하기
     @GetMapping("/review/{wineId}")
-    @Operation(summary = "와인 리뷰 전체 조회", description = "선택한 와인의 리뷰들을 List에 담아서 반환한다." +
-            " 정렬 기준(sortType)은 \"최신순\", \"오래된 순\",\" 별점 높은 순\", \"별점 낮은 순\"으로 설정할 수 있다.")
-    public ApiResponse<List<WineReviewResponse>> showWineReview(@PathVariable("wineId") Long wineId, @RequestParam String sortType) {
-        List<WineReviewResponse> wineReviewResponseList = wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType));
+    @Operation(summary = "와인 리뷰 전체 조회", description = "선택한 와인의 리뷰들을 List에 담아서 반환한다. " +
+            " 정렬 기준(sortType)은 \"최신순\", \"오래된 순\",\" 별점 높은 순\", \"별점 낮은 순\"으로 설정할 수 있다. "
+    +"paging 기능의 sort는 사용하지 않고 sortType을 사용한다.")
+    public ApiResponse<List<WineReviewResponse>> showWineReview(
+            @PathVariable("wineId") Long wineId,
+            @RequestParam String sortType,
+            @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
+
+        List<WineReviewResponse> wineReviewResponseList = wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType), pageable);
 
         return ApiResponse.onSuccess(wineReviewResponseList);
     }

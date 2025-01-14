@@ -25,10 +25,9 @@ public class MyWineResponse {
 
     private int period;
 
-    public static MyWineResponse of(MyWine myWine){
+    public static MyWineResponse of(MyWine myWine, LocalDate currentDate) {
 
         Wine wine = myWine.getWine();
-        LocalDate currentDate = LocalDate.now();
         LocalDate purchaseDate = myWine.getPurchaseDate();
 
         // 기간을 일수로 계산
