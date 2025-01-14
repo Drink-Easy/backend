@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.notice.service;
 
 import com.drinkeg.drinkeg.domain.notice.domain.Notice;
 import com.drinkeg.drinkeg.domain.notice.controller.request.NoticeRequest;
+import com.drinkeg.drinkeg.domain.notice.domain.NoticeTag;
 import com.drinkeg.drinkeg.domain.notice.repository.NoticeRepository;
 import com.drinkeg.drinkeg.domain.notice.service.request.NoticeServiceRequest;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
@@ -25,7 +26,7 @@ public class AdminNoticeService {
     public void update(Long noticeId, NoticeServiceRequest request) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.NOTICE_NOT_FOUND));
-        notice.update(request.getTitle(), request.getContentUrl(), request.getTag());
+        notice.update(request.getTitle(), request.getContentUrl(), NoticeTag.of(request.getTag()));
     }
 
     public void delete(Long noticeId) {

@@ -10,4 +10,13 @@ public enum NoticeTag {
     EVENT("이벤트");
 
     private final String text;
+
+    public static NoticeTag of(String text) {
+        for (NoticeTag noticeTag : values()) {
+            if (noticeTag.text.equals(text)) {
+                return noticeTag;
+            }
+        }
+        throw new IllegalArgumentException("존재하지 않는 공지사항 태그입니다.");
+    }
 }

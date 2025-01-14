@@ -21,7 +21,7 @@ class AdminNoticeServiceTest extends IntegrationTestSupport {
     @Test
     void saveNotice() {
         // given
-        NoticeServiceRequest request = createNoticeServiceRequest("공지사항1", "https://notion/test/notice", NOTICE);
+        NoticeServiceRequest request = createNoticeServiceRequest("공지사항1", "https://notion/test/notice", "공지사항");
         // when
         Long savedId = adminNoticeService.save(request);
         // then
@@ -33,7 +33,7 @@ class AdminNoticeServiceTest extends IntegrationTestSupport {
     void updateNotice() {
         // given
         Notice notice = noticeRepository.save(createNotice("공지사항1", "https://notion/test/notice", NOTICE));
-        NoticeServiceRequest request = createNoticeServiceRequest("이벤트1", "https://notion/test/notice/updated", EVENT);
+        NoticeServiceRequest request = createNoticeServiceRequest("이벤트1", "https://notion/test/notice/updated", "이벤트");
         // when
         adminNoticeService.update(notice.getId(), request);
         // then
@@ -46,7 +46,7 @@ class AdminNoticeServiceTest extends IntegrationTestSupport {
     @Test
     void updateNoticeWithWrongId() {
         // given
-        NoticeServiceRequest request = createNoticeServiceRequest("이벤트1", "https://notion/test/notice/updated", EVENT);
+        NoticeServiceRequest request = createNoticeServiceRequest("이벤트1", "https://notion/test/notice/updated", "이벤트");
         // when // then
         assertThatThrownBy(() -> adminNoticeService.update(0L, request))
                 .isInstanceOf(GeneralException.class)
@@ -75,7 +75,18 @@ class AdminNoticeServiceTest extends IntegrationTestSupport {
                 .hasMessage("존재하지 않는 공지사항입니다.");
     }
 
-    private NoticeServiceRequest createNoticeServiceRequest(String title, String contentUrl, NoticeTag tag) {
+    @DisplayName("존재하지 않는 공지사항 태그로 공지사항 등록 요청을 하면 오류가 발생한다.")
+    @Test
+    void saveNoticeWithWrongTag() {
+        // given
+        NoticeServiceRequest request = createNoticeServiceRequest("공지사항1", "https://notion/test/notice", "테스트");
+        // when // then
+        assertThatThrownBy(() -> adminNoticeService.save(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 공지사항 태그입니다.");
+    }
+
+    private NoticeServiceRequest createNoticeServiceRequest(String title, String contentUrl, String tag) {
         return NoticeServiceRequest.builder()
                 .title(title)
                 .contentUrl(contentUrl)
