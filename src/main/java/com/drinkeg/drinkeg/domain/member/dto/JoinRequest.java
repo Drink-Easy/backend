@@ -17,8 +17,8 @@ public class JoinRequest {
 
     @NotBlank(message = "Password는 필수입니다.")
     @Pattern(
-            regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$",
-            message = "Password는 최소 하나의 영문자와 숫자를 포함해야 합니다."
+            regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=?.,<>])[A-Za-z\\d!@#$%^&*()_+\\-=?.,<>]+$",
+            message = "Password는 최소 하나의 영문자, 숫자, 특수문자를 포함해야 합니다."
     )
     private String password;
 
