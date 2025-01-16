@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.controller;
 
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.UserDTO;
+import com.drinkeg.drinkeg.MockMember;
 import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
@@ -12,12 +11,9 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.*;
 
 import java.time.LocalDate;
@@ -33,16 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TastingNoteControllerTest extends TastingNoteControllerTestSupport {
-    @BeforeEach
-    void setUp() {
-        PrincipalDetail principalDetail = new PrincipalDetail(UserDTO.builder().username("user").build());
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(principalDetail, "password", principalDetail.getAuthorities())
-        );
-    }
 
     @DisplayName("테이스팅 노트를 저장한다.")
     @Test
+    @MockMember
     void saveTastingNote() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(1L);
@@ -63,6 +53,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("없는 와인 아이디로 테이스팅 노트를 저장하면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteByWrongWineId() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(-1L);
@@ -82,6 +73,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("없는 사용자가 테이스팅 노트를 저장하면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteByWrongUser() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(1L);
@@ -101,6 +93,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 와인 아이디가 없으면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteWithoutWineId() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(null);
@@ -119,6 +112,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 색상이 없으면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteWithoutColor() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, null, LocalDate.parse("2025-01-01"),
@@ -137,6 +131,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 시음 날짜가 없으면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteWithoutTasteDate() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", null,
@@ -155,6 +150,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 당도가 없으면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteWithoutSweetness() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -173,6 +169,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 당도 값이 0 미만이면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteWithSweetnessUnder0() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -191,6 +188,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 당도 값이 100 초과이면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteWithSweetnessOver100() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -209,6 +207,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 당도, 산도, 탄닌, 바디, 알콜도 값이 모두 0이면 노트가 생성된다.")
     @Test
+    @MockMember
     void saveTastingNoteWithAllZero() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -231,6 +230,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 당도, 산도, 탄닌, 바디, 알콜도 값이 모두 100이면 노트가 생성된다.")
     @Test
+    @MockMember
     void saveTastingNoteWithAllHundred() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -253,6 +253,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 만족도가 없으면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteWithoutRating() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -271,6 +272,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 만족도 값이 0 미만이면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteWithRatingUnder0() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -289,6 +291,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 만족도 값이 5 초과이면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveTastingNoteWithRatingOver5() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -307,6 +310,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 만족도 값이 5이면 노트가 생성된다.")
     @Test
+    @MockMember
     void saveTastingNoteWithRatingEquals5() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -326,6 +330,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 nose 리스트가 없어도 노트가 생성된다.")
     @Test
+    @MockMember
     void saveTastingNoteWithoutNose() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -348,6 +353,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("테이스팅 노트 생성 시 리뷰가 없어도 노트가 생성된다.")
     @Test
+    @MockMember
     void saveTastingNoteWithoutReview() throws Exception {
         //given
         TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
@@ -370,6 +376,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("없는 사용자가 전체 테이스팅 노트를 조회하면 예외가 발생한다.")
     @Test
+    @MockMember
     void showAllTastingNoteByWrongUser() throws Exception {
         //given
         when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of("전체")), eq("user")))
@@ -387,6 +394,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(전체) 기준으로 조회한다.")
     @Test
+    @MockMember
     void showAllTastingNoteAll() throws Exception {
         // given
         String sort = "전체";
@@ -422,6 +430,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(레드) 기준으로 조회한다.")
     @Test
+    @MockMember
     void showAllTastingNoteRed() throws Exception {
         // given
         String sort = "레드";
@@ -447,6 +456,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(화이트) 기준으로 조회한다.")
     @Test
+    @MockMember
     void showAllTastingNoteWhite() throws Exception {
         // given
         String sort = "화이트";
@@ -472,6 +482,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(스파클링) 기준으로 조회한다.")
     @Test
+    @MockMember
     void showAllTastingNoteSparkling() throws Exception {
         // given
         String sort = "스파클링";
@@ -497,6 +508,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(로제) 기준으로 조회한다.")
     @Test
+    @MockMember
     void showAllTastingNoteRose() throws Exception {
         // given
         String sort = "로제";
@@ -522,6 +534,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(기타) 기준으로 조회한다.")
     @Test
+    @MockMember
     void showAllTastingNoteEtc() throws Exception {
         // given
         String sort = "기타";
@@ -549,6 +562,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(전체) 기준으로 조회할 때 테이스팅 노트가 없으면 빈 리스트를 반환한다.")
     @Test
+    @MockMember
     void showAllTastingNoteEmpty() throws Exception {
         // given
         String sort = "전체";
@@ -571,6 +585,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 특정 테이스팅 노트를 조회한다.")
     @Test
+    @MockMember
     void showTastingNote() throws Exception {
         // given
         Long noteId = 1L;
@@ -607,6 +622,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 특정 테이스팅 노트를 조회할 때 존재하지 않는 노트 아이디면 예외가 발생한다.")
     @Test
+    @MockMember
     void showTastingNoteWithoutNoteId() throws Exception {
         // given
         Long noteId = -1L;
@@ -624,6 +640,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 특정 테이스팅 노트를 조회할 때 다른 사용자의 노트 아이디면 예외가 발생한다.")
     @Test
+    @MockMember
     void showTastingNoteWithDifferentUsername() throws Exception {
         // given
         Long noteId = 1L;
@@ -640,6 +657,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 특정 테이스팅 노트를 수정한다.")
     @Test
+    @MockMember
     void updateTastingNote() throws Exception {
         // given
         Long noteId = 1L;
@@ -662,6 +680,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 특정 테이스팅 노트를 수정할 때 존재하지 않는 노트 아이디면 예외가 발생한다.")
     @Test
+    @MockMember
     void updateTastingNoteWithoutNoteId() throws Exception {
         // given
         Long noteId = -1L;
@@ -686,6 +705,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 특정 테이스팅 노트를 수정할 때 다른 사용자의 노트 아이디면 예외가 발생한다.")
     @Test
+    @MockMember
     void updateTastingNoteWithDifferentUsername() throws Exception {
         // given
         Long noteId = 1L;
@@ -710,6 +730,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("없는 사용자가 특정 테이스팅 노트를 수정하려고 하면 예외가 발생한다.")
     @Test
+    @MockMember
     void updateTastingNoteWithNoUser() throws Exception {
         // given
         Long noteId = 1L;
@@ -734,6 +755,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 특정 테이스팅 노트를 삭제한다.")
     @Test
+    @MockMember
     void deleteTastingNote() throws Exception {
         // given
         Long noteId = 1L;
@@ -752,6 +774,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 특정 테이스팅 노트를 삭제할 때 존재하지 않는 노트 아이디면 예외가 발생한다.")
     @Test
+    @MockMember
     void deleteTastingNoteWithoutNoteId() throws Exception {
         // given
         Long noteId = -1L;
@@ -771,6 +794,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("사용자의 특정 테이스팅 노트를 삭제할 때 다른 사용자의 노트 아이디면 예외가 발생한다.")
     @Test
+    @MockMember
     void deleteTastingNoteWithDifferentUsername() throws Exception {
         // given
         Long noteId = 1L;
@@ -790,6 +814,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
     @DisplayName("없는 사용자가 특정 테이스팅 노트를 삭제하려고 하면 예외가 발생한다.")
     @Test
+    @MockMember
     void deleteTastingNoteWithNoUser() throws Exception {
         // given
         Long noteId = 1L;
