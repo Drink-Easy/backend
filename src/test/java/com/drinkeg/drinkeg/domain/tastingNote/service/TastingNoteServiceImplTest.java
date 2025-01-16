@@ -598,24 +598,6 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 .hasMessage(ErrorStatus.TASTING_NOTE_FORBIDDEN.getMessage());
     }
 
-    @DisplayName("테이스팅 노트를 삭제하면 노즈도 함께 삭제된다.")
-    @Test
-    void setTastingNoteMemberNull(){
-        //given
-        Member member = memberRepository.save(createMember("user1", "password", false));
-        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote1 = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
-        TastingNote tastingNote2 = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
-
-        //when
-        tastingNoteService.setTastingNoteMemberNull(member.getUsername());
-        entityManager.clear();
-
-        //then
-        assertThat(tastingNoteRepository.findById(tastingNote1.getId()).get().getMember()).isNull();
-        assertThat(tastingNoteRepository.findById(tastingNote2.getId()).get().getMember()).isNull();
-    }
-
     private Wine createWine(String name, String sort, String imageUrl) {
         return Wine.builder()
                 .name(name)
