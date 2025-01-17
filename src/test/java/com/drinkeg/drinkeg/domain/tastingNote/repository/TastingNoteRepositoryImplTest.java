@@ -372,6 +372,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         assertThat(tastingNotes).hasSize(2)
                 .extracting("wine.sort")
                 .containsExactly("기타", "주정강화");
+    }
 
     @DisplayName("와인 아이디로 테이스팅 노트를 별점 높은순 정렬 조회한다.(페이징)")
     @Test
