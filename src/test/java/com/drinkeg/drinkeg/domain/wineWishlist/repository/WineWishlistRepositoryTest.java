@@ -102,9 +102,15 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
         //given
         Member member = createMember("user");
         memberRepository.save(member);
-        WineWishlist wineWishlist1 = createWineWishlist(member, "와인1");
-        WineWishlist wineWishlist2 = createWineWishlist(member, "와인2");
-        WineWishlist wineWishlist3 = createWineWishlist(member, "와인3");
+        Wine wine1 = createWine("와인1");
+        Wine wine2 = createWine("와인2");
+        Wine wine3 = createWine("와인3");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3));
+
+        WineWishlist wineWishlist1 = createWineWishlist(member, wine1);
+        WineWishlist wineWishlist2 = createWineWishlist(member, wine2);
+        WineWishlist wineWishlist3 = createWineWishlist(member, wine3);
+        wineWishlistRepository.saveAll(List.of(wineWishlist1, wineWishlist2, wineWishlist3));
 
         //when
         List<WineWishlist> wineWishlistsByMemberOrderByCreatedAtDesc = wineWishlistRepository.findByMemberOrderByCreatedAtDesc(member);
@@ -148,10 +154,8 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
                 .price(10000).build();
     }
 
-    private WineWishlist createWineWishlist(Member member, String wineName) {
-        Wine wine = createWine(wineName);
-        wineRepository.save(wine);
-        return wineWishlistRepository.save(WineWishlist.create(member, wine));
+    private WineWishlist createWineWishlist(Member member, Wine wine) {
+        return WineWishlist.create(member, wine);
     }
 
 }

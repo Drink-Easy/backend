@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class WineNoteStatisticsAvgDto {
-    private float avgSugarContent;
+    private float avgSweetness;
     private float avgAcidity;
     private float avgTannin;
     private float avgBody;
@@ -15,8 +15,8 @@ public class WineNoteStatisticsAvgDto {
     private float avgMemberRating;
 
     @Builder
-    public WineNoteStatisticsAvgDto(float avgSugarContent, float avgAcidity, float avgTannin, float avgBody, float avgAlcohol, float avgMemberRating) {
-        this.avgSugarContent = avgSugarContent;
+    public WineNoteStatisticsAvgDto(float avgSweetness, float avgAcidity, float avgTannin, float avgBody, float avgAlcohol, float avgMemberRating) {
+        this.avgSweetness = avgSweetness;
         this.avgAcidity = avgAcidity;
         this.avgTannin = avgTannin;
         this.avgBody = avgBody;

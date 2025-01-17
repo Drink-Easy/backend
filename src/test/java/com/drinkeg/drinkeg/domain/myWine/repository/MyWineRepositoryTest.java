@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -34,9 +35,16 @@ class MyWineRepositoryTest extends IntegrationTestSupport {
         //given
         Member member = createMember("user");
         memberRepository.save(member);
-        MyWine myWine1 = createMyWine(member, "wine1", LocalDate.parse("2025-01-01"), 10000);
-        MyWine myWine2 = createMyWine(member, "wine2", LocalDate.parse("2025-01-02"), 20000);
-        MyWine myWine3 = createMyWine(member, "wine3", LocalDate.parse("2025-01-03"), 30000);
+        Wine wine1 = createWine("wine1");
+        Wine wine2 = createWine("wine2");
+        Wine wine3 = createWine("wine3");
+        wineRepository.saveAll(Arrays.asList(wine1, wine2, wine3));
+
+        MyWine myWine1 = createMyWine(member, wine1, LocalDate.parse("2025-01-01"), 10000);
+        MyWine myWine2 = createMyWine(member, wine2, LocalDate.parse("2025-01-02"), 20000);
+        MyWine myWine3 = createMyWine(member, wine3, LocalDate.parse("2025-01-03"), 30000);
+        myWineRepository.saveAll(Arrays.asList(myWine1, myWine2, myWine3));
+
 
         //when
         List<MyWine> myWineList = myWineRepository.findByMemberOrderByCreatedAt(member);
@@ -80,9 +88,7 @@ class MyWineRepositoryTest extends IntegrationTestSupport {
                 .price(10000).build();
     }
 
-    private MyWine createMyWine(Member member, String wineName, LocalDate purchaseDate, int purchasePrice) {
-        Wine wine = createWine(wineName);
-        wineRepository.save(wine);
-        return myWineRepository.save(MyWine.create(member, wine, purchaseDate, purchasePrice));
+    private MyWine createMyWine(Member member, Wine wine, LocalDate purchaseDate, int purchasePrice) {
+        return MyWine.create(member, wine, purchaseDate, purchasePrice);
     }
 }

@@ -1,15 +1,11 @@
 package com.drinkeg.drinkeg.domain.wineWishlist.controller;
 
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.UserDTO;
+import com.drinkeg.drinkeg.MockMember;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
@@ -26,16 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class WineWishlistControllerTest extends WineWishlistControllerTestSupport {
 
-    @BeforeEach
-    void setUp() {
-        PrincipalDetail principalDetail = new PrincipalDetail(UserDTO.builder().username("user").build());
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(principalDetail, "password", principalDetail.getAuthorities())
-        );
-    }
-
     @DisplayName("위시리스트 추가 요청이 들어오면 위시리스트에 추가한다.")
     @Test
+    @MockMember
     void saveWineWishlistByWineIdAndUser() throws Exception {
         // given
         Long wineId = 1L;
@@ -54,6 +43,7 @@ public class WineWishlistControllerTest extends WineWishlistControllerTestSuppor
 
     @DisplayName("존재하지 않는 와인에 대해 위시리스트 요청이 들어오면 예외가 발생한다..")
     @Test
+    @MockMember
     void saveWineWishlistByWrongWine() throws Exception {
         // given
         when(wineWishlistService.createWineWishlist(-1L, "user"))
@@ -70,6 +60,7 @@ public class WineWishlistControllerTest extends WineWishlistControllerTestSuppor
 
     @DisplayName("이미 존재하는 위시리스트에 대해 추가 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveDuplicatedWineWishlist() throws Exception {
         // given
         GeneralException generalException = new GeneralException(ErrorStatus.WINE_WISHLIST_ALREADY_EXISTS);
@@ -87,6 +78,7 @@ public class WineWishlistControllerTest extends WineWishlistControllerTestSuppor
 
     @DisplayName("위시리스트 조회 요청이 들어오면 전체 위시리스트를 반환한다.")
     @Test
+    @MockMember
     void getWineWishlistByUser() throws Exception {
         // given
         List<WinePreviewResponse> winePreviewResponses = List.of(
@@ -130,6 +122,7 @@ public class WineWishlistControllerTest extends WineWishlistControllerTestSuppor
 
     @DisplayName("위시리스트가 없는 경우 조회 요청이 들어오면 빈 리스트를 반환한다.")
     @Test
+    @MockMember
     void getWineWishlistByUserWhenEmptyWishlist() throws Exception {
         // given
         List<WinePreviewResponse> winePreviewResponses = new ArrayList<>();
@@ -148,6 +141,7 @@ public class WineWishlistControllerTest extends WineWishlistControllerTestSuppor
 
     @DisplayName("위시리스트 삭제 요청이 들어오면 위시리스트에서 삭제한다.")
     @Test
+    @MockMember
     void deleteWineWishlistByWineIdAndUser() throws Exception {
         // given
         mockMvc.perform(delete("/wine-wishlist/{wineId}", 1L)
@@ -162,6 +156,7 @@ public class WineWishlistControllerTest extends WineWishlistControllerTestSuppor
 
     @DisplayName("존재하지 않는 와인에 대해 위시리스트 삭제 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void deleteWineWishlistByWrongWine() throws Exception {
         // given
         doThrow(new GeneralException(ErrorStatus.WINE_NOT_FOUND))

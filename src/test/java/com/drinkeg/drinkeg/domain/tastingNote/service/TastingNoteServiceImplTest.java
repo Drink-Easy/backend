@@ -6,8 +6,8 @@ import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
@@ -17,6 +17,7 @@ import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.member.domain.Member.createMember;
+import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
@@ -42,6 +44,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
     TastingNoteRepository tastingNoteRepository;
     @Autowired
     TastingNoteService tastingNoteService;
+    @Autowired
+    EntityManager entityManager;
 
     @DisplayName("테이스팅 노트를 저장한다.")
     @Test
@@ -424,7 +428,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         assertThat(updatedNote)
                 .extracting(
                         TastingNote::getColor, TastingNote::getTasteDate,
-                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getSweetness, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
                         TastingNote::getRating, TastingNote::getReview,
                         (updateNote -> {
                             List<TastingNoteNose> noseList = updateNote.getNoseList();
@@ -457,7 +461,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         assertThat(updatedNote)
                 .extracting(
                         TastingNote::getColor, TastingNote::getTasteDate,
-                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getSweetness, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
                         TastingNote::getRating, TastingNote::getReview,
                         (updateNote -> {
                             List<TastingNoteNose> noseList = updateNote.getNoseList();
@@ -490,7 +494,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         assertThat(updatedNote)
                 .extracting(
                         TastingNote::getColor, TastingNote::getTasteDate,
-                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getSweetness, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
                         TastingNote::getRating, TastingNote::getReview,
                         (updateNote -> {
                             List<TastingNoteNose> noseList = updateNote.getNoseList();
@@ -522,7 +526,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         assertThat(updatedNote)
                 .extracting(
                         TastingNote::getColor, TastingNote::getTasteDate,
-                        TastingNote::getSugarContent, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
+                        TastingNote::getSweetness, TastingNote::getAcidity, TastingNote::getTannin, TastingNote::getBody, TastingNote::getAlcohol,
                         TastingNote::getRating, TastingNote::getReview,
                         (updateNote -> {
                             List<TastingNoteNose> noseList = updateNote.getNoseList();
@@ -594,6 +598,24 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 .hasMessage(ErrorStatus.TASTING_NOTE_FORBIDDEN.getMessage());
     }
 
+    @DisplayName("회원 탈퇴 시 회원의 테이스팅 노트의 member를 null로 수정한다.")
+    @Test
+    void setTastingNoteMemberNull(){
+        //given
+        Member member = memberRepository.save(createMember("user1", "password", false));
+        Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        TastingNote tastingNote1 = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        TastingNote tastingNote2 = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+
+        //when
+        tastingNoteService.setTastingNoteMemberNull(member.getUsername());
+        entityManager.clear();
+
+        //then
+        assertThat(tastingNoteRepository.findById(tastingNote1.getId()).get().getMember()).isNull();
+        assertThat(tastingNoteRepository.findById(tastingNote2.getId()).get().getMember()).isNull();
+    }
+
     private Wine createWine(String name, String sort, String imageUrl) {
         return Wine.builder()
                 .name(name)
@@ -612,7 +634,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 .wineId(wine.getId())
                 .color("레드")
                 .tasteDate(LocalDate.parse("2025-01-01"))
-                .sugarContent(10)
+                .sweetness(10)
                 .acidity(10)
                 .tannin(10)
                 .body(10)
@@ -627,4 +649,5 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
                 List.of("오렌지", "장미", "차", "아몬드"), 3.5f, "맛있어요");
     }
+
 }

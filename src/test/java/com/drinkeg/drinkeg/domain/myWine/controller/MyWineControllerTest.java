@@ -1,18 +1,14 @@
 package com.drinkeg.drinkeg.domain.myWine.controller;
 
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.UserDTO;
+import com.drinkeg.drinkeg.MockMember;
 import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
 import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -28,16 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class MyWineControllerTest extends MyWineControllerTestSupport {
-    @BeforeEach
-    void setUp() {
-        PrincipalDetail principalDetail = new PrincipalDetail(UserDTO.builder().username("user").build());
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(principalDetail, "password", principalDetail.getAuthorities())
-        );
-    }
 
     @DisplayName("보유 와인 추가 요청이 들어오면 보유 와인에 추가한다.")
     @Test
+    @MockMember
     void saveMyWine() throws Exception {
         // given
         MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), 100000);
@@ -58,6 +48,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("와인 아이디 없이 보유 와인 추가 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveMyWineWithoutWineId() throws Exception {
         // given
         MyWineRequest myWineRequest = createMyWineRequest(null, LocalDate.parse("2025-01-01"), 100000);
@@ -75,6 +66,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("구매 일자 없이 보유 와인 추가 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveMyWineWithoutPurchaseDate() throws Exception {
         // given
         MyWineRequest myWineRequest = createMyWineRequest(1L, null, 100000);
@@ -92,6 +84,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("구매 가격 없이 보유 와인 추가 요청이 들어오면 정상적으로 저장한다.")
     @Test
+    @MockMember
     void saveMyWineWithoutPurchasePrice() throws Exception {
         // given
         MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), null);
@@ -112,6 +105,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("없는 사용자에 대해 보유 와인 추가 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveMyWineWithWrongUser() throws Exception {
         // given
         MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), 100000);
@@ -131,6 +125,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("없는 와인에 대해 보유 와인 추가 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void saveMyWineWithWrongWine() throws Exception {
         // given
         MyWineRequest myWineRequest = createMyWineRequest(-1L, LocalDate.parse("2025-01-01"), 100000);
@@ -150,6 +145,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("보유 와인 조회 요청이 들어오면 해당 보유 와인을 반환한다.")
     @Test
+    @MockMember
     void getMyWine() throws Exception {
         // given
         Long myWineId = 1L;
@@ -171,6 +167,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("없는 보유 와인 조회 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void getMyWineWithWrongMyWine() throws Exception {
         // given
         Long myWineId = -1L;
@@ -188,6 +185,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("다른 사용자의 보유 와인 조회 요청을 하면 예외가 발생한다.")
     @Test
+    @MockMember
     void getMyWineWithUnauthorized() throws Exception {
         // given
         Long myWineId = 1L;
@@ -205,6 +203,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("보유 와인 목록 조회 요청이 들어오면 전체 보유 와인을 반환한다.")
     @Test
+    @MockMember
     void getMyWineList() throws Exception {
         // given
         when(myWineService.getMyWinesByUsername(any(String.class), any(LocalDate.class)))
@@ -232,6 +231,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("없는 사용자의 보유 와인 목록 조회 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void getMyWineListWithWrongUser() throws Exception {
         // given
         when(myWineService.getMyWinesByUsername(any(String.class), any(LocalDate.class)))
@@ -248,6 +248,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("보유 와인 수정 요청이 들어오면 보유 와인을 수정한다.")
     @Test
+    @MockMember
     void updateMyWine() throws Exception {
         // given
         MyWineUpdateRequest myWineUpdateRequest = createMyWineUpdateRequest(LocalDate.parse("2025-01-01"), 100000);
@@ -269,6 +270,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("없는 보유 와인 수정 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void updateMyWineWithWrongMyWine() throws Exception {
         // given
         MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(LocalDate.parse("2025-01-01"), 100000);
@@ -289,6 +291,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("다른 사용자의 보유 와인 수정 요청을 하면 예외가 발생한다.")
     @Test
+    @MockMember
     void updateMyWineWithUnauthorized() throws Exception {
         // given
         MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(LocalDate.parse("2025-01-01"), 100000);
@@ -308,11 +311,12 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("보유 와인 삭제 요청이 들어오면 보유 와인을 삭제한다.")
     @Test
+    @MockMember
     void deleteMyWine() throws Exception {
         // given
         Long myWineId = 1L;
 
-        // when
+        // when // then
         mockMvc.perform(MockMvcRequestBuilders.delete("/my-wine/{id}", myWineId)
                         .with(csrf()))
                 .andDo(print())
@@ -321,12 +325,12 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
                 .andExpect(jsonPath("$.message").value("OK"))
                 .andExpect(jsonPath("$.result").value("보유 와인 삭제 완료"));
 
-        // then
         verify(myWineService).deleteMyWineById(eq(myWineId), eq("user"));
     }
 
     @DisplayName("없는 사용자의 보유 와인 삭제 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void deleteMyWineWithWrongUser() throws Exception {
         // given
         Long myWineId = 1L;
@@ -344,6 +348,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("없는 보유 와인 삭제 요청이 들어오면 예외가 발생한다.")
     @Test
+    @MockMember
     void deleteMyWineWithWrongMyWine() throws Exception {
         // given
         Long myWineId = -1L;
@@ -361,6 +366,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
 
     @DisplayName("다른 사용자의 보유 와인 삭제 요청을 하면 예외가 발생한다.")
     @Test
+    @MockMember
     void deleteMyWineWithUnauthorized() throws Exception {
         // given
         Long myWineId = 1L;

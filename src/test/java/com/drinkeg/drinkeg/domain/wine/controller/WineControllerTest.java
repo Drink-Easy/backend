@@ -1,12 +1,10 @@
 package com.drinkeg.drinkeg.domain.wine.controller;
 
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.UserDTO;
+import com.drinkeg.drinkeg.MockMember;
 import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
@@ -25,16 +23,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class WineControllerTest extends WineControllerTestSupport {
-    @BeforeEach
-    void setUp() {
-        PrincipalDetail principalDetail = new PrincipalDetail(UserDTO.builder().username("user").build());
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(principalDetail, "password", principalDetail.getAuthorities())
-        );
-    }
 
     @DisplayName("와인 이름으로 와인을 검색한다.")
     @Test
+    @MockMember
     void searchWineByWineName() throws Exception {
         // given
         String wineName = "와인";
@@ -54,6 +46,7 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("와인 이름으로 와인을 검색하는데 일치하는 와인이 없다면 빈 리스트를 반환한다.")
     @Test
+    @MockMember
     void searchWineByNotExistingWineName() throws Exception {
         // given
         String wineName = "존재하지 않는 와인 이름";
@@ -69,6 +62,7 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("검색 파라미터를 넣지 않으면 기본값으로 빈 문자열이 들어간다.")
     @Test
+    @MockMember
     void searchWineByBlankSearchWineParameter() throws Exception {
         // given
         String wineName = "";
@@ -89,6 +83,7 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("와인 아이디로 와인 상세 정보를 조회한다.")
     @Test
+    @MockMember
     void findWineInfoByWineId() throws Exception {
         // given
         WineWithThreeReviewsResponse wineWithThreeReviewsResponse = createWineWithThreeReviewsResponse();
@@ -113,7 +108,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.result.wineInfoResponse.country").value("프랑스"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.variety").value("Merlot"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.vivinoRating").value(4.3))
-                .andExpect(jsonPath("$.result.wineInfoResponse.avgSugarContent").value(5.0))
+                .andExpect(jsonPath("$.result.wineInfoResponse.avgSweetness").value(5.0))
                 .andExpect(jsonPath("$.result.wineInfoResponse.avgAcidity").value(4.2))
                 .andExpect(jsonPath("$.result.wineInfoResponse.avgTannin").value(3.8))
                 .andExpect(jsonPath("$.result.wineInfoResponse.avgBody").value(4.0))
@@ -138,6 +133,7 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("존재하지 않는 와인 아이디로 와인 상세 정보를 조회하면 예외를 반환한다.")
     @Test
+    @MockMember
     void findWineInfoWithWrongWineId() throws Exception {
         // given
         GeneralException generalException = new GeneralException(ErrorStatus.WINE_NOT_FOUND);
@@ -155,6 +151,7 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("와인 아이디와 정렬 기준으로 와인의 리뷰를 전체조회한다.")
     @Test
+    @MockMember
     void findWineReviewByWineIdAndSortType() throws Exception {
         // given
         Long wineId = 1L;
@@ -184,6 +181,7 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("올바르지 않은 정렬 기준으로 와인의 리뷰를 전체조회하면 예외가 반환된다.")
     @Test
+    @MockMember
     void findWineReviewByWineIdAndWrongSortType() throws Exception {
         // given
         Long wineId = 1L;
@@ -198,6 +196,7 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("멤버의 취향 정보를 기반으로 추천 와인 리스트를 조회한다.")
     @Test
+    @MockMember
     void findRecommendWineList() throws Exception {
         // given
         when(wineService.getRecommendWineList("user"))
@@ -219,6 +218,7 @@ class WineControllerTest extends WineControllerTestSupport {
 
     @DisplayName("가장 인기있는 와인 10개를 조회한다.")
     @Test
+    @MockMember
     void findMostLikedWineList() throws Exception {
         // given
         when(wineService.getMostLikedWineList())
@@ -281,7 +281,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .country("프랑스")
                 .variety("Merlot")
                 .vivinoRating(4.3f)
-                .avgSugarContent(5.0f)
+                .avgSweetness(5.0f)
                 .avgAcidity(4.2f)
                 .avgTannin(3.8f)
                 .avgBody(4.0f)

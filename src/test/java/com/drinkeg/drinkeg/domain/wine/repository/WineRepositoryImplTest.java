@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import static com.drinkeg.drinkeg.domain.member.domain.Member.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class WineRepositoryImplTest extends IntegrationTestSupport {
@@ -182,7 +183,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
                 .extracting("name")
                 .containsExactly("와인2", "와인3", "와인9", "와인1", "와인4", "와인8", "와인5", "와인6", "와인10", "와인19");
     }
-
+  
     @DisplayName("와인 이름을 받아서 이름을 포함하는 모든 와인을 조회한다.")
     @Test
     void searchWineByName() {
@@ -289,6 +290,13 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         return WineWishlist.builder()
                 .wine(wine)
                 .member(member)
+                .build();
+    }
+
+    private WineWishlist createWineWishlist(Wine wine) {
+        return WineWishlist.builder()
+                .member(memberRepository.save(createMember("user1", "password", true)))
+                .wine(wine)
                 .build();
     }
 

@@ -20,7 +20,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
@@ -38,7 +37,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     public WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId) {
         return queryFactory
                 .select(Projections.fields(WineNoteStatisticsAvgDto.class,
-                        tastingNote.sugarContent.avg().coalesce(0.0).floatValue().as("avgSugarContent"),
+                        tastingNote.sweetness.avg().coalesce(0.0).floatValue().as("avgSweetness"),
                         tastingNote.acidity.avg().coalesce(0.0).floatValue().as("avgAcidity"),
                         tastingNote.tannin.avg().coalesce(0.0).floatValue().as("avgTannin"),
                         tastingNote.body.avg().coalesce(0.0).floatValue().as("avgBody"),
@@ -61,16 +60,6 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .orderBy(tastingNoteNose.noseElement.asc())
                 .limit(3)
                 .fetch();
-    }
-
-    @Override
-    public Optional<TastingNote> findTastingNoteWithNoseById(Long tastingNoteId) {
-        return Optional.ofNullable(
-                queryFactory.selectFrom(tastingNote)
-                        .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
-                        .where(tastingNote.id.eq(tastingNoteId))
-                        .fetchOne()
-        );
     }
 
     @Override

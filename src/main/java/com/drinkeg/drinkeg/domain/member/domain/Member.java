@@ -65,7 +65,7 @@ public class Member {
 
     private boolean agreement;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<TastingNote> tastingNotes = new ArrayList<>();
 
     // CascadeType.REMOVE: Member 엔티티가 삭제되면 연관된 WineWishlist 엔티티도 삭제
