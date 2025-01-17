@@ -63,9 +63,12 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         member.updateMemberInfo(memberUpdateRequest);
+        memberRepository.save(member);
+
     }
 
     @Override
+    @Transactional
     public String uploadProfileImage(MultipartFile profileImg, String username) {
         String profileImgUrl = storageService.uploadFile(profileImg, StoragePathName.MEMBER_PROFILE);
         Member member = memberRepository.findByUsername(username)

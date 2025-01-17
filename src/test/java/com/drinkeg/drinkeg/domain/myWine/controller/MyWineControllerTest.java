@@ -149,7 +149,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     void getMyWine() throws Exception {
         // given
         Long myWineId = 1L;
-        when(myWineService.getMyWineById(myWineId, "user"))
+        when(myWineService.getMyWineById(any(Long.class), any(String.class), any(LocalDate.class)))
                 .thenReturn(createMyWineResponse(myWineId, 1L, LocalDate.parse("2025-01-01"), 100000));
 
         // when // then
@@ -171,7 +171,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     void getMyWineWithWrongMyWine() throws Exception {
         // given
         Long myWineId = -1L;
-        when(myWineService.getMyWineById(myWineId, "user"))
+        when(myWineService.getMyWineById(any(Long.class), any(String.class), any(LocalDate.class)))
                 .thenThrow(new GeneralException(ErrorStatus.MY_WINE_NOT_FOUND));
 
         // when // then
@@ -189,7 +189,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     void getMyWineWithUnauthorized() throws Exception {
         // given
         Long myWineId = 1L;
-        when(myWineService.getMyWineById(myWineId, "user"))
+        when(myWineService.getMyWineById(any(Long.class), any(String.class), any(LocalDate.class)))
                 .thenThrow(new GeneralException(ErrorStatus.MY_WINE_UNAUTHORIZED));
 
         // when // then
@@ -206,7 +206,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void getMyWineList() throws Exception {
         // given
-        when(myWineService.getMyWinesByUsername("user"))
+        when(myWineService.getMyWinesByUsername(any(String.class), any(LocalDate.class)))
                 .thenReturn(List.of(
                         createMyWineResponse(1L, 1L, LocalDate.parse("2025-01-01"), 100000),
                         createMyWineResponse(2L, 2L, LocalDate.parse("2025-01-02"), 200000)
@@ -234,7 +234,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void getMyWineListWithWrongUser() throws Exception {
         // given
-        when(myWineService.getMyWinesByUsername("user"))
+        when(myWineService.getMyWinesByUsername(any(String.class), any(LocalDate.class)))
                 .thenThrow(new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         // when // then

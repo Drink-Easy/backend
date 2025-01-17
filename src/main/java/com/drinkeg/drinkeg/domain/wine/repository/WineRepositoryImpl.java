@@ -2,17 +2,14 @@ package com.drinkeg.drinkeg.domain.wine.repository;
 
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.drinkeg.drinkeg.domain.member.domain.QMember.member;
-import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
 import static com.drinkeg.drinkeg.domain.wineWishlist.domain.QWineWishlist.wineWishlist;
 
@@ -33,12 +30,15 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     }
 
     @Override
-    public List<Wine> searchByName(String name) {
+    public List<Wine> searchByName(String name, Pageable pageable) {
         return queryFactory.selectFrom(wine)
                 .where(
                         wine.name.containsIgnoreCase(name)
                         .or(wine.nameEng.containsIgnoreCase(name))
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(wine.name.asc())
                 .fetch();
     }
 

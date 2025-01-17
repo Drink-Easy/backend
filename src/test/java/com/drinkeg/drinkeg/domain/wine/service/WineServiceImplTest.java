@@ -20,6 +20,8 @@ import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,10 +50,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
-        
+        Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<WinePreviewResponse> winePreviewList1 = wineService.searchWinesByName("0년");
-        List<WinePreviewResponse> winePreviewList2 = wineService.searchWinesByName("대중적");
+        List<WinePreviewResponse> winePreviewList1 = wineService.searchWinesByName("0년", pageable);
+        List<WinePreviewResponse> winePreviewList2 = wineService.searchWinesByName("대중적", pageable);
         // then
         assertThat(winePreviewList1).hasSize(3)
                 .extracting("name")
@@ -79,9 +81,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년", "popular white sparkling wine 20 years");
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년", "red wine that manias find 30 years");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<WinePreviewResponse> winePreviewList1 = wineService.searchWinesByName("0 years");
-        List<WinePreviewResponse> winePreviewList2 = wineService.searchWinesByName("popular");
+        List<WinePreviewResponse> winePreviewList1 = wineService.searchWinesByName("0 years", pageable);
+        List<WinePreviewResponse> winePreviewList2 = wineService.searchWinesByName("popular", pageable);
         // then
         assertThat(winePreviewList1).hasSize(3)
                 .extracting("name")
@@ -108,8 +111,9 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<WinePreviewResponse> winePreviewList = wineService.searchWinesByName("존재하지 않는 와인 이름으로 검색하기");
+        List<WinePreviewResponse> winePreviewList = wineService.searchWinesByName("존재하지 않는 와인 이름으로 검색하기", pageable);
         // then
         assertThat(winePreviewList).isEmpty();
     }
@@ -258,8 +262,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
         TastingNote tastingNote5 = createTastingNote(member, wine, "빨간색",
                 50, 30, 20, 40, 30, 10, "다시 구매할 것 같아요");
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
+
+        Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<WineReviewResponse> wineReviews = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST);
+        List<WineReviewResponse> wineReviews = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST, pageable);
         // then
         assertThat(wineReviews).hasSize(5)
                 .extracting("review", "rating")
@@ -275,8 +281,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @DisplayName("잘못된 와인 아이디로 와인 리뷰를 전체 조회하면 예외가 발생한다.")
     @Test
     void findWineReviewByWrongWineId() {
-        // given // when // then
-        assertThatThrownBy(() -> wineService.getWineReviewsAndIsLikedByWineId(-1L, SortType.LATEST))
+        // given
+        Pageable pageable = PageRequest.of(0, 10);
+        // when // then
+        assertThatThrownBy(() -> wineService.getWineReviewsAndIsLikedByWineId(-1L, SortType.LATEST, pageable))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage("와인이 없습니다.");
     }
@@ -307,6 +315,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void findMostLikedWine() {
         // given
+        Member member = memberRepository.save(createMember("user"));
         Wine wine1 = createWine("와인1", "레드", "프랑스", 10000, "피노누아", 4.5f);
         Wine wine2 = createWine("와인2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
         Wine wine3 = createWine("와인3", "로제", "스페인", 30000, "피노누아", 3.5f);
@@ -330,12 +339,12 @@ class WineServiceImplTest extends IntegrationTestSupport {
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10,
                 wine11, wine12, wine13, wine14, wine15, wine16, wine17, wine18, wine19, wine20));
         List<WineWishlist> wishlists = List.of(
-                createWineWishlist(wine1), createWineWishlist(wine1), createWineWishlist(wine2), createWineWishlist(wine2), createWineWishlist(wine2),
-                createWineWishlist(wine3), createWineWishlist(wine3), createWineWishlist(wine3), createWineWishlist(wine4), createWineWishlist(wine4),
-                createWineWishlist(wine5), createWineWishlist(wine5), createWineWishlist(wine6), createWineWishlist(wine6), createWineWishlist(wine7),
-                createWineWishlist(wine8), createWineWishlist(wine8), createWineWishlist(wine9), createWineWishlist(wine9), createWineWishlist(wine10),
-                createWineWishlist(wine11), createWineWishlist(wine12), createWineWishlist(wine13), createWineWishlist(wine14), createWineWishlist(wine15),
-                createWineWishlist(wine16), createWineWishlist(wine17), createWineWishlist(wine18), createWineWishlist(wine19), createWineWishlist(wine20));
+                createWineWishlist(wine1, member), createWineWishlist(wine1, member), createWineWishlist(wine2, member), createWineWishlist(wine2, member), createWineWishlist(wine2, member),
+                createWineWishlist(wine3, member), createWineWishlist(wine3, member), createWineWishlist(wine3, member), createWineWishlist(wine4, member), createWineWishlist(wine4, member),
+                createWineWishlist(wine5, member), createWineWishlist(wine5, member), createWineWishlist(wine6, member), createWineWishlist(wine6, member), createWineWishlist(wine7, member),
+                createWineWishlist(wine8, member), createWineWishlist(wine8, member), createWineWishlist(wine9, member), createWineWishlist(wine9, member), createWineWishlist(wine10, member),
+                createWineWishlist(wine11, member), createWineWishlist(wine12, member), createWineWishlist(wine13, member), createWineWishlist(wine14, member), createWineWishlist(wine15, member),
+                createWineWishlist(wine16, member), createWineWishlist(wine17, member), createWineWishlist(wine18, member), createWineWishlist(wine19, member), createWineWishlist(wine20, member));
         wineWishlistRepository.saveAll(wishlists);
 
         // when
@@ -348,8 +357,9 @@ class WineServiceImplTest extends IntegrationTestSupport {
     }
     // 편의 메서드
 
-    private WineWishlist createWineWishlist(Wine wine) {
+    private WineWishlist createWineWishlist(Wine wine, Member member) {
         return WineWishlist.builder()
+                .member(member)
                 .wine(wine)
                 .build();
     }

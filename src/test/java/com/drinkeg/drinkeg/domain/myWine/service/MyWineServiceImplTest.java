@@ -98,7 +98,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Long myWineId = saveMyWine(member, wine, LocalDate.parse("2025-01-11"), 100000);
 
         // when
-        MyWineResponse myWine = myWineService.getMyWineById(myWineId, member.getUsername());
+        MyWineResponse myWine = myWineService.getMyWineById(myWineId, member.getUsername(), LocalDate.of(2025, 1, 11));
 
         // then
         assertThat(myWine)
@@ -116,7 +116,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         memberRepository.save(member);
 
         // when & then
-        assertThatThrownBy(() -> myWineService.getMyWineById(-1L, member.getUsername()))
+        assertThatThrownBy(() -> myWineService.getMyWineById(-1L, member.getUsername(), LocalDate.of(2025, 1, 1)))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.MY_WINE_NOT_FOUND.getMessage());
     }
@@ -132,7 +132,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Long myWineId = saveMyWine(member, wine, LocalDate.parse("2025-01-11"), 100000);
 
         // when & then
-        assertThatThrownBy(() -> myWineService.getMyWineById(myWineId, "wrongMember"))
+        assertThatThrownBy(() -> myWineService.getMyWineById(myWineId, "wrongMember", LocalDate.of(2025, 1, 1)))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
     }
@@ -150,7 +150,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Long myWineId = saveMyWine(member1, wine, LocalDate.parse("2025-01-11"), 100000);
 
         // when & then
-        assertThatThrownBy(() -> myWineService.getMyWineById(myWineId, member2.getUsername()))
+        assertThatThrownBy(() -> myWineService.getMyWineById(myWineId, member2.getUsername(), LocalDate.of(2025, 1, 1)))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.MY_WINE_UNAUTHORIZED.getMessage());
     }
@@ -170,14 +170,14 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         saveMyWine(member, wine2, LocalDate.parse("2025-01-12"), 200000);
 
         // when
-        List<MyWineResponse> myWines = myWineService.getMyWinesByUsername(member.getUsername());
+        List<MyWineResponse> myWines = myWineService.getMyWinesByUsername(member.getUsername(), LocalDate.of(2025, 1, 12));
 
         // then
         assertThat(myWines).hasSize(2)
                 .extracting("wineId", "wineName", "wineSort", "wineArea", "wineVariety", "purchaseDate", "purchasePrice", "period")
                 .containsExactly(
-                        Assertions.tuple(wine2.getId(), wine2.getName(), wine2.getSort(), wine2.getCountry(), wine2.getVariety(), LocalDate.parse("2025-01-12"), 200000, (int) ChronoUnit.DAYS.between(LocalDate.parse("2025-01-12"), LocalDate.now())),
-                        Assertions.tuple(wine1.getId(), wine1.getName(), wine1.getSort(), wine1.getCountry(), wine1.getVariety(), LocalDate.parse("2025-01-11"), 100000, (int) ChronoUnit.DAYS.between(LocalDate.parse("2025-01-11"), LocalDate.now()))
+                        Assertions.tuple(wine2.getId(), wine2.getName(), wine2.getSort(), wine2.getCountry(), wine2.getVariety(), LocalDate.parse("2025-01-12"), 200000, 0),
+                        Assertions.tuple(wine1.getId(), wine1.getName(), wine1.getSort(), wine1.getCountry(), wine1.getVariety(), LocalDate.parse("2025-01-11"), 100000, 1)
                 );
     }
 
@@ -189,7 +189,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         memberRepository.save(member);
 
         // when
-        List<MyWineResponse> myWinesByUsername = myWineService.getMyWinesByUsername(member.getUsername());
+        List<MyWineResponse> myWinesByUsername = myWineService.getMyWinesByUsername(member.getUsername(), LocalDate.of(2025, 1, 11));
 
         // then
         assertThat(myWinesByUsername).isEmpty();
@@ -199,7 +199,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
     @Test
     void getMyWinesByWrongMember() {
         // when & then
-        assertThatThrownBy(() -> myWineService.getMyWinesByUsername("wrongMember"))
+        assertThatThrownBy(() -> myWineService.getMyWinesByUsername("wrongMember", LocalDate.of(2025, 1, 11)))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
     }

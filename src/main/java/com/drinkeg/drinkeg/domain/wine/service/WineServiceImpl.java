@@ -23,6 +23,7 @@ import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,8 +47,8 @@ public class WineServiceImpl implements WineService {
     private final StorageService storageService;
 
     @Override
-    public List<WinePreviewResponse> searchWinesByName(String searchName) {
-        List<Wine> searchWines = wineRepository.searchByName(searchName);
+    public List<WinePreviewResponse> searchWinesByName(String searchName, Pageable pageable) {
+        List<Wine> searchWines = wineRepository.searchByName(searchName, pageable);
 
         return searchWines.stream()
                 .map(WinePreviewResponse::of)
@@ -81,11 +82,11 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType sortType){
+    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType sortType, Pageable pageable){
         if (!wineRepository.existsById(wineId))
             throw new GeneralException(ErrorStatus.WINE_NOT_FOUND);
 
-        List<TastingNote> tastingNoteList = tastingNoteRepository.findAllTastingNoteBy(wineId, sortType);
+        List<TastingNote> tastingNoteList = tastingNoteRepository.findAllTastingNoteBy(wineId, sortType, pageable);
 
         return tastingNoteList.stream()
                 .map(WineReviewResponse::of)
