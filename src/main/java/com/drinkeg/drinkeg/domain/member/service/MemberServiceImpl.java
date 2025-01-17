@@ -40,7 +40,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void deleteMemberByUsername(String username){
-        eventPublisher.publishEvent(new RemoveTastingNoteMemberEvent(username));
         memberRepository.deleteByUsername(username);
     }
 

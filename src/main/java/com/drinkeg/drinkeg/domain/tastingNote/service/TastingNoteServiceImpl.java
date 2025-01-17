@@ -16,6 +16,7 @@ import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,6 +36,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     private final MemberRepository memberRepository;
 
     private final ApplicationEventPublisher eventPublisher;
+    private final EntityManager em;
 
 
     @Override
@@ -123,7 +125,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         return noteId;
     }
 
-    // 회원 탈퇴 시 탈퇴한 회원의 테이스팅 노트의 member_id null 로 설정
     @Override
     public void setTastingNoteMemberNull(String username) {
         tastingNoteRepository.updateTastingNoteMemberNull(username);
