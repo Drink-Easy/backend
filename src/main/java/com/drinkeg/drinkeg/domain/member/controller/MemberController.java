@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.member.controller;
 
 import com.drinkeg.drinkeg.domain.member.dto.*;
-import com.drinkeg.drinkeg.domain.tastingNote.service.TastingNoteService;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -24,7 +23,6 @@ public class MemberController {
 
     private final JoinService joinService;
     private final MemberService memberService;
-    private final TastingNoteService tastingNoteService;
     private final TokenService tokenService;
 
     @PostMapping("/join")
@@ -38,7 +36,6 @@ public class MemberController {
     @DeleteMapping("/member/delete")
     @Operation(summary = "사용자 탈퇴", description = "사용자 정보를 삭제합니다.")
     public ApiResponse<?> deleteProcess(@AuthenticationPrincipal PrincipalDetail principalDetail,  HttpServletResponse response){
-        tastingNoteService.setTastingNoteMemberNull(principalDetail.getUsername());
         memberService.deleteMemberByUsername(principalDetail.getUsername());
         tokenService.deleteRefreshTokenAndAccessToken(response, principalDetail.getUsername());
         return ApiResponse.onSuccess("회원 탈퇴 성공");
