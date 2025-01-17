@@ -34,7 +34,7 @@ class AdminNoticeControllerTest extends NoticeControllerTestSupport {
     void save() throws Exception {
         // given
         when(adminNoticeService.save(any(NoticeServiceRequest.class))).thenReturn(1L);
-        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", NoticeTag.NOTICE);
+        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", "공지사항");
         // when // then
         mockMvc.perform(post("/admin/notice")
                         .content(objectMapper.writeValueAsString(request))
@@ -51,7 +51,7 @@ class AdminNoticeControllerTest extends NoticeControllerTestSupport {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void update() throws Exception {
         // given
-        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", NoticeTag.NOTICE);
+        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", "공지사항");
         // when // then
         mockMvc.perform(put("/admin/notice/1")
                         .content(objectMapper.writeValueAsString(request))
@@ -71,7 +71,7 @@ class AdminNoticeControllerTest extends NoticeControllerTestSupport {
         doThrow(new GeneralException(ErrorStatus.NOTICE_NOT_FOUND))
                 .when(adminNoticeService)
                 .update(any(Long.class), any(NoticeServiceRequest.class));
-        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", NoticeTag.NOTICE);
+        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", "공지사항");
         // when // then
         mockMvc.perform(put("/admin/notice/1")
                         .content(objectMapper.writeValueAsString(request))
@@ -116,7 +116,7 @@ class AdminNoticeControllerTest extends NoticeControllerTestSupport {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void createWithBlankTitle() throws Exception {
         // given
-        NoticeRequest request = createNoticeRequest("  ", "https://notion/notice", NoticeTag.NOTICE);
+        NoticeRequest request = createNoticeRequest("  ", "https://notion/notice", "공지사항");
         // when // then
         mockMvc.perform(post("/admin/notice")
                         .content(objectMapper.writeValueAsString(request))
@@ -132,7 +132,7 @@ class AdminNoticeControllerTest extends NoticeControllerTestSupport {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void createWithBlankUrl() throws Exception {
         // given
-        NoticeRequest request = createNoticeRequest("공지사항", "  ", NoticeTag.NOTICE);
+        NoticeRequest request = createNoticeRequest("공지사항", "  ", "공지사항");
         // when // then
         mockMvc.perform(post("/admin/notice")
                         .content(objectMapper.writeValueAsString(request))
@@ -148,7 +148,7 @@ class AdminNoticeControllerTest extends NoticeControllerTestSupport {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void createWithoutTag() throws Exception {
         // given
-        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", null);
+        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", "");
         // when // then
         mockMvc.perform(post("/admin/notice")
                         .content(objectMapper.writeValueAsString(request))
@@ -159,7 +159,25 @@ class AdminNoticeControllerTest extends NoticeControllerTestSupport {
                 .andExpect(jsonPath("$.message").value("공지사항 태그는 필수입니다."));
     }
 
-    private NoticeRequest createNoticeRequest(String title, String contentUrl, NoticeTag tag) {
+    @DisplayName("존재하지 않는 공지사항 태그로 공지사항 등록 요청을 하면 오류를 반환한다.")
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void createWithWrongTag() throws Exception {
+        // given
+        NoticeRequest request = createNoticeRequest("공지사항", "https://notion/notice", "잘못된 태그");
+        when(adminNoticeService.save(any(NoticeServiceRequest.class)))
+                .thenThrow(new IllegalArgumentException("존재하지 않는 공지사항 태그입니다."));
+        // when // then
+        mockMvc.perform(post("/admin/notice")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("ARGUMENT_ERROR"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 공지사항 태그입니다."));
+    }
+
+    private NoticeRequest createNoticeRequest(String title, String contentUrl, String tag) {
         return NoticeRequest.builder()
                 .title(title)
                 .contentUrl(contentUrl)

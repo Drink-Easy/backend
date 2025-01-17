@@ -10,11 +10,11 @@ import lombok.Getter;
 @Getter
 public class NoticeServiceRequest {
     private String title;
-    private NoticeTag tag;
+    private String tag;
     private String contentUrl;
 
     @Builder
-    public NoticeServiceRequest(String title, NoticeTag tag, String contentUrl) {
+    public NoticeServiceRequest(String title, String tag, String contentUrl) {
         this.title = title;
         this.tag = tag;
         this.contentUrl = contentUrl;
@@ -23,7 +23,7 @@ public class NoticeServiceRequest {
     public Notice toEntity() {
         return Notice.builder()
                 .title(title)
-                .tag(tag)
+                .tag(NoticeTag.of(tag))
                 .contentUrl(contentUrl)
                 .build();
     }
