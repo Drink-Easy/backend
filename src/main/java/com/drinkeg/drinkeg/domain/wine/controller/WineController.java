@@ -1,10 +1,7 @@
 package com.drinkeg.drinkeg.domain.wine.controller;
 
 
-import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.wine.service.WineService;
@@ -15,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -34,13 +32,13 @@ public class WineController {
     @GetMapping
     @Operation(summary = "와인 검색", description = "와인 이름 또는 영어 이름으로 검색하여 와인의 기본 정보를 조회한다. " +
             "paging 기능의 sort는 디폴트 값(name)을 사용하는 것을 권장한다.")
-    public ApiResponse<List<WinePreviewResponse>> searchWine(
+    public ApiResponse<PageResponse<WinePreviewResponse>> searchWine(
             @RequestParam(defaultValue = "") String searchName,
             @ParameterObject @PageableDefault(size = 10, sort = "name") Pageable pageable) {
 
-        List<WinePreviewResponse> winePreviewResponses = wineService.searchWinesByName(searchName, pageable);
+        PageResponse<WinePreviewResponse> pageResponse = wineService.searchWinesByName(searchName, pageable);
 
-        return ApiResponse.onSuccess(winePreviewResponses);
+        return ApiResponse.onSuccess(pageResponse);
     }
 
     @GetMapping("/{wineId}")

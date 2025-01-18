@@ -1,9 +1,12 @@
 package com.drinkeg.drinkeg.domain.wine.repository;
 
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,16 +33,26 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     }
 
     @Override
-    public List<Wine> searchByName(String name, Pageable pageable) {
-        return queryFactory.selectFrom(wine)
+    public Page<Wine> searchByNameWithPaging(String searchName, Pageable pageable) {
+        List<Wine> wines = queryFactory.selectFrom(wine)
                 .where(
-                        wine.name.containsIgnoreCase(name)
-                        .or(wine.nameEng.containsIgnoreCase(name))
+                        wine.name.containsIgnoreCase(searchName)
+                                .or(wine.nameEng.containsIgnoreCase(searchName))
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(wine.name.asc())
                 .fetch();
+
+        long total = queryFactory.select(wine.count())
+                .from(wine)
+                .where(
+                        wine.name.containsIgnoreCase(searchName)
+                                .or(wine.nameEng.containsIgnoreCase(searchName))
+                )
+                .fetchOne();
+
+        return new PageImpl<>(wines, pageable, total);
     }
 
     @Override

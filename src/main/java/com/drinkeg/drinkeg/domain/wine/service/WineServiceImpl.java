@@ -2,10 +2,8 @@ package com.drinkeg.drinkeg.domain.wine.service;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
+import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
-import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
 import com.drinkeg.drinkeg.infra.storage.StoragePathName;
@@ -15,7 +13,6 @@ import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -23,6 +20,7 @@ import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,15 +42,12 @@ public class WineServiceImpl implements WineService {
 
     private final WineWishlistRepository wineWishlistRepository;
     private final TastingNoteRepository tastingNoteRepository;
-    private final StorageService storageService;
 
     @Override
-    public List<WinePreviewResponse> searchWinesByName(String searchName, Pageable pageable) {
-        List<Wine> searchWines = wineRepository.searchByName(searchName, pageable);
-
-        return searchWines.stream()
-                .map(WinePreviewResponse::of)
-                .toList();
+    public PageResponse<WinePreviewResponse> searchWinesByName(String searchName, Pageable pageable) {
+        Page<WinePreviewResponse> winePreviewResponses =
+                wineRepository.searchByNameWithPaging(searchName, pageable).map(WinePreviewResponse::of);
+        return PageResponse.of(winePreviewResponses);
     }
 
     @Override
