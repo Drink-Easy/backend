@@ -17,33 +17,27 @@ import java.util.stream.Collectors;
 public class TastingNoteResponse {
 
     private Long noteId;
-
     private Long wineId;
     private String wineName;
     private String sort;
     private String country;
     private String region;
+    private String variety;
     private String imageUrl;
-
     private String color;
     private LocalDate tasteDate;
-
-    // 점수 0 ~ 5
     private int sweetness;
     private int acidity;
     private int tannin;
     private int body;
     private int alcohol;
-
     private List<String> noseList = new ArrayList<>();
-
     private float rating;
-
     private String review;
 
     @Builder
     public TastingNoteResponse(Long noteId, Long wineId, String wineName, String sort,
-                               String country, String region, String imageUrl, String color, LocalDate tasteDate,
+                               String country, String region, String variety, String imageUrl, String color, LocalDate tasteDate,
                                int sweetness, int acidity, int tannin, int body, int alcohol,
                                List<TastingNoteNose> noseList, float rating, String review){
         this.noteId = noteId;
@@ -52,6 +46,7 @@ public class TastingNoteResponse {
         this.sort = sort;
         this.country = country;
         this.region = region;
+        this.variety = variety;
         this.imageUrl = imageUrl;
         this.color = color;
         this.tasteDate = tasteDate;
@@ -75,6 +70,7 @@ public class TastingNoteResponse {
                 .sort(tastingNote.getWine().getSort())
                 .country(tastingNote.getWine().getCountry())
                 .region(tastingNote.getWine().getRegion())
+                .variety(tastingNote.getWine().getVariety())
                 .imageUrl(tastingNote.getWine().getImageUrl())
                 .color(tastingNote.getColor())
                 .tasteDate(tastingNote.getTasteDate())
