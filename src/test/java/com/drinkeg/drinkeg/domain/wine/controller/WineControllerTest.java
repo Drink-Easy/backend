@@ -34,7 +34,7 @@ class WineControllerTest extends WineControllerTestSupport {
         Wine wine3 = Wine.builder().name("와인3").build();
         List<WinePreviewResponse> winePreviewResponses = List.of(WinePreviewResponse.of(wine1), WinePreviewResponse.of(wine2), WinePreviewResponse.of(wine3));
         when(wineService.searchWinesByName(any(String.class), any(Pageable.class)))
-                .thenReturn(new PageResponse<>(winePreviewResponses, 0, 10, 1, false));
+                .thenReturn(new PageResponse<>(winePreviewResponses, 0, 1));
 
         // when // then
         mockMvc.perform(get("/wine?searchName=" + wineName + "&page=0&size=10"))
@@ -45,9 +45,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.result.content[1].name").value("와인2"))
                 .andExpect(jsonPath("$.result.content[2].name").value("와인3"))
                 .andExpect(jsonPath("$.result.pageNumber").value(0))
-                .andExpect(jsonPath("$.result.pageSize").value(10))
-                .andExpect(jsonPath("$.result.totalPages").value(1))
-                .andExpect(jsonPath("$.result.hasNext").value(false));
+                .andExpect(jsonPath("$.result.totalPages").value(1));
     }
 
     @DisplayName("와인 이름으로 와인을 검색하는데 일치하는 와인이 없다면 빈 리스트를 반환한다.")
@@ -57,7 +55,7 @@ class WineControllerTest extends WineControllerTestSupport {
         // given
         String wineName = "존재하지 않는 와인 이름";
         when(wineService.searchWinesByName(any(String.class), any(Pageable.class)))
-                .thenReturn(new PageResponse<>(List.of(), 0, 0, 0, false));
+                .thenReturn(new PageResponse<>(List.of(), 0, 0));
 
         // when // then
         mockMvc.perform(get("/wine?searchName=" + wineName))
@@ -66,9 +64,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.message").value("OK"))
                 .andExpect(jsonPath("$.result.content").isEmpty())
                 .andExpect(jsonPath("$.result.pageNumber").value(0))
-                .andExpect(jsonPath("$.result.pageSize").value(0))
-                .andExpect(jsonPath("$.result.totalPages").value(0))
-                .andExpect(jsonPath("$.result.hasNext").value(false));
+                .andExpect(jsonPath("$.result.totalPages").value(0));
     }
 
     @DisplayName("검색 파라미터를 넣지 않으면 기본값으로 빈 문자열이 들어간다.")
@@ -83,7 +79,7 @@ class WineControllerTest extends WineControllerTestSupport {
         Wine wine3 = Wine.builder().name("와인3").build();
         List<WinePreviewResponse> winePreviewResponses = List.of(WinePreviewResponse.of(wine1), WinePreviewResponse.of(wine2), WinePreviewResponse.of(wine3));
         when(wineService.searchWinesByName(any(String.class), any(Pageable.class)))
-                .thenReturn(new PageResponse<>(winePreviewResponses, 0, 10, 1, false));
+                .thenReturn(new PageResponse<>(winePreviewResponses, 0, 10));
 
         // when // then
         mockMvc.perform(get("/wine" + "?page=0&size=10"))
@@ -94,9 +90,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.result.content[1].name").value("와인2"))
                 .andExpect(jsonPath("$.result.content[2].name").value("와인3"))
                 .andExpect(jsonPath("$.result.pageNumber").value(0))
-                .andExpect(jsonPath("$.result.pageSize").value(10))
-                .andExpect(jsonPath("$.result.totalPages").value(1))
-                .andExpect(jsonPath("$.result.hasNext").value(false));
+                .andExpect(jsonPath("$.result.totalPages").value(1));
     }
 
     @DisplayName("와인 아이디로 와인 상세 정보를 조회한다.")

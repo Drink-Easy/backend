@@ -54,9 +54,9 @@ class WineServiceImplTest extends IntegrationTestSupport {
         PageResponse<WinePreviewResponse> winePreviewResponsePageResponse2 = wineService.searchWinesByName("대중적", pageable);
 
         // then
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 10, 1, false,
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 10,
                 "대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년");
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 10, 1, false,
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 10,
                 "대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년");
     }
 
@@ -76,10 +76,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
         PageResponse<WinePreviewResponse> winePreviewResponsePageResponse2 = wineService.searchWinesByName("popular", pageable);
 
         // then
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 10, 1, false,
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 10,
                 "대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년");
 
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 10, 1, false,
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 10,
                 "대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년");
     }
 
@@ -98,7 +98,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         PageResponse<WinePreviewResponse> winePreviewResponsePageResponse = wineService.searchWinesByName("존재하지 않는 와인 이름으로 검색하기", pageable);
 
         // then
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse, 0, 10, 0, false);
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse, 0, 10);
     }
 
     @DisplayName("와인 아이디를 받아서 와인의 통계 정보를 업데이트 한다.")
@@ -196,10 +196,9 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("레드 와인"));
-        List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
         wineWishlistRepository.save(WineWishlist.create(member, wine));
-
         wineService.updateWineNoteStatics(wine.getId());
+
         // when
         WineWithThreeReviewsResponse wineInfo = wineService.getWineInfoWithThreeReviews(wine.getId(), member.getUsername());
         // then
@@ -380,11 +379,6 @@ class WineServiceImplTest extends IntegrationTestSupport {
     }
 
 
-
-    private TastingNote createTastingNote(Member member, Wine wine) {
-        return createTastingNote(member, wine, 0, 0, 0, 0, 0, 0);
-    }
-
     private TastingNote createTastingNote(Member member, Wine wine, String color,
                                           int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating, String review) {
@@ -421,12 +415,12 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private void assertWinePreviewPageResponse(PageResponse<WinePreviewResponse> winePreviewResponsePageResponse, int pageNumber, int pageSize, int totalPages, boolean hasNext, String... wineNames) {
+    private void assertWinePreviewPageResponse(PageResponse<WinePreviewResponse> winePreviewResponsePageResponse, int pageNumber, int totalPages, String... wineNames) {
         assertThat(winePreviewResponsePageResponse.getContent())
                 .extracting("name")
                 .containsExactly(wineNames);
         assertThat(winePreviewResponsePageResponse)
-                .extracting("pageNumber", "pageSize", "totalPages", "hasNext")
-                .containsExactly(pageNumber, pageSize, totalPages, hasNext);
+                .extracting("pageNumber", "totalPages")
+                .containsExactly(pageNumber, totalPages);
     }
 }

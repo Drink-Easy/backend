@@ -14,26 +14,20 @@ public class PageResponse<T> {
 
     private List<T> content;
     private int pageNumber;
-    private int pageSize;
     private int totalPages;
-    private boolean hasNext;
 
     @Builder
-    public PageResponse(List<T> content, int pageNumber, int pageSize, int totalPages, boolean hasNext) {
+    public PageResponse(List<T> content, int pageNumber, int totalPages) {
         this.content = content;
         this.pageNumber = pageNumber;
-        this.pageSize = pageSize;
         this.totalPages = totalPages;
-        this.hasNext = hasNext;
     }
 
     public static PageResponse of(Page page) {
         return PageResponse.builder()
                 .content(page.getContent())
                 .pageNumber(page.getNumber())
-                .pageSize(page.getSize())
                 .totalPages(page.getTotalPages())
-                .hasNext(page.hasNext())
                 .build();
     }
 }
