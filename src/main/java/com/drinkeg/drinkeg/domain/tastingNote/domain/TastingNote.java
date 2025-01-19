@@ -6,8 +6,6 @@ import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequ
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-
 import java.time.LocalDate;
 import java.util.*;
 import static jakarta.persistence.FetchType.*;
@@ -15,7 +13,6 @@ import static jakarta.persistence.FetchType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Slf4j
 public class TastingNote extends BaseEntity {
 
     @Id
@@ -45,6 +42,7 @@ public class TastingNote extends BaseEntity {
 
     private float rating;
 
+    @Column(length = 500)
     private String review;
 
     @Builder
