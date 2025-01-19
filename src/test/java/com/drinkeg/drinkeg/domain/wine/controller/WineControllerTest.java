@@ -79,7 +79,7 @@ class WineControllerTest extends WineControllerTestSupport {
         Wine wine3 = Wine.builder().name("와인3").build();
         List<WinePreviewResponse> winePreviewResponses = List.of(WinePreviewResponse.of(wine1), WinePreviewResponse.of(wine2), WinePreviewResponse.of(wine3));
         when(wineService.searchWinesByName(any(String.class), any(Pageable.class)))
-                .thenReturn(new PageResponse<>(winePreviewResponses, 0, 10));
+                .thenReturn(new PageResponse<>(winePreviewResponses, 0, 0));
 
         // when // then
         mockMvc.perform(get("/wine" + "?page=0&size=10"))
@@ -90,7 +90,7 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.result.content[1].name").value("와인2"))
                 .andExpect(jsonPath("$.result.content[2].name").value("와인3"))
                 .andExpect(jsonPath("$.result.pageNumber").value(0))
-                .andExpect(jsonPath("$.result.totalPages").value(1));
+                .andExpect(jsonPath("$.result.totalPages").value(0));
     }
 
     @DisplayName("와인 아이디로 와인 상세 정보를 조회한다.")

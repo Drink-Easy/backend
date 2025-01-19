@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -54,10 +55,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
         PageResponse<WinePreviewResponse> winePreviewResponsePageResponse2 = wineService.searchWinesByName("대중적", pageable);
 
         // then
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 10,
-                "대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년");
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 10,
-                "대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년");
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 1,
+                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년"));
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 1,
+                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년"));
     }
 
     @DisplayName("와인 이름을 영어로 받으면 영어로 된 와인 이름을 포함하는 모든 와인을 조회한다.")
@@ -76,11 +77,11 @@ class WineServiceImplTest extends IntegrationTestSupport {
         PageResponse<WinePreviewResponse> winePreviewResponsePageResponse2 = wineService.searchWinesByName("popular", pageable);
 
         // then
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 10,
-                "대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년");
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 1,
+                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년"));
 
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 10,
-                "대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년");
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 1,
+                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년"));
     }
 
     @DisplayName("존재하지 않는 와인 이름을 받으면 빈 리스트를 반환한다.")
@@ -98,7 +99,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         PageResponse<WinePreviewResponse> winePreviewResponsePageResponse = wineService.searchWinesByName("존재하지 않는 와인 이름으로 검색하기", pageable);
 
         // then
-        assertWinePreviewPageResponse(winePreviewResponsePageResponse, 0, 10);
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse, 0, 0, new ArrayList<>());
     }
 
     @DisplayName("와인 아이디를 받아서 와인의 통계 정보를 업데이트 한다.")
@@ -415,10 +416,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private void assertWinePreviewPageResponse(PageResponse<WinePreviewResponse> winePreviewResponsePageResponse, int pageNumber, int totalPages, String... wineNames) {
+    private void assertWinePreviewPageResponse(PageResponse<WinePreviewResponse> winePreviewResponsePageResponse, int pageNumber, int totalPages, List<String> wineNames) {
         assertThat(winePreviewResponsePageResponse.getContent())
                 .extracting("name")
-                .containsExactly(wineNames);
+                .containsExactlyElementsOf(wineNames);
         assertThat(winePreviewResponsePageResponse)
                 .extracting("pageNumber", "totalPages")
                 .containsExactly(pageNumber, totalPages);
