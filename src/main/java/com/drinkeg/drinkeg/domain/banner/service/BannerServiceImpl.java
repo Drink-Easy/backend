@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.banner.service;
 
 import com.drinkeg.drinkeg.domain.banner.domain.Banner;
-import com.drinkeg.drinkeg.domain.banner.dto.request.BannerCreateRequest;
+import com.drinkeg.drinkeg.domain.banner.dto.request.BannerRequest;
 import com.drinkeg.drinkeg.domain.banner.dto.response.AllBannerResponse;
 import com.drinkeg.drinkeg.domain.banner.dto.response.BannerResponse;
 import com.drinkeg.drinkeg.domain.banner.repository.BannerRepository;
@@ -31,7 +31,7 @@ public class BannerServiceImpl implements BannerService {
 
     // 배너 생성 및 저장
     @Override
-    public void saveBanner(MultipartFile bannerImage, BannerCreateRequest bannerCreateRequest, PrincipalDetail principalDetail) {
+    public void saveBanner(MultipartFile bannerImage, BannerRequest bannerRequest, PrincipalDetail principalDetail) {
         Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
 
         if (!member.getRole().equals(Role.ROLE_ADMIN)) {
@@ -41,7 +41,7 @@ public class BannerServiceImpl implements BannerService {
         // 배너 이미지 업로드
         String imageUrl = storageService.uploadFile(bannerImage, StoragePathName.BANNER);
 
-        Banner banner = Banner.create(imageUrl, bannerCreateRequest.getPostUrl());
+        Banner banner = Banner.create(imageUrl, bannerRequest.getPostUrl());
 
         bannerRepository.save(banner);
     }
@@ -71,5 +71,28 @@ public class BannerServiceImpl implements BannerService {
                 .toList();
 
         return AllBannerResponse.create(bannerResponseList);
+    }
+
+    // 배너 업데이트
+    @Override
+    public void updateBanner(Long bannerId, MultipartFile bannerImage, BannerRequest bannerRequest, PrincipalDetail principalDetail) {
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+
+        if (!member.getRole().equals(Role.ROLE_ADMIN)) {
+            throw new GeneralException(ErrorStatus.BANNER_UNAUTHORIZED);
+        }
+
+        Banner banner = bannerRepository.findById(bannerId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.BANNER_NOT_FOUND));
+
+        // 배너 이미지가 요청에 포함된 경우만 이미지 업데이트
+        String newImageUrl = null;
+        if (bannerImage != null) {
+            storageService.deleteFile(banner.getImageUrl());
+            newImageUrl = storageService.uploadFile(bannerImage, StoragePathName.BANNER);
+        }
+
+        banner.update(newImageUrl,
+                !bannerRequest.getPostUrl().isEmpty() ? bannerRequest.getPostUrl() : null);
     }
 }

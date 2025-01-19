@@ -28,4 +28,10 @@ public class Banner extends BaseEntity {
                 .postUrl(postUrl)
                 .build();
     }
+
+    // 배너 업데이트
+    public void update(String imageUrl, String postUrl) {
+        if (imageUrl != null) this.imageUrl = imageUrl;
+        if (postUrl != null) this.postUrl = postUrl;
+    }
 }

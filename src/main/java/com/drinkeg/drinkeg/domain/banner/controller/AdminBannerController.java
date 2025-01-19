@@ -1,12 +1,13 @@
 package com.drinkeg.drinkeg.domain.banner.controller;
 
-import com.drinkeg.drinkeg.domain.banner.dto.request.BannerCreateRequest;
+import com.drinkeg.drinkeg.domain.banner.dto.request.BannerRequest;
 import com.drinkeg.drinkeg.domain.banner.dto.response.BannerResponse;
 import com.drinkeg.drinkeg.domain.banner.service.BannerService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +27,9 @@ public class AdminBannerController {
             description = "홈 화면 배너를 생성합니다.<br>ADMIN만 접근 가능합니다."
     )
     public ApiResponse<String> saveBanner(@RequestPart(value = "bannerImage") MultipartFile bannerImage,
-                                          @RequestPart(value = "banner") BannerCreateRequest bannerCreateRequest,
+                                          @RequestPart(value = "banner") @Valid BannerRequest bannerRequest,
                                           @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        bannerService.saveBanner(bannerImage, bannerCreateRequest, principalDetail);
+        bannerService.saveBanner(bannerImage, bannerRequest, principalDetail);
         return ApiResponse.onSuccess("배너 저장 성공");
     }
 
@@ -41,5 +42,19 @@ public class AdminBannerController {
                                                   @AuthenticationPrincipal PrincipalDetail principalDetail) {
         BannerResponse bannerResponse = bannerService.showBanner(bannerId, principalDetail);
         return ApiResponse.onSuccess(bannerResponse);
+    }
+
+    @PatchMapping("/{bannerId}")
+    @Operation(
+            summary = "배너 업데이트",
+            description = "bannerId에 해당하는 배너를 업데이트합니다. 필요한 정보만 갱신 가능합니다." +
+                    "<br>ADMIN만 접근 가능합니다."
+    )
+    public ApiResponse<String> updateBanner(@PathVariable Long bannerId,
+                                            @RequestPart(value = "bannerImage", required = false) MultipartFile bannerImage,
+                                            @RequestPart(value = "banner", required = false) @Valid BannerRequest bannerRequest,
+                                            @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        bannerService.updateBanner(bannerId, bannerImage, bannerRequest, principalDetail);
+        return ApiResponse.onSuccess("배너 업데이트 성공");
     }
 }
