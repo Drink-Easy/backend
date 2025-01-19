@@ -12,12 +12,10 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WineReviewResponse {
+
     private String name;
-
     private String review;
-
     private float rating;
-
     private LocalDateTime createdAt;
 
     @Builder

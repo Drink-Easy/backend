@@ -24,21 +24,15 @@ public class TastingNoteResponse {
     private String country;
     private String region;
     private String imageUrl;
-
     private String color;
     private LocalDate tasteDate;
-
-    // 점수 0 ~ 5
     private int sweetness;
     private int acidity;
     private int tannin;
     private int body;
     private int alcohol;
-
     private List<String> noseList = new ArrayList<>();
-
     private float rating;
-
     private String review;
 
     @Builder

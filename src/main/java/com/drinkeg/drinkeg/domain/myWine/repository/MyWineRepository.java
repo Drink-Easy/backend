@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.myWine.repository;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
-import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
+import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

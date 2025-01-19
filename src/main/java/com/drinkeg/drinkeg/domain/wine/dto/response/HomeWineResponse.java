@@ -14,12 +14,10 @@ public class HomeWineResponse {
 
     private Long wineId;
     private String imageUrl;
-
     private String wineName;
     private String wineNameEng;
     private String sort;
     private int price;
-
     private float vivinoRating;
 
     @Builder

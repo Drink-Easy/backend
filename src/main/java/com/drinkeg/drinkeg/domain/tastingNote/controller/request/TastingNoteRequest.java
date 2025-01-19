@@ -70,20 +70,4 @@ public class TastingNoteRequest {
         this.rating = rating;
         this.review = review;
     }
-
-    public TastingNoteRequest of(Long wineId, String color, LocalDate tasteDate, int sweetness, int acidity, int tannin, int body, int alcohol, List<String> nose, float rating, String review) {
-        return TastingNoteRequest.builder()
-                .wineId(wineId)
-                .color(color)
-                .tasteDate(tasteDate)
-                .sweetness(sweetness)
-                .acidity(acidity)
-                .tannin(tannin)
-                .body(body)
-                .alcohol(alcohol)
-                .nose(nose)
-                .rating(rating)
-                .review(review)
-                .build();
-    }
 }
