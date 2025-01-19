@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain.banner.controller;
 
 import com.drinkeg.drinkeg.domain.banner.dto.request.BannerCreateRequest;
+import com.drinkeg.drinkeg.domain.banner.dto.response.BannerResponse;
 import com.drinkeg.drinkeg.domain.banner.service.BannerService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
@@ -29,5 +30,16 @@ public class AdminBannerController {
                                           @AuthenticationPrincipal PrincipalDetail principalDetail) {
         bannerService.saveBanner(bannerImage, bannerCreateRequest, principalDetail);
         return ApiResponse.onSuccess("배너 저장 성공");
+    }
+
+    @GetMapping("/{bannerId}")
+    @Operation(
+            summary = "단일 배너 조회",
+            description = "bannerId로 배너를 조회합니다.<br>ADMIN만 접근 가능합니다."
+    )
+    public ApiResponse<BannerResponse> showBanner(@PathVariable Long bannerId,
+                                                  @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        BannerResponse bannerResponse = bannerService.showBanner(bannerId, principalDetail);
+        return ApiResponse.onSuccess(bannerResponse);
     }
 }

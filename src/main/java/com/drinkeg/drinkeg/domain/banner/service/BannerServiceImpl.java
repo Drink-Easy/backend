@@ -2,6 +2,8 @@ package com.drinkeg.drinkeg.domain.banner.service;
 
 import com.drinkeg.drinkeg.domain.banner.domain.Banner;
 import com.drinkeg.drinkeg.domain.banner.dto.request.BannerCreateRequest;
+import com.drinkeg.drinkeg.domain.banner.dto.response.AllBannerResponse;
+import com.drinkeg.drinkeg.domain.banner.dto.response.BannerResponse;
 import com.drinkeg.drinkeg.domain.banner.repository.BannerRepository;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -15,6 +17,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +41,35 @@ public class BannerServiceImpl implements BannerService {
         // 배너 이미지 업로드
         String imageUrl = storageService.uploadFile(bannerImage, StoragePathName.BANNER);
 
-        Banner banner = Banner.create(imageUrl, bannerCreateRequest.postUrl());
+        Banner banner = Banner.create(imageUrl, bannerCreateRequest.getPostUrl());
 
         bannerRepository.save(banner);
+    }
+
+    // 단일 배너 조회
+    @Override
+    public BannerResponse showBanner(Long bannerId, PrincipalDetail principalDetail) {
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+
+        if (!member.getRole().equals(Role.ROLE_ADMIN)) {
+            throw new GeneralException(ErrorStatus.BANNER_UNAUTHORIZED);
+        }
+
+        Banner banner = bannerRepository.findById(bannerId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.BANNER_NOT_FOUND));
+
+        return BannerResponse.of(banner);
+    }
+
+    // 전체 배너 조회
+    @Override
+    public AllBannerResponse showAllBanner() {
+        List<Banner> bannerList = bannerRepository.findAll();
+
+        List<BannerResponse> bannerResponseList = bannerList.stream()
+                .map(BannerResponse::of)
+                .toList();
+
+        return AllBannerResponse.create(bannerResponseList);
     }
 }
