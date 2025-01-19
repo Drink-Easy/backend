@@ -8,8 +8,6 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
-import com.drinkeg.drinkeg.infra.storage.StoragePathName;
-import com.drinkeg.drinkeg.infra.storage.StorageService;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
@@ -17,22 +15,11 @@ import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.CSVWriter;
-import com.opencsv.CSVWriterBuilder;
-import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -44,7 +31,6 @@ public class WineServiceImpl implements WineService {
 
     private final WineWishlistRepository wineWishlistRepository;
     private final TastingNoteRepository tastingNoteRepository;
-    private final StorageService storageService;
 
     @Override
     public List<WinePreviewResponse> searchWinesByName(String searchName, Pageable pageable) {
