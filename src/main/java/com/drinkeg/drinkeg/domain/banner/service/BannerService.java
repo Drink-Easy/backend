@@ -19,4 +19,7 @@ public interface BannerService {
 
     // 배너 업데이트
     void updateBanner(Long bannerId, MultipartFile bannerImage, BannerRequest bannerRequest, PrincipalDetail principalDetail);
+
+    // 배너 삭제
+    void deleteBanner(Long bannerId, PrincipalDetail principalDetail);
 }

@@ -95,4 +95,22 @@ public class BannerServiceImpl implements BannerService {
         banner.update(newImageUrl,
                 !bannerRequest.getPostUrl().isEmpty() ? bannerRequest.getPostUrl() : null);
     }
+
+    // 배너 삭제
+    @Override
+    public void deleteBanner(Long bannerId, PrincipalDetail principalDetail) {
+        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
+
+        if (!member.getRole().equals(Role.ROLE_ADMIN)) {
+            throw new GeneralException(ErrorStatus.BANNER_UNAUTHORIZED);
+        }
+
+        Banner banner = bannerRepository.findById(bannerId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.BANNER_NOT_FOUND));
+
+        // 이미지 삭제
+        storageService.deleteFile(banner.getImageUrl());
+
+        bannerRepository.delete(banner);
+    }
 }

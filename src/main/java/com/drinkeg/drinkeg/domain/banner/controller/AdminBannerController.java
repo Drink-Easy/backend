@@ -57,4 +57,15 @@ public class AdminBannerController {
         bannerService.updateBanner(bannerId, bannerImage, bannerRequest, principalDetail);
         return ApiResponse.onSuccess("배너 업데이트 성공");
     }
+
+    @DeleteMapping("/{bannerId}")
+    @Operation(
+            summary = "배너 삭제",
+            description = "bannerId로 배너를 삭제합니다.<br>ADMIN만 접근 가능합니다."
+    )
+    public ApiResponse<String> deleteBanner(@PathVariable Long bannerId,
+                                            @AuthenticationPrincipal PrincipalDetail principalDetail) {
+        bannerService.deleteBanner(bannerId, principalDetail);
+        return ApiResponse.onSuccess("배너 삭제 성공");
+    }
 }
