@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.myWine.service;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
-import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
+import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWine;
 import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
 import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;

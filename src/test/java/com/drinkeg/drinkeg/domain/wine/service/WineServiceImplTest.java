@@ -7,12 +7,9 @@ import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
-import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
@@ -24,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -51,25 +49,16 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
         Pageable pageable = PageRequest.of(0, 10);
-        // when
-        List<WinePreviewResponse> winePreviewList1 = wineService.searchWinesByName("0년", pageable);
-        List<WinePreviewResponse> winePreviewList2 = wineService.searchWinesByName("대중적", pageable);
-        // then
-        assertThat(winePreviewList1).hasSize(3)
-                .extracting("name")
-                .containsExactlyInAnyOrder(
-                        "대중적인 레드 와인 10년",
-                        "대중적인 화이트 스파클링 와인 20년",
-                        "매니아들이 찾는 레드 와인 30년"
-                );
 
-        assertThat(winePreviewList2).hasSize(3)
-                .extracting("name")
-                .containsExactlyInAnyOrder(
-                        "대중적인 레드 와인 10년",
-                        "대중적인 화이트 와인 13년",
-                        "대중적인 화이트 스파클링 와인 20년"
-                );
+        // when
+        PageResponse<WinePreviewResponse> winePreviewResponsePageResponse1 = wineService.searchWinesByName("0년", pageable);
+        PageResponse<WinePreviewResponse> winePreviewResponsePageResponse2 = wineService.searchWinesByName("대중적", pageable);
+
+        // then
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 1,
+                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년"));
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 1,
+                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년"));
     }
 
     @DisplayName("와인 이름을 영어로 받으면 영어로 된 와인 이름을 포함하는 모든 와인을 조회한다.")
@@ -82,24 +71,17 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년", "red wine that manias find 30 years");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
         Pageable pageable = PageRequest.of(0, 10);
+
         // when
-        List<WinePreviewResponse> winePreviewList1 = wineService.searchWinesByName("0 years", pageable);
-        List<WinePreviewResponse> winePreviewList2 = wineService.searchWinesByName("popular", pageable);
+        PageResponse<WinePreviewResponse> winePreviewResponsePageResponse1 = wineService.searchWinesByName("0 years", pageable);
+        PageResponse<WinePreviewResponse> winePreviewResponsePageResponse2 = wineService.searchWinesByName("popular", pageable);
+
         // then
-        assertThat(winePreviewList1).hasSize(3)
-                .extracting("name")
-                .containsExactlyInAnyOrder(
-                        "대중적인 레드 와인 10년",
-                        "대중적인 화이트 스파클링 와인 20년",
-                        "매니아들이 찾는 레드 와인 30년"
-                );
-        assertThat(winePreviewList2).hasSize(3)
-                .extracting("name")
-                .containsExactlyInAnyOrder(
-                        "대중적인 레드 와인 10년",
-                        "대중적인 화이트 와인 13년",
-                        "대중적인 화이트 스파클링 와인 20년"
-                );
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 1,
+                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년"));
+
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 1,
+                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년"));
     }
 
     @DisplayName("존재하지 않는 와인 이름을 받으면 빈 리스트를 반환한다.")
@@ -112,10 +94,12 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
         Pageable pageable = PageRequest.of(0, 10);
+
         // when
-        List<WinePreviewResponse> winePreviewList = wineService.searchWinesByName("존재하지 않는 와인 이름으로 검색하기", pageable);
+        PageResponse<WinePreviewResponse> winePreviewResponsePageResponse = wineService.searchWinesByName("존재하지 않는 와인 이름으로 검색하기", pageable);
+
         // then
-        assertThat(winePreviewList).isEmpty();
+        assertWinePreviewPageResponse(winePreviewResponsePageResponse, 0, 0, new ArrayList<>());
     }
 
     @DisplayName("와인 아이디를 받아서 와인의 통계 정보를 업데이트 한다.")
@@ -213,10 +197,9 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("레드 와인"));
-        List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
         wineWishlistRepository.save(WineWishlist.create(member, wine));
-
         wineService.updateWineNoteStatics(wine.getId());
+
         // when
         WineWithThreeReviewsResponse wineInfo = wineService.getWineInfoWithThreeReviews(wine.getId(), member.getUsername());
         // then
@@ -397,11 +380,6 @@ class WineServiceImplTest extends IntegrationTestSupport {
     }
 
 
-
-    private TastingNote createTastingNote(Member member, Wine wine) {
-        return createTastingNote(member, wine, 0, 0, 0, 0, 0, 0);
-    }
-
     private TastingNote createTastingNote(Member member, Wine wine, String color,
                                           int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating, String review) {
@@ -436,5 +414,14 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .role(Role.ROLE_USER)
                 .isFirst(false)
                 .build();
+    }
+
+    private void assertWinePreviewPageResponse(PageResponse<WinePreviewResponse> winePreviewResponsePageResponse, int pageNumber, int totalPages, List<String> wineNames) {
+        assertThat(winePreviewResponsePageResponse.getContent())
+                .extracting("name")
+                .containsExactlyElementsOf(wineNames);
+        assertThat(winePreviewResponsePageResponse)
+                .extracting("pageNumber", "totalPages")
+                .containsExactly(pageNumber, totalPages);
     }
 }

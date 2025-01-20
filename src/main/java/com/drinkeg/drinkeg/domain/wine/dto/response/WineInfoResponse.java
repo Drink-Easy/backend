@@ -11,31 +11,24 @@ import lombok.NoArgsConstructor;
 public class WineInfoResponse {
 
     private Long wineId;
-
     private String name;
     private String nameEng;
-
     private String imageUrl;
-
     private int price;
     private String sort;
     private String country;
     private String region;
     private String variety;
     private float vivinoRating;
-
     private float avgSweetness;
     private float avgAcidity;
     private float avgTannin;
     private float avgBody;
     private float avgAlcohol;
-
     private String nose1;
     private String nose2;
     private String nose3;
-
     private float avgMemberRating;
-
     private boolean liked;
 
     public static WineInfoResponse of(Wine wine, boolean isLiked) {

@@ -6,7 +6,7 @@ import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
 import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
-import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
+import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWine;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.domain.myWine.repository.MyWineRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 

@@ -10,9 +10,11 @@ import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.drinkeg.drinkeg.domain.member.domain.Member.createMember;
@@ -198,22 +200,12 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         // when
         List<Wine> wineList1 = wineRepository.searchByName("0년", pageable);
         List<Wine> wineList2 = wineRepository.searchByName("대중적", pageable);
+
         // then
         assertThat(wineList1).hasSize(3)
-                .extracting("name")
-                .containsExactlyInAnyOrder(
-                        "대중적인 레드 와인 10년",
-                        "대중적인 화이트 스파클링 와인 20년",
-                        "매니아들이 찾는 레드 와인 30년"
-                );
-
+                .isEqualTo(List.of(wine1, wine3, wine4));
         assertThat(wineList2).hasSize(3)
-                .extracting("name")
-                .containsExactlyInAnyOrder(
-                        "대중적인 레드 와인 10년",
-                        "대중적인 화이트 와인 13년",
-                        "대중적인 화이트 스파클링 와인 20년"
-                );
+                .isEqualTo(List.of(wine1, wine3, wine2));
     }
 
     @DisplayName("와인 이름을 영어로 받으면 영어로 된 와인 이름을 포함하는 모든 와인을 조회한다.")
@@ -229,21 +221,12 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         // when
         List<Wine> wineList1 = wineRepository.searchByName("0 years", pageable);
         List<Wine> wineList2 = wineRepository.searchByName("popular", pageable);
+
         // then
         assertThat(wineList1).hasSize(3)
-                .extracting("name")
-                .containsExactlyInAnyOrder(
-                        "대중적인 레드 와인 10년",
-                        "대중적인 화이트 스파클링 와인 20년",
-                        "매니아들이 찾는 레드 와인 30년"
-                );
+                .isEqualTo(List.of(wine1, wine3, wine4));
         assertThat(wineList2).hasSize(3)
-                .extracting("name")
-                .containsExactlyInAnyOrder(
-                        "대중적인 레드 와인 10년",
-                        "대중적인 화이트 와인 13년",
-                        "대중적인 화이트 스파클링 와인 20년"
-                );
+                .isEqualTo(List.of(wine1, wine3, wine2));
     }
 
     @DisplayName("존재하지 않는 와인 이름을 받으면 빈 리스트를 반환한다.")
@@ -256,8 +239,10 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
         Pageable pageable = PageRequest.of(0, 10);
+
         // when
         List<Wine> wineList = wineRepository.searchByName("존재하지 않는 와인 이름으로 검색하기", pageable);
+
         // then
         assertThat(wineList).isEmpty();
     }
@@ -272,12 +257,47 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
         Pageable pageable = Pageable.ofSize(2).withPage(1);
+
         // when
         List<Wine> wineList = wineRepository.searchByName("0년", pageable);
+
         // then
         assertThat(wineList).hasSize(1)
-                .extracting("name")
-                .containsExactly("매니아들이 찾는 레드 와인 30년");
+                .isEqualTo(List.of(wine4));
+    }
+
+    @DisplayName("검색한 와인 이름을 포함하는 와인의 총 개수를 조회한다.")
+    @Test
+    void countSearchWinePage(){
+        // given
+        Wine wine1 = createWine("대중적인 레드 와인 10년");
+        Wine wine2 = createWine("대중적인 화이트 와인 13년");
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+
+        // when
+        long count = wineRepository.countSearchWinePage("0년");
+
+        // then
+        assertThat(count).isEqualTo(3);
+    }
+
+    @DisplayName("검색한 와인 이름을 포함하는 와인의 총 개수를 조회한다. (검색어 결과가 없는 경우)")
+    @Test
+    void countSearchWinePageWithEmptySearchName(){
+        // given
+        Wine wine1 = createWine("대중적인 레드 와인 10년");
+        Wine wine2 = createWine("대중적인 화이트 와인 13년");
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+
+        // when
+        long count = wineRepository.countSearchWinePage("매력적인");
+
+        // then
+        assertThat(count).isEqualTo(0);
     }
 
     private Member creatMember(String username) {

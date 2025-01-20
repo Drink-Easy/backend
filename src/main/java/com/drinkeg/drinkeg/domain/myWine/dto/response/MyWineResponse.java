@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.domain.myWine.dto.response;
 
-import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import lombok.*;
 
