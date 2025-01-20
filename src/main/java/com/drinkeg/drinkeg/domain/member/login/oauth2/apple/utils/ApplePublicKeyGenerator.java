@@ -1,7 +1,7 @@
+
 package com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils;
 
-
-import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.AppleLoginDTO.ApplePublicKeyResponseDTO;
+import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleDTO.ApplePublicKeyResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

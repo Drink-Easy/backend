@@ -90,7 +90,12 @@ public enum ErrorStatus implements BaseCode {
 
     // appleLogin Error
     MATCH_PUBLIC_KEY_NOR_FOUND(HttpStatus.BAD_REQUEST, "APPLE4001", "일치하는 공개키를 찾을 수 없습니다"),
-    IDENTITY_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLE4002", "아이덴티티 토큰을 찾을 수 없습니다."),
+    IDENTITY_TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "APPLE4001", "아이덴티티 토큰을 찾을 수 없습니다."),
+
+    // appleDelete Error
+    FAILED_TO_LOAD_PRIVATE_KEY(HttpStatus.BAD_REQUEST, "APPLE4002", "개인키를 가져오는 것에 실패했습니다."),
+    FAILED_TO_REVOKE_MEMBER(HttpStatus.BAD_REQUEST, "APPLE4002", "애플 탈퇴에 실패했습니다."),
+
 
     // WineWishlist Error
     WINE_WISHLIST_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE_WISHLIST4001", "와인 위시리스트가 없습니다."),
