@@ -860,6 +860,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .sort("레드")
                 .country("프랑스")
                 .region("보르도")
+                .variety("피노누아")
                 .imageUrl("https://DEFAULT_IMAGE_URL")
                 .color("red")
                 .tasteDate(LocalDate.parse("2025-01-01"))
