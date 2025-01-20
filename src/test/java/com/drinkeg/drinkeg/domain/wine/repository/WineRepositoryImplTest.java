@@ -7,7 +7,6 @@ import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
-import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.member.domain.Member.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -200,12 +198,14 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        Page<Wine> winePage1 = wineRepository.searchByNameWithPaging("0년", pageable);
-        Page<Wine> winePage2 = wineRepository.searchByNameWithPaging("대중적", pageable);
+        List<Wine> wineList1 = wineRepository.searchByName("0년", pageable);
+        List<Wine> wineList2 = wineRepository.searchByName("대중적", pageable);
 
         // then
-        assertWinePage(winePage1, List.of(wine1, wine3, wine4), 0, 10, false);
-        assertWinePage(winePage2, List.of(wine1, wine2, wine3), 0, 10, false);
+        assertThat(wineList1).hasSize(3)
+                .isEqualTo(List.of(wine1, wine3, wine4));
+        assertThat(wineList2).hasSize(3)
+                .isEqualTo(List.of(wine1, wine3, wine2));
     }
 
     @DisplayName("와인 이름을 영어로 받으면 영어로 된 와인 이름을 포함하는 모든 와인을 조회한다.")
@@ -219,12 +219,14 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
         Pageable pageable = PageRequest.of(0, 10);
         // when
-        Page<Wine> winePage1 = wineRepository.searchByNameWithPaging("0 years", pageable);
-        Page<Wine> winePage2 = wineRepository.searchByNameWithPaging("popular", pageable);
+        List<Wine> wineList1 = wineRepository.searchByName("0 years", pageable);
+        List<Wine> wineList2 = wineRepository.searchByName("popular", pageable);
 
         // then
-        assertWinePage(winePage1, List.of(wine1, wine3, wine4), 0, 10, false);
-        assertWinePage(winePage2, List.of(wine1, wine2, wine3), 0, 10, false);
+        assertThat(wineList1).hasSize(3)
+                .isEqualTo(List.of(wine1, wine3, wine4));
+        assertThat(wineList2).hasSize(3)
+                .isEqualTo(List.of(wine1, wine3, wine2));
     }
 
     @DisplayName("존재하지 않는 와인 이름을 받으면 빈 리스트를 반환한다.")
@@ -239,10 +241,10 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        Page<Wine> winePage = wineRepository.searchByNameWithPaging("존재하지 않는 와인 이름으로 검색하기", pageable);
+        List<Wine> wineList = wineRepository.searchByName("존재하지 않는 와인 이름으로 검색하기", pageable);
 
         // then
-        assertWinePage(winePage, new ArrayList<>(), 0, 10, false);
+        assertThat(wineList).isEmpty();
     }
 
     @DisplayName("와인 이름을 받아서 이름을 포함하는 모든 와인을 조회한다. (페이징)")
@@ -257,10 +259,45 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         Pageable pageable = Pageable.ofSize(2).withPage(1);
 
         // when
-        Page<Wine> winePage = wineRepository.searchByNameWithPaging("0년", pageable);
+        List<Wine> wineList = wineRepository.searchByName("0년", pageable);
 
         // then
-        assertWinePage(winePage, List.of(wine4), 1, 2, false);
+        assertThat(wineList).hasSize(1)
+                .isEqualTo(List.of(wine4));
+    }
+
+    @DisplayName("검색한 와인 이름을 포함하는 와인의 총 개수를 조회한다.")
+    @Test
+    void countSearchWinePage(){
+        // given
+        Wine wine1 = createWine("대중적인 레드 와인 10년");
+        Wine wine2 = createWine("대중적인 화이트 와인 13년");
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+
+        // when
+        long count = wineRepository.countSearchWinePage("0년");
+
+        // then
+        assertThat(count).isEqualTo(3);
+    }
+
+    @DisplayName("검색한 와인 이름을 포함하는 와인의 총 개수를 조회한다. (검색어 결과가 없는 경우)")
+    @Test
+    void countSearchWinePageWithEmptySearchName(){
+        // given
+        Wine wine1 = createWine("대중적인 레드 와인 10년");
+        Wine wine2 = createWine("대중적인 화이트 와인 13년");
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+
+        // when
+        long count = wineRepository.countSearchWinePage("매력적인");
+
+        // then
+        assertThat(count).isEqualTo(0);
     }
 
     private Member creatMember(String username) {
@@ -310,15 +347,5 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
                 .vivinoRating(vivinoRating)
                 .wineNoteStatistics(WineNoteStatistics.builder().build())
                 .price(price).build();
-    }
-
-    private void assertWinePage(Page<Wine> winePage, List<Wine> wines, int page, int size, boolean hasNext) {
-        assertThat(winePage.getContent())
-                .hasSize(wines.size())
-                .containsExactlyInAnyOrderElementsOf(wines);
-
-        assertThat(winePage.getNumber()).isEqualTo(page);
-        assertThat(winePage.getSize()).isEqualTo(size);
-        assertThat(winePage.hasNext()).isEqualTo(hasNext);
     }
 }

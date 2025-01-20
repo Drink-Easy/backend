@@ -6,31 +6,19 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
-import com.drinkeg.drinkeg.infra.storage.StoragePathName;
-import com.drinkeg.drinkeg.infra.storage.StorageService;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.CSVWriter;
-import com.opencsv.CSVWriterBuilder;
-import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -45,9 +33,14 @@ public class WineServiceImpl implements WineService {
 
     @Override
     public PageResponse<WinePreviewResponse> searchWinesByName(String searchName, Pageable pageable) {
-        Page<WinePreviewResponse> winePreviewResponses =
-                wineRepository.searchByNameWithPaging(searchName, pageable).map(WinePreviewResponse::of);
-        return PageResponse.of(winePreviewResponses);
+
+        List<WinePreviewResponse> winePreviewList = wineRepository.searchByName(searchName, pageable)
+                .stream()
+                .map(WinePreviewResponse::of)
+                .toList();
+        long totalPage = wineRepository.countSearchWinePage(searchName);
+
+        return PageResponse.of(new PageImpl<>(winePreviewList, pageable, totalPage));
     }
 
     @Override

@@ -33,8 +33,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     }
 
     @Override
-    public Page<Wine> searchByNameWithPaging(String searchName, Pageable pageable) {
-        List<Wine> wines = queryFactory.selectFrom(wine)
+    public List<Wine> searchByName(String searchName, Pageable pageable) {
+        return queryFactory.selectFrom(wine)
                 .where(
                         wine.name.containsIgnoreCase(searchName)
                                 .or(wine.nameEng.containsIgnoreCase(searchName))
@@ -43,16 +43,17 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .orderBy(wine.name.asc())
                 .fetch();
+    }
 
-        long total = queryFactory.select(wine.count())
+    @Override
+    public long countSearchWinePage(String searchName) {
+        return queryFactory.select(wine.count())
                 .from(wine)
                 .where(
                         wine.name.containsIgnoreCase(searchName)
                                 .or(wine.nameEng.containsIgnoreCase(searchName))
                 )
                 .fetchOne();
-
-        return new PageImpl<>(wines, pageable, total);
     }
 
     @Override
