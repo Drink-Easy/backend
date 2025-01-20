@@ -1,15 +1,18 @@
 package com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils;
 
 
+import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -22,22 +25,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ApplePrivateKeyGenerator  {
 
-    public PrivateKey getPrivateKey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    @Value("${spring.servlet.social-login.provider.apple.private-key-path}")
+    private String privateKeyPath;
 
-        InputStream privateKey = new ClassPathResource("AUTHKEY_DRINKEG.p8").getInputStream();
+    public PrivateKey getPrivateKey() {
+        try (Reader pemReader = new FileReader(privateKeyPath)) {
+            PEMParser pemParser = new PEMParser(pemReader);
+            JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+            PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
 
+            PrivateKey privateKey = converter.getPrivateKey(object);
 
-        String result = new BufferedReader(new InputStreamReader(privateKey)) .lines().collect(Collectors.joining("\n"));
+            System.out.println(">>> PrivateKey: " + privateKey);
 
-        String key = result.replace("-----BEGIN PRIVATE KEY-----\n", "")
-                .replace("-----END PRIVATE KEY-----", "");
+            return privateKey;
 
-        byte[] encoded = Base64.decodeBase64(key);
-
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
-        KeyFactory keyFactory = KeyFactory.getInstance("EC");
-        return keyFactory.generatePrivate(keySpec);
-
+        } catch (IOException e) {
+            throw new GeneralException(ErrorStatus.FAILED_TO_LOAD_PRIVATE_KEY);
+        }
     }
 
 }
