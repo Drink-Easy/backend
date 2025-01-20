@@ -116,6 +116,24 @@ class WineResponseTest extends IntegrationTestSupport {
 
     }
 
+    @DisplayName("WineReviewResponse of 메서드 매개변수로 TastingNote의 Member가 null이면 WineReviewResponse name은 '(알 수 없음)'으로 반환한다.")
+    @Test
+    void WineReviewResponseOfException() {
+        // given
+        Wine wine = wineRepository.save(createWine());
+        TastingNote tastingNote = tastingNoteRepository.save(createTastingNote(null, wine, "와인이 맛있어요."));
+
+        // when
+        WineReviewResponse wineReviewResponse = WineReviewResponse.of(tastingNote);
+
+        // then
+        Assertions.assertThat(wineReviewResponse)
+                .extracting("name", "review", "rating", "createdAt")
+                .containsExactly("(알 수 없음)", tastingNote.getReview(), tastingNote.getRating(), tastingNote.getCreatedAt());
+
+    }
+
+
     @DisplayName("WineWithThreeReviewsResponse of 메서드 매개변수로 Wine, TastingNote List, isLiked가 들어가면 WineWithThreeReviewsResponse로 변환한다.")
     @Test
     void WineWithThreeReviewsResponseOf() {
