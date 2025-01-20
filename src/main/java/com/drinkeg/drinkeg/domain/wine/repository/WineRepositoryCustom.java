@@ -13,5 +13,5 @@ public interface WineRepositoryCustom {
 
     List<Wine> searchByName(String searchName, Pageable pageable);
 
-    long countSearchWinePage(String searchName);
+    long countSearchWine(String searchName);
 }

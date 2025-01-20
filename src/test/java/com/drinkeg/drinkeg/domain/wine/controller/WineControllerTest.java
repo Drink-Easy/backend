@@ -5,6 +5,7 @@ import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -169,26 +170,30 @@ class WineControllerTest extends WineControllerTestSupport {
         Long wineId = 1L;
         String sortType = "최신순";
         Pageable pageable = PageRequest.of(0, 10);
+        List<WineReviewResponse> wineReviewResponses = List.of(
+                createReviewResponse("첫 번째 리뷰 내용", "user1", 5, LocalDateTime.of(2025, 1, 6, 0, 0)),
+                createReviewResponse("두 번째 리뷰 내용", "user2", 4, LocalDateTime.of(2025, 1, 6, 0, 0)),
+                createReviewResponse("세 번째 리뷰 내용", "user3", 5, LocalDateTime.of(2025, 1, 6, 0, 0)));
+
         when(wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType), pageable))
-                .thenReturn(List.of(
-                        createReviewResponse("첫 번째 리뷰 내용", "user1", 5, LocalDateTime.of(2025, 1, 6, 0, 0)),
-                        createReviewResponse("두 번째 리뷰 내용", "user2", 4, LocalDateTime.of(2025, 1, 6, 0, 0)),
-                        createReviewResponse("세 번째 리뷰 내용", "user3", 5, LocalDateTime.of(2025, 1, 6, 0, 0))
-                ));
+                .thenReturn(new PageResponse<>(wineReviewResponses, 0, 1));
+
         // when // then
         mockMvc.perform(get("/wine/review/{wineId}?sortType={sortType}&page=0&size=10", wineId, sortType))
                 .andDo(print())
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"))
-                .andExpect(jsonPath("$.result[0].review").value("첫 번째 리뷰 내용"))
-                .andExpect(jsonPath("$.result[0].name").value("user1"))
-                .andExpect(jsonPath("$.result[0].rating").value(5))
-                .andExpect(jsonPath("$.result[1].review").value("두 번째 리뷰 내용"))
-                .andExpect(jsonPath("$.result[1].name").value("user2"))
-                .andExpect(jsonPath("$.result[1].rating").value(4))
-                .andExpect(jsonPath("$.result[2].review").value("세 번째 리뷰 내용"))
-                .andExpect(jsonPath("$.result[2].name").value("user3"))
-                .andExpect(jsonPath("$.result[2].rating").value(5));
+                .andExpect(jsonPath("$.result.content[0].review").value("첫 번째 리뷰 내용"))
+                .andExpect(jsonPath("$.result.content[0].name").value("user1"))
+                .andExpect(jsonPath("$.result.content[0].rating").value(5))
+                .andExpect(jsonPath("$.result.content[1].review").value("두 번째 리뷰 내용"))
+                .andExpect(jsonPath("$.result.content[1].name").value("user2"))
+                .andExpect(jsonPath("$.result.content[1].rating").value(4))
+                .andExpect(jsonPath("$.result.content[2].review").value("세 번째 리뷰 내용"))
+                .andExpect(jsonPath("$.result.content[2].name").value("user3"))
+                .andExpect(jsonPath("$.result.content[2].rating").value(5))
+                .andExpect(jsonPath("$.result.pageNumber").value(0))
+                .andExpect(jsonPath("$.result.totalPages").value(1));
     }
 
     @DisplayName("올바르지 않은 정렬 기준으로 와인의 리뷰를 전체조회하면 예외가 반환된다.")

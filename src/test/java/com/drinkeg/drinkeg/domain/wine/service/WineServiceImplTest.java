@@ -13,7 +13,9 @@ import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +58,9 @@ class WineServiceImplTest extends IntegrationTestSupport {
 
         // then
         assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 1,
-                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년"));
+                List.of(WinePreviewResponse.of(wine1), WinePreviewResponse.of(wine3), WinePreviewResponse.of(wine4)));
         assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 1,
-                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년"));
+                List.of(WinePreviewResponse.of(wine1), WinePreviewResponse.of(wine3), WinePreviewResponse.of(wine2)));
     }
 
     @DisplayName("와인 이름을 영어로 받으면 영어로 된 와인 이름을 포함하는 모든 와인을 조회한다.")
@@ -78,10 +80,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
 
         // then
         assertWinePreviewPageResponse(winePreviewResponsePageResponse1, 0, 1,
-                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "매니아들이 찾는 레드 와인 30년"));
+                List.of(WinePreviewResponse.of(wine1), WinePreviewResponse.of(wine3), WinePreviewResponse.of(wine4)));
 
         assertWinePreviewPageResponse(winePreviewResponsePageResponse2, 0, 1,
-                List.of("대중적인 레드 와인 10년", "대중적인 화이트 스파클링 와인 20년", "대중적인 화이트 와인 13년"));
+                List.of(WinePreviewResponse.of(wine1), WinePreviewResponse.of(wine3), WinePreviewResponse.of(wine2)));
     }
 
     @DisplayName("존재하지 않는 와인 이름을 받으면 빈 리스트를 반환한다.")
@@ -247,18 +249,28 @@ class WineServiceImplTest extends IntegrationTestSupport {
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
 
         Pageable pageable = PageRequest.of(0, 10);
+
         // when
-        List<WineReviewResponse> wineReviews = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST, pageable);
+        PageResponse<WineReviewResponse> wineReviewsAndIsLikedPage = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST, pageable);
+
         // then
-        assertThat(wineReviews).hasSize(5)
-                .extracting("review", "rating")
-                .containsExactly(
-                        tuple("다시 구매할 것 같아요", 10.0f),
-                        tuple("고기랑 먹기 좋아요!", 10.0f),
-                        tuple("맛있어요!", 10.0f),
-                        tuple("나쁘지 않아요", 5.0f),
-                        tuple("가성비 좋아요", 0.0f)
-                );
+        assertWineReviewPageResponse(wineReviewsAndIsLikedPage, 0, 1,
+                List.of(WineReviewResponse.of(tastingNote5), WineReviewResponse.of(tastingNote4), WineReviewResponse.of(tastingNote3),
+                        WineReviewResponse.of(tastingNote2), WineReviewResponse.of(tastingNote1)));
+    }
+
+    @DisplayName("와인 아이디로 와인 리뷰를 전체 조회한다. 리뷰가 없는 경우 content가 비어있다.")
+    @Test
+    void findWineReviewByWineIdWithNoReview() {
+        // given
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // when
+        PageResponse<WineReviewResponse> wineReviewsAndIsLikedPage = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST, pageable);
+
+        // then
+        assertWineReviewPageResponse(wineReviewsAndIsLikedPage, 0, 0, new ArrayList<>());
     }
 
     @DisplayName("잘못된 와인 아이디로 와인 리뷰를 전체 조회하면 예외가 발생한다.")
@@ -416,11 +428,32 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private void assertWinePreviewPageResponse(PageResponse<WinePreviewResponse> winePreviewResponsePageResponse, int pageNumber, int totalPages, List<String> wineNames) {
+    private void assertWinePreviewPageResponse(PageResponse<WinePreviewResponse> winePreviewResponsePageResponse, int pageNumber, int totalPages, List<WinePreviewResponse> winePreviewContents) {
         assertThat(winePreviewResponsePageResponse.getContent())
-                .extracting("name")
-                .containsExactlyElementsOf(wineNames);
+                .hasSize(winePreviewContents.size())
+                .extracting("wineId", "name", "nameEng", "imageUrl", "sort", "country", "variety", "vivinoRating", "price")
+                .containsExactly(
+                        winePreviewContents.stream()
+                                .map(content -> tuple(content.getWineId(), content.getName(), content.getNameEng(), content.getImageUrl(),
+                                        content.getSort(), content.getCountry(), content.getVariety(), content.getVivinoRating(), content.getPrice()))
+                                .toArray(Tuple[]::new)
+                );
         assertThat(winePreviewResponsePageResponse)
+                .extracting("pageNumber", "totalPages")
+                .containsExactly(pageNumber, totalPages);
+    }
+
+    private void assertWineReviewPageResponse(PageResponse<WineReviewResponse> wineReviewResponsePageResponse, int pageNumber, int totalPages, List<WineReviewResponse> reviewContents) {
+        assertThat(wineReviewResponsePageResponse.getContent())
+                .hasSize(reviewContents.size())
+                .extracting("name", "review", "rating", "createdAt")
+                .containsExactly(
+                        reviewContents.stream()
+                                .map(content -> tuple(content.getName(), content.getReview(), content.getRating(), content.getCreatedAt()))
+                                .toArray(Tuple[]::new)
+                );
+
+        assertThat(wineReviewResponsePageResponse)
                 .extracting("pageNumber", "totalPages")
                 .containsExactly(pageNumber, totalPages);
     }

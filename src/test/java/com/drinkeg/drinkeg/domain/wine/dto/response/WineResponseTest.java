@@ -9,7 +9,7 @@ import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
-import org.assertj.core.api.Assert;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,8 +21,6 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class WineResponseTest extends IntegrationTestSupport {
     @Autowired
@@ -117,6 +115,24 @@ class WineResponseTest extends IntegrationTestSupport {
                 .containsExactly(member.getName(), tastingNote.getReview(), tastingNote.getRating(), tastingNote.getCreatedAt());
 
     }
+
+    @DisplayName("WineReviewResponse of 메서드 매개변수로 TastingNote의 Member가 null이면 WineReviewResponse name은 '(알 수 없음)'으로 반환한다.")
+    @Test
+    void WineReviewResponseOfException() {
+        // given
+        Wine wine = wineRepository.save(createWine());
+        TastingNote tastingNote = tastingNoteRepository.save(createTastingNote(null, wine, "와인이 맛있어요."));
+
+        // when
+        WineReviewResponse wineReviewResponse = WineReviewResponse.of(tastingNote);
+
+        // then
+        Assertions.assertThat(wineReviewResponse)
+                .extracting("name", "review", "rating", "createdAt")
+                .containsExactly("(알 수 없음)", tastingNote.getReview(), tastingNote.getRating(), tastingNote.getCreatedAt());
+
+    }
+
 
     @DisplayName("WineWithThreeReviewsResponse of 메서드 매개변수로 Wine, TastingNote List, isLiked가 들어가면 WineWithThreeReviewsResponse로 변환한다.")
     @Test

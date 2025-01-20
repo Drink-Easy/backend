@@ -27,8 +27,11 @@ public class WineReviewResponse {
     }
 
     public static WineReviewResponse of(TastingNote tastingNote) {
+        String name = (tastingNote.getMember() != null) ? tastingNote.getMember().getName()
+                : "(알 수 없음)";
+
         return WineReviewResponse.builder()
-                .name(tastingNote.getMember().getName())
+                .name(name)
                 .review(tastingNote.getReview())
                 .rating(tastingNote.getRating())
                 .createdAt(tastingNote.getCreatedAt())

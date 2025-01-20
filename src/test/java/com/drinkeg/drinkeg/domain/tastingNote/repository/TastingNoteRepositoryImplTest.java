@@ -237,6 +237,39 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 );
     }
 
+    @DisplayName("와인 아이디로 테이스팅 노트의 수를 조회한다.")
+    @Test
+    void countTastingNoteByWineId() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+
+        TastingNote tastingNote1 = createTastingNote(member, wine);
+        TastingNote tastingNote2 = createTastingNote(member, wine);
+        TastingNote tastingNote3 = createTastingNote(member, wine);
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
+
+        // when
+        long count = tastingNoteRepository.countTastingNoteByWineId(wine.getId());
+
+        // then
+        assertThat(count).isEqualTo(3);
+    }
+
+    @DisplayName("와인 아이디로 테이스팅 노트의 수를 조회한다.(테이스팅 노트가 없는 경우)")
+    @Test
+    void countTastingNoteByWineIdWithNoTastingNote() {
+        // given
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+
+        // when
+        long count = tastingNoteRepository.countTastingNoteByWineId(wine.getId());
+
+        // then
+        assertThat(count).isEqualTo(0);
+    }
+
     @DisplayName("회원이 보유한 테이스팅 노트의 와인의 종류 수를 조회한다.")
     @Test
     void findTastingNoteSortCountsByUsername() {

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.wine.dto.response;
+package com.drinkeg.drinkeg.global.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
