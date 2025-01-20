@@ -2,16 +2,11 @@ package com.drinkeg.drinkeg.domain.banner.domain;
 
 import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Banner extends BaseEntity {
 
     @Id
@@ -20,6 +15,12 @@ public class Banner extends BaseEntity {
 
     private String imageUrl; // 배너 이미지 url
     private String postUrl; // 배너 관련 게시글 url
+
+    @Builder
+    public Banner(String imageUrl, String postUrl) {
+        this.imageUrl = imageUrl;
+        this.postUrl = postUrl;
+    }
 
     // 배너 생성
     public static Banner create(String imageUrl, String postUrl) {
