@@ -38,9 +38,9 @@ public class WineServiceImpl implements WineService {
                 .stream()
                 .map(WinePreviewResponse::of)
                 .toList();
-        long count = wineRepository.countSearchWine(searchName);
+        long total = wineRepository.countSearchWine(searchName);
 
-        return PageResponse.of(new PageImpl<>(winePreviewList, pageable, count));
+        return PageResponse.of(new PageImpl<>(winePreviewList, pageable, total));
     }
 
     @Override
