@@ -11,6 +11,7 @@ import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
@@ -37,9 +38,9 @@ public class WineServiceImpl implements WineService {
                 .stream()
                 .map(WinePreviewResponse::of)
                 .toList();
-        long totalPage = wineRepository.countSearchWinePage(searchName);
+        long count = wineRepository.countSearchWine(searchName);
 
-        return PageResponse.of(new PageImpl<>(winePreviewList, pageable, totalPage));
+        return PageResponse.of(new PageImpl<>(winePreviewList, pageable, count));
     }
 
     @Override
@@ -69,15 +70,16 @@ public class WineServiceImpl implements WineService {
     }
 
     @Override
-    public List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType sortType, Pageable pageable){
+    public PageResponse<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType sortType, Pageable pageable){
         if (!wineRepository.existsById(wineId))
             throw new GeneralException(ErrorStatus.WINE_NOT_FOUND);
 
-        List<TastingNote> tastingNoteList = tastingNoteRepository.findAllTastingNoteBy(wineId, sortType, pageable);
-
-        return tastingNoteList.stream()
+        List<WineReviewResponse> wineReviewResponseList = tastingNoteRepository.findAllTastingNoteBy(wineId, sortType, pageable).stream()
                 .map(WineReviewResponse::of)
                 .toList();
+        long total = tastingNoteRepository.countTastingNoteByWineId(wineId);
+
+        return PageResponse.of(new PageImpl<>(wineReviewResponseList, pageable, total));
     }
 
     @Override

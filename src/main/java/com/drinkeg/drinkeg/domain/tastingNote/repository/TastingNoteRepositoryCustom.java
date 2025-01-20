@@ -15,6 +15,8 @@ public interface TastingNoteRepositoryCustom {
 
     List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable);
 
+    long countTastingNoteByWineId(Long wineId);
+
     WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId);
 
     List<String> findTopThreeNoseByWineId(Long wineId);

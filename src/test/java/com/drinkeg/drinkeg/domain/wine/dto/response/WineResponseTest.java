@@ -9,7 +9,7 @@ import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
-import org.assertj.core.api.Assert;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,8 +21,6 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class WineResponseTest extends IntegrationTestSupport {
     @Autowired

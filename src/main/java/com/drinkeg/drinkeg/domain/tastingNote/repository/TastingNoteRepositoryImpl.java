@@ -34,6 +34,25 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable) {
+        return queryFactory.selectFrom(tastingNote)
+                .where(tastingNote.wine.id.eq(wineId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(orderCondition(sort), tastingNote.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public long countTastingNoteByWineId(Long wineId) {
+        return queryFactory
+                .select(tastingNote.count())
+                .from(tastingNote)
+                .where(tastingNote.wine.id.eq(wineId))
+                .fetchOne();
+    }
+
+    @Override
     public WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId) {
         return queryFactory
                 .select(Projections.fields(WineNoteStatisticsAvgDto.class,
@@ -76,24 +95,6 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .fetch();
     }
 
-    @Override
-    public List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable) {
-        return queryFactory.selectFrom(tastingNote)
-                .where(tastingNote.wine.id.eq(wineId))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(orderCondition(sort), tastingNote.id.desc())
-                .fetch();
-    }
-
-    private OrderSpecifier<?> orderCondition(SortType sortType) {
-        return switch (sortType) {
-            case LATEST -> new OrderSpecifier<>(Order.DESC, tastingNote.updatedAt);
-            case OLDEST -> new OrderSpecifier<>(Order.ASC, tastingNote.updatedAt);
-            case HIGH_RATING -> new OrderSpecifier<>(Order.DESC, tastingNote.rating);
-            case LOW_RATING -> new OrderSpecifier<>(Order.ASC, tastingNote.rating);
-        };
-    }
 
     @Override
     public TastingNoteSortCountResponse findTastingNoteSortCountsByUsername(String username) {
@@ -113,17 +114,25 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .fetchOne();
     }
 
+
+    private OrderSpecifier<?> orderCondition(SortType sortType) {
+        return switch (sortType) {
+            case LATEST -> new OrderSpecifier<>(Order.DESC, tastingNote.updatedAt);
+            case OLDEST -> new OrderSpecifier<>(Order.ASC, tastingNote.updatedAt);
+            case HIGH_RATING -> new OrderSpecifier<>(Order.DESC, tastingNote.rating);
+            case LOW_RATING -> new OrderSpecifier<>(Order.ASC, tastingNote.rating);
+        };
+    }
+
     private BooleanExpression wineSortIn(TastingNoteWineSort wineSort) {
         if (wineSort.equals(TastingNoteWineSort.ALL)) return null;
         else if (wineSort.equals(TastingNoteWineSort.ETCETERA)) return wine.sort.in("주정강화", "기타");
         else return wine.sort.eq(wineSort.getValue());
     }
 
-
-    // 와인 종류에 따른 개수 반환
     private NumberExpression<Integer> getWineCount(String wineSort) {
-        Predicate condition = wineSort.equals("기타")
-                ? tastingNote.wine.sort.in("주정강화", "기타")
+        Predicate condition = wineSort
+                .equals("기타") ? tastingNote.wine.sort.in("주정강화", "기타")
                 : tastingNote.wine.sort.eq(wineSort);
 
         return new CaseBuilder()

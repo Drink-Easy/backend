@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.wine.service;
 
 import com.drinkeg.drinkeg.domain.wine.dto.response.*;
 import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface WineService {
 
     WineWithThreeReviewsResponse getWineInfoWithThreeReviews(Long windId, String username);
 
-    List<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType orderByLatest, Pageable pageable);
+    PageResponse<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType orderByLatest, Pageable pageable);
 
     List<HomeWineResponse> getRecommendWineList(String username);
 

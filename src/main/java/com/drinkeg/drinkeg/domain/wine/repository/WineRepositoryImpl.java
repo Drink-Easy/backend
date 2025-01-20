@@ -46,7 +46,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     }
 
     @Override
-    public long countSearchWinePage(String searchName) {
+    public long countSearchWine(String searchName) {
         return queryFactory.select(wine.count())
                 .from(wine)
                 .where(

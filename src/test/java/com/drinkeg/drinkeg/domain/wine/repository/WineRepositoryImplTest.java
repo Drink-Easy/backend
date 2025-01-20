@@ -10,11 +10,9 @@ import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.drinkeg.drinkeg.domain.member.domain.Member.createMember;
@@ -268,7 +266,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
     @DisplayName("검색한 와인 이름을 포함하는 와인의 총 개수를 조회한다.")
     @Test
-    void countSearchWinePage(){
+    void countSearchWine(){
         // given
         Wine wine1 = createWine("대중적인 레드 와인 10년");
         Wine wine2 = createWine("대중적인 화이트 와인 13년");
@@ -277,7 +275,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
 
         // when
-        long count = wineRepository.countSearchWinePage("0년");
+        long count = wineRepository.countSearchWine("0년");
 
         // then
         assertThat(count).isEqualTo(3);
@@ -294,7 +292,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
 
         // when
-        long count = wineRepository.countSearchWinePage("매력적인");
+        long count = wineRepository.countSearchWine("매력적인");
 
         // then
         assertThat(count).isEqualTo(0);
