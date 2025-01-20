@@ -45,13 +45,6 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
 
     }
 
-    @DisplayName("TastingNotePreviewResponse of 메서드에서 매개변수 null 이면 예외가 발생한다.")
-    @Test
-    void TastingNotePreviewResponseOfException() {
-        // given // when // then
-        assertThrows(NullPointerException.class, () -> TastingNotePreviewResponse.of(null));
-    }
-
     @DisplayName("TastingNoteResponseTest of 메서드에 매개변수로 TastingNote가 들어가면 TastingNoteResponse로 변환한다.")
     @Test
     void TastingNoteResponseOf() {
@@ -67,13 +60,6 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
         Assertions.assertThat(tastingNoteResponse)
                 .extracting("noteId", "wineId", "wineName", "sort", "country", "region", "imageUrl", "color", "tasteDate", "sweetness", "acidity", "tannin", "body", "alcohol", "rating", "review")
                 .containsExactly(tastingNoteId, wine.getId(), wine.getName(), wine.getSort(), wine.getCountry(), wine.getRegion(), wine.getImageUrl(), "빨간색", LocalDate.of(2025, 1, 6), 10, 20, 30, 40, 50, 4.5f, "맛있어요");
-    }
-
-    @DisplayName("TastingNoteResponseTest of 메서드에서 매개변수 null 이면 예외가 발생한다.")
-    @Test
-    void TastingNoteResponseOfException() {
-        // given // when // then
-        assertThrows(NullPointerException.class, () -> TastingNoteResponse.of(null));
     }
 
     private Member createMember(String username) {

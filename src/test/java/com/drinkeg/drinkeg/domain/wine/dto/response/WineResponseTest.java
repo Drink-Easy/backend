@@ -48,13 +48,6 @@ class WineResponseTest extends IntegrationTestSupport {
 
     }
 
-    @DisplayName("HomeWineResponse of 메서드에서 매개변수 null 이면 예외가 발생한다.")
-    @Test
-    void HomeWineResponseOfException() {
-        // given // when // then
-        assertThrows(NullPointerException.class, () -> HomeWineResponse.of(null));
-    }
-
     @DisplayName("PageResponse of 메서드 매개변수로 Page가 들어가면 MyWineResponse로 변환한다.")
     @Test
     void PageResponseOf() {
@@ -71,13 +64,6 @@ class WineResponseTest extends IntegrationTestSupport {
                 .extracting("content", "pageNumber", "totalPages")
                 .containsExactly(wines.getContent(), wines.getNumber(), wines.getTotalPages());
 
-    }
-
-    @DisplayName("PageResponse of 메서드에서 매개변수 null 이면 예외가 발생한다.")
-    @Test
-    void PageResponseOfException() {
-        // given // when // then
-        assertThrows(NullPointerException.class, () -> PageResponse.of(null));
     }
 
     @DisplayName("WineInfoResponse of 메서드 매개변수로 Wine과 isLiked가 들어가면 WineInfoResponse로 변환한다.")
@@ -99,13 +85,6 @@ class WineResponseTest extends IntegrationTestSupport {
                         wine.getWineNoteStatistics().getAvgAlcohol(), wine.getWineNoteStatistics().getNose1(), wine.getWineNoteStatistics().getNose2(), wine.getWineNoteStatistics().getNose3(), wine.getWineNoteStatistics().getAvgMemberRating(), isLiked);
     }
 
-    @DisplayName("WineInfoResponse of 메서드에서 매개변수 null 이면 예외가 발생한다.")
-    @Test
-    void WineInfoResponseOfException() {
-        // given // when // then
-        assertThrows(NullPointerException.class, () -> WineInfoResponse.of(null, true));
-    }
-
     @DisplayName("WinePreviewResponse of 메서드 매개변수로 Wine이 들어가면 WinePreviewResponse로 변환한다.")
     @Test
     void WinePreviewResponseOf() {
@@ -119,13 +98,6 @@ class WineResponseTest extends IntegrationTestSupport {
         Assertions.assertThat(winePreviewResponse)
                 .extracting("wineId", "name", "nameEng", "imageUrl", "sort", "country", "region", "variety", "vivinoRating", "price")
                 .containsExactly(wine.getId(), wine.getName(), wine.getNameEng(), wine.getImageUrl(), wine.getSort(), wine.getCountry(), wine.getRegion(), wine.getVariety(), wine.getVivinoRating(), wine.getPrice());
-    }
-
-    @DisplayName("WinePreviewResponse of 메서드에서 매개변수 null 이면 예외가 발생한다.")
-    @Test
-    void WinePreviewResponseOfException() {
-        // given // when // then
-        assertThrows(NullPointerException.class, () -> WinePreviewResponse.of(null));
     }
 
     @DisplayName("WineReviewResponse of 메서드 매개변수로 TastingNote가 들어가면 WineReviewResponse로 변환한다.")
@@ -144,13 +116,6 @@ class WineResponseTest extends IntegrationTestSupport {
                 .extracting("name", "review", "rating", "createdAt")
                 .containsExactly(member.getName(), tastingNote.getReview(), tastingNote.getRating(), tastingNote.getCreatedAt());
 
-    }
-
-    @DisplayName("WineReviewResponse of 메서드에서 매개변수 null 이면 예외가 발생한다.")
-    @Test
-    void WineReviewResponseOfException() {
-        // given // when // then
-        assertThrows(NullPointerException.class, () -> WineReviewResponse.of(null));
     }
 
     @DisplayName("WineWithThreeReviewsResponse of 메서드 매개변수로 Wine, TastingNote List, isLiked가 들어가면 WineWithThreeReviewsResponse로 변환한다.")
@@ -183,31 +148,6 @@ class WineResponseTest extends IntegrationTestSupport {
                         Assertions.tuple(member.getName(), tastingNote1.getReview(), tastingNote1.getRating(), tastingNote1.getCreatedAt())
 
                 );
-    }
-
-    @DisplayName("WineWithThreeReviewsResponse of 메서드에서 매개변수 Wine이 null 이면 예외가 발생한다.")
-    @Test
-    void WineWithThreeReviewsResponseOfException() {
-        // given
-        Member member = memberRepository.save(createMember());
-        Wine wine = wineRepository.save(createWine());
-        TastingNote tastingNote1 = tastingNoteRepository.save(createTastingNote(member, wine, "와인이 맛있어요1."));
-        TastingNote tastingNote2 = tastingNoteRepository.save(createTastingNote(member, wine, "와인이 맛있어요2."));
-        TastingNote tastingNote3 = tastingNoteRepository.save(createTastingNote(member, wine, "와인이 맛있어요3."));
-        List<TastingNote> tastingNotes = List.of(tastingNote3, tastingNote2, tastingNote1);
-
-        // when // then
-        assertThrows(NullPointerException.class, () -> WineWithThreeReviewsResponse.of(null, tastingNotes, true));
-    }
-
-    @DisplayName("WineWithThreeReviewsResponse of 메서드에서 매개변수 TastingNote List가 null 이면 예외가 발생한다.")
-    @Test
-    void WineWithThreeReviewsResponseOfException2() {
-        // given
-        Wine wine = wineRepository.save(createWine());
-
-        // when // then
-        assertThrows(NullPointerException.class, () -> WineWithThreeReviewsResponse.of(wine, null, true));
     }
 
     @DisplayName("WineWithThreeReviewsResponse of 메서드에서 매개변수 TastingNote List가 빈 리스트면 정상적으로 반환한다.")

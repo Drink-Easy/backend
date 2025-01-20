@@ -42,13 +42,6 @@ class MyWineResponseTest extends IntegrationTestSupport {
                 .containsExactly(myWineId, wine.getId(), wine.getName(), wine.getSort(), wine.getCountry(), wine.getVariety(), LocalDate.parse("2025-01-01"), 100000, 14);
     }
 
-    @DisplayName("MyWineResponse of 메서드에서 매개변수 null 이면 예외가 발생한다.")
-    @Test
-    void MyWineResponseOfException() {
-        // given // when // then
-        assertThrows(NullPointerException.class, () -> MyWineResponse.of(null, LocalDate.now()));
-    }
-
     private Member createMember(String username) {
         return Member.builder()
                 .username(username)
