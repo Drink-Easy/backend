@@ -45,7 +45,7 @@ public class BannerControllerTest extends BannerControllerTestSupport{
         // given
         when(bannerService.showAllBanner())
                 .thenReturn(createAllBannerResponse(List.of()));
-        // when $ then
+        // when & then
         mockMvc.perform(get("/banner"))
                 .andDo(print())
                 .andExpect(status().isOk())

@@ -59,7 +59,7 @@ public class BannerServiceTest extends IntegrationTestSupport {
     @DisplayName("올바르지 않은 ID로 조회하면 BANNER_NOT_FOUND 예외가 발생한다.")
     @Test
     public void findBannerWithWrongId() {
-        // given $ when $ then
+        // given & when & then
         assertThatThrownBy(() -> bannerService.showBanner(0L))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.BANNER_NOT_FOUND.getMessage());
@@ -177,7 +177,7 @@ public class BannerServiceTest extends IntegrationTestSupport {
         // given
         Banner banner = createBanner("https://test.s3.amazonaws.com/test", "www.test.com");
         bannerRepository.save(banner);
-        // when % then
+        // when & then
         assertThatThrownBy(() -> bannerService.deleteBanner(0L))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.BANNER_NOT_FOUND.getMessage());
