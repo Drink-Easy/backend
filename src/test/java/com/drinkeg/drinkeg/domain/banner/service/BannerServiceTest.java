@@ -30,16 +30,10 @@ public class BannerServiceTest extends IntegrationTestSupport {
     @Test
     void saveBanner() {
         // given
-        byte[] imageBytes = "test-image-content".getBytes();
-        MockMultipartFile imageFile = new MockMultipartFile(
-                "image",             // 파일 필드 이름
-                "test-image.png",    // 원본 파일 이름
-                "image/png",         // MIME 타입
-                imageBytes           // 파일 내용
-        );
+        MockMultipartFile bannerImage = createBannerImage();
         BannerRequest bannerRequest = createBannerRequest("www.test.com");
         // when
-        Long savedId = bannerService.saveBanner(imageFile, bannerRequest);
+        Long savedId = bannerService.saveBanner(bannerImage, bannerRequest);
         // then
         Optional<Banner> banner = bannerRepository.findById(savedId);
         assertThat(banner).isPresent();
@@ -103,16 +97,10 @@ public class BannerServiceTest extends IntegrationTestSupport {
         Banner banner = createBanner("https://test.s3.amazonaws.com/test", "www.test.com");
         bannerRepository.save(banner);
 
-        byte[] imageBytes = "test-image-content".getBytes();
-        MockMultipartFile imageFile = new MockMultipartFile(
-                "image",             // 파일 필드 이름
-                "test-image.png",    // 원본 파일 이름
-                "image/png",         // MIME 타입
-                imageBytes           // 파일 내용
-        );
+        MockMultipartFile bannerImage = createBannerImage();
         BannerRequest bannerRequest = createBannerRequest("www.test-update.com");
         // when
-        bannerService.updateBanner(banner.getId(), imageFile, bannerRequest);
+        bannerService.updateBanner(banner.getId(), bannerImage, bannerRequest);
         // then
         Banner updateBanner = bannerRepository.findById(banner.getId()).get();
         // 기존 imageUrl과 다른지 검증
@@ -128,15 +116,9 @@ public class BannerServiceTest extends IntegrationTestSupport {
         Banner banner = createBanner("https://test.s3.amazonaws.com/test", "www.test.com");
         bannerRepository.save(banner);
 
-        byte[] imageBytes = "test-image-content".getBytes();
-        MockMultipartFile imageFile = new MockMultipartFile(
-                "image",             // 파일 필드 이름
-                "test-image.png",    // 원본 파일 이름
-                "image/png",         // MIME 타입
-                imageBytes           // 파일 내용
-        );
+        MockMultipartFile bannerImage = createBannerImage();
         // when
-        bannerService.updateBanner(banner.getId(), imageFile, null);
+        bannerService.updateBanner(banner.getId(), bannerImage, null);
         // then
         Banner updateBanner = bannerRepository.findById(banner.getId()).get();
         assertThat(updateBanner.getImageUrl()).isNotEqualTo("https://test.s3.amazonaws.com/test");
@@ -169,16 +151,10 @@ public class BannerServiceTest extends IntegrationTestSupport {
         Banner banner = createBanner("https://test.s3.amazonaws.com/test", "www.test.com");
         bannerRepository.save(banner);
 
-        byte[] imageBytes = "test-image-content".getBytes();
-        MockMultipartFile imageFile = new MockMultipartFile(
-                "image",             // 파일 필드 이름
-                "test-image.png",    // 원본 파일 이름
-                "image/png",         // MIME 타입
-                imageBytes           // 파일 내용
-        );
+        MockMultipartFile bannerImage = createBannerImage();
         BannerRequest bannerRequest = createBannerRequest("www.test-update.com");
         // when & then
-        assertThatThrownBy(() -> bannerService.updateBanner(0L, imageFile, bannerRequest))
+        assertThatThrownBy(() -> bannerService.updateBanner(0L, bannerImage, bannerRequest))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage(ErrorStatus.BANNER_NOT_FOUND.getMessage());
     }
@@ -218,5 +194,16 @@ public class BannerServiceTest extends IntegrationTestSupport {
                 .imageUrl(imageUrl)
                 .postUrl(postUrl)
                 .build();
+    }
+
+    // Mock 이미지 생성
+    private MockMultipartFile createBannerImage() {
+        byte[] imageBytes = "test-image-content".getBytes();
+        return new MockMultipartFile(
+                "image",       // 파일 필드 이름
+                "test-image.png",    // 원본 파일 이름
+                "image/png",         // MIME 타입
+                imageBytes           // 파일 내용
+        );
     }
 }
