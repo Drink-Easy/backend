@@ -4,6 +4,7 @@ package com.drinkeg.drinkeg.domain.member.login.oauth2.controller;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleDTO.AppleDeleteDTO;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleDTO.AppleLoginRequestDTO;
+import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils.ApplePrivateKeyGenerator;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.dto.LoginResponseDTO;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.kakao.kakaoLoginDTO.KakaoLoginRequestDTO;
@@ -13,11 +14,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleService.AppleService;
+
+import java.security.PrivateKey;
 
 @Tag(name = "Authorization", description = "스프링 시큐리티 관련 API")
 @RestController
@@ -26,6 +26,7 @@ public class OAuth2Controller {
 
     private final AppleService appleService;
     private final KakaoLoginService kakaoLoginService;
+    private final ApplePrivateKeyGenerator privateKeyGenerator;
 
 
     @PostMapping("/login/apple")
@@ -59,6 +60,19 @@ public class OAuth2Controller {
         return ApiResponse.onSuccess("애플 회원 탈퇴 성공");
 
 
+    }
+    @GetMapping("/private-key")
+    @Operation(summary = "애플 private key Test ", description = "애플 private-key를 확인합니다.")
+    public String loadPrivateKey() {
+        try {
+            // Private Key 가져오기
+            PrivateKey privateKey = privateKeyGenerator.getPrivateKey();
+            String algorithm = privateKey.getAlgorithm();
+
+            return "Private key successfully loaded: " + algorithm;
+        } catch (Exception e) {
+            return "Failed to load private key: " + e.getMessage();
+        }
     }
 
 

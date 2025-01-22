@@ -37,6 +37,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void deleteMemberByUsername(String username){
+
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
         tastingNoteService.setTastingNoteMemberNull(username);
         memberRepository.deleteByUsername(username);
     }
@@ -60,7 +64,6 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         member.updateMemberInfo(memberUpdateRequest);
-        memberRepository.save(member);
 
     }
 

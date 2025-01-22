@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain.member.controller;
 
 import com.drinkeg.drinkeg.domain.member.dto.*;
+import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils.ApplePrivateKeyGenerator;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -11,10 +12,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.security.PrivateKey;
 
 @Tag(name = "Authorization", description = "스프링 시큐리티 관련 API")
 @RestController
@@ -82,4 +87,7 @@ public class MemberController {
         String imageUrl = memberService.uploadProfileImage(profileImg, principalDetail.getUsername());
         return ApiResponse.onSuccess(imageUrl);
     }
+
+
+
 }
