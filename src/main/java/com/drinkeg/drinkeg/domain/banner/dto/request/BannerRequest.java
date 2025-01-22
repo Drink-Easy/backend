@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BannerRequest {
     @Schema(description = "배너 관련 게시글 URL", example = "www.drinkeg.com")
-    @NotNull(message = "필요하지 않은 경우 \"\"를 입력하세요.")
+    @NotNull(message = "postUrl은 필수입니다.")
     String postUrl;
 
     @Builder

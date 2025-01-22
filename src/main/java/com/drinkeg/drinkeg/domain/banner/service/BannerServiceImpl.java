@@ -78,7 +78,7 @@ public class BannerServiceImpl implements BannerService {
         }
 
         banner.update(newImageUrl,
-                !bannerRequest.getPostUrl().isEmpty() ? bannerRequest.getPostUrl() : null);
+                !(bannerRequest == null) ? bannerRequest.getPostUrl() : null);
     }
 
     // 배너 삭제
