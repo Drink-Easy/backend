@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BannerResponse {
     @Schema(description = "배너 id", example = "1")
-    private Long id;
+    private Long bannerId;
     @Schema(description = "배너 이미지 url", example = "https://drinkeg.amazonaws.com/123")
     private String imageUrl;
     @Schema(description = "배너 관련 게시글 url", example = "www.drinkeg.com")
@@ -21,7 +21,7 @@ public class BannerResponse {
 
     public static BannerResponse of(Banner banner) {
         return BannerResponse.builder()
-                .id(banner.getId())
+                .bannerId(banner.getId())
                 .imageUrl(banner.getImageUrl())
                 .postUrl(banner.getPostUrl())
                 .build();

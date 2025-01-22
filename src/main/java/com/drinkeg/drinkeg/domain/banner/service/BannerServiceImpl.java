@@ -31,12 +31,7 @@ public class BannerServiceImpl implements BannerService {
 
     // 배너 생성 및 저장
     @Override
-    public void saveBanner(MultipartFile bannerImage, BannerRequest bannerRequest, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
-
-        if (!member.getRole().equals(Role.ROLE_ADMIN)) {
-            throw new GeneralException(ErrorStatus.BANNER_UNAUTHORIZED);
-        }
+    public Long saveBanner(MultipartFile bannerImage, BannerRequest bannerRequest) {
 
         // 배너 이미지 업로드
         String imageUrl = storageService.uploadFile(bannerImage, StoragePathName.BANNER);
@@ -44,16 +39,12 @@ public class BannerServiceImpl implements BannerService {
         Banner banner = Banner.create(imageUrl, bannerRequest.getPostUrl());
 
         bannerRepository.save(banner);
+        return banner.getId();
     }
 
     // 단일 배너 조회
     @Override
-    public BannerResponse showBanner(Long bannerId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
-
-        if (!member.getRole().equals(Role.ROLE_ADMIN)) {
-            throw new GeneralException(ErrorStatus.BANNER_UNAUTHORIZED);
-        }
+    public BannerResponse showBanner(Long bannerId) {
 
         Banner banner = bannerRepository.findById(bannerId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.BANNER_NOT_FOUND));
@@ -75,13 +66,7 @@ public class BannerServiceImpl implements BannerService {
 
     // 배너 업데이트
     @Override
-    public void updateBanner(Long bannerId, MultipartFile bannerImage, BannerRequest bannerRequest, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
-
-        if (!member.getRole().equals(Role.ROLE_ADMIN)) {
-            throw new GeneralException(ErrorStatus.BANNER_UNAUTHORIZED);
-        }
-
+    public void updateBanner(Long bannerId, MultipartFile bannerImage, BannerRequest bannerRequest) {
         Banner banner = bannerRepository.findById(bannerId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.BANNER_NOT_FOUND));
 
@@ -98,13 +83,7 @@ public class BannerServiceImpl implements BannerService {
 
     // 배너 삭제
     @Override
-    public void deleteBanner(Long bannerId, PrincipalDetail principalDetail) {
-        Member member = memberService.loadMemberByPrincipalDetail(principalDetail);
-
-        if (!member.getRole().equals(Role.ROLE_ADMIN)) {
-            throw new GeneralException(ErrorStatus.BANNER_UNAUTHORIZED);
-        }
-
+    public void deleteBanner(Long bannerId) {
         Banner banner = bannerRepository.findById(bannerId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.BANNER_NOT_FOUND));
 

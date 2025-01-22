@@ -26,11 +26,10 @@ public class AdminBannerController {
             summary = "홈 화면 배너 생성",
             description = "홈 화면 배너를 생성합니다.<br>ADMIN만 접근 가능합니다."
     )
-    public ApiResponse<String> saveBanner(@RequestPart(value = "bannerImage") MultipartFile bannerImage,
-                                          @RequestPart(value = "banner") @Valid BannerRequest bannerRequest,
-                                          @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        bannerService.saveBanner(bannerImage, bannerRequest, principalDetail);
-        return ApiResponse.onSuccess("배너 저장 성공");
+    public ApiResponse<Long> saveBanner(@RequestPart(value = "bannerImage") MultipartFile bannerImage,
+                                          @RequestPart(value = "banner") @Valid BannerRequest bannerRequest) {
+        Long bannerId = bannerService.saveBanner(bannerImage, bannerRequest);
+        return ApiResponse.onSuccess(bannerId);
     }
 
     @GetMapping("/{bannerId}")
@@ -38,9 +37,8 @@ public class AdminBannerController {
             summary = "단일 배너 조회",
             description = "bannerId로 배너를 조회합니다.<br>ADMIN만 접근 가능합니다."
     )
-    public ApiResponse<BannerResponse> showBanner(@PathVariable Long bannerId,
-                                                  @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        BannerResponse bannerResponse = bannerService.showBanner(bannerId, principalDetail);
+    public ApiResponse<BannerResponse> showBanner(@PathVariable Long bannerId) {
+        BannerResponse bannerResponse = bannerService.showBanner(bannerId);
         return ApiResponse.onSuccess(bannerResponse);
     }
 
@@ -52,9 +50,8 @@ public class AdminBannerController {
     )
     public ApiResponse<String> updateBanner(@PathVariable Long bannerId,
                                             @RequestPart(value = "bannerImage", required = false) MultipartFile bannerImage,
-                                            @RequestPart(value = "banner", required = false) @Valid BannerRequest bannerRequest,
-                                            @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        bannerService.updateBanner(bannerId, bannerImage, bannerRequest, principalDetail);
+                                            @RequestPart(value = "banner", required = false) @Valid BannerRequest bannerRequest) {
+        bannerService.updateBanner(bannerId, bannerImage, bannerRequest);
         return ApiResponse.onSuccess("배너 업데이트 성공");
     }
 
@@ -63,9 +60,8 @@ public class AdminBannerController {
             summary = "배너 삭제",
             description = "bannerId로 배너를 삭제합니다.<br>ADMIN만 접근 가능합니다."
     )
-    public ApiResponse<String> deleteBanner(@PathVariable Long bannerId,
-                                            @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        bannerService.deleteBanner(bannerId, principalDetail);
+    public ApiResponse<String> deleteBanner(@PathVariable Long bannerId) {
+        bannerService.deleteBanner(bannerId);
         return ApiResponse.onSuccess("배너 삭제 성공");
     }
 }
