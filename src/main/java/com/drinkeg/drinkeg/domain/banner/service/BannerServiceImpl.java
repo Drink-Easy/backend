@@ -55,7 +55,7 @@ public class BannerServiceImpl implements BannerService {
     // 전체 배너 조회
     @Override
     public AllBannerResponse showAllBanner() {
-        List<Banner> bannerList = bannerRepository.findAll();
+        List<Banner> bannerList = bannerRepository.findAllByOrderByIdDesc();
 
         List<BannerResponse> bannerResponseList = bannerList.stream()
                 .map(BannerResponse::of)
