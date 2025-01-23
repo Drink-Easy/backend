@@ -111,9 +111,11 @@ public enum ErrorStatus implements BaseCode {
     FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_UPLOAD5002", "파일 삭제에 실패했습니다."),
 
     // Notice Error
-    NOTICE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTICE4001", "존재하지 않는 공지사항입니다.");
+    NOTICE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTICE4001", "존재하지 않는 공지사항입니다."),
 
-
+    // Banner Error
+    BANNER_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "BANNER4001", "권한이 없는 배너입니다."),
+    BANNER_NOT_FOUND(HttpStatus.BAD_REQUEST, "BANNER4001", "존재하지 않는 배너입니다.");
 
 
 
