@@ -378,6 +378,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @Test
     @MockMember
     void showAllTastingNoteByWrongUser() throws Exception {
+
         //given
         when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of("전체")), eq("user")))
                 .thenThrow(new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN));
