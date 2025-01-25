@@ -47,7 +47,7 @@ public class OAuth2Controller {
         return ApiResponse.onSuccess(loginResponseDTO);
     }
 
-    @DeleteMapping("/delete/apple")
+    @DeleteMapping("member/delete/apple")
     @Operation(summary = "애플 ", description = "애플 회원 탈퇴하고 유저 정보를 삭제합니다.")
     public ApiResponse<?> deleteApple(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody AppleDeleteDTO appleDeleteDTO, HttpServletResponse response) throws Exception{
 
