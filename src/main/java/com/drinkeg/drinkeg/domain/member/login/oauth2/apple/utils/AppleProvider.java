@@ -20,8 +20,13 @@ public class AppleProvider {
 
     public String getAppleRefreshToken(final String code, final String clientSecret) {
         try {
+            System.out.println("get AppleRefresh Token 시작");
+
             AppleRefreshTokenResponseDTO appleRefreshTokenResponse = appleClient.getAppleToken(code, clientId, clientSecret,"authorization_code");
 
+            if (appleRefreshTokenResponse.getError() != null || appleRefreshTokenResponse.getRefresh_token() == null) {
+                throw new GeneralException(ErrorStatus.FAILED_TO_LOAD_REFRESH_TOKEN);
+            }
             System.out.println("Access Token: " + appleRefreshTokenResponse.getAccess_token());
             System.out.println("Expires In: " + appleRefreshTokenResponse.getExpires_in());
             System.out.println("ID Token: " + appleRefreshTokenResponse.getId_token());
@@ -30,7 +35,8 @@ public class AppleProvider {
 
             return appleRefreshTokenResponse.getRefresh_token();
         } catch (Exception e) {
-            throw new GeneralException(ErrorStatus.FAILED_TO_LOAD_PRIVATE_KEY);
+            e.printStackTrace();
+            throw new GeneralException(ErrorStatus.FAILED_TO_LOAD_REFRESH_TOKEN);
         }
     }
 

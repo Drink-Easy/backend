@@ -95,6 +95,8 @@ public enum ErrorStatus implements BaseCode {
     // appleDelete Error
     FAILED_TO_LOAD_PRIVATE_KEY(HttpStatus.BAD_REQUEST, "APPLE4002", "개인키를 가져오는 것에 실패했습니다."),
     FAILED_TO_REVOKE_MEMBER(HttpStatus.BAD_REQUEST, "APPLE4002", "애플 탈퇴에 실패했습니다."),
+    FAILED_TO_LOAD_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "APPLE4002", "Refresh Token을 받아오는 것에 실패했습니다."),
+    FAILED_TO_MAKE_CLIENT_SECRET(HttpStatus.BAD_REQUEST, "APPLE4002", "클라이언트 시크릿을 만드는 것에 실패했습니다."),
 
 
     // WineWishlist Error

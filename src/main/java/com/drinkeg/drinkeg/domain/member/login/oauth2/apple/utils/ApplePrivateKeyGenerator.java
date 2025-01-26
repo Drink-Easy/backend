@@ -29,7 +29,10 @@ public class ApplePrivateKeyGenerator  {
     private String privateKeyPath;
 
     public PrivateKey getPrivateKey() {
+        System.out.println("privtate");
         try (Reader pemReader = new FileReader(privateKeyPath)) {
+
+            System.out.println("privtate");
             PEMParser pemParser = new PEMParser(pemReader);
             JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
             PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
@@ -41,6 +44,7 @@ public class ApplePrivateKeyGenerator  {
             return privateKey;
 
         } catch (IOException e) {
+            e.printStackTrace();
             throw new GeneralException(ErrorStatus.FAILED_TO_LOAD_PRIVATE_KEY);
         }
     }
