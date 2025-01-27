@@ -80,9 +80,20 @@ public class OAuth2Controller {
     public String checkEnvironment() {
         StringBuilder result = new StringBuilder();
 
+
         try {
             // 출력 환경변수 값 확인
             result.append("Private Key Path: ").append(privateKeyPath).append("\n");
+
+            // 경로가 비어 있는지 확인
+            if (privateKeyPath == null || privateKeyPath.isEmpty()) {
+                result.append("Error: Private Key Path is empty or null.\n");
+                return result.toString();
+            }
+
+            // 절대 경로 확인
+            String absolutePath = Paths.get(privateKeyPath).toAbsolutePath().toString();
+            result.append("Absolute Path: ").append(absolutePath).append("\n");
 
             // 파일 존재 여부 확인
             if (Files.exists(Paths.get(privateKeyPath))) {
@@ -99,11 +110,13 @@ public class OAuth2Controller {
             }
 
         } catch (Exception e) {
-            result.append("Error occurred while checking environment or file: ").append(e.getMessage());
+            // 예외 발생 시 상세 오류 메시지 추가
+            result.append("Error occurred while checking environment or file: ").append(e.getMessage()).append("\n");
+            e.printStackTrace();
         }
 
         return result.toString();
-    }
 
 
+}
 }
