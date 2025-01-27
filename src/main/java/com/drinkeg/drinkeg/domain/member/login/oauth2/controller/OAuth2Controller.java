@@ -4,6 +4,7 @@ package com.drinkeg.drinkeg.domain.member.login.oauth2.controller;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleDTO.AppleDeleteDTO;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleDTO.AppleLoginRequestDTO;
+import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils.AppleClientSecretGenerator;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.dto.LoginResponseDTO;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.kakao.kakaoLoginDTO.KakaoLoginRequestDTO;
@@ -12,12 +13,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleService.AppleService;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @Tag(name = "Authorization", description = "스프링 시큐리티 관련 API")
 @RestController
@@ -26,6 +29,7 @@ public class OAuth2Controller {
 
     private final AppleService appleService;
     private final KakaoLoginService kakaoLoginService;
+    private final AppleClientSecretGenerator appleClientSecretGenerator;
 
 
     @PostMapping("/login/apple")
@@ -55,10 +59,15 @@ public class OAuth2Controller {
 
         appleService.unlinkApple(principalDetail.getUsername(),appleDeleteDTO.getAuthorizationCode(),response);
 
-
         return ApiResponse.onSuccess("애플 회원 탈퇴 성공");
 
+    }
 
+
+    @GetMapping("/clientSecret")
+    public ResponseEntity<String> getAppleClientSecret() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        String clientSecret = appleClientSecretGenerator.generateClientSecret();
+        return ResponseEntity.ok(clientSecret);
     }
 
 
