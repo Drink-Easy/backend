@@ -13,12 +13,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleService.AppleService;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -30,6 +33,9 @@ public class OAuth2Controller {
     private final AppleService appleService;
     private final KakaoLoginService kakaoLoginService;
     private final AppleClientSecretGenerator appleClientSecretGenerator;
+
+    @Value("${spring.servlet.social-login.provider.apple.private-key-path}")
+    private String privateKeyPath;
 
 
     @PostMapping("/login/apple")
@@ -68,6 +74,35 @@ public class OAuth2Controller {
     public ResponseEntity<String> getAppleClientSecret() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String clientSecret = appleClientSecretGenerator.generateClientSecret();
         return ResponseEntity.ok(clientSecret);
+    }
+
+    @GetMapping("/check-environment")
+    public String checkEnvironment() {
+        StringBuilder result = new StringBuilder();
+
+        try {
+            // 출력 환경변수 값 확인
+            result.append("Private Key Path: ").append(privateKeyPath).append("\n");
+
+            // 파일 존재 여부 확인
+            if (Files.exists(Paths.get(privateKeyPath))) {
+                result.append("File exists at the path.\n");
+            } else {
+                result.append("File does NOT exist at the specified path.\n");
+            }
+
+            // 파일 읽기 권한 확인
+            if (Files.isReadable(Paths.get(privateKeyPath))) {
+                result.append("File is readable.\n");
+            } else {
+                result.append("File is NOT readable. Check file permissions.\n");
+            }
+
+        } catch (Exception e) {
+            result.append("Error occurred while checking environment or file: ").append(e.getMessage());
+        }
+
+        return result.toString();
     }
 
 
