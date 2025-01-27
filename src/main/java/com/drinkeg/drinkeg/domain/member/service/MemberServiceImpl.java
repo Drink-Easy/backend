@@ -75,4 +75,9 @@ public class MemberServiceImpl implements MemberService {
         member.updateImageUrl(profileImgUrl);
         return profileImgUrl;
     }
+
+    @Override
+    public String showMemberName(String username){
+        return memberRepository.getNameByUsername(username);
+    }
 }
