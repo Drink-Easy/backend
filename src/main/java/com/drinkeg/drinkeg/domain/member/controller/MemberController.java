@@ -84,4 +84,11 @@ public class MemberController {
         String imageUrl = memberService.uploadProfileImage(profileImg, principalDetail.getUsername());
         return ApiResponse.onSuccess(imageUrl);
     }
+
+    @GetMapping(value = "member/name")
+    @Operation(summary = "멤버 닉네임 반환", description = "멤버 닉네임을 반환합니다.")
+    public ApiResponse<String> showMemberName(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+        return ApiResponse.onSuccess(memberService.showMemberName(principalDetail.getUsername()));
+    }
+
 }
