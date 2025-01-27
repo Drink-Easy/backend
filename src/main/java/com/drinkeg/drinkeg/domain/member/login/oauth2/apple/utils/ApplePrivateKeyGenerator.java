@@ -39,7 +39,6 @@ public class ApplePrivateKeyGenerator  {
 
             PrivateKey privateKey = converter.getPrivateKey(object);
 
-            System.out.println(">>> PrivateKey: " + privateKey);
 
             return privateKey;
 

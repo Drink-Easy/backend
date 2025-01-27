@@ -27,11 +27,6 @@ public class AppleProvider {
             if (appleRefreshTokenResponse.getError() != null || appleRefreshTokenResponse.getRefresh_token() == null) {
                 throw new GeneralException(ErrorStatus.FAILED_TO_LOAD_REFRESH_TOKEN);
             }
-            System.out.println("Access Token: " + appleRefreshTokenResponse.getAccess_token());
-            System.out.println("Expires In: " + appleRefreshTokenResponse.getExpires_in());
-            System.out.println("ID Token: " + appleRefreshTokenResponse.getId_token());
-            System.out.println("Refresh Token: " + appleRefreshTokenResponse.getRefresh_token());
-            System.out.println("Error: " + appleRefreshTokenResponse.getError());
 
             return appleRefreshTokenResponse.getRefresh_token();
         } catch (Exception e) {
@@ -41,7 +36,10 @@ public class AppleProvider {
     }
 
     public void requestRevoke(final String refreshToken, final String clientSecret) {
-        appleClient.revoke(clientSecret,refreshToken,clientId, "refresh_token");
+        try{appleClient.revoke(clientSecret,refreshToken,clientId, "refresh_token");}
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 

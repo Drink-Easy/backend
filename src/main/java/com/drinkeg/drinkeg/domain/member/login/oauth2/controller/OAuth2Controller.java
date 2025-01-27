@@ -59,7 +59,6 @@ public class OAuth2Controller {
 
         appleService.unlinkApple(principalDetail.getUsername(),appleDeleteDTO.getAuthorizationCode(),response);
 
-
         return ApiResponse.onSuccess("애플 회원 탈퇴 성공");
 
     }
