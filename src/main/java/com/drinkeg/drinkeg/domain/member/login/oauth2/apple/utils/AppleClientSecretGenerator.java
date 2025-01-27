@@ -40,8 +40,8 @@ public class AppleClientSecretGenerator {
 
         System.out.println("--------------apple generateClientSecret---------------2");
 
-        try{
-            return Jwts.builder()
+
+        return Jwts.builder()
                     .setHeaderParam("alg", "ES256")
                     .setHeaderParam("kid", keyId)
                     .setIssuer(teamId)
@@ -51,14 +51,7 @@ public class AppleClientSecretGenerator {
                     .setSubject(clientId)
                     .signWith(applePrivateKeyGenerator.getPrivateKey(), SignatureAlgorithm.ES256)
                     .compact();}
-        catch (NullPointerException e) {
 
-            throw new GeneralException(ErrorStatus.FAILED_TO_LOAD_PRIVATE_KEY);
-        }
-        catch (Exception e) {
-                e.printStackTrace();
-                throw new GeneralException(ErrorStatus.FAILED_TO_MAKE_CLIENT_SECRET);
-        }
 
-    }
+
 }
