@@ -387,6 +387,30 @@ public class MemberControllerTest extends MemberControllerTestSupport{
         verify(memberService).updateMemberInfo(refEq(updateRequest), eq(username));
     }
 
+    @Test
+    @DisplayName("존재하지 않는 username으로 유저 정보 수정 시 예외를 반환한다.")
+    @MockMember
+    void updateMemberInfo_ThrowException() throws Exception {
+        // given
+        String username = "user";
+        MemberUpdateRequest updateRequest = createMemberUpdateRequest("newName","서울");
+        doThrow(new GeneralException(ErrorStatus.MEMBER_NOT_FOUND))
+                .when(memberService).updateMemberInfo(refEq(updateRequest),eq(username));
+
+        // when & then
+        mockMvc.perform(patch("/member/info")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequest))
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("MEMBER4001"))
+                .andExpect(jsonPath("$.message").value(ErrorStatus.MEMBER_NOT_FOUND.getMessage()));
+
+        // verify
+        verify(memberService).updateMemberInfo(refEq(updateRequest), eq(username));
+    }
+
     private Member createMember(String username, String password) {
         return Member.builder()
                 .username(username)
