@@ -42,7 +42,7 @@ public class SecurityConfig {
         return web -> {
             web.ignoring()
                     .requestMatchers("/join/**","/login/apple/**","/login/kakao/**",
-                            "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**");// 필터를 타면 안되는 경로
+                            "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**","/clientSecret","/check-environment");// 필터를 타면 안되는 경로
         };
     }
 
@@ -61,7 +61,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        //csrf disable
         http
                 .csrf(AbstractHttpConfigurer::disable);
 
@@ -115,9 +114,8 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        //.requestMatchers("/my").authenticated()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
-                        .requestMatchers("/", "/join/**", "/login", "/reissue","/login/apple","/login/kakao").permitAll()
+                        .requestMatchers("/", "/join/**", "/login", "/reissue","/login/apple","/login/kakao","/clientSecret","/check-environment").permitAll()
 
                         .requestMatchers(HttpMethod.GET,"/home").hasRole("USER")
                         .requestMatchers("/wine/**").hasRole("USER")

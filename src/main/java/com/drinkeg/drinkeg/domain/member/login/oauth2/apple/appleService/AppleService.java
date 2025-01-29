@@ -88,9 +88,11 @@ public class AppleService {
 
         try {
             String clientSecret = appleClientSecretGenerator.generateClientSecret();
+            System.out.println(clientSecret);
             String refreshToken = appleProvider.getAppleRefreshToken(code, clientSecret);
             appleProvider.requestRevoke(refreshToken, clientSecret);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new GeneralException(ErrorStatus.FAILED_TO_REVOKE_MEMBER);
         }
 

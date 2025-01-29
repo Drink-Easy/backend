@@ -95,6 +95,8 @@ public enum ErrorStatus implements BaseCode {
     // appleDelete Error
     FAILED_TO_LOAD_PRIVATE_KEY(HttpStatus.BAD_REQUEST, "APPLE4002", "개인키를 가져오는 것에 실패했습니다."),
     FAILED_TO_REVOKE_MEMBER(HttpStatus.BAD_REQUEST, "APPLE4002", "애플 탈퇴에 실패했습니다."),
+    FAILED_TO_LOAD_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "APPLE4002", "Refresh Token을 받아오는 것에 실패했습니다."),
+    FAILED_TO_MAKE_CLIENT_SECRET(HttpStatus.BAD_REQUEST, "APPLE4002", "클라이언트 시크릿을 만드는 것에 실패했습니다."),
 
 
     // WineWishlist Error
@@ -111,9 +113,11 @@ public enum ErrorStatus implements BaseCode {
     FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_UPLOAD5002", "파일 삭제에 실패했습니다."),
 
     // Notice Error
-    NOTICE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTICE4001", "존재하지 않는 공지사항입니다.");
+    NOTICE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTICE4001", "존재하지 않는 공지사항입니다."),
 
-
+    // Banner Error
+    BANNER_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "BANNER4001", "권한이 없는 배너입니다."),
+    BANNER_NOT_FOUND(HttpStatus.BAD_REQUEST, "BANNER4001", "존재하지 않는 배너입니다.");
 
 
 
