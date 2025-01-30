@@ -6,7 +6,7 @@ import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
 import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
-import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWine;
+import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.domain.myWine.repository.MyWineRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
@@ -102,9 +102,9 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         // then
         assertThat(myWine)
                 .extracting("myWineId", "wineId", "wineName", "wineSort",
-                        "wineArea", "wineVariety", "purchaseDate", "purchasePrice", "period")
+                        "wineCountry", "wineRegion", "wineVariety", "wineImageUrl", "purchaseDate", "purchasePrice", "period")
                 .containsExactly(myWineId, wine.getId(), wine.getName(), wine.getSort(),
-                        wine.getCountry(), wine.getVariety(), LocalDate.parse("2025-01-11"), 100000, 0);
+                        wine.getCountry(), wine.getRegion(), wine.getVariety(), wine.getImageUrl(), LocalDate.parse("2025-01-11"), 100000, 0);
     }
 
     @DisplayName("없는 보유와인을 조회하려고 하면 MY_WINE_NOT_FOUND 예외 발생")
@@ -173,10 +173,10 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(myWines).hasSize(2)
-                .extracting("wineId", "wineName", "wineSort", "wineArea", "wineVariety", "purchaseDate", "purchasePrice", "period")
+                .extracting("wineId", "wineName", "wineSort", "wineCountry", "wineRegion", "wineVariety", "wineImageUrl", "purchaseDate", "purchasePrice", "period")
                 .containsExactly(
-                        Assertions.tuple(wine2.getId(), wine2.getName(), wine2.getSort(), wine2.getCountry(), wine2.getVariety(), LocalDate.parse("2025-01-12"), 200000, 0),
-                        Assertions.tuple(wine1.getId(), wine1.getName(), wine1.getSort(), wine1.getCountry(), wine1.getVariety(), LocalDate.parse("2025-01-11"), 100000, 1)
+                        Assertions.tuple(wine2.getId(), wine2.getName(), wine2.getSort(), wine2.getCountry(), wine2.getRegion(), wine2.getVariety(),wine2.getImageUrl(), LocalDate.parse("2025-01-12"), 200000, 0),
+                        Assertions.tuple(wine1.getId(), wine1.getName(), wine1.getSort(), wine1.getCountry(), wine1.getRegion(), wine1.getVariety(),wine1.getImageUrl(), LocalDate.parse("2025-01-11"), 100000, 1)
                 );
     }
 
