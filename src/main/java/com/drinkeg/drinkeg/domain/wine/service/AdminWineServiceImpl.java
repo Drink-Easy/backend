@@ -30,7 +30,7 @@ public class AdminWineServiceImpl implements AdminWineService {
         Wine wine = Wine.of(wineRegisterRequest);
 
         String imageUrl;
-        if (imageFile != null) imageUrl = storageService.uploadFile(imageFile, StoragePathName.TEST);
+        if (imageFile != null) imageUrl = storageService.uploadFile(imageFile, StoragePathName.WINE);
         else imageUrl = defaultImageUrl;
 
         wine.updateImageUrl(imageUrl);
@@ -49,7 +49,7 @@ public class AdminWineServiceImpl implements AdminWineService {
 
         if(imageFile != null){
             String originalImageUrl = wine.getImageUrl();
-            String newImageUrl = storageService.uploadFile(imageFile, StoragePathName.TEST);
+            String newImageUrl = storageService.uploadFile(imageFile, StoragePathName.WINE);
 
             if (!originalImageUrl.equals(defaultImageUrl)) {
                 try {

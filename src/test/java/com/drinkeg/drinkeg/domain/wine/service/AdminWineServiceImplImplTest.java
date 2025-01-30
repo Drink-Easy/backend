@@ -50,7 +50,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
         WineRegisterRequest request = createWineRegisterRequest();
         MultipartFile mockFile = createMockMultipartFile("test-image.jpg");
 
-        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST)))
+        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.WINE)))
                 .thenReturn("https://mock-bucket.s3.amazonaws.com/test-image.jpg");
         when(wineRepository.save(any(Wine.class)))
                 .thenAnswer(invocation -> invocation.<Wine>getArgument(0));
@@ -59,7 +59,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
         adminWineService.saveWine(request, mockFile);
 
         // Then
-        verify(storageService).uploadFile(mockFile, StoragePathName.TEST);
+        verify(storageService).uploadFile(mockFile, StoragePathName.WINE);
         verify(wineRepository).save(argThat(wine ->
                 wine.getImageUrl().equals("https://mock-bucket.s3.amazonaws.com/test-image.jpg") &&
                         wine.getName().equals("와인1") &&
@@ -97,7 +97,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
                         wine.getVariety().equals("메를로") &&
                         wine.getVivinoRating() == 4.5f
         ));
-        verify(storageService, times(0)).uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST));
+        verify(storageService, times(0)).uploadFile(any(MultipartFile.class), eq(StoragePathName.WINE));
     }
 
     @DisplayName("디폴트 이미지가 아닌 와인에 대해 wineUpdateRequest와 이미지가 모두 주어진 경우 와인 수정 테스트")
@@ -110,7 +110,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
 
         when(wineRepository.findById(anyLong()))
                 .thenReturn(java.util.Optional.of(wine));
-        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST)))
+        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.WINE)))
                 .thenReturn("https://mock-bucket.s3.amazonaws.com/test-image2.jpg");
 
         // When
@@ -118,7 +118,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
 
         // Then
         verify(wineRepository).findById(anyLong());
-        verify(storageService).uploadFile(mockFile, StoragePathName.TEST);
+        verify(storageService).uploadFile(mockFile, StoragePathName.WINE);
         verify(storageService).deleteFile(anyString());
     }
 
@@ -137,7 +137,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
 
         // Then
         verify(wineRepository).findById(anyLong());
-        verify(storageService, times(0)).uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST));
+        verify(storageService, times(0)).uploadFile(any(MultipartFile.class), eq(StoragePathName.WINE));
         verify(storageService, times(0)).deleteFile(anyString());
     }
 
@@ -151,7 +151,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
 
         when(wineRepository.findById(anyLong()))
                 .thenReturn(java.util.Optional.of(wine));
-        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST)))
+        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.WINE)))
                 .thenReturn("https://mock-bucket.s3.amazonaws.com/test-image2.jpg");
 
         // When
@@ -159,7 +159,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
 
         // Then
         verify(wineRepository).findById(anyLong());
-        verify(storageService).uploadFile(mockFile, StoragePathName.TEST);
+        verify(storageService).uploadFile(mockFile, StoragePathName.WINE);
         verify(storageService, times(0)).deleteFile(anyString());
     }
 
@@ -178,7 +178,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
 
         // Then
         verify(wineRepository).findById(anyLong());
-        verify(storageService, times(0)).uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST));
+        verify(storageService, times(0)).uploadFile(any(MultipartFile.class), eq(StoragePathName.WINE));
         verify(storageService, times(0)).deleteFile(anyString());
     }
 
@@ -189,7 +189,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
         WineRegisterRequest request = createWineRegisterRequest();
         MultipartFile mockFile = createMockMultipartFile("test-image2.jpg");
 
-        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST)))
+        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.WINE)))
                 .thenThrow(new GeneralException(ErrorStatus.FILE_UPLOAD_FAILED));
 
         // When // Then
@@ -206,7 +206,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
 
         when(wineRepository.findById(anyLong()))
                 .thenReturn(java.util.Optional.of(wine));
-        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST)))
+        when(storageService.uploadFile(any(MultipartFile.class), eq(StoragePathName.WINE)))
                 .thenReturn("https://mock-bucket.s3.amazonaws.com/test-image2.jpg");
         doThrow(new GeneralException(ErrorStatus.FILE_DELETE_FAILED))
                 .when(storageService).deleteFile(anyString());
