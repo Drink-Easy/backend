@@ -122,6 +122,25 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
         verify(storageService).deleteFile(anyString());
     }
 
+    @DisplayName("디폴트 이미지가 아닌 와인에 대해 wineUpdateRequest만 주어진 경우 와인 수정 테스트")
+    @Test
+    void updateWineWhenImageIsNull() {
+        // Given
+        Wine wine = createWine("https://mock-bucket.s3.amazonaws.com/test-image.jpg");
+        WineUpdateRequest request = createWineUpdateRequest();
+
+        when(wineRepository.findById(anyLong()))
+                .thenReturn(java.util.Optional.of(wine));
+
+        // When
+        adminWineService.updateWine(1L, request, null);
+
+        // Then
+        verify(wineRepository).findById(anyLong());
+        verify(storageService, times(0)).uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST));
+        verify(storageService, times(0)).deleteFile(anyString());
+    }
+
     @DisplayName("디폴트 이미지인 와인에 대해 wineUpdateRequest와 이미지가 모두 주어진 경우 와인 수정 테스트")
     @Test
     void updateWineWhenDefaultImageUrl() {
@@ -141,6 +160,25 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
         // Then
         verify(wineRepository).findById(anyLong());
         verify(storageService).uploadFile(mockFile, StoragePathName.TEST);
+        verify(storageService, times(0)).deleteFile(anyString());
+    }
+
+    @DisplayName("디폴트 이미지인 와인에 대해 wineUpdateRequest만 주어진 경우 와인 수정 테스트")
+    @Test
+    void updateWineWhenDefaultImageUrlAndImageIsNull() {
+        // Given
+        Wine wine = createWine(defaultImageUrl);
+        WineUpdateRequest request = createWineUpdateRequest();
+
+        when(wineRepository.findById(anyLong()))
+                .thenReturn(java.util.Optional.of(wine));
+
+        // When
+        adminWineService.updateWine(1L, request, null);
+
+        // Then
+        verify(wineRepository).findById(anyLong());
+        verify(storageService, times(0)).uploadFile(any(MultipartFile.class), eq(StoragePathName.TEST));
         verify(storageService, times(0)).deleteFile(anyString());
     }
 
@@ -172,6 +210,20 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
                 .thenReturn("https://mock-bucket.s3.amazonaws.com/test-image2.jpg");
         doThrow(new GeneralException(ErrorStatus.FILE_DELETE_FAILED))
                 .when(storageService).deleteFile(anyString());
+
+        // When // Then
+        assertThrows(GeneralException.class, () -> adminWineService.updateWine(1L, request, mockFile));
+    }
+
+    @DisplayName("수정할 와인이 존재하지 않는 경우 와인 수정 테스트")
+    @Test
+    void updateWineWhenWineNotFound() {
+        // Given
+        WineUpdateRequest request = createWineUpdateRequest();
+        MultipartFile mockFile = createMockMultipartFile("test-image2.jpg");
+
+        when(wineRepository.findById(anyLong()))
+                .thenReturn(java.util.Optional.empty());
 
         // When // Then
         assertThrows(GeneralException.class, () -> adminWineService.updateWine(1L, request, mockFile));

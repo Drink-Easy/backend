@@ -47,18 +47,19 @@ public class AdminWineServiceImpl implements AdminWineService {
                     request.getCountry(), request.getRegion(), request.getVariety(), request.getVivinoRating());
         }
 
-        String originalImageUrl = wine.getImageUrl();
-        String newImageUrl = storageService.uploadFile(imageFile, StoragePathName.TEST);
+        if(imageFile != null){
+            String originalImageUrl = wine.getImageUrl();
+            String newImageUrl = storageService.uploadFile(imageFile, StoragePathName.TEST);
 
-        if (!originalImageUrl.equals(defaultImageUrl)) {
-            try {
-                storageService.deleteFile(originalImageUrl);
-            } catch (Exception e) {
-                storageService.deleteFile(newImageUrl);
-                throw new GeneralException(ErrorStatus.FILE_DELETE_FAILED);
+            if (!originalImageUrl.equals(defaultImageUrl)) {
+                try {
+                    storageService.deleteFile(originalImageUrl);
+                } catch (Exception e) {
+                    storageService.deleteFile(newImageUrl);
+                    throw new GeneralException(ErrorStatus.FILE_DELETE_FAILED);
+                }
             }
+            wine.updateImageUrl(newImageUrl);
         }
-
-        wine.updateImageUrl(newImageUrl);
     }
 }
