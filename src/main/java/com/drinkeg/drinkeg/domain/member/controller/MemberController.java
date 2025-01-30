@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain.member.controller;
 
 import com.drinkeg.drinkeg.domain.member.dto.*;
+import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils.AppleClientSecretGenerator;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.security.jwt.TokenService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -24,6 +25,7 @@ public class MemberController {
     private final JoinService joinService;
     private final MemberService memberService;
     private final TokenService tokenService;
+
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "username과 password를 입력받아 회원가입을 진행합니다.")
@@ -82,4 +84,11 @@ public class MemberController {
         String imageUrl = memberService.uploadProfileImage(profileImg, principalDetail.getUsername());
         return ApiResponse.onSuccess(imageUrl);
     }
+
+    @GetMapping(value = "member/name")
+    @Operation(summary = "멤버 닉네임 반환", description = "멤버 닉네임을 반환합니다.")
+    public ApiResponse<String> showMemberName(@AuthenticationPrincipal PrincipalDetail principalDetail) {
+        return ApiResponse.onSuccess(memberService.showMemberName(principalDetail.getUsername()));
+    }
+
 }
