@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.myWine.dto.response;
+package com.drinkeg.drinkeg.domain.myWine.domain;
 
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.model.BaseEntity;

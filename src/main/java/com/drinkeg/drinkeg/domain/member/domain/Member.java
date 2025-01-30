@@ -4,7 +4,7 @@ package com.drinkeg.drinkeg.domain.member.domain;
 import com.drinkeg.drinkeg.domain.member.converter.StringListConverter;
 import com.drinkeg.drinkeg.domain.member.dto.MemberRequest;
 import com.drinkeg.drinkeg.domain.member.dto.MemberUpdateRequest;
-import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWine;
+import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
 import com.drinkeg.drinkeg.domain.member.enums.Provider;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
