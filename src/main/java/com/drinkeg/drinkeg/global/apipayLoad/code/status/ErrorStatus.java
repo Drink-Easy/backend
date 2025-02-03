@@ -78,6 +78,7 @@ public enum ErrorStatus implements BaseCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "MEMBER4001", "접근 권한이 없습니다."),
     PROVIDER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "일치하는 Provider가 없습니다."),
     ROLE_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "일치하는 Role 없습니다."),
+    PROFILE_IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "삭제할 프로필 이미지가 없습니다"),
 
     // Token Error
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4001", "유효하지 않은 엑세스 토큰입니다."),
