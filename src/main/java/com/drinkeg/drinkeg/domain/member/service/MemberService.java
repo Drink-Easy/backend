@@ -20,4 +20,6 @@ public interface MemberService {
     public String uploadProfileImage(MultipartFile multipartFile, String username);
 
     public String showMemberName(String username);
+
+    public void deleteProfileImage(String username);
 }
