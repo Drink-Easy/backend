@@ -85,6 +85,9 @@ public enum ErrorStatus implements BaseCode {
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "리프레쉬 토큰이 없습니다."),
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "리프레쉬 토큰이 만료되었습니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "유효하지 않은 리프레쉬 토큰입니다."),
+    ACCESS_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED,"ACCESS_TOKEN4001","엑세스 토큰이 없습니다."),
+    ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4001", "엑세스 토큰이 만료되었습니다."),
+
 
     // Redis Error
     REDIS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REDIS4001", "Redis 설정에 오류가 발생했습니다."),
@@ -118,7 +121,10 @@ public enum ErrorStatus implements BaseCode {
 
     // Banner Error
     BANNER_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "BANNER4001", "권한이 없는 배너입니다."),
-    BANNER_NOT_FOUND(HttpStatus.BAD_REQUEST, "BANNER4001", "존재하지 않는 배너입니다.");
+    BANNER_NOT_FOUND(HttpStatus.BAD_REQUEST, "BANNER4001", "존재하지 않는 배너입니다."),
+
+    //method Error
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED,"METHOD405", "허용되지 않은 HTTP 메서드입니다.");
 
 
 

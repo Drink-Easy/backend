@@ -43,19 +43,26 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String requestMethod = request.getMethod();
         if (!requestMethod.equals("POST")) {
 
-            filterChain.doFilter(request, response);
+            JWTException.jwtExceptionHandler(response, ErrorStatus.METHOD_NOT_ALLOWED);
             return;
         }
 
         // 쿠키에서 Refresh 토큰 가져옴
         String refresh = null;
+        String access = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("refreshToken")) {
-
                 refresh = cookie.getValue();
             }
+            else if (cookie.getName().equals("accessToken")) {
+                access = cookie.getValue();
+            }
+        }
+        if (access == null) {
+            JWTException.jwtExceptionHandler(response, ErrorStatus.ACCESS_TOKEN_NOT_FOUND);
+            return;
         }
 
         // 토큰 존재 여부 확인
@@ -70,9 +77,15 @@ public class CustomLogoutFilter extends GenericFilterBean {
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-
             // response status code
             JWTException.jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_EXPIRED);
+            return;
+        }
+
+        try {
+            jwtUtil.isExpired(access);
+        } catch (ExpiredJwtException e) {
+            JWTException.jwtExceptionHandler(response, ErrorStatus.ACCESS_TOKEN_EXPIRED);
             return;
         }
 
@@ -84,6 +97,13 @@ public class CustomLogoutFilter extends GenericFilterBean {
             JWTException.jwtExceptionHandler(response, ErrorStatus.INVALID_REFRESH_TOKEN);
             return;
         }
+
+        String accessCategory = jwtUtil.getCategory(access);
+        if (!accessCategory.equals("access")) {
+            JWTException.jwtExceptionHandler(response, ErrorStatus.INVALID_ACCESS_TOKEN);
+            return;
+        }
+
 
         String username = jwtUtil.getUsername(refresh);
 
