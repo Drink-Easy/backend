@@ -13,6 +13,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -119,17 +121,25 @@ public class CustomLogoutFilter extends GenericFilterBean {
         // Refresh 토큰 DB에서 제거
         redisClient.deleteValue(username);
 
-        // 쿠키에 저장되어 있는 Refresh 토큰 null값 처리
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
+        // 쿠키에 저장되어 있는 Refresh 토큰, Access 토큰 null값 처리
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", null)
+                .maxAge(0)
+                .secure(true)
+                .path("/")
+                .httpOnly(true)
+                .sameSite("Strict")
+                .build();
 
-        Cookie accessTokenCookie = new Cookie("accessToken", null);
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(0);
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", null)
+                .maxAge(0)
+                .secure(true)
+                .path("/")
+                .httpOnly(true)
+                .sameSite("Strict")
+                .build();
 
-        response.addCookie(cookie);
-        response.addCookie(accessTokenCookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
         response.setStatus(HttpServletResponse.SC_OK);
 
         response.setContentType("application/json");
