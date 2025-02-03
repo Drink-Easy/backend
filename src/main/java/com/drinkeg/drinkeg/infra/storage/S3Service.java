@@ -28,6 +28,7 @@ public class S3Service implements StorageService {
         return path + '/' + uuid.getUuid();
     }
 
+    @Override
     public String uploadFile(MultipartFile file, StoragePathName storagePathName) {
         try {
             Uuid uuid = uuidRepository.save(Uuid.builder()
@@ -42,7 +43,7 @@ public class S3Service implements StorageService {
         }
     }
 
-    @Transactional
+    @Override
     public List<String> uploadFiles(List<MultipartFile> files, StoragePathName storagePathName) {
         List<String> FileUrls = new ArrayList<>();
         for (MultipartFile file : files) {
@@ -61,6 +62,7 @@ public class S3Service implements StorageService {
         return FileUrls;
     }
 
+    @Override
     public void deleteFile(String url) {
         String keyPath = URI.create(url)
                 .getPath()

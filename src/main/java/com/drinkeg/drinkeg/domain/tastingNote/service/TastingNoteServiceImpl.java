@@ -36,8 +36,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     private final MemberRepository memberRepository;
 
     private final ApplicationEventPublisher eventPublisher;
-    private final EntityManager em;
-
 
     @Override
     public Long saveTastingNote(TastingNoteRequest tastingNoteRequest, String username) {

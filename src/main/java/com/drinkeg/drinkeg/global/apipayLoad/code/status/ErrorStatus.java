@@ -12,6 +12,7 @@ public enum ErrorStatus implements BaseCode {
 
     // Wine Error
     WINE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE4001", "와인이 없습니다."),
+    WINE_IMAGE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "WINE4002", "와인 이미지 업로드에 실패했습니다."),
 
     // TastingNote Error
     TASTING_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTE4001", "테이스팅 노트가 없습니다."),

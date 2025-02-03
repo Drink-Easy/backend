@@ -10,7 +10,8 @@ public enum StoragePathName {
     WINE("wine"),
     WINE_CLASS("wine-class"),
     MEMBER_PROFILE("member/profile"),
-    BANNER("banner");
+    BANNER("banner"),
+    TEST("test");
 
     private final String path;
 }
