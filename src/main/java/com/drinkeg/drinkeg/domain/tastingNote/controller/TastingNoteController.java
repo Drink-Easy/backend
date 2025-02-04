@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.tastingNote.controller;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
@@ -77,10 +78,10 @@ public class TastingNoteController {
 
     @GetMapping
     @Operation(summary = "와인 이름으로 테이스팅 노트 검색", description = "와인 이름으로 테이스팅 노트 검색")
-    public ApiResponse<List<TastingNoteResponse>> searchTastingNoteByWineName(@AuthenticationPrincipal PrincipalDetail principalDetail,
+    public ApiResponse<List<TastingNotePreviewResponse>> searchTastingNoteByWineName(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                                       @RequestParam("searchName") String searchName) {
 
-        List<TastingNoteResponse> result = tastingNoteService.searchTastingNoteByWineName(searchName, principalDetail.getUsername());
+        List<TastingNotePreviewResponse> result = tastingNoteService.searchTastingNoteByWineName(searchName, principalDetail.getUsername());
         return ApiResponse.onSuccess(result);
     }
 

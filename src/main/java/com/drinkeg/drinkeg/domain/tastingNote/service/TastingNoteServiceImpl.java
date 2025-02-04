@@ -129,11 +129,11 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public List<TastingNoteResponse> searchTastingNoteByWineName(String searchName, String username) {
+    public List<TastingNotePreviewResponse> searchTastingNoteByWineName(String searchName, String username) {
         List<TastingNote> tastingNoteList = tastingNoteRepository.searchTastingNoteByWineName(searchName, username);
 
         return tastingNoteList.stream()
-                .map(TastingNoteResponse::of)
+                .map(TastingNotePreviewResponse::of)
                 .toList();
     }
 }

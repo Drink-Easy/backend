@@ -4,6 +4,7 @@ import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 
 import java.util.List;
@@ -23,6 +24,6 @@ public interface TastingNoteService {
 
     void setTastingNoteMemberNull(String username);
 
-    List<TastingNoteResponse> searchTastingNoteByWineName(String searchName, String username);
+    List<TastingNotePreviewResponse> searchTastingNoteByWineName(String searchName, String username);
 
 }
