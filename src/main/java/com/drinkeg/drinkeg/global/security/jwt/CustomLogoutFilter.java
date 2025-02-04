@@ -1,5 +1,7 @@
 package com.drinkeg.drinkeg.global.security.jwt;
 
+import com.drinkeg.drinkeg.domain.member.login.oauth2.dto.LoginResponseDTO;
+import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.infra.redis.RedisClient;
@@ -142,10 +144,12 @@ public class CustomLogoutFilter extends GenericFilterBean {
         response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
         response.setStatus(HttpServletResponse.SC_OK);
 
+        ApiResponse<String> apiResponse = ApiResponse.onSuccess("로그아웃 성공");
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getWriter(), "로그아웃 성공");
+        objectMapper.writeValue(response.getWriter(), apiResponse);
     }
 }
