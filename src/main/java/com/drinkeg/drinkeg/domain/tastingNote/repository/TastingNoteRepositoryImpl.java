@@ -114,6 +114,21 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .fetchOne();
     }
 
+    @Override
+    public List<TastingNote> searchTastingNoteByWineName(String searchName, String username) {
+        return queryFactory
+                .selectFrom(tastingNote)
+                .leftJoin(tastingNote.wine, wine).fetchJoin()
+                .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
+                .where(
+                        tastingNote.member.username.eq(username),
+                        wine.name.containsIgnoreCase(searchName)
+                                .or(wine.nameEng.containsIgnoreCase(searchName))
+                )
+                .orderBy(tastingNote.id.desc())
+                .fetch();
+    }
+
 
     private OrderSpecifier<?> orderCondition(SortType sortType) {
         return switch (sortType) {

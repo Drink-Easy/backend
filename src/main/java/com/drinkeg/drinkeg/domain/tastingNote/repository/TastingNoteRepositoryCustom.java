@@ -24,4 +24,6 @@ public interface TastingNoteRepositoryCustom {
     List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username);
 
     TastingNoteSortCountResponse findTastingNoteSortCountsByUsername(String username);
+
+    List<TastingNote> searchTastingNoteByWineName(String searchName, String username);
 }

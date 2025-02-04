@@ -6,6 +6,8 @@ import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpda
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 
+import java.util.List;
+
 
 public interface TastingNoteService {
 
@@ -20,5 +22,7 @@ public interface TastingNoteService {
     Long deleteTastingNote(Long noteId, String username);
 
     void setTastingNoteMemberNull(String username);
+
+    List<TastingNoteResponse> searchTastingNoteByWineName(String searchName, String username);
 
 }

@@ -127,4 +127,13 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public void setTastingNoteMemberNull(String username) {
         tastingNoteRepository.updateTastingNoteMemberNull(username);
     }
+
+    @Override
+    public List<TastingNoteResponse> searchTastingNoteByWineName(String searchName, String username) {
+        List<TastingNote> tastingNoteList = tastingNoteRepository.searchTastingNoteByWineName(searchName, username);
+
+        return tastingNoteList.stream()
+                .map(TastingNoteResponse::of)
+                .toList();
+    }
 }

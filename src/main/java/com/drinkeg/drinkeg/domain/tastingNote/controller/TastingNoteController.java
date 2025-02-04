@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.controller;
 
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -70,6 +73,15 @@ public class TastingNoteController {
 
         tastingNoteService.deleteTastingNote(noteId, principalDetail.getUsername());
         return ApiResponse.onSuccess("노트 삭제 완료");
+    }
+
+    @GetMapping
+    @Operation(summary = "와인 이름으로 테이스팅 노트 검색", description = "와인 이름으로 테이스팅 노트 검색")
+    public ApiResponse<List<TastingNoteResponse>> searchTastingNoteByWineName(@AuthenticationPrincipal PrincipalDetail principalDetail,
+                                                                      @RequestParam("searchName") String searchName) {
+
+        List<TastingNoteResponse> result = tastingNoteService.searchTastingNoteByWineName(searchName, principalDetail.getUsername());
+        return ApiResponse.onSuccess(result);
     }
 
 }
