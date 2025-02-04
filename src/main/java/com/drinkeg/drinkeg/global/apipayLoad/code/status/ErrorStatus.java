@@ -87,7 +87,7 @@ public enum ErrorStatus implements BaseCode {
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "리프레쉬 토큰이 만료되었습니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "유효하지 않은 리프레쉬 토큰입니다."),
     ACCESS_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED,"ACCESS_TOKEN4001","엑세스 토큰이 없습니다."),
-    ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4001", "엑세스 토큰이 만료되었습니다."),
+    ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4002", "엑세스 토큰이 만료되었습니다."),
 
 
     // Redis Error
