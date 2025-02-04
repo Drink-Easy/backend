@@ -35,6 +35,9 @@ public class JWTUtil {
 
     public String createJwt(String category,String username, String role, Long expiredMs) {
 
+        System.out.println("현재 시간 (밀리초): " + System.currentTimeMillis());
+        System.out.println("현재 시간 (Date 변환): " + new Date(System.currentTimeMillis()));
+
         return Jwts.builder()
                 .claim("category",category)
                 .claim("username", username)
@@ -44,8 +47,6 @@ public class JWTUtil {
                 .signWith(secretKey)
                 .compact();
     }
-
-
 
 
 }
