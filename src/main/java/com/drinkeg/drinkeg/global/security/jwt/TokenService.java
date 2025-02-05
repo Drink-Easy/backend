@@ -29,14 +29,14 @@ public class TokenService {
     private final JWTUtil jwtUtil;
     private final RedisClient redisClient;
 
-    public void createCookie(HttpServletResponse response, String key, String value) {
+    public void createCookie(HttpServletResponse response, String key, String value, long expierd) {
 
         ResponseCookie cookie = ResponseCookie.from(key, value)
                 .httpOnly(true)
                 .secure(true) // HTTPS만 허용
                 .path("/")
                 .sameSite("Strict") // SameSite 설정
-                .maxAge(24 * 60 * 60) // 1일
+                .maxAge(expierd) // 1일
                 .build();
         response.addHeader("Set-Cookie", cookie.toString());
 
@@ -107,16 +107,16 @@ public class TokenService {
         }
 
         //make new JWT
-        String newAccess = jwtUtil.createJwt("access", username, role, 600000L);
-        String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        String newAccess = jwtUtil.createJwt("access", username, role, 3600000L);
+        String newRefresh = jwtUtil.createJwt("refresh", username, role, 864000000L);
 
         //Refresh 토큰 저장하고 기존의 Refresh 토큰 삭제 후에 새 refresh 토큰 저장
         redisClient.deleteValue(username);
         redisClient.setValue(username, newRefresh, 864000000L);
 
         //response
-        createCookie(response, "accessToken", newAccess); // Access Token 쿠키 추가
-        createCookie(response, "refreshToken", newRefresh); // refresh token 쿠키 추가
+        createCookie(response, "accessToken", newAccess,3600000L); // Access Token 쿠키 추가
+        createCookie(response, "refreshToken", newRefresh,864000000L); // refresh token 쿠키 추가
         response.setStatus(HttpStatus.OK.value());
     }
 
@@ -172,8 +172,8 @@ public class TokenService {
         String refreshToken = jwtUtil.createJwt("refresh",member.getUsername(), member.getRole().getValue(),864000000L);
 
         // 토큰을 쿠키에 저장하여 응답
-        createCookie(response, "accessToken", accessToken); // Access Token 쿠키 추가
-        createCookie(response, "refreshToken", refreshToken); // refresh token 쿠키 추가
+        createCookie(response, "accessToken", accessToken,3600000L); // Access Token 쿠키 추가
+        createCookie(response, "refreshToken", refreshToken,864000000L); // refresh token 쿠키 추가
         response.setStatus(HttpStatus.OK.value());
 
         // redis에 refresh 토큰 저장
