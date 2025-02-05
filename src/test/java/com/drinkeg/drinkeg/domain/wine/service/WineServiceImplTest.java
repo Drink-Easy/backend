@@ -301,9 +301,9 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // when
         List<HomeWineResponse> recommendWineList = wineService.getRecommendWineList(member.getUsername());
         // then
-        assertThat(recommendWineList).hasSize(4)
+        assertThat(recommendWineList).hasSize(2)
                 .extracting("wineName")
-                .containsExactlyInAnyOrder("와인1", "와인2", "와인4", "와인5");
+                .containsExactlyInAnyOrder("와인1", "와인4");
     }
 
     @DisplayName("가장 인기있는 와인 10개를 반환한다.")
