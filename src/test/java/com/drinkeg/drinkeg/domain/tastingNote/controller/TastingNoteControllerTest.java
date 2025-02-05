@@ -10,9 +10,11 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewRes
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.*;
 
@@ -379,7 +381,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void showAllTastingNoteByWrongUser() throws Exception {
         //given
-        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of("전체")), eq("user")))
+        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of("전체")), eq("user"), any(Pageable.class)))
                 .thenThrow(new GeneralException(ErrorStatus.TASTING_NOTE_FORBIDDEN));
 
         //when //then
@@ -398,18 +400,19 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     void showAllTastingNoteAll() throws Exception {
         // given
         String sort = "전체";
-        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user")))
+        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user"), any(Pageable.class)))
                 .thenReturn(AllTastingNoteResponse.builder()
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
-                        .NotePriviewList(List.of(
-                                createTastingNotePreviewResponse(1L, "wine", "레드"),
-                                createTastingNotePreviewResponse(2L, "wine2", "화이트"),
-                                createTastingNotePreviewResponse(3L, "wine3", "스파클링"),
-                                createTastingNotePreviewResponse(4L, "wine4", "로제"),
-                                createTastingNotePreviewResponse(5L, "wine5", "주정강화"),
-                                createTastingNotePreviewResponse(6L, "wine6", "기타")
-                        ))
-                        .build());
+                        .pageResponse(new PageResponse<>(
+                                List.of(
+                                        createTastingNotePreviewResponse(1L, "2025-01-01", "wine", "레드"),
+                                        createTastingNotePreviewResponse(2L, "2025-01-02", "wine2", "화이트"),
+                                        createTastingNotePreviewResponse(3L, "2025-01-03", "wine3", "스파클링"),
+                                        createTastingNotePreviewResponse(4L, "2025-01-04", "wine4", "로제"),
+                                        createTastingNotePreviewResponse(5L, "2025-01-05", "wine5", "주정강화"),
+                                        createTastingNotePreviewResponse(6L, "2025-01-06", "wine6", "기타")
+                                ), 0, 1)).build()
+                        );
 
         // when // then
         ResultActions resultActions = mockMvc.perform(get("/tasting-note/all")
@@ -420,12 +423,12 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 1L, "wine", "레드");
-        assertJsonNotePreviewList(resultActions, 1, 2L, "wine2", "화이트");
-        assertJsonNotePreviewList(resultActions, 2, 3L, "wine3", "스파클링");
-        assertJsonNotePreviewList(resultActions, 3, 4L, "wine4", "로제");
-        assertJsonNotePreviewList(resultActions, 4, 5L, "wine5", "주정강화");
-        assertJsonNotePreviewList(resultActions, 5, 6L, "wine6", "기타");
+        assertJsonNotePreviewList(resultActions, 0, 1L, "2025-01-01", "wine", "레드");
+        assertJsonNotePreviewList(resultActions, 1, 2L, "2025-01-02", "wine2", "화이트");
+        assertJsonNotePreviewList(resultActions, 2, 3L, "2025-01-03", "wine3", "스파클링");
+        assertJsonNotePreviewList(resultActions, 3, 4L, "2025-01-04", "wine4", "로제");
+        assertJsonNotePreviewList(resultActions, 4, 5L, "2025-01-05", "wine5", "주정강화");
+        assertJsonNotePreviewList(resultActions, 5, 6L, "2025-01-06", "wine6", "기타");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(레드) 기준으로 조회한다.")
@@ -434,13 +437,14 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     void showAllTastingNoteRed() throws Exception {
         // given
         String sort = "레드";
-        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user")))
+        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user"), any(Pageable.class)))
                 .thenReturn(AllTastingNoteResponse.builder()
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
-                        .NotePriviewList(List.of(
-                                createTastingNotePreviewResponse(1L, "wine", "레드")
-                        ))
-                        .build());
+                        .pageResponse(new PageResponse<>(
+                                List.of(
+                                        createTastingNotePreviewResponse(1L, "2025-01-01", "wine", "레드")
+                                ), 0, 1)).build()
+                );
 
         // when // then
         ResultActions resultActions = mockMvc.perform(get("/tasting-note/all")
@@ -451,7 +455,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 1L, "wine", "레드");
+        assertJsonNotePreviewList(resultActions, 0, 1L, "2025-01-01","wine", "레드");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(화이트) 기준으로 조회한다.")
@@ -460,13 +464,14 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     void showAllTastingNoteWhite() throws Exception {
         // given
         String sort = "화이트";
-        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user")))
+        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user"), any(Pageable.class)))
                 .thenReturn(AllTastingNoteResponse.builder()
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
-                        .NotePriviewList(List.of(
-                                createTastingNotePreviewResponse(2L, "wine2", "화이트")
-                        ))
-                        .build());
+                        .pageResponse(new PageResponse<>(
+                                List.of(
+                                        createTastingNotePreviewResponse(2L, "2025-01-01", "wine2", "화이트")
+                                ), 0, 1)).build()
+                );
 
         // when // then
         ResultActions resultActions = mockMvc.perform(get("/tasting-note/all")
@@ -477,7 +482,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 2L, "wine2", "화이트");
+        assertJsonNotePreviewList(resultActions, 0, 2L, "2025-01-01", "wine2", "화이트");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(스파클링) 기준으로 조회한다.")
@@ -486,13 +491,13 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     void showAllTastingNoteSparkling() throws Exception {
         // given
         String sort = "스파클링";
-        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user")))
+        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user"), any(Pageable.class)))
                 .thenReturn(AllTastingNoteResponse.builder()
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
-                        .NotePriviewList(List.of(
-                                createTastingNotePreviewResponse(3L, "wine3", "스파클링")
-                        ))
-                        .build());
+                        .pageResponse(new PageResponse<>(
+                                List.of(
+                                        createTastingNotePreviewResponse(3L, "2025-01-01", "wine3", "스파클링")
+                                ), 0, 1)).build());
 
         // when // then
         ResultActions resultActions = mockMvc.perform(get("/tasting-note/all")
@@ -503,7 +508,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 3L, "wine3", "스파클링");
+        assertJsonNotePreviewList(resultActions, 0, 3L, "2025-01-01","wine3", "스파클링");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(로제) 기준으로 조회한다.")
@@ -512,13 +517,13 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     void showAllTastingNoteRose() throws Exception {
         // given
         String sort = "로제";
-        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user")))
+        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user"), any(Pageable.class)))
                 .thenReturn(AllTastingNoteResponse.builder()
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
-                        .NotePriviewList(List.of(
-                                createTastingNotePreviewResponse(4L, "wine4", "로제")
-                        ))
-                        .build());
+                        .pageResponse(new PageResponse<>(
+                                List.of(
+                                        createTastingNotePreviewResponse(4L, "2025-01-01","wine4", "로제")
+                                ), 0, 1)).build());
 
         // when // then
         ResultActions resultActions = mockMvc.perform(get("/tasting-note/all")
@@ -529,7 +534,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 4L, "wine4", "로제");
+        assertJsonNotePreviewList(resultActions, 0, 4L, "2025-01-01","wine4", "로제");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(기타) 기준으로 조회한다.")
@@ -538,14 +543,14 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     void showAllTastingNoteEtc() throws Exception {
         // given
         String sort = "기타";
-        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user")))
+        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user"), any(Pageable.class)))
                 .thenReturn(AllTastingNoteResponse.builder()
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
-                        .NotePriviewList(List.of(
-                                createTastingNotePreviewResponse(5L, "wine5", "주정강화"),
-                                createTastingNotePreviewResponse(6L, "wine6", "기타")
-                        ))
-                        .build());
+                        .pageResponse(new PageResponse<>(
+                                List.of(
+                                        createTastingNotePreviewResponse(5L, "2025-01-01","wine5", "주정강화"),
+                                        createTastingNotePreviewResponse(6L, "2025-01-03","wine6", "기타")
+                                ), 0, 1)).build());
 
         // when // then
         ResultActions resultActions = mockMvc.perform(get("/tasting-note/all")
@@ -556,8 +561,8 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 5L, "wine5", "주정강화");
-        assertJsonNotePreviewList(resultActions, 1, 6L, "wine6", "기타");
+        assertJsonNotePreviewList(resultActions, 0, 5L, "2025-01-01","wine5", "주정강화");
+        assertJsonNotePreviewList(resultActions, 1, 6L, "2025-01-03","wine6", "기타");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(전체) 기준으로 조회할 때 테이스팅 노트가 없으면 빈 리스트를 반환한다.")
@@ -566,20 +571,20 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     void showAllTastingNoteEmpty() throws Exception {
         // given
         String sort = "전체";
-        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user")))
+        when(tastingNoteService.findAllTastingNote(eq(TastingNoteWineSort.of(sort)), eq("user"), any(Pageable.class)))
                 .thenReturn(AllTastingNoteResponse.builder()
                         .sortCount(new TastingNoteSortCountResponse(0, 0, 0, 0, 0, 0))
-                        .NotePriviewList(List.of())
-                        .build());
+                        .pageResponse(new PageResponse<>(List.of(), 0, 0)).build());
 
         // when // then
         ResultActions resultActions = mockMvc.perform(get("/tasting-note/all")
                         .param("sort", "전체")
                 )
-                .andExpect(jsonPath("$.result.notePriviewList").isEmpty())
+                .andExpect(jsonPath("$.result.pageResponse.content").isEmpty())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("COMMON200"))
-                .andExpect(jsonPath("$.message").value("OK"));
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.result.pageResponse.content").isEmpty());
         assertJsonSortCount(resultActions, 0, 0, 0, 0, 0, 0);
     }
 
@@ -832,6 +837,54 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
         verify(tastingNoteService).deleteTastingNote(eq(noteId), eq("user"));
     }
 
+    @DisplayName("와인 이름으로 사용자의 테이스팅 노트를 검색한다.")
+    @Test
+    @MockMember
+    void searchTastingNoteByWineName() throws Exception {
+        // given
+        String wineName = "와인";
+        when(tastingNoteService.searchTastingNoteByWineName(eq(wineName), eq("user"), any(Pageable.class)))
+                .thenReturn(new PageResponse(
+                        List.of(createTastingNotePreviewResponse(6L, "2025-01-06", "와인6", "기타"),
+                                createTastingNotePreviewResponse(5L, "2025-01-05", "와인5", "주정강화"),
+                                createTastingNotePreviewResponse(4L, "2025-01-04", "와인4", "로제"),
+                                createTastingNotePreviewResponse(3L, "2025-01-03", "와인3", "스파클링"),
+                                createTastingNotePreviewResponse(2L, "2025-01-02", "와인2", "화이트"),
+                                createTastingNotePreviewResponse(1L, "2025-01-01", "와인1", "레드")
+                        ), 0, 1));
+
+        // when // then
+        ResultActions resultActions = mockMvc.perform(get("/tasting-note?searchName={searchName}", wineName))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"));
+        assertJsonSearchNotePreviewList(resultActions, 0, 6L, "2025-01-06", "와인6", "기타");
+        assertJsonSearchNotePreviewList(resultActions, 1, 5L, "2025-01-05", "와인5", "주정강화");
+        assertJsonSearchNotePreviewList(resultActions, 2, 4L, "2025-01-04", "와인4", "로제");
+        assertJsonSearchNotePreviewList(resultActions, 3, 3L, "2025-01-03", "와인3", "스파클링");
+        assertJsonSearchNotePreviewList(resultActions, 4, 2L, "2025-01-02", "와인2", "화이트");
+        assertJsonSearchNotePreviewList(resultActions, 5, 1L, "2025-01-01", "와인1", "레드");
+    }
+
+    @DisplayName("와인 이름으로 사용자의 테이스팅 노트를 검색할 때 테이스팅 노트가 없으면 빈 리스트를 반환한다.")
+    @Test
+    @MockMember
+    void searchTastingNoteByWineNameEmpty() throws Exception {
+        // given
+        String wineName = "와인";
+        when(tastingNoteService.searchTastingNoteByWineName(eq(wineName), eq("user"), any(Pageable.class)))
+                .thenReturn(new PageResponse<>(List.of(), 0, 0));
+
+        // when // then
+        ResultActions resultActions = mockMvc.perform(get("/tasting-note?searchName={searchName}", wineName))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.content").isEmpty())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"));
+    }
+
 
     TastingNoteRequest createTastingNoteRequest(Long wineId) {
         return new TastingNoteRequest(wineId, "red", LocalDate.parse("2025-01-01"), 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, "good");
@@ -843,9 +896,10 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
         return new TastingNoteRequest(wineId, color, tasteDate, sweetness, acidity, tannin, body, alcohol, noseList, rating, review);
     }
 
-    TastingNotePreviewResponse createTastingNotePreviewResponse(Long noteId, String wineName, String sort) {
+    TastingNotePreviewResponse createTastingNotePreviewResponse(Long noteId, String tasteDate, String wineName, String sort) {
         return TastingNotePreviewResponse.builder()
                 .noteId(noteId)
+                .tasteDate(LocalDate.parse(tasteDate))
                 .wineName(wineName)
                 .imageUrl("https://DEFAULT_IMAGE_URL")
                 .sort(sort)
@@ -893,10 +947,20 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.result.sortCount.etcCount").value(etcCount));
     }
 
-    private void assertJsonNotePreviewList(ResultActions resultActions, int index, long noteId, String wineName, String sort) throws Exception {
-        resultActions.andExpect(jsonPath("$.result.notePriviewList[" + index + "].noteId").value(noteId))
-                .andExpect(jsonPath("$.result.notePriviewList[" + index + "].wineName").value(wineName))
-                .andExpect(jsonPath("$.result.notePriviewList[" + index + "].sort").value(sort))
-                .andExpect(jsonPath("$.result.notePriviewList[" + index + "].imageUrl").value("https://DEFAULT_IMAGE_URL"));
+    private void assertJsonNotePreviewList(ResultActions resultActions, int index, long noteId, String tasteDate, String wineName, String sort) throws Exception {
+        resultActions.andExpect(jsonPath("$.result.pageResponse.content[" + index + "].noteId").value(noteId))
+                .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].tasteDate").value(tasteDate))
+                .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].wineName").value(wineName))
+                .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].sort").value(sort))
+                .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].imageUrl").value("https://DEFAULT_IMAGE_URL"));
     }
+
+    private void assertJsonSearchNotePreviewList(ResultActions resultActions, int index, long noteId, String tasteDate, String wineName, String sort) throws Exception {
+        resultActions.andExpect(jsonPath("$.result.content[" + index + "].noteId").value(noteId))
+                .andExpect(jsonPath("$.result.content[" + index + "].tasteDate").value(tasteDate))
+                .andExpect(jsonPath("$.result.content[" + index + "].wineName").value(wineName))
+                .andExpect(jsonPath("$.result.content[" + index + "].sort").value(sort))
+                .andExpect(jsonPath("$.result.content[" + index + "].imageUrl").value("https://DEFAULT_IMAGE_URL"));
+    }
+
 }

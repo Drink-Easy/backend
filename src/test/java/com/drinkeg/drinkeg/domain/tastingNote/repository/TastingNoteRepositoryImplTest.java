@@ -340,7 +340,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
 
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ALL, member.getUsername());
+        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ALL, member.getUsername(), PageRequest.of(0, 10));
 
         // then
         assertThat(tastingNotes).hasSize(6)
@@ -348,7 +348,29 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 .containsExactly("기타", "주정강화", "로제", "스파클링", "화이트", "레드");
     }
 
-    @DisplayName("회원이 보유한 테이스트를 와인 종류별로 조회한다.")
+    @DisplayName("회원의 보유한 테이스팅 노트의 개수를 와인 종류에 따라 조회한다.")
+    @Test
+    void countTastingNoteByUsername() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine1 = wineRepository.save(createWine("레드 와인"));
+        Wine wine2 = wineRepository.save(createWine("화이트 와인"));
+        Wine wine3 = wineRepository.save(createWine("스파클링 와인"));
+
+        TastingNote tastingNote1 = createTastingNote(member, wine1);
+        TastingNote tastingNote2 = createTastingNote(member, wine2);
+        TastingNote tastingNote3 = createTastingNote(member, wine3);
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
+
+        // when
+        long count = tastingNoteRepository.countTastingNoteBySortAndUsername(TastingNoteWineSort.ALL, member.getUsername());
+
+        // then
+        assertThat(count).isEqualTo(3);
+    }
+
+    @DisplayName("회원이 보유한 테이스팅 노트를 와인 종류별로 조회한다.")
     @Test
     void findTastingNoteBySortAndUsernameRed() {
         // given
@@ -370,7 +392,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
 
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.RED, member.getUsername());
+        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.RED, member.getUsername(), PageRequest.of(0, 10));
 
         // then
         assertThat(tastingNotes).hasSize(1)
@@ -399,7 +421,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
 
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ETCETERA, member.getUsername());
+        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ETCETERA, member.getUsername(), PageRequest.of(0, 10));
 
         // then
         assertThat(tastingNotes).hasSize(2)
@@ -431,6 +453,52 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                         tuple(5.0f, "Review 3"),
                         tuple(4.0f, "Review 1")
                 );
+    }
+
+    @DisplayName("와인 이름으로 테이스팅 노트를 검색한다.")
+    @Test
+    void findTastingNoteByWineName() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine1 = wineRepository.save(createWine("와인1"));
+        Wine wine2 = wineRepository.save(createWine("와인2"));
+        Wine wine3 = wineRepository.save(createWine("와인3"));
+
+        TastingNote tastingNote1 = createTastingNote(member, wine1);
+        TastingNote tastingNote2 = createTastingNote(member, wine2);
+        TastingNote tastingNote3 = createTastingNote(member, wine3);
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
+
+        // when
+        List<TastingNote> tastingNotes = tastingNoteRepository.searchTastingNoteByWineName("와인", "user" ,PageRequest.of(0, 10));
+
+        // then
+        assertThat(tastingNotes).hasSize(3)
+                .extracting("wine.name")
+                .containsExactly("와인3", "와인2", "와인1");
+    }
+
+    @DisplayName("와인 이름으로 검색한 테이스팅 노트의 개수를 조회한다.")
+    @Test
+    void countTastingNoteByWineName() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine1 = wineRepository.save(createWine("와인1"));
+        Wine wine2 = wineRepository.save(createWine("와인2"));
+        Wine wine3 = wineRepository.save(createWine("와인3"));
+
+        TastingNote tastingNote1 = createTastingNote(member, wine1);
+        TastingNote tastingNote2 = createTastingNote(member, wine2);
+        TastingNote tastingNote3 = createTastingNote(member, wine3);
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
+
+        // when
+        long count = tastingNoteRepository.countSearchTastingNoteByWineName("와인", "user");
+
+        // then
+        assertThat(count).isEqualTo(3);
     }
 
     private TastingNote createTastingNote(Member member, Wine wine,

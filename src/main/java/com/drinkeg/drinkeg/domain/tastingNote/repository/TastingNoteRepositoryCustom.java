@@ -21,7 +21,13 @@ public interface TastingNoteRepositoryCustom {
 
     List<String> findTopThreeNoseByWineId(Long wineId);
 
-    List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username);
+    List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username, Pageable pageable);
+
+    long countTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username);
 
     TastingNoteSortCountResponse findTastingNoteSortCountsByUsername(String username);
+
+    List<TastingNote> searchTastingNoteByWineName(String searchName, String username, Pageable pageable);
+
+    long countSearchTastingNoteByWineName(String searchName, String username);
 }
