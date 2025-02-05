@@ -583,7 +583,8 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.result.pageResponse.content").isEmpty())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("COMMON200"))
-                .andExpect(jsonPath("$.message").value("OK"));
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.result.pageResponse.content").isEmpty());
         assertJsonSortCount(resultActions, 0, 0, 0, 0, 0, 0);
     }
 
@@ -864,6 +865,24 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
         assertJsonSearchNotePreviewList(resultActions, 3, 3L, "2025-01-03", "와인3", "스파클링");
         assertJsonSearchNotePreviewList(resultActions, 4, 2L, "2025-01-02", "와인2", "화이트");
         assertJsonSearchNotePreviewList(resultActions, 5, 1L, "2025-01-01", "와인1", "레드");
+    }
+
+    @DisplayName("와인 이름으로 사용자의 테이스팅 노트를 검색할 때 테이스팅 노트가 없으면 빈 리스트를 반환한다.")
+    @Test
+    @MockMember
+    void searchTastingNoteByWineNameEmpty() throws Exception {
+        // given
+        String wineName = "와인";
+        when(tastingNoteService.searchTastingNoteByWineName(eq(wineName), eq("user"), any(Pageable.class)))
+                .thenReturn(new PageResponse<>(List.of(), 0, 0));
+
+        // when // then
+        ResultActions resultActions = mockMvc.perform(get("/tasting-note?searchName={searchName}", wineName))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.content").isEmpty())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"));
     }
 
 
