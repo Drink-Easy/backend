@@ -6,6 +6,8 @@ import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpda
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public interface TastingNoteService {
 
     TastingNoteResponse showTastingNoteByIdAndUsername(Long noteId, String username);
 
-    AllTastingNoteResponse findAllTastingNote(TastingNoteWineSort wineSort, String username);
+    AllTastingNoteResponse findAllTastingNote(TastingNoteWineSort wineSort, String username, Pageable pageable);
 
     void updateTastingNote(Long noteId, TastingNoteUpdateRequest tastingNoteUpdateRequest, String username);
 
@@ -24,6 +26,6 @@ public interface TastingNoteService {
 
     void setTastingNoteMemberNull(String username);
 
-    List<TastingNotePreviewResponse> searchTastingNoteByWineName(String searchName, String username);
+    PageResponse<TastingNotePreviewResponse> searchTastingNoteByWineName(String searchName, String username, Pageable pageable);
 
 }

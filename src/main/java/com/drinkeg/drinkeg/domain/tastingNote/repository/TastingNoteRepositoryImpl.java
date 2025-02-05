@@ -82,7 +82,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     }
 
     @Override
-    public List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username) {
+    public List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username, Pageable pageable) {
         return queryFactory
                 .selectFrom(tastingNote)
                 .leftJoin(tastingNote.wine, wine).fetchJoin()
@@ -91,8 +91,23 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                         tastingNote.member.username.eq(username),
                         wineSortIn(wineSort)
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .orderBy(tastingNote.id.desc())
                 .fetch();
+    }
+
+    @Override
+    public long countTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username) {
+        return queryFactory
+                .select(tastingNote.count())
+                .from(tastingNote)
+                .leftJoin(tastingNote.wine, wine)
+                .where(
+                        tastingNote.member.username.eq(username),
+                        wineSortIn(wineSort)
+                )
+                .fetchOne();
     }
 
 
@@ -115,7 +130,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     }
 
     @Override
-    public List<TastingNote> searchTastingNoteByWineName(String searchName, String username) {
+    public List<TastingNote> searchTastingNoteByWineName(String searchName, String username, Pageable pageable) {
         return queryFactory
                 .selectFrom(tastingNote)
                 .leftJoin(tastingNote.wine, wine).fetchJoin()
@@ -125,8 +140,24 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                         wine.name.containsIgnoreCase(searchName)
                                 .or(wine.nameEng.containsIgnoreCase(searchName))
                 )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .orderBy(tastingNote.id.desc())
                 .fetch();
+    }
+
+    @Override
+    public long countSearchTastingNoteByWineName(String searchName, String username) {
+        return queryFactory
+                .select(tastingNote.count())
+                .from(tastingNote)
+                .leftJoin(tastingNote.wine, wine)
+                .where(
+                        tastingNote.member.username.eq(username),
+                        wine.name.containsIgnoreCase(searchName)
+                                .or(wine.nameEng.containsIgnoreCase(searchName))
+                )
+                .fetchOne();
     }
 
 
