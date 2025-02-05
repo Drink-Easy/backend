@@ -49,9 +49,9 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
          // then
          assertThat(recommendWines)
-                 .hasSize(4)
+                 .hasSize(2)
                  .extracting("name")
-                 .containsExactlyInAnyOrder("와인1", "와인2", "와인4", "와인5");
+                 .containsExactlyInAnyOrder("와인1", "와인4");
     }
 
     @DisplayName("멤버 선호 와인 종류, 가격대에 따른 와인 추천 리스트 조회")
@@ -77,9 +77,9 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(recommendWines)
-                .hasSize(7)
+                .hasSize(3)
                 .extracting("name")
-                .containsExactlyInAnyOrder("와인1", "와인2", "와인4", "와인5", "와인7", "와인8", "와인11");
+                .containsExactlyInAnyOrder("와인1", "와인4", "와인8");
     }
 
     @DisplayName("멤버 선호 가격대에 따른 와인 추천 리스트 조회")
@@ -105,9 +105,9 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(recommendWines)
-                .hasSize(9)
+                .hasSize(5)
                 .extracting("name")
-                .containsExactlyInAnyOrder("와인1", "와인2", "와인4", "와인5", "와인7", "와인8", "와인9", "와인10", "와인11");
+                .containsExactlyInAnyOrder("와인1", "와인4", "와인8", "와인9", "와인10");
     }
 
     @DisplayName("멤버의 선호 정보 없이 와인 추천 리스트 조회")
@@ -129,8 +129,9 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(recommendWines)
+                .hasSize(2)
                 .extracting("name")
-                .containsExactlyInAnyOrder("와인1", "와인2", "와인4", "와인5");
+                .containsExactlyInAnyOrder("와인1", "와인4");
     }
 
     @DisplayName("좋아요 수가 많은 와인 리스트 조회")
