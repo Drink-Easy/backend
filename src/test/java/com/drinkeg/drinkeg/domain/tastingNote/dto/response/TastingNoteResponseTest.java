@@ -40,8 +40,8 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
 
         // then
         Assertions.assertThat(tastingNotePreviewResponse)
-                .extracting("noteId", "wineName", "imageUrl", "sort")
-                .containsExactly(tastingNoteId, wine.getName(), wine.getImageUrl(), wine.getSort());
+                .extracting("noteId", "tasteDate", "wineName", "imageUrl", "sort")
+                .containsExactly(tastingNoteId, LocalDate.parse("2025-01-06"), wine.getName(), wine.getImageUrl(), wine.getSort());
 
     }
 

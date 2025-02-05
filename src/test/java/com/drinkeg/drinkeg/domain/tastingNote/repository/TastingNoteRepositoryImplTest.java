@@ -340,7 +340,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
 
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ALL, member.getUsername());
+        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ALL, member.getUsername(), PageRequest.of(0, 10));
 
         // then
         assertThat(tastingNotes).hasSize(6)
@@ -370,7 +370,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
 
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.RED, member.getUsername());
+        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.RED, member.getUsername(), PageRequest.of(0, 10));
 
         // then
         assertThat(tastingNotes).hasSize(1)
@@ -399,7 +399,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5, tastingNote6));
 
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ETCETERA, member.getUsername());
+        List<TastingNote> tastingNotes = tastingNoteRepository.findTastingNoteBySortAndUsername(TastingNoteWineSort.ETCETERA, member.getUsername(), PageRequest.of(0, 10));
 
         // then
         assertThat(tastingNotes).hasSize(2)

@@ -21,6 +21,7 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,11 +29,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.drinkeg.drinkeg.domain.member.domain.Member.createMember;
-import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class TastingNoteServiceImplTest extends IntegrationTestSupport {
 
@@ -175,8 +174,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember("user1", "password", false));
 
         // when
-        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ALL, member.getUsername());
-        List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
+        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ALL, member.getUsername(), PageRequest.of(0, 10));
+        List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getPageResponse().getContent();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
         // then
@@ -216,10 +215,10 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wine6, createTastingNoteRequest(wine6)));
 
         // when
-        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ALL, member.getUsername());
+        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ALL, member.getUsername(), PageRequest.of(0, 10));
 
         // then
-        List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
+        List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getPageResponse().getContent();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
         assertThat(notePriviewList).hasSize(6)
@@ -266,10 +265,10 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wine6, createTastingNoteRequest(wine6)));
 
         // when
-        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.RED, member.getUsername());
+        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.RED, member.getUsername(), PageRequest.of(0, 10));
 
         // then
-        List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
+        List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getPageResponse().getContent();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
         assertThat(notePriviewList).hasSize(2)
@@ -312,10 +311,10 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wine6, createTastingNoteRequest(wine6)));
 
         // when
-        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ETCETERA, member.getUsername());
+        AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ETCETERA, member.getUsername(), PageRequest.of(0, 10));
 
         // then
-        List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getNotePriviewList();
+        List<TastingNotePreviewResponse> notePriviewList = allTastingNote.getPageResponse().getContent();
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
         assertThat(notePriviewList).hasSize(3)
@@ -344,7 +343,7 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember("user1", "password", false));
 
         // when & then
-        assertThatThrownBy(() -> tastingNoteService.findAllTastingNote(TastingNoteWineSort.of("WrongType"), member.getUsername()))
+        assertThatThrownBy(() -> tastingNoteService.findAllTastingNote(TastingNoteWineSort.of("WrongType"), member.getUsername(), PageRequest.of(0, 10)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("유효하지 않은 와인 종류입니다.");
     }
