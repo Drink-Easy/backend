@@ -2,7 +2,7 @@
 name: Docs
 about: 문서 작성
 title: "\U0001F4DD"
-labels: "\U0001F527 Chore, \U0001F4DD Docs"
+labels: "\U0001F4DD Docs"
 assignees: ''
 
 ---
