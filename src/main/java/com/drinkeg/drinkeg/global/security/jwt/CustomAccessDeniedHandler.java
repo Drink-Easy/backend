@@ -1,18 +1,18 @@
 package com.drinkeg.drinkeg.global.security.jwt;
 
+import com.drinkeg.drinkeg.global.apipayLoad.code.ReasonDTO;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
@@ -25,9 +25,13 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setCharacterEncoding("UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("code", ErrorStatus.FORBIDDEN.getCode());
-        errorResponse.put("message", ErrorStatus.FORBIDDEN.getMessage());
+
+        ReasonDTO errorResponse = ReasonDTO.builder()
+                .isSuccess(false)
+                .httpStatus(HttpStatus.FORBIDDEN)
+                .code(ErrorStatus.FORBIDDEN.getCode())
+                .message(ErrorStatus.FORBIDDEN.getMessage())
+                .build();
 
         try {
             String jsonResponse = objectMapper.writeValueAsString(errorResponse);

@@ -155,6 +155,28 @@ public class MemberControllerTest extends MemberControllerTestSupport{
 
     }
 
+    @DisplayName("password와 rePassword 값이 다를 시에 예외가 발생한다.")
+    @Test
+    void joinProcess_not_match_rePassword() throws Exception {
+
+        //given
+        JoinRequest joinRequest = new JoinRequest("existingUser", "password123@", "password12@");
+        doThrow(new GeneralException(ErrorStatus.PASSWORD_NOT_MATCH))
+                .when(joinService).join(refEq(joinRequest));
+
+        // when // then
+        mockMvc.perform(post("/join")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(joinRequest))
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(ErrorStatus.PASSWORD_NOT_MATCH.getCode()))
+                .andExpect(jsonPath("$.message").value(ErrorStatus.PASSWORD_NOT_MATCH.getMessage()));
+
+
+    }
+
     @DisplayName("회원 탈퇴 성공")
     @Test
     @MockMember

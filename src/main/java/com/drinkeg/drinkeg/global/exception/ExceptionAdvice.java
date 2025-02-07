@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.global.exception;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.ReasonDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -32,6 +33,18 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorReason);
     }
 
+    @ExceptionHandler(InvalidContentTypeException.class)
+    public ResponseEntity<?> handleInvalidContentTypeException(InvalidContentTypeException e, HttpServletRequest request) {
+        ReasonDTO errorReason = ReasonDTO.builder()
+                .isSuccess(false)
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message("요청의 Content-Type이 올바르지 않습니다. multipart/form-data 형식이어야 합니다.")
+                .code("INVALID_CONTENT_TYPE")
+                .build();
+
+        return handleExceptionInternal(e, errorReason, null, request);
+    }
+
     @ExceptionHandler(value = GeneralException.class)
     public ResponseEntity<?> onThrowException(GeneralException generalException, HttpServletRequest request) {
         ReasonDTO errorReasonHttpStatus = generalException.getErrorStatus();
@@ -57,7 +70,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 .message(e.getBindingResult().getAllErrors().get(0).getDefaultMessage())
                 .code("VALIDATION_ERROR")
                 .build();
-        return handleExceptionInternal(e, errorReasonHttpStatus, headers, request);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorReasonHttpStatus);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ReasonDTO reason, HttpHeaders headers, HttpServletRequest request) {
