@@ -1,7 +1,7 @@
 ---
-name: "⚙️ chore"
+name: Chore
 about: 개발 환경 설정
-title: "⚙️ "
+title: "\U0001F528 "
 labels: "\U0001F527 Chore"
 assignees: ''
 
