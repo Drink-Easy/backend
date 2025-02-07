@@ -22,14 +22,14 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMissingServletRequestPart(
             MissingServletRequestPartException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
-        ReasonDTO errorReasonHttpStatus = ReasonDTO.builder()
+        ReasonDTO errorReason = ReasonDTO.builder()
                 .isSuccess(false)
                 .httpStatus(HttpStatus.BAD_REQUEST)
                 .message("필수 요청 데이터가 누락되었습니다: " + e.getRequestPartName())
                 .code("MISSING_REQUEST_PART")
                 .build();
 
-        return handleExceptionInternal(e, errorReasonHttpStatus, null, request);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorReason);
     }
 
     @ExceptionHandler(value = GeneralException.class)
@@ -57,7 +57,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 .message(e.getBindingResult().getAllErrors().get(0).getDefaultMessage())
                 .code("VALIDATION_ERROR")
                 .build();
-        return handleExceptionInternal(e, errorReasonHttpStatus, headers, request);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorReasonHttpStatus);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ReasonDTO reason, HttpHeaders headers, HttpServletRequest request) {
