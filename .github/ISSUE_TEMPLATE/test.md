@@ -1,5 +1,5 @@
 ---
-name: "✅ Test"
+name: Test
 about: 테스트코드 작성
 title: "✅"
 labels: "✅ Test"

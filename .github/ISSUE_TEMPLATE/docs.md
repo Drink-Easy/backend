@@ -1,5 +1,5 @@
 ---
-name: "\U0001F4DD Docs"
+name: Docs
 about: 문서 작성
 title: "\U0001F4DD"
 labels: "\U0001F4DD Docs"
