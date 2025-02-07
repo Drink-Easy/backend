@@ -40,6 +40,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void deleteMemberByUsername(String username){
         tastingNoteService.setTastingNoteMemberNull(username);
+        deleteProfileImage(username);
         memberRepository.deleteByUsername(username);
     }
 

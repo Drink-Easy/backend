@@ -91,7 +91,7 @@ public class MemberController {
         return ApiResponse.onSuccess(memberService.showMemberName(principalDetail.getUsername()));
     }
 
-    @DeleteMapping(value = "/member/profileImage")
+    @DeleteMapping(value = "/g")
     @Operation(summary = "프로필 이미지 삭제", description = "프로필 이미지를 삭제합니다.")
     public ApiResponse<String> deleteProfileImage(@AuthenticationPrincipal PrincipalDetail principalDetail){
         memberService.deleteProfileImage(principalDetail.getUsername());
