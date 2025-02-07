@@ -1,5 +1,5 @@
 ---
-name: "⚙️ Chore"
+name: "⚙️ chore"
 about: 개발 환경 설정
 title: "⚙️ "
 labels: "\U0001F527 Chore"
