@@ -57,7 +57,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 .message(e.getBindingResult().getAllErrors().get(0).getDefaultMessage())
                 .code("VALIDATION_ERROR")
                 .build();
-        return handleExceptionInternal(e, errorReasonHttpStatus, headers, request);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorReasonHttpStatus);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ReasonDTO reason, HttpHeaders headers, HttpServletRequest request) {
