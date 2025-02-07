@@ -1,5 +1,5 @@
 ---
-name: Chore
+name: "\U0001F527 Chore"
 about: 개발 환경 설정
 title: "\U0001F527"
 labels: "\U0001F527 Chore"
