@@ -12,6 +12,7 @@ public enum ErrorStatus implements BaseCode {
 
     // Wine Error
     WINE_NOT_FOUND(HttpStatus.BAD_REQUEST, "WINE4001", "와인이 없습니다."),
+    WINE_IMAGE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST, "WINE4002", "와인 이미지 업로드에 실패했습니다."),
 
     // TastingNote Error
     TASTING_NOTE_NOT_FOUND(HttpStatus.BAD_REQUEST, "NOTE4001", "테이스팅 노트가 없습니다."),
@@ -78,12 +79,16 @@ public enum ErrorStatus implements BaseCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "MEMBER4001", "접근 권한이 없습니다."),
     PROVIDER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "일치하는 Provider가 없습니다."),
     ROLE_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "일치하는 Role 없습니다."),
+    PROFILE_IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "삭제할 프로필 이미지가 없습니다"),
 
     // Token Error
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4001", "유효하지 않은 엑세스 토큰입니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "리프레쉬 토큰이 없습니다."),
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "리프레쉬 토큰이 만료되었습니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "REFRESH_TOKEN4001", "유효하지 않은 리프레쉬 토큰입니다."),
+    ACCESS_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED,"ACCESS_TOKEN4001","엑세스 토큰이 없습니다."),
+    ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "ACCESS_TOKEN4002", "엑세스 토큰이 만료되었습니다."),
+
 
     // Redis Error
     REDIS_NOT_FOUND(HttpStatus.BAD_REQUEST, "REDIS4001", "Redis 설정에 오류가 발생했습니다."),
@@ -117,7 +122,10 @@ public enum ErrorStatus implements BaseCode {
 
     // Banner Error
     BANNER_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "BANNER4001", "권한이 없는 배너입니다."),
-    BANNER_NOT_FOUND(HttpStatus.BAD_REQUEST, "BANNER4001", "존재하지 않는 배너입니다.");
+    BANNER_NOT_FOUND(HttpStatus.BAD_REQUEST, "BANNER4001", "존재하지 않는 배너입니다."),
+
+    //method Error
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED,"METHOD405", "허용되지 않은 HTTP 메서드입니다.");
 
 
 

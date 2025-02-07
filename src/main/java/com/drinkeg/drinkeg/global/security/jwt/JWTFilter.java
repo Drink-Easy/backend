@@ -4,6 +4,8 @@ package com.drinkeg.drinkeg.global.security.jwt;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.UserDTO;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
+import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -59,17 +61,15 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //Authorization 헤더 검증
         if (accessToken == null) {
-            filterChain.doFilter(request, response);
-            //조건이 해당되면 메소드 종료 (필수)
+            JWTException.jwtExceptionHandler(response, ErrorStatus.ACCESS_TOKEN_NOT_FOUND);
             return ;
         }
 
         //토큰 소멸 시간 검증
-        if (jwtUtil.isExpired(accessToken)) {
-
-            System.out.println("token expired");
-            filterChain.doFilter(request, response);
-            //조건이 해당되면 메소드 종료 (필수)
+        try {
+            jwtUtil.isExpired(accessToken);
+        } catch (ExpiredJwtException e) {
+            JWTException.jwtExceptionHandler(response, ErrorStatus.ACCESS_TOKEN_EXPIRED);
             return;
         }
 

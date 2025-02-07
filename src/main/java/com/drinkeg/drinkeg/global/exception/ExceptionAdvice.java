@@ -13,10 +13,25 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestPart(
+            MissingServletRequestPartException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        ReasonDTO errorReason = ReasonDTO.builder()
+                .isSuccess(false)
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message("필수 요청 데이터가 누락되었습니다: " + e.getRequestPartName())
+                .code("MISSING_REQUEST_PART")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorReason);
+    }
+
     @ExceptionHandler(value = GeneralException.class)
     public ResponseEntity<?> onThrowException(GeneralException generalException, HttpServletRequest request) {
         ReasonDTO errorReasonHttpStatus = generalException.getErrorStatus();

@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.domain.wine.repository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -63,7 +64,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wineAreaIn(wineArea),
                         wineSortIn(wineSort),
                         winePriceLessThan(price),
-                        wine.vivinoRating.goe(4.0f))
+                        wine.vivinoRating.goe(4.3f))
                 .limit(20)
                 .fetch();
     }

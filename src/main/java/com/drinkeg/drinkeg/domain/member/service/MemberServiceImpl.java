@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         tastingNoteService.setTastingNoteMemberNull(username);
+        deleteProfileImage(username);
         memberRepository.deleteByUsername(username);
     }
 
@@ -83,4 +86,18 @@ public class MemberServiceImpl implements MemberService {
     public String showMemberName(String username){
         return memberRepository.getNameByUsername(username);
     }
+
+    @Override
+    @Transactional
+    public void deleteProfileImage(String username){
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        String imageUrl = Optional.ofNullable(member.getImageUrl())
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PROFILE_IMAGE_NOT_FOUND));
+
+        storageService.deleteFile(member.getImageUrl());
+        memberRepository.deleteImageUrlByUsername(username);
+    }
+
 }

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,7 +44,7 @@ public class SecurityConfig {
         return web -> {
             web.ignoring()
                     .requestMatchers("/join/**","/login/apple/**","/login/kakao/**",
-                            "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**","/clientSecret","/check-environment");// 필터를 타면 안되는 경로
+                            "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**","/clientSecret","/check-environment","reissue");// 필터를 타면 안되는 경로
         };
     }
 
@@ -56,6 +58,13 @@ public class SecurityConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
 
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public static RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.fromHierarchy("""
+                ROLE_ADMIN > ROLE_USER
+                """);
     }
 
     @Bean
@@ -115,7 +124,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/index.html#/**").permitAll()
-                        .requestMatchers("/", "/join/**", "/login", "/reissue","/login/apple","/login/kakao","/clientSecret","/check-environment").permitAll()
+                        .requestMatchers("/", "/join/**", "/login", "/reissue","/login/apple","/login/kakao","/clientSecret","/check-environment","reissue").permitAll()
 
                         .requestMatchers(HttpMethod.GET,"/home").hasRole("USER")
                         .requestMatchers("/wine/**").hasRole("USER")

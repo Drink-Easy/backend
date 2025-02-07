@@ -14,12 +14,15 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +39,6 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     private final MemberRepository memberRepository;
 
     private final ApplicationEventPublisher eventPublisher;
-    private final EntityManager em;
-
 
     @Override
     public Long saveTastingNote(TastingNoteRequest tastingNoteRequest, String username) {
@@ -69,15 +70,18 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     @Override
-    public AllTastingNoteResponse findAllTastingNote(TastingNoteWineSort wineSort, String username) {
-        List<TastingNote> tastingNoteList = tastingNoteRepository.findTastingNoteBySortAndUsername(wineSort, username);
+    public AllTastingNoteResponse findAllTastingNote(TastingNoteWineSort wineSort, String username, Pageable pageable) {
         TastingNoteSortCountResponse tastingNoteSortCountResponse = tastingNoteRepository.findTastingNoteSortCountsByUsername(username);
 
-        List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteList.stream()
+        List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteRepository.findTastingNoteBySortAndUsername(wineSort, username, pageable)
+                .stream()
                 .map(TastingNotePreviewResponse::of)
                 .toList();
+        long total = tastingNoteRepository.countTastingNoteBySortAndUsername(wineSort, username);
 
-        return AllTastingNoteResponse.create(tastingNoteSortCountResponse, tastingNotePreviewResponseList);
+        PageResponse pageResponse = PageResponse.of(new PageImpl<>(tastingNotePreviewResponseList, pageable, total));
+
+        return AllTastingNoteResponse.create(tastingNoteSortCountResponse, pageResponse);
     }
 
     @Override
@@ -128,5 +132,16 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     @Override
     public void setTastingNoteMemberNull(String username) {
         tastingNoteRepository.updateTastingNoteMemberNull(username);
+    }
+
+    @Override
+    public PageResponse<TastingNotePreviewResponse> searchTastingNoteByWineName(String searchName, String username, Pageable pageable) {
+        List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteRepository.searchTastingNoteByWineName(searchName, username, pageable).
+                stream()
+                .map(TastingNotePreviewResponse::of)
+                .toList();
+        Long total = tastingNoteRepository.countSearchTastingNoteByWineName(searchName, username);
+
+        return PageResponse.of(new PageImpl<>(tastingNotePreviewResponseList, pageable, total));
     }
 }

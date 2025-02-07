@@ -1,5 +1,7 @@
 package com.drinkeg.drinkeg.global.security.jwt;
 
+import com.drinkeg.drinkeg.domain.member.login.oauth2.dto.LoginResponseDTO;
+import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.infra.redis.RedisClient;
@@ -13,6 +15,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -43,19 +47,26 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String requestMethod = request.getMethod();
         if (!requestMethod.equals("POST")) {
 
-            filterChain.doFilter(request, response);
+            JWTException.jwtExceptionHandler(response, ErrorStatus.METHOD_NOT_ALLOWED);
             return;
         }
 
         // 쿠키에서 Refresh 토큰 가져옴
         String refresh = null;
+        String access = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("refreshToken")) {
-
                 refresh = cookie.getValue();
             }
+            else if (cookie.getName().equals("accessToken")) {
+                access = cookie.getValue();
+            }
+        }
+        if (access == null) {
+            JWTException.jwtExceptionHandler(response, ErrorStatus.ACCESS_TOKEN_NOT_FOUND);
+            return;
         }
 
         // 토큰 존재 여부 확인
@@ -70,9 +81,15 @@ public class CustomLogoutFilter extends GenericFilterBean {
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
-
             // response status code
             JWTException.jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_EXPIRED);
+            return;
+        }
+
+        try {
+            jwtUtil.isExpired(access);
+        } catch (ExpiredJwtException e) {
+            JWTException.jwtExceptionHandler(response, ErrorStatus.ACCESS_TOKEN_EXPIRED);
             return;
         }
 
@@ -84,6 +101,13 @@ public class CustomLogoutFilter extends GenericFilterBean {
             JWTException.jwtExceptionHandler(response, ErrorStatus.INVALID_REFRESH_TOKEN);
             return;
         }
+
+        String accessCategory = jwtUtil.getCategory(access);
+        if (!accessCategory.equals("access")) {
+            JWTException.jwtExceptionHandler(response, ErrorStatus.INVALID_ACCESS_TOKEN);
+            return;
+        }
+
 
         String username = jwtUtil.getUsername(refresh);
 
@@ -99,23 +123,33 @@ public class CustomLogoutFilter extends GenericFilterBean {
         // Refresh 토큰 DB에서 제거
         redisClient.deleteValue(username);
 
-        // 쿠키에 저장되어 있는 Refresh 토큰 null값 처리
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
+        // 쿠키에 저장되어 있는 Refresh 토큰, Access 토큰 null값 처리
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", null)
+                .maxAge(0)
+                .secure(true)
+                .path("/")
+                .httpOnly(true)
+                .sameSite("Strict")
+                .build();
 
-        Cookie accessTokenCookie = new Cookie("accessToken", null);
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(0);
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", null)
+                .maxAge(0)
+                .secure(true)
+                .path("/")
+                .httpOnly(true)
+                .sameSite("Strict")
+                .build();
 
-        response.addCookie(cookie);
-        response.addCookie(accessTokenCookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
         response.setStatus(HttpServletResponse.SC_OK);
+
+        ApiResponse<String> apiResponse = ApiResponse.onSuccess("로그아웃 성공");
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getWriter(), "로그아웃 성공");
+        objectMapper.writeValue(response.getWriter(), apiResponse);
     }
 }

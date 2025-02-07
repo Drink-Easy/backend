@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import lombok.*;
 
 import java.util.List;
@@ -10,18 +11,18 @@ public class AllTastingNoteResponse {
 
     TastingNoteSortCountResponse sortCount;
 
-    List<TastingNotePreviewResponse> NotePriviewList;
+    PageResponse<TastingNotePreviewResponse> pageResponse;
 
     @Builder
-    public AllTastingNoteResponse(TastingNoteSortCountResponse sortCount, List<TastingNotePreviewResponse> NotePriviewList){
+    public AllTastingNoteResponse(TastingNoteSortCountResponse sortCount, PageResponse<TastingNotePreviewResponse> pageResponse){
         this.sortCount = sortCount;
-        this.NotePriviewList = NotePriviewList;
+        this.pageResponse = pageResponse;
     }
 
-    public static AllTastingNoteResponse create(TastingNoteSortCountResponse sortCount, List<TastingNotePreviewResponse> tastingNotePreviewResponseList){
+    public static AllTastingNoteResponse create(TastingNoteSortCountResponse sortCount, PageResponse<TastingNotePreviewResponse> pageResponse){
         return AllTastingNoteResponse.builder()
                 .sortCount(sortCount)
-                .NotePriviewList(tastingNotePreviewResponseList)
+                .pageResponse(pageResponse)
                 .build();
     }
 }

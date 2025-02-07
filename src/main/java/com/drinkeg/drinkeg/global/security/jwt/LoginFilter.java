@@ -83,15 +83,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String accessToken = jwtUtil.createJwt("access",username, role, 60000000000L); // 임의로 10000배로 해놓았음. 나중에 수정 필요.
+        String accessToken = jwtUtil.createJwt("access",username, role, 3600000L);
         String refreshToken = jwtUtil.createJwt("refresh",username,role,864000000L);
 
         System.out.println("---------------LoginFilter------------------");
 
 
         // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
-        tokenService.createCookie(response, "accessToken", accessToken); // Access Token 쿠키 추가
-        tokenService.createCookie(response, "refreshToken", refreshToken); // refresh token 쿠키 추가
+        tokenService.createCookie(response, "accessToken", accessToken,3600000L); // Access Token 쿠키 추가
+        tokenService.createCookie(response, "refreshToken", refreshToken,864000000L); // refresh token 쿠키 추가
         response.setStatus(HttpStatus.OK.value());
 
         // redis에 refresh 토큰 저장
