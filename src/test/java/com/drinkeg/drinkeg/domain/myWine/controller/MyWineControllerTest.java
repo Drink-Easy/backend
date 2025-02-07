@@ -82,6 +82,43 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
                 .andExpect(jsonPath("$.message").value("구매 날짜 입력은 필수입니다."));
     }
 
+    @DisplayName("구매 가격이 0보다 작은 경우 보유 와인 추가 요청이 들어오면 예외가 발생한다.")
+    @Test
+    @MockMember
+    void saveMyWineWithNegativePurchasePrice() throws Exception {
+        // given
+        MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), -1);
+
+        // when // then
+        mockMvc.perform(MockMvcRequestBuilders.post("/my-wine")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(myWineRequest))
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.message").value("구매 가격은 0 이상이어야 합니다."));
+    }
+
+    @DisplayName("구매 가격이 1000000000보다 큰 경우 보유 와인 추가 요청이 들어오면 예외가 발생한다.")
+    @Test
+    @MockMember
+    void saveMyWineWithOverPurchasePrice() throws Exception {
+        // given
+        MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), 1000000001);
+
+        // when // then
+        mockMvc.perform(MockMvcRequestBuilders.post("/my-wine")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(myWineRequest))
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.message").value("구매 가격은 1000000000 이하여야 합니다."));
+    }
+
+
     @DisplayName("구매 가격 없이 보유 와인 추가 요청이 들어오면 정상적으로 저장한다.")
     @Test
     @MockMember
