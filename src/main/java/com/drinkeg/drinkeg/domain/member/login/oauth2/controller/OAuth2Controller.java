@@ -72,18 +72,5 @@ public class OAuth2Controller {
         return ApiResponse.onSuccess("애플 회원 탈퇴 성공");
 
     }
-    @GetMapping("/private-key")
-    @Operation(summary = "애플 private key Test ", description = "애플 private-key를 확인합니다.")
-    public String loadPrivateKey() {
-        try {
-            // Private Key 가져오기
-            PrivateKey privateKey = privateKeyGenerator.getPrivateKey();
-            String algorithm = privateKey.getAlgorithm();
-
-            return "Private key successfully loaded: " + algorithm;
-        } catch (Exception e) {
-            return "Failed to load private key: " + e.getMessage();
-        }
-    }
 
 }
