@@ -42,7 +42,7 @@ public class AdminBannerControllerTest extends BannerControllerTestSupport{
                 .andExpect(jsonPath("$.result").value(1));
     }
 
-    @DisplayName("배너 생성 시 이미지를 포함하지 않으면 400 Bad Request 에러가 발생한다.")
+    @DisplayName("배너 생성 시 이미지를 포함하지 않으면 MISSING_REQUEST_PART 에러가 발생한다.")
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void saveBannerWithoutBannerImage() throws Exception {
@@ -54,10 +54,11 @@ public class AdminBannerControllerTest extends BannerControllerTestSupport{
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail").value("Required part 'bannerImage' is not present."));
+                .andExpect(jsonPath("$.code").value("MISSING_REQUEST_PART"))
+                .andExpect(jsonPath("$.message").value("필수 요청 데이터가 누락되었습니다: bannerImage"));
     }
 
-    @DisplayName("배너 생성 시 BannerRequest JSON 본문을 포함하지 않으면 400 Bad Request 에러가 발생한다.")
+    @DisplayName("배너 생성 시 BannerRequest JSON 본문을 포함하지 않으면 MISSING_REQUEST_PART 에러가 발생한다.")
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void saveBannerWithoutBannerRequest() throws Exception {
@@ -69,7 +70,8 @@ public class AdminBannerControllerTest extends BannerControllerTestSupport{
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail").value("Required part 'banner' is not present."));
+                .andExpect(jsonPath("$.code").value("MISSING_REQUEST_PART"))
+                .andExpect(jsonPath("$.message").value("필수 요청 데이터가 누락되었습니다: banner"));
     }
 
     @DisplayName("배너 ID로 배너를 조회한다.")
