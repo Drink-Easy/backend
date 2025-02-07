@@ -3,15 +3,23 @@ package com.drinkeg.drinkeg.domain.member.service;
 import com.drinkeg.drinkeg.IntegrationTestSupport;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.dto.MemberInfoResponse;
+import com.drinkeg.drinkeg.domain.member.dto.MemberUpdateRequest;
 import com.drinkeg.drinkeg.domain.member.enums.Provider;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
+import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
+import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -24,6 +32,12 @@ public class MemberServiceTest extends IntegrationTestSupport {
 
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    TastingNoteRepository tastingNoteRepository;
+
+    @Autowired
+    WineRepository wineRepository;
 
     @DisplayName("존재하는 username으로 사용자 정보를 불러온다.")
     @Test
@@ -62,7 +76,6 @@ public class MemberServiceTest extends IntegrationTestSupport {
     @Test
     void showMemberInfo_ThrowsException() {
         // given
-
         memberRepository.save(createMember("user1", "윤다영", "55azaz@naver.com", "서울", "Drinkeg", true," https://drinkeg-bucket-1.s3.ap-northeast-2.amazonaws.com/member/profile/70af4bd2-717c-48d8-93d5-1a563de091a2"));
 
         // when & then
@@ -101,6 +114,87 @@ public class MemberServiceTest extends IntegrationTestSupport {
                         null                );
     }
 
+
+    @DisplayName("성공적으로 회원을 삭제한다.")
+    @Test
+    void deleteMemberByUsername(){
+
+        // given
+        Member member =  memberRepository.save(createMember("user1", "윤다영", "55azaz@naver.com", "서울", "Drinkeg", true," https://drinkeg-bucket-1.s3.ap-northeast-2.amazonaws.com/member/profile/70af4bd2-71"));
+
+        // when
+        memberService.deleteMemberByUsername(member.getUsername());
+
+        // then
+        Optional<Member> deletedMember = memberRepository.findByUsername(member.getUsername());
+        assertThat(deletedMember).isEmpty();
+
+    }
+    @DisplayName("존재하지 않는 username으로 삭제 시 GeneralException을 반환한다")
+    @Test
+    void deleteMemberByUsername_ThrowsException() {
+        // given
+        memberRepository.save(createMember("user1", "윤다영", "55azaz@naver.com", "서울", "Drinkeg", true," https://drinkeg-bucket-1.s3.ap-northeast-2.amazonaws.com/member/profile/70af4bd2-717c-48d8-93d5-1a563de091a2"));
+
+        // when & then
+        assertThatThrownBy(() -> memberService.deleteMemberByUsername("user2"))
+                .isInstanceOf(GeneralException.class)
+                .hasMessageContaining(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
+    }
+
+
+    @DisplayName("회원 정보 업데이트를 성공적으로 수행한다.")
+    @Test
+    void updateMemberInfo_Success() {
+
+        // given
+        Member member = memberRepository.save(createMember("user1","주민영","44azaz@naver.com","광주","Kakao", true ,null));
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName", "newRegion");
+
+        // when
+        memberService.updateMemberInfo(updateRequest, member.getUsername());
+
+        // then
+        Optional<Member> OptimalMember = memberRepository.findByUsername(member.getUsername());
+
+        Member updatedMember = OptimalMember.get();
+        assertThat(updatedMember)
+                .extracting(Member::getName, Member::getRegion)
+                .containsExactly(updateRequest.getName(), updateRequest.getRegion());
+    }
+
+    @DisplayName("존재하지 않는 회원의 정보를 업데이트하려고 하면 예외가 발생한다.")
+    @Test
+    void updateMemberInfo_ThrowsException() {
+
+        // given
+        String username = "nonexistentUser";
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName", "newRegion");
+
+        // when & then
+        assertThatThrownBy(() -> memberService.updateMemberInfo(updateRequest,username))
+                .isInstanceOf(GeneralException.class)
+                .hasMessageContaining(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
+    }
+
+    @DisplayName("memberUpdateRequest에 값이 없을 경우 정보가 업데이트 되지 않는다.")
+    @Test
+    void updateMemberInfo_is_null_Test() {
+        // given
+        Member member = memberRepository.save(createMember("user1","주민영","44azaz@naver.com","광주","Kakao", true ,null));
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName",null);
+
+        // when
+        memberService.updateMemberInfo(updateRequest, member.getUsername());
+
+        // then
+        Optional<Member> OptimalMember = memberRepository.findByUsername(member.getUsername());
+        Member updatedMember = OptimalMember.get();
+        assertThat(updatedMember)
+                .extracting(Member::getName, Member::getRegion)
+                .containsExactly(updateRequest.getName(), "광주");
+    }
+
     private Member createMember(
             String username,
             String name,
@@ -121,5 +215,22 @@ public class MemberServiceTest extends IntegrationTestSupport {
                 .isFirst(false)
                 .imageUrl(imageUrl)
                 .build();
+    }
+
+    private TastingNoteRequest createTastingNoteRequest(Wine wine) {
+        List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
+
+        return TastingNoteRequest.builder()
+                .wineId(wine.getId())
+                .color("레드")
+                .tasteDate(LocalDate.parse("2025-01-01"))
+                .sweetness(10)
+                .acidity(10)
+                .tannin(10)
+                .body(10)
+                .alcohol(10)
+                .nose(noseList)
+                .rating(4.5f)
+                .review("좋아요").build();
     }
 }

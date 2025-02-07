@@ -3,12 +3,11 @@ package com.drinkeg.drinkeg.domain.member.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 
 @Getter
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class JoinRequest {
 
 
@@ -24,6 +23,13 @@ public class JoinRequest {
 
     @NotBlank(message = "rePassword는 필수입니다.")
     private String rePassword;
+
+    @Builder
+    public JoinRequest(String username, String password, String rePassword){
+        this.username = username;
+        this.password = password;
+        this.rePassword = rePassword;
+    }
 
 
 }

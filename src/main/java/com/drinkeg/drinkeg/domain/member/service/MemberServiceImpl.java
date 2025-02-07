@@ -69,7 +69,6 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         member.updateMemberInfo(memberUpdateRequest);
-        memberRepository.save(member);
 
     }
 

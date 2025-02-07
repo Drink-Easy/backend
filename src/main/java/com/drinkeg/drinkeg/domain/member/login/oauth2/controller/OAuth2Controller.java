@@ -4,6 +4,7 @@ package com.drinkeg.drinkeg.domain.member.login.oauth2.controller;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleDTO.AppleDeleteDTO;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleDTO.AppleLoginRequestDTO;
+import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils.ApplePrivateKeyGenerator;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.utils.AppleClientSecretGenerator;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.dto.LoginResponseDTO;
@@ -19,6 +20,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.apple.appleService.AppleService;
 
+
+import java.security.PrivateKey;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,6 +35,7 @@ public class OAuth2Controller {
 
     private final AppleService appleService;
     private final KakaoLoginService kakaoLoginService;
+    private final ApplePrivateKeyGenerator privateKeyGenerator;
     private final AppleClientSecretGenerator appleClientSecretGenerator;
 
     @Value("${spring.servlet.social-login.provider.apple.private-key-path}")
