@@ -218,7 +218,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
         Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<Wine> wineList1 = wineRepository.searchByName("0 years", pageable);
+        List<Wine> wineList1 = wineRepository.searchByName("0years", pageable);
         List<Wine> wineList2 = wineRepository.searchByName("popular", pageable);
 
         // then
