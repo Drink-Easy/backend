@@ -13,6 +13,7 @@ import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class WineServiceImpl implements WineService {
     private final WineRepository wineRepository;
     private final MemberRepository memberRepository;
+    private final EntityManager em;
 
     private final WineWishlistRepository wineWishlistRepository;
     private final TastingNoteRepository tastingNoteRepository;
@@ -88,9 +90,10 @@ public class WineServiceImpl implements WineService {
         Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
+        em.clear();
         List<Wine> recommendWines = wineRepository.findRecommendWinesBy(member.getWineArea(), member.getWineSort(), member.getMonthPriceMax());
 
-        Collections.shuffle(recommendWines, ThreadLocalRandom.current());
+        Collections.shuffle(recommendWines);
         recommendWines = recommendWines.subList(0, Math.min(recommendWines.size(), 10));
 
         return recommendWines.stream()
