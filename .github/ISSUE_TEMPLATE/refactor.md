@@ -1,10 +1,16 @@
 ---
-name: Refactor
-about: 리팩토링
-title: "♻️"
-labels: "♻️ Refactor"
+name: Style
+about: 코드 스타일 변경
+title: "\U0001F58C️"
+labels: "\U0001F58C️ Style"
 assignees: ''
 
 ---
 
-리팩토링 테스트
+## 설명
+
+## 체크리스트
+- [ ] 
+
+## 기한
+2025.00.00
