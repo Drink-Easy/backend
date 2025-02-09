@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -89,7 +90,7 @@ public class WineServiceImpl implements WineService {
 
         List<Wine> recommendWines = wineRepository.findRecommendWinesBy(member.getWineArea(), member.getWineSort(), member.getMonthPriceMax());
 
-        Collections.shuffle(recommendWines);
+        Collections.shuffle(recommendWines, ThreadLocalRandom.current());
         recommendWines = recommendWines.subList(0, Math.min(recommendWines.size(), 10));
 
         return recommendWines.stream()
