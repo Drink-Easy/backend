@@ -69,6 +69,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         wineAreaIn(wineArea),
                         wineSortIn(wineSort),
                         winePriceLessThan(price),
+                        wine.price.gt(0L),
                         wine.vivinoRating.goe(4.3f))
                 .limit(20)
                 .orderBy(wine.vivinoRating.desc())
