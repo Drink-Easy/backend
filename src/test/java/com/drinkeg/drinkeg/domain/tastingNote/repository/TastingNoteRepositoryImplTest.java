@@ -542,6 +542,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
     private Wine createWine(String name) {
         return Wine.builder()
                 .name(name)
+                .nameEng("wine")
                 .imageUrl("http://default.image")
                 .sort("레드")
                 .country("프랑스")
@@ -549,6 +550,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 .variety("샤도네이")
                 .vivinoRating(4.1f)
                 .wineNoteStatistics(WineNoteStatistics.builder().build())
+                .searchName(name.replaceAll("[ ,.'\\\\]", "").concat("wine"))
                 .price(100).build();
     }
 
