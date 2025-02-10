@@ -39,7 +39,7 @@ public class WineServiceImpl implements WineService {
 
         String cleanSearchName = searchName.replaceAll("[ ,.'\\\\]", "").toLowerCase();
         List<WinePreviewResponse> winePreviewList =
-                wineRepository.searchByName(cleanSearchName.toLowerCase(), pageable)
+                wineRepository.searchByName(cleanSearchName, pageable)
                         .stream()
                         .map(WinePreviewResponse::of)
                         .toList();

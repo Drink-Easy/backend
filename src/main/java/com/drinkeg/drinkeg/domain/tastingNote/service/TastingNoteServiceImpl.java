@@ -141,7 +141,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
                 stream()
                 .map(TastingNotePreviewResponse::of)
                 .toList();
-        Long total = tastingNoteRepository.countSearchTastingNoteByWineName(cleanSearchName.toLowerCase(), username);
+        Long total = tastingNoteRepository.countSearchTastingNoteByWineName(cleanSearchName, username);
 
         return PageResponse.of(new PageImpl<>(tastingNotePreviewResponseList, pageable, total));
     }
