@@ -25,6 +25,8 @@ public class Wine {
 
     private String nameEng;
 
+    private String searchName;
+
     private int price;
 
     private String sort; // 종류
@@ -53,10 +55,19 @@ public class Wine {
         if(region != null) this.region = region;
         if(variety != null) this.variety = variety;
         if(vivinoRating != null) this.vivinoRating = vivinoRating;
+        if(name != null && nameEng != null) {
+            String cleanedName = name.replaceAll("[ ,.'\\\\]", "").toLowerCase();
+            String cleanedNameEng = nameEng.replaceAll("[ ,.'\\\\]", "").toLowerCase();
+            this.searchName = cleanedName.concat(cleanedNameEng);
+        }
     }
 
     public void updateImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
+    }
+
+    public void updateSearchName(String searchName){
+        this.searchName = searchName;
     }
 
     @Builder
