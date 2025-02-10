@@ -379,6 +379,8 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .country(country)
                 .variety(variety)
                 .vivinoRating(vivinoRating)
+                .searchName(name.replaceAll("[ ,.'\\\\]", "")
+                        .concat(nameEng.replaceAll("[ ,.'\\\\]", "")))
                 .wineNoteStatistics(WineNoteStatistics.builder().build())
                 .price(price).build();
     }
