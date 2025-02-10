@@ -40,7 +40,7 @@ public class AdminWineController {
                                      @RequestPart(value = "wineUpdateRequest", required = false) @Valid WineUpdateRequest wineUpdateRequest,
                                      @RequestPart(value = "wineImage", required = false) MultipartFile wineImage) {
 
-        if (wineUpdateRequest == null || wineImage == null) {
+        if (wineUpdateRequest == null && wineImage == null) {
             throw new IllegalArgumentException("wineUpdateRequest 또는 wineImage 중 하나는 필수입니다.");
         }
         adminWineService.updateWine(wineId, wineUpdateRequest, wineImage);
