@@ -550,7 +550,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 .variety("샤도네이")
                 .vivinoRating(4.1f)
                 .wineNoteStatistics(WineNoteStatistics.builder().build())
-                .searchName(name.replaceAll("[ ,.'\\\\]", "").concat("wine"))
+                .searchName(name.replaceAll("[ ,.'\\\\]", "").concat("wine").toLowerCase())
                 .price(100).build();
     }
 

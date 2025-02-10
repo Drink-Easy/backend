@@ -136,7 +136,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     @Override
     public PageResponse<TastingNotePreviewResponse> searchTastingNoteByWineName(String searchName, String username, Pageable pageable) {
-        String cleanSearchName = searchName.replaceAll("[ ,.'\\\\]", "");
+        String cleanSearchName = searchName.replaceAll("[ ,.'\\\\]", "").toLowerCase();
         List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteRepository.searchTastingNoteByWineName(cleanSearchName, username, pageable).
                 stream()
                 .map(TastingNotePreviewResponse::of)
