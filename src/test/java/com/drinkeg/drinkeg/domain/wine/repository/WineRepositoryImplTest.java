@@ -324,6 +324,8 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     }
 
     private Wine createWine(String name, String nameEng) {
+        String cleanName = name.replaceAll("[ ,.'\\\\]", "").toLowerCase();
+        String cleanNameEng = nameEng.replaceAll("[ ,.'\\\\]", "").toLowerCase();
         return Wine.builder()
                 .name(name)
                 .nameEng(nameEng)
@@ -332,6 +334,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
                 .country("프랑스")
                 .variety("피노누아")
                 .vivinoRating(4.5f)
+                .searchName(cleanName.concat(cleanNameEng))
                 .wineNoteStatistics(WineNoteStatistics.builder().build())
                 .price(10000).build();
     }
