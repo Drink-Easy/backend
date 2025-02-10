@@ -1,9 +1,8 @@
 ---
-name: Style
-about: 코드 스타일 변경
-title: "\U0001F58C️"
-labels: "\U0001F58C️ Style"
-assignees: ''
+name: Refactor
+about: 리팩토링
+title: "♻️"
+labels: "♻️ Refactor"
 
 ---
 
