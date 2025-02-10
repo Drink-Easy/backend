@@ -55,8 +55,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
         return queryFactory.select(wine.count())
                 .from(wine)
                 .where(
-                        wine.name.containsIgnoreCase(searchName)
-                                .or(wine.nameEng.containsIgnoreCase(searchName))
+                        wine.searchName.contains(searchName)
                 )
                 .fetchOne();
     }
