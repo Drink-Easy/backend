@@ -71,8 +71,8 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                         winePriceLessThan(price),
                         wine.price.gt(0L),
                         wine.vivinoRating.goe(4.3f))
+                .orderBy(Expressions.numberTemplate(Double.class, "RAND()").asc())
                 .limit(20)
-                .orderBy(wine.vivinoRating.desc())
                 .fetch();
     }
 
