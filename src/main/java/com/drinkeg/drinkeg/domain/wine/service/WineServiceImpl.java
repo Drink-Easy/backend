@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -36,12 +37,12 @@ public class WineServiceImpl implements WineService {
     @Override
     public PageResponse<WinePreviewResponse> searchWinesByName(String searchName, Pageable pageable) {
 
-        List<WinePreviewResponse> winePreviewList = wineRepository.searchByName(searchName.replace(" ", ""), pageable)
-                .stream()
-                .map(WinePreviewResponse::of)
-                .toList();
+        List<WinePreviewResponse> winePreviewList =
+                wineRepository.searchByName(searchName.replace(" ", "").toLowerCase(), pageable)
+                        .stream()
+                        .map(WinePreviewResponse::of)
+                        .toList();
         long total = wineRepository.countSearchWine(searchName);
-
         return PageResponse.of(new PageImpl<>(winePreviewList, pageable, total));
     }
 
