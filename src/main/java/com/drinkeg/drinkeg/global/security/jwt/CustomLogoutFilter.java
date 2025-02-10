@@ -55,13 +55,14 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String refresh = null;
         String access = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
 
-            if (cookie.getName().equals("refreshToken")) {
-                refresh = cookie.getValue();
-            }
-            else if (cookie.getName().equals("accessToken")) {
-                access = cookie.getValue();
+        if (cookies != null) {  // ✅ `cookies`가 `null`이 아닐 때만 순회
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("refreshToken")) {
+                    refresh = cookie.getValue();
+                } else if (cookie.getName().equals("accessToken")) {
+                    access = cookie.getValue();
+                }
             }
         }
         if (access == null) {
@@ -71,20 +72,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         // 토큰 존재 여부 확인
         if (refresh == null) {
-
             // response status code
             JWTException.jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_NOT_FOUND);
             return;
         }
 
-        // 토큰 만료 여부 확인
-        try {
-            jwtUtil.isExpired(refresh);
-        } catch (ExpiredJwtException e) {
-            // response status code
-            JWTException.jwtExceptionHandler(response, ErrorStatus.REFRESH_TOKEN_EXPIRED);
-            return;
-        }
 
         try {
             jwtUtil.isExpired(access);
@@ -97,7 +89,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String category = jwtUtil.getCategory(refresh);
         if (!category.equals("refresh")) {
 
-            // response status code
             JWTException.jwtExceptionHandler(response, ErrorStatus.INVALID_REFRESH_TOKEN);
             return;
         }
