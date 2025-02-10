@@ -64,9 +64,6 @@ public class TokenService {
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("refreshToken")) {
-
-                    System.out.println("--------reissue controller-------");
-
                 refresh = cookie.getValue();
             }
         }
@@ -121,12 +118,10 @@ public class TokenService {
     }
 
     public String decodeHeader(String token) {
-        System.out.println("====decodeHeader====");
         return new String(Base64.getDecoder().decode(token), StandardCharsets.UTF_8);
     }
     // Identity Token 헤더에서 Public Key 사용에 필요한 헤더 추출
     public Map<String, String> parseHeaders(String identityToken) throws JsonProcessingException {
-        System.out.println("====parseHeser====");
         String header = identityToken.split("\\.")[0];
         return new ObjectMapper().readValue(decodeHeader(header), Map.class);
     }

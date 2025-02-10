@@ -86,7 +86,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = jwtUtil.createJwt("access",username, role, 3600000L);
         String refreshToken = jwtUtil.createJwt("refresh",username,role,864000000L);
 
-        System.out.println("---------------LoginFilter------------------");
 
 
         // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
