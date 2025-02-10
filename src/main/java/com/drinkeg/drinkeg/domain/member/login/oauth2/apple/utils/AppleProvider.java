@@ -20,7 +20,6 @@ public class AppleProvider {
 
     public String getAppleRefreshToken(final String code, final String clientSecret) {
         try {
-            System.out.println("get AppleRefresh Token 시작");
 
             AppleRefreshTokenResponseDTO appleRefreshTokenResponse = appleClient.getAppleToken(code, clientId, clientSecret,"authorization_code");
 

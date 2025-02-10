@@ -33,12 +33,10 @@ public class AppleClientSecretGenerator {
 
     public String generateClientSecret() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-        System.out.println("--------------apple generateClientSecret---------------");
 
         Date expirationDate = Date.from(LocalDateTime.now().plusDays(5)
                 .atZone(ZoneId.systemDefault()).toInstant());
 
-        System.out.println("--------------apple generateClientSecret---------------2");
 
 
         return Jwts.builder()

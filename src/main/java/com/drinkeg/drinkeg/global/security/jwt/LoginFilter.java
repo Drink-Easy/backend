@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.global.security.jwt;
 
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
+import com.drinkeg.drinkeg.global.apipayLoad.code.ReasonDTO;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
 import com.drinkeg.drinkeg.domain.member.login.oauth2.dto.LoginResponseDTO;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -86,7 +88,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = jwtUtil.createJwt("access",username, role, 3600000L);
         String refreshToken = jwtUtil.createJwt("refresh",username,role,864000000L);
 
-        System.out.println("---------------LoginFilter------------------");
 
 
         // 토큰을 쿠키에 저장하여 응답 (access 의 경우 추후 프론트와 협의하여 헤더에 넣어서 반환할 예정)
@@ -124,9 +125,25 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setCharacterEncoding("UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("code", "MEMBER4001");
-        errorResponse.put("message", "로그인 과정에서 오류가 발생했습니다.");
+
+        ReasonDTO errorResponse;
+
+        if (failed instanceof BadCredentialsException) {
+            errorResponse = ReasonDTO.builder()
+                    .isSuccess(false)
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .code("MEMBER4015")
+                    .message("로그인 정보를 다시 확인해주세요.")
+                    .build();
+        } else {
+            errorResponse = ReasonDTO.builder()
+                    .isSuccess(false)
+                    .httpStatus(HttpStatus.UNAUTHORIZED)
+                    .code("MEMBER4001")
+                    .message("로그인 과정에서 오류가 발생했습니다.")
+                    .build();
+        }
+
 
         try {
             String jsonResponse = objectMapper.writeValueAsString(errorResponse);

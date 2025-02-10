@@ -51,7 +51,6 @@ public class AppleService {
             throw new GeneralException(ErrorStatus.IDENTITY_TOKEN_NOT_FOUND);
         }
 
-        System.out.println("--------------apple Login Start---------------");
 
         String identityToken = appleLoginRequestDTO.getIdentityToken();
         Claims claims = getClaimsFromIdentityToken(identityToken);

@@ -46,7 +46,6 @@ public class OAuth2Controller {
     @Operation(summary = "애플 로그인", description = "클라이언트에게 Identity Token을 전달 받아 유저 정보를 저장합니다.")
     public ApiResponse<LoginResponseDTO> appleLogin(@RequestBody AppleLoginRequestDTO appleLoginRequestDTO, HttpServletResponse response) throws Exception{
 
-        System.out.println("=========start apple login controller============");
         LoginResponseDTO loginResponseDTO = appleService.appleLogin(appleLoginRequestDTO, response);
         return ApiResponse.onSuccess(loginResponseDTO);
     }
@@ -54,8 +53,6 @@ public class OAuth2Controller {
     @PostMapping("/login/kakao")
     @Operation(summary = "카카오 로그인", description = "클라이언트에게 카카오 유저 정보를 전달 받아 저장합니다.")
     public ApiResponse<LoginResponseDTO> appleLogin(@RequestBody KakaoLoginRequestDTO kakaoLoginRequestDTO, HttpServletResponse response) throws Exception{
-
-        System.out.println("=========start kakao login controller============");
 
         LoginResponseDTO loginResponseDTO = kakaoLoginService.kakaoLogin(kakaoLoginRequestDTO , response);
         return ApiResponse.onSuccess(loginResponseDTO);
@@ -65,7 +62,6 @@ public class OAuth2Controller {
     @Operation(summary = "애플 ", description = "애플 회원 탈퇴하고 유저 정보를 삭제합니다.")
     public ApiResponse<?> deleteApple(@AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody AppleDeleteDTO appleDeleteDTO, HttpServletResponse response) throws Exception{
 
-        System.out.println("=========start apple delete controller============");
 
         appleService.unlinkApple(principalDetail.getUsername(),appleDeleteDTO.getAuthorizationCode(),response);
 

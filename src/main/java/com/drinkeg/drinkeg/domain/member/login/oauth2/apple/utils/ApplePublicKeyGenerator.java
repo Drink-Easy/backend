@@ -24,17 +24,6 @@ public class ApplePublicKeyGenerator {
                                        ApplePublicKeyResponseDTO applePublicKeys)
             throws AuthenticationException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-        System.out.println("======apple public key generator==========");
-        System.out.println(tokenHeaders);
-        for (ApplePublicKeyResponseDTO.ApplePublicKey key : applePublicKeys.getKeys()) {
-            System.out.println("kty: " + key.getKty());
-            System.out.println("kid: " + key.getKid());
-            System.out.println("use: " + key.getUse());
-            System.out.println("alg: " + key.getAlg());
-            System.out.println("n: " + key.getN());
-            System.out.println("e: " + key.getE());
-            System.out.println("----------------------------");
-        }
 
         ApplePublicKeyResponseDTO.ApplePublicKey publicKey = applePublicKeys.getMatchedKeyBy(tokenHeaders.get("kid"),
                 tokenHeaders.get("alg"));
