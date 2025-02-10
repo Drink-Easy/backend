@@ -36,12 +36,13 @@ public class WineServiceImpl implements WineService {
     @Override
     public PageResponse<WinePreviewResponse> searchWinesByName(String searchName, Pageable pageable) {
 
-        List<WinePreviewResponse> winePreviewList = wineRepository.searchByName(searchName.replace(" ", ""), pageable)
-                .stream()
-                .map(WinePreviewResponse::of)
-                .toList();
-        long total = wineRepository.countSearchWine(searchName);
-
+        String cleanSearchName = searchName.replace(" ", "").toLowerCase();
+        List<WinePreviewResponse> winePreviewList =
+                wineRepository.searchByName(cleanSearchName, pageable)
+                        .stream()
+                        .map(WinePreviewResponse::of)
+                        .toList();
+        long total = wineRepository.countSearchWine(cleanSearchName);
         return PageResponse.of(new PageImpl<>(winePreviewList, pageable, total));
     }
 

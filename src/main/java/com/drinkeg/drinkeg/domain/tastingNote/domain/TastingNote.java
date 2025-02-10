@@ -91,12 +91,6 @@ public class TastingNote extends BaseEntity {
         return this;
     }
 
-    public TastingNote removeTastingNoteNose(TastingNoteNose tastingNoteNose) {
-        this.noseList.remove(tastingNoteNose);
-        tastingNoteNose.updateTastingNote(null);
-        return this;
-    }
-
     public void updateTastingNote(String color, LocalDate tasteDate,
                                   Integer sweetness, Integer acidity, Integer tannin, Integer body, Integer alcohol,
                                   List<String> updateNoseList, Float rating, String review){

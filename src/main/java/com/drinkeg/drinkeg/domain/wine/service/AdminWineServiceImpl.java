@@ -28,6 +28,9 @@ public class AdminWineServiceImpl implements AdminWineService {
     @Override
     public void saveWine(WineRegisterRequest wineRegisterRequest, MultipartFile imageFile) {
         Wine wine = Wine.of(wineRegisterRequest);
+        String cleanedName = wineRegisterRequest.getName().replaceAll("[ ,.'\\\\]", "").toLowerCase();
+        String cleanedNameEng = wineRegisterRequest.getNameEng().replaceAll("[ ,.'\\\\]", "").toLowerCase();
+        wine.updateSearchName(cleanedName.concat(cleanedNameEng));
 
         String imageUrl;
         if (imageFile != null) imageUrl = storageService.uploadFile(imageFile, StoragePathName.WINE);

@@ -17,7 +17,6 @@ import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -136,11 +135,12 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
     @Override
     public PageResponse<TastingNotePreviewResponse> searchTastingNoteByWineName(String searchName, String username, Pageable pageable) {
-        List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteRepository.searchTastingNoteByWineName(searchName, username, pageable).
+        String cleanSearchName = searchName.replaceAll("[ ,.'\\\\]", "").toLowerCase();
+        List<TastingNotePreviewResponse> tastingNotePreviewResponseList = tastingNoteRepository.searchTastingNoteByWineName(cleanSearchName, username, pageable).
                 stream()
                 .map(TastingNotePreviewResponse::of)
                 .toList();
-        Long total = tastingNoteRepository.countSearchTastingNoteByWineName(searchName, username);
+        Long total = tastingNoteRepository.countSearchTastingNoteByWineName(cleanSearchName, username);
 
         return PageResponse.of(new PageImpl<>(tastingNotePreviewResponseList, pageable, total));
     }

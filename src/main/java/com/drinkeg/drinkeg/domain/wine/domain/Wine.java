@@ -25,6 +25,8 @@ public class Wine {
 
     private String nameEng;
 
+    private String searchName;
+
     private int price;
 
     private String sort; // 종류
@@ -53,14 +55,23 @@ public class Wine {
         if(region != null) this.region = region;
         if(variety != null) this.variety = variety;
         if(vivinoRating != null) this.vivinoRating = vivinoRating;
+        if(name != null || nameEng != null) {
+            String cleanedName = name.replaceAll("[ ,.'\\\\]", "").toLowerCase();
+            String cleanedNameEng = nameEng.replaceAll("[ ,.'\\\\]", "").toLowerCase();
+            this.searchName = cleanedName.concat(cleanedNameEng);
+        }
     }
 
     public void updateImageUrl(String imageUrl){
         this.imageUrl = imageUrl;
     }
 
+    public void updateSearchName(String searchName){
+        this.searchName = searchName;
+    }
+
     @Builder
-    public Wine(String name, String nameEng, String imageUrl, String sort, String country, String region, String variety, float vivinoRating, int price, WineNoteStatistics wineNoteStatistics) {
+    public Wine(String name, String nameEng, String imageUrl, String sort, String country, String region, String variety, float vivinoRating, int price, WineNoteStatistics wineNoteStatistics, String searchName) {
         this.name = name;
         this.nameEng = nameEng;
         this.imageUrl = imageUrl;
@@ -71,6 +82,7 @@ public class Wine {
         this.vivinoRating = vivinoRating;
         this.price = price;
         this.wineNoteStatistics = wineNoteStatistics != null ? wineNoteStatistics : WineNoteStatistics.create();
+        this.searchName = searchName;
     }
 
     public static Wine of(WineRegisterRequest wineRegisterRequest) {

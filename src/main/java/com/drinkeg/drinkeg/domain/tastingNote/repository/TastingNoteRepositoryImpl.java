@@ -137,8 +137,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
                 .where(
                         tastingNote.member.username.eq(username),
-                        wine.name.containsIgnoreCase(searchName)
-                                .or(wine.nameEng.containsIgnoreCase(searchName))
+                        tastingNote.wine.searchName.contains(searchName)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -154,8 +153,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .leftJoin(tastingNote.wine, wine)
                 .where(
                         tastingNote.member.username.eq(username),
-                        wine.name.containsIgnoreCase(searchName)
-                                .or(wine.nameEng.containsIgnoreCase(searchName))
+                        tastingNote.wine.searchName.contains(searchName)
                 )
                 .fetchOne();
     }

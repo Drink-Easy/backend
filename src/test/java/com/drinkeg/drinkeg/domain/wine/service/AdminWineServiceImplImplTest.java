@@ -21,6 +21,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -61,16 +62,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
         // Then
         verify(storageService).uploadFile(mockFile, StoragePathName.WINE);
         verify(wineRepository).save(argThat(wine ->
-                wine.getImageUrl().equals("https://mock-bucket.s3.amazonaws.com/test-image.jpg") &&
-                        wine.getName().equals("와인1") &&
-                        wine.getNameEng().equals("wine1") &&
-                        wine.getPrice() == 10000 &&
-                        wine.getSort().equals("레드") &&
-                        wine.getCountry().equals("프랑스") &&
-                        wine.getRegion().equals("보르도") &&
-                        wine.getVariety().equals("메를로") &&
-                        wine.getVivinoRating() == 4.5f
-        ));
+                matchesSaveWine(wine, "https://mock-bucket.s3.amazonaws.com/test-image.jpg", request)));
     }
 
     @Test
@@ -86,17 +78,7 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
         adminWineService.saveWine(request, null);
 
         // Then
-        verify(wineRepository).save(argThat(wine ->
-                wine.getImageUrl().equals(defaultImageUrl) &&
-                        wine.getName().equals("와인1") &&
-                        wine.getNameEng().equals("wine1") &&
-                        wine.getPrice() == 10000 &&
-                        wine.getSort().equals("레드") &&
-                        wine.getCountry().equals("프랑스") &&
-                        wine.getRegion().equals("보르도") &&
-                        wine.getVariety().equals("메를로") &&
-                        wine.getVivinoRating() == 4.5f
-        ));
+        verify(wineRepository).save(argThat(wine -> matchesSaveWine(wine, defaultImageUrl, request)));
         verify(storageService, times(0)).uploadFile(any(MultipartFile.class), eq(StoragePathName.WINE));
     }
 
@@ -278,4 +260,30 @@ public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
                 "dummy content".getBytes()
         );
     }
+
+    private boolean matchesSaveWine(Wine wine, String imageUrl, WineRegisterRequest request) {
+        String cleanedName = wine.getName().replaceAll("[ ,.'\\\\]", "").toLowerCase();
+        String cleanedNameEng = wine.getNameEng().replaceAll("[ ,.'\\\\]", "").toLowerCase();
+        String searchName = cleanedName.concat(cleanedNameEng);
+        return wine.getName().equals(request.getName()) &&
+                wine.getImageUrl().equals(imageUrl) &&
+                wine.getNameEng().equals(request.getNameEng()) &&
+                wine.getPrice() == request.getPrice() &&
+                wine.getSort().equals(request.getSort()) &&
+                wine.getCountry().equals(request.getCountry()) &&
+                wine.getRegion().equals(request.getRegion()) &&
+                wine.getVariety().equals(request.getVariety()) &&
+                wine.getVivinoRating() == request.getVivinoRating() &&
+                wine.getWineNoteStatistics().getNose1() == null &&
+                wine.getWineNoteStatistics().getNose2() == null &&
+                wine.getWineNoteStatistics().getNose3() == null &&
+                wine.getWineNoteStatistics().getAvgAcidity() == 0 &&
+                wine.getWineNoteStatistics().getAvgBody() == 0 &&
+                wine.getWineNoteStatistics().getAvgTannin() == 0 &&
+                wine.getWineNoteStatistics().getAvgSweetness() == 0 &&
+                wine.getWineNoteStatistics().getAvgAlcohol() == 0 &&
+                wine.getWineNoteStatistics().getAvgMemberRating() == 0 &&
+                wine.getSearchName().equals(searchName);
+    }
+
 }
