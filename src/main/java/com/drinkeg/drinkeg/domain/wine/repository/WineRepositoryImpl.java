@@ -38,7 +38,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     public List<Wine> searchByName(String searchName, Pageable pageable) {
         return queryFactory.selectFrom(wine)
                 .where(
-                        wine.searchName.likeIgnoreCase(searchName)
+                        wine.searchName.like(searchName)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -55,7 +55,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
         return queryFactory.select(wine.count())
                 .from(wine)
                 .where(
-                        wine.searchName.likeIgnoreCase(searchName)
+                        wine.searchName.like(searchName)
                 )
                 .fetchOne();
     }
