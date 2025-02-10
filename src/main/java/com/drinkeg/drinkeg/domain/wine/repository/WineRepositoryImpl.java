@@ -1,14 +1,11 @@
 package com.drinkeg.drinkeg.domain.wine.repository;
 
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,10 +41,6 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .orderBy(wine.name.asc())
                 .fetch();
-    }
-
-    private StringExpression removeSpecialChars(StringExpression column) {
-        return Expressions.stringTemplate("REPLACE(REPLACE({0}, ',', ''), ' ', '')", column);
     }
 
     @Override
