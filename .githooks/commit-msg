@@ -1,0 +1,41 @@
+#!/bin/sh
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# 첫 번째 줄 패턴 (커밋 타입, 제목, 이슈 번호 포함)
+FIRST_LINE_PATTERN="^(feat|fix|docs|style|refactor|test|chore) : .+ \(#[0-9]+\)$"
+
+# 두 번째 줄 이후 패턴 (선택사항: - 로 시작하는 설명 줄)
+DESCRIPTION_PATTERN="^- .+"
+
+# 첫 번째 줄만 추출
+FIRST_LINE=$(head -n 1 "$COMMIT_MSG_FILE")
+
+# 첫 번째 줄 검증
+if ! echo "$FIRST_LINE" | grep -Eq "$FIRST_LINE_PATTERN"; then
+    echo "❌ [ERROR] 잘못된 커밋 메시지 형식입니다!"
+    echo "💡 올바른 형식:"
+    echo "   'feat : 메시지 (#이슈번호)'"
+    echo "   '- 설명'"
+    echo "   예시: 'feat : 와인 도메인 엔티티 추가 (#0)'"
+    echo "         '- 테이스팅 노트와 1:N 관계 설정'"
+    exit 1  # 커밋 중단
+fi
+
+# 첫 줄을 제외한 나머지 줄 추출 (두 번째 줄부터 확인)
+TAIL_LINES=$(tail -n +2 "$COMMIT_MSG_FILE" | grep -v '^$')  # 빈 줄 제외
+
+if [ -n "$TAIL_LINES" ]; then
+    # 설명 줄이 존재할 경우, 각 줄이 "- "로 시작하는지 확인
+    while read -r line; do
+        if ! echo "$line" | grep -Eq "$DESCRIPTION_PATTERN"; then
+            echo "❌ [ERROR] 잘못된 부가 설명 형식입니다!"
+            echo "💡 올바른 형식: '- 설명'"
+            echo "   예시: '- 엔티티 설정'"
+            exit 1  # 커밋 중단
+        fi
+    done <<< "$TAIL_LINES"
+fi
+
+exit 0  # 정상 종료
