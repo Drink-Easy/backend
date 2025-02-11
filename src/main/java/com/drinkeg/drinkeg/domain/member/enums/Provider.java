@@ -15,7 +15,7 @@ public enum Provider {
 
     KAKAO("Kakao"),
     APPLE("Apple"),
-    DRINKEG("Drinkeg");
+    DRINKEG("DRINKIG");
 
     private final String value;
 
