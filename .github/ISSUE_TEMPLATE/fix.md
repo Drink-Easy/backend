@@ -1,7 +1,7 @@
 ---
 name: Fix
 about: 버그 수정
-title: "\U0001F6E0️"
+title: "\U0001F41B "
 labels: "\U0001F6E0️ Fix"
 assignees: ''
 
