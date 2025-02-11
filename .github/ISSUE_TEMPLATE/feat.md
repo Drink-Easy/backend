@@ -1,7 +1,7 @@
 ---
 name: Feat
 about: 새롭게 구현해야하는 기능
-title: "⚙️"
+title: "✨ "
 labels: "⚙️ Feat"
 assignees: ''
 

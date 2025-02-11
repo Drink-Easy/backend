@@ -1,8 +1,8 @@
 ---
 name: Chore
 about: 개발 환경 설정
-title: "\U0001F528 "
-labels: "\U0001F527 Chore"
+title: "\U0001F527 "
+labels: "\U0001F527 Chore, \U0001F4DD Docs"
 assignees: ''
 
 ---
