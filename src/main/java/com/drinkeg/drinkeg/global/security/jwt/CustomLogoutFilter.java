@@ -88,7 +88,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
         String category = jwtUtil.getCategory(refresh);
         if (!category.equals("refresh")) {
-
             JWTException.jwtExceptionHandler(response, ErrorStatus.INVALID_REFRESH_TOKEN);
             return;
         }
@@ -105,9 +104,9 @@ public class CustomLogoutFilter extends GenericFilterBean {
         // DB에 저장되어 있는지 확인
         String redisRefresh = redisClient.getValue(username);
         if (StringUtils.isEmpty(redisRefresh) || !refresh.equals(redisRefresh)) {
-
             // response body
-            throw new GeneralException(ErrorStatus.INVALID_REFRESH_TOKEN);
+            JWTException.jwtExceptionHandler(response, ErrorStatus.INVALID_REFRESH_TOKEN);
+            return;
         }
 
         // 로그아웃 진행
