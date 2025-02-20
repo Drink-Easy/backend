@@ -14,5 +14,4 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class MemberUpdateRequest {
     private String name;
-    private String region;
 }

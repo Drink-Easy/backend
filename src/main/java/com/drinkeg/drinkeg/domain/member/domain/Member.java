@@ -102,7 +102,6 @@ public class Member {
 
     public void updateMemberInfo(MemberUpdateRequest memberUpdateRequest) {
         if (memberUpdateRequest.getName() != null) name = memberUpdateRequest.getName();
-        if (memberUpdateRequest.getRegion() != null) region = memberUpdateRequest.getRegion();
     }
 
     public void updateEmail(String email) { this.email = email; };
