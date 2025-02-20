@@ -29,5 +29,4 @@ public class MemberRequest {
     @Builder.Default
     private List<String> wineVariety = new ArrayList<>();
 
-    private String region;
 }
