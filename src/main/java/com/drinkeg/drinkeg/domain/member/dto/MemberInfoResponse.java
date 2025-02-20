@@ -16,7 +16,6 @@ public class MemberInfoResponse {
     private String imageUrl;
     private String username;
     private String email;
-    private String city;
     private String authType;
     private boolean isAdult;
 
@@ -26,7 +25,6 @@ public class MemberInfoResponse {
                 .imageUrl(member.getImageUrl())
                 .username(member.getName())
                 .email(member.getEmail())
-                .city(member.getRegion())
                 .authType(member.getProvider().getValue())
                 .isAdult(member.isAdult())
                 .build();
