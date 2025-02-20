@@ -102,7 +102,6 @@ public class Member {
 
     public void updateMemberInfo(MemberUpdateRequest memberUpdateRequest) {
         if (memberUpdateRequest.getName() != null) name = memberUpdateRequest.getName();
-        if (memberUpdateRequest.getRegion() != null) region = memberUpdateRequest.getRegion();
     }
 
     public void updateEmail(String email) { this.email = email; };
@@ -139,7 +138,6 @@ public class Member {
         if(memberRequest.getWineSort() != null) this.wineSort = memberRequest.getWineSort();
         if(memberRequest.getWineArea() != null) this.wineArea = memberRequest.getWineArea();
         if(memberRequest.getWineVariety() != null) this.wineVariety = memberRequest.getWineVariety();
-        if(memberRequest.getRegion() != null) this.region =memberRequest.getRegion();
         this.isFirst = false;
     }
 }
