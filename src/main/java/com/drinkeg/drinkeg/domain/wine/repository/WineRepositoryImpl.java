@@ -44,6 +44,21 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     }
 
     @Override
+    public List<Wine> searchByNameSortVarietyAndArea(String searchName, String wineSort, String wineVariety, String wineArea, Pageable pageable) {
+        return queryFactory.selectFrom(wine)
+                .where(
+                        wine.searchName.contains(searchName),
+                        wine.sort.eq(wineSort),
+                        wine.variety.contains(wineVariety),
+                        wine.country.contains(wineArea)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(wine.name.asc())
+                .fetch();
+    }
+
+    @Override
     public long countSearchWine(String searchName) {
         return queryFactory.select(wine.count())
                 .from(wine)
