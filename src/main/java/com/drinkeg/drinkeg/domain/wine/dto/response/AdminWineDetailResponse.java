@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AdminWineDetailResponse {
 
-
     private Long wineId;
     private String name;
     private String nameEng;
@@ -23,8 +22,6 @@ public class AdminWineDetailResponse {
     private String variety;
     private float vivinoRating;
     private int price;
-    private LocalDateTime createdAt;
-
 
     @Builder
     public AdminWineDetailResponse(Long wineId, String name, String nameEng, String imageUrl,

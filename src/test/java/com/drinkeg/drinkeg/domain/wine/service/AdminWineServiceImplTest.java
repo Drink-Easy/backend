@@ -4,8 +4,10 @@ import com.drinkeg.drinkeg.IntegrationTestSupport;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
+import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
@@ -16,9 +18,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
-public class AdminWineSearchServiceImplTest  extends IntegrationTestSupport {
+public class AdminWineServiceImplTest extends IntegrationTestSupport {
 
     @Autowired
     private WineRepository wineRepository;
@@ -134,8 +137,33 @@ public class AdminWineSearchServiceImplTest  extends IntegrationTestSupport {
         ));
     }
 
+    @DisplayName("와인 id로 와인 상세 조회 테스트")
+    @Test
+    void getWine() {
+        // Given
+        Wine wine = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        wineRepository.save(wine);
 
+        // when
+        AdminWineResponse adminWineResponse = adminWineService.getWine(wine.getId());
 
+        // then
+        Assertions.assertThat(adminWineResponse.getAdminWinePreviewResponse())
+                .extracting("wineId", "name", "sort", "variety", "country", "region", "createdAt")
+                .containsExactly(wine.getId(), wine.getName(), wine.getSort(),wine.getVariety(), wine.getCountry(), wine.getRegion(), wine.getCreatedAt());
+        Assertions.assertThat(adminWineResponse.getAdminWineDetailResponse())
+                .extracting("wineId", "name", "nameEng","imageUrl", "sort", "country", "region", "variety", "vivinoRating", "price")
+                .containsExactly(wine.getId(), wine.getName(), wine.getNameEng(), wine.getImageUrl(), wine.getSort(), wine.getCountry(), wine.getRegion(), wine.getVariety(), wine.getVivinoRating(), wine.getPrice());
+    }
+
+    @DisplayName("존재하지 않는 와인 id로 와인 상세 조회 테스트")
+    @Test
+    void getWineNotExist() {
+        // when // then
+        assertThatThrownBy(() -> adminWineService.getWine(0L))
+                .isInstanceOf(GeneralException.class)
+                .hasMessage("와인이 없습니다.");
+    }
 
     private Wine createWine(String name, String nameEng, String sort, String country, int price, String variety, float vivinoRating) {
         return Wine.builder()
