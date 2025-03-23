@@ -4,20 +4,106 @@ import com.drinkeg.drinkeg.MockMember;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
 import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineDetailResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;
+import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.time.LocalDateTime;
+
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AdminWineControllerTest extends AdminWineControllerSupport{
+
+    @DisplayName("와인 검색 요청이 들어오면 와인을 검색한다.")
+    @Test
+    @MockMember(role = Role.ROLE_ADMIN)
+    void searchWine() throws Exception {
+        // given
+        String searchName = "와인";
+        String wineSort = "레드";
+        String wineVariety = "메를로";
+        String wineCountry = "프랑스";
+
+        // when // then
+        mockMvc.perform(get("/admin/wine")
+                        .param("searchName", searchName)
+                        .param("wineSort", wineSort)
+                        .param("wineVariety", wineVariety)
+                        .param("wineCountry", wineCountry)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"));
+        verify(adminWineService).searchWinesAdmin(eq(searchName), eq(wineSort), eq(wineVariety), eq(wineCountry), any());
+    }
+
+    @DisplayName("와인 상세정보 조회 요청이 들어오면 와인 상세정보를 조회한다.")
+    @Test
+    @MockMember(role = Role.ROLE_ADMIN)
+    void getWine() throws Exception {
+        // given
+        AdminWineResponse adminWineResponse = createAdminWineResponse();
+        when(adminWineService.getWine(any(Long.class)))
+                .thenReturn(adminWineResponse);
+
+
+        // when // then
+        mockMvc.perform(get("/admin/wine/{wineId}", 1L)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.result.adminWinePreviewResponse.wineId").value(1L))
+                .andExpect(jsonPath("$.result.adminWinePreviewResponse.name").value("와인1"))
+                .andExpect(jsonPath("$.result.adminWinePreviewResponse.sort").value("레드"))
+                .andExpect(jsonPath("$.result.adminWinePreviewResponse.country").value("프랑스"))
+                .andExpect(jsonPath("$.result.adminWinePreviewResponse.region").value("보르도"))
+                .andExpect(jsonPath("$.result.adminWinePreviewResponse.variety").value("메를로"))
+                .andExpect(jsonPath("$.result.adminWinePreviewResponse.createdAt").value("2025-03-23T01:00:00"))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.wineId").value(1L))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.name").value("와인1"))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.nameEng").value("wine1"))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.price").value(10000))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.sort").value("레드"))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.country").value("프랑스"))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.region").value("보르도"))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.variety").value("메를로"))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.vivinoRating").value(4.5f))
+                .andExpect(jsonPath("$.result.adminWineDetailResponse.imageUrl").value("test-image.jpg"));
+        verify(adminWineService).getWine(eq(1L));
+    }
+
+    @DisplayName("존재하지 않는 와인 ID로 와인 상세정보 조회 요청이 들어오면 와인 상세정보 조회가 실패한다.")
+    @Test
+    @MockMember(role = Role.ROLE_ADMIN)
+    void getWineWithNotExistId() throws Exception {
+        // given
+        Long wineId = -100L;
+        GeneralException generalException = new GeneralException(ErrorStatus.WINE_NOT_FOUND);
+        when(adminWineService.getWine(any(Long.class)))
+                .thenThrow(generalException);
+
+        // when // then
+        mockMvc.perform(get("/admin/wine/{wineId}", wineId)
+                        .with(csrf()))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("WINE4001"))
+                .andExpect(jsonPath("$.message").value("와인이 없습니다."));
+    }
 
     @DisplayName("올바른 와인 등록 DTO와 이미지로 와인 등록 요청이 들어오면 와인을 등록한다.")
     @Test
@@ -380,6 +466,41 @@ public class AdminWineControllerTest extends AdminWineControllerSupport{
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.message").value("비비노 평점은 5 이하여야 합니다."));
+    }
+
+    private AdminWineResponse createAdminWineResponse(){
+        return AdminWineResponse.builder()
+                .adminWineDetailResponse(createAdminWineDetailResponse())
+                .adminWinePreviewResponse(createAdminWinePreviewResponse())
+                .build();
+    }
+
+    private AdminWinePreviewResponse createAdminWinePreviewResponse(){
+        return AdminWinePreviewResponse.builder()
+                .wineId(1L)
+                .name("와인1")
+                .sort("레드")
+                .variety("메를로")
+                .country("프랑스")
+                .region("보르도")
+                .variety("메를로")
+                .createdAt(LocalDateTime.of(2025, 3, 23, 1, 0, 0))
+                .build();
+    }
+
+    private AdminWineDetailResponse createAdminWineDetailResponse(){
+        return AdminWineDetailResponse.builder()
+                .wineId(1L)
+                .name("와인1")
+                .nameEng("wine1")
+                .price(10000)
+                .sort("레드")
+                .country("프랑스")
+                .region("보르도")
+                .variety("메를로")
+                .vivinoRating(4.5f)
+                .imageUrl("test-image.jpg")
+                .build();
     }
 
     private WineRegisterRequest createWineRegisterRequest() {
