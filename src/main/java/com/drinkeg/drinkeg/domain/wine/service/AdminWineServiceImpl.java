@@ -4,6 +4,7 @@ import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
 import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
@@ -44,6 +45,13 @@ public class AdminWineServiceImpl implements AdminWineService {
                         .toList();
         long total = wineRepository.countSearchWineSortVarietyAndArea(searchName, wineSort, wineVariety, wineCountry);
         return PageResponse.of(new PageImpl<>(winePreviewList, pageable, total));
+    }
+
+    @Override
+    public AdminWineResponse getWine(Long wineId) {
+        Wine wine = wineRepository.findById(wineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
+        return AdminWineResponse.of(wine);
     }
 
     @Override

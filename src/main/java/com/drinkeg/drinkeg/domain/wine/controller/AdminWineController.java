@@ -41,6 +41,15 @@ public class AdminWineController {
         return ApiResponse.onSuccess(pageResponse);
     }
 
+    @GetMapping("/{wineId}")
+    @Operation(
+            summary = "와인 상세정보 조회",
+            description = "와인의 상세정보를 반환한다."
+    )
+    public ApiResponse<?> getWine(@PathVariable Long wineId) {
+        return ApiResponse.onSuccess(adminWineService.getWine(wineId));
+    }
+
     @PostMapping("")
     @Operation(
             summary = "와인 등록",
