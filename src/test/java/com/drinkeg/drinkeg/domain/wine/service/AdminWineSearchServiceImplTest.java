@@ -39,7 +39,7 @@ public class AdminWineSearchServiceImplTest  extends IntegrationTestSupport {
         Wine wine7 = createWine("와인7", "wine7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
         Wine wine8 = createWine("와인8", "wine8", "화이트", "독일", 250000, "리슬링", 4.3f);
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8));
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 7);
 
         // when
         PageResponse<AdminWinePreviewResponse> adminWineResponsePageResponse = adminWineService.searchWinesAdmin("와인", "레드", "피노누아", "프랑스", pageable);
@@ -64,21 +64,20 @@ public class AdminWineSearchServiceImplTest  extends IntegrationTestSupport {
         Wine wine7 = createWine("와인7", "wine7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
         Wine wine8 = createWine("와인8", "wine8", "화이트", "독일", 250000, "리슬링", 4.3f);
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8));
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 7);
 
         // when
         PageResponse<AdminWinePreviewResponse> adminWineResponsePageResponse = adminWineService.searchWinesAdmin("와인", null, null, null, pageable);
 
         // then
-        assertWinePreviewPageResponse(adminWineResponsePageResponse, 0, 1, List.of(
+        assertWinePreviewPageResponse(adminWineResponsePageResponse, 0, 2, List.of(
                 AdminWinePreviewResponse.of(wine1),
                 AdminWinePreviewResponse.of(wine2),
                 AdminWinePreviewResponse.of(wine3),
                 AdminWinePreviewResponse.of(wine4),
                 AdminWinePreviewResponse.of(wine5),
                 AdminWinePreviewResponse.of(wine6),
-                AdminWinePreviewResponse.of(wine7),
-                AdminWinePreviewResponse.of(wine8)
+                AdminWinePreviewResponse.of(wine7)
         ));
     }
 
@@ -156,10 +155,10 @@ public class AdminWineSearchServiceImplTest  extends IntegrationTestSupport {
     private void assertWinePreviewPageResponse(PageResponse<AdminWinePreviewResponse> adminWinePreviewResponsePageResponse, int pageNumber, int totalPages, List<AdminWinePreviewResponse> adminWinePreviewResponseList) {
         Assertions.assertThat(adminWinePreviewResponsePageResponse.getContent())
                 .hasSize(adminWinePreviewResponseList.size())
-                .extracting("wineId", "name", "imageUrl", "sort", "country", "region", "createdAt")
+                .extracting("wineId", "name", "sort", "country", "region", "createdAt")
                 .containsExactly(
                         adminWinePreviewResponseList.stream()
-                                .map(content -> tuple(content.getWineId(), content.getName(), content.getImageUrl(),
+                                .map(content -> tuple(content.getWineId(), content.getName(),
                                         content.getSort(), content.getCountry(), content.getRegion(), content.getCreatedAt()))
                                 .toArray(Tuple[]::new)
                 );

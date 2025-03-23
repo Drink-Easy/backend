@@ -14,7 +14,6 @@ public class AdminWinePreviewResponse {
 
     private Long wineId;
     private String name;
-    private String imageUrl;
     private String sort;
     private String variety;
     private String country;
@@ -23,11 +22,9 @@ public class AdminWinePreviewResponse {
 
 
     @Builder
-    public AdminWinePreviewResponse(Long wineId, String name, String imageUrl,
-                                    String sort, String variety, String country, String region, LocalDateTime createdAt) {
+    public AdminWinePreviewResponse(Long wineId, String name, String sort, String variety, String country, String region, LocalDateTime createdAt) {
         this.wineId = wineId;
         this.name = name;
-        this.imageUrl = imageUrl;
         this.sort = sort;
         this.variety = variety;
         this.country = country;
@@ -39,7 +36,6 @@ public class AdminWinePreviewResponse {
         return AdminWinePreviewResponse.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())
-                .imageUrl(wine.getImageUrl())
                 .sort(wine.getSort())
                 .variety(wine.getVariety())
                 .country(wine.getCountry())
