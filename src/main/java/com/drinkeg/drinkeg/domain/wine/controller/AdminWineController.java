@@ -33,7 +33,7 @@ public class AdminWineController {
             @RequestParam(defaultValue = "") String wineSort,
             @RequestParam(defaultValue = "") String wineVariety,
             @RequestParam(defaultValue = "") String wineCountry,
-            @ParameterObject @PageableDefault(size = 10, sort = "name") Pageable pageable) {
+            @ParameterObject @PageableDefault(size = 7, sort = "name") Pageable pageable) {
 
         PageResponse<AdminWinePreviewResponse> pageResponse = adminWineService
                 .searchWinesAdmin(searchName, wineSort, wineVariety, wineCountry, pageable);
