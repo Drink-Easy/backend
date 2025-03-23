@@ -33,15 +33,15 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("와인"));
-        Long tastingNoteId = saveTastingNote(member, wine, 10, 20, 30, 40, 50, 4.5f);
+        TastingNote tastingNote = saveTastingNote(member, wine, 10, 20, 30, 40, 50, 4.5f);
 
         // when
-        TastingNotePreviewResponse tastingNotePreviewResponse = TastingNotePreviewResponse.of(tastingNoteRepository.findById(tastingNoteId).get());
+        TastingNotePreviewResponse tastingNotePreviewResponse = TastingNotePreviewResponse.of(tastingNote);
 
         // then
         Assertions.assertThat(tastingNotePreviewResponse)
-                .extracting("noteId", "tasteDate", "wineName", "imageUrl", "sort")
-                .containsExactly(tastingNoteId, LocalDate.parse("2025-01-06"), wine.getName(), wine.getImageUrl(), wine.getSort());
+                .extracting("noteId", "tasteDate", "wineName", "imageUrl", "sort", "createdAt")
+                .containsExactly(tastingNote.getId(), LocalDate.parse("2025-01-06"), wine.getName(), wine.getImageUrl(), wine.getSort(), tastingNote.getCreatedAt().toLocalDate());
 
     }
 
@@ -51,15 +51,16 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("와인"));
-        Long tastingNoteId = saveTastingNote(member, wine, 10, 20, 30, 40, 50, 4.5f);
+        TastingNote tastingNote = saveTastingNote(member, wine, 10, 20, 30, 40, 50, 4.5f);
+
 
         // when
-        TastingNoteResponse tastingNoteResponse = TastingNoteResponse.of(tastingNoteRepository.findById(tastingNoteId).get());
+        TastingNoteResponse tastingNoteResponse = TastingNoteResponse.of(tastingNote);
 
         // then
         Assertions.assertThat(tastingNoteResponse)
-                .extracting("noteId", "wineId", "wineName", "sort", "country", "region", "imageUrl", "color", "tasteDate", "sweetness", "acidity", "tannin", "body", "alcohol", "rating", "review")
-                .containsExactly(tastingNoteId, wine.getId(), wine.getName(), wine.getSort(), wine.getCountry(), wine.getRegion(), wine.getImageUrl(), "빨간색", LocalDate.of(2025, 1, 6), 10, 20, 30, 40, 50, 4.5f, "맛있어요");
+                .extracting("noteId", "wineId", "wineName", "sort", "country", "region", "imageUrl", "color", "tasteDate", "sweetness", "acidity", "tannin", "body", "alcohol", "rating", "review", "createdAt")
+                .containsExactly(tastingNote.getId(), wine.getId(), wine.getName(), wine.getSort(), wine.getCountry(), wine.getRegion(), wine.getImageUrl(), "빨간색", LocalDate.of(2025, 1, 6), 10, 20, 30, 40, 50, 4.5f, "맛있어요", tastingNote.getCreatedAt().toLocalDate());
     }
 
     private Member createMember(String username) {
@@ -82,7 +83,7 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
                 .price(100).build();
     }
 
-    private Long saveTastingNote(Member member, Wine wine,
+    private TastingNote saveTastingNote(Member member, Wine wine,
                                           int sweetness, int acidity, int tannin, int body, int alcohol, float rating) {
         return tastingNoteRepository.save(
                 TastingNote.builder()
@@ -96,7 +97,8 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
                         .body(body)
                         .alcohol(alcohol)
                         .rating(rating)
-                        .review("맛있어요").build()).getId();
+                        .review("맛있어요")
+                        .build());
     }
 
 

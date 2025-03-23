@@ -96,8 +96,7 @@ public class JoinServiceTest extends IntegrationTestSupport {
                 50000L,
                 wineSort,
                 wineArea,
-                wineVariety,
-                "testRegion"
+                wineVariety
         );
 
         // when
@@ -145,8 +144,7 @@ public class JoinServiceTest extends IntegrationTestSupport {
                 50000L,
                 wineSort,
                 wineArea,
-                wineVariety,
-                "testRegion"
+                wineVariety
         );
 
         // when
@@ -193,8 +191,7 @@ public class JoinServiceTest extends IntegrationTestSupport {
                 50000L,
                 wineSort,
                 wineArea,
-                wineVariety,
-                "testRegion"
+                wineVariety
         );
 
 
@@ -227,8 +224,8 @@ public class JoinServiceTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private MemberRequest createMemberRequest(String name, Boolean isNewbie, Long monthPrice, List<String> wineSort, List<String> wineArea, List<String> wineVariety, String region){
-        return new MemberRequest(name,isNewbie,monthPrice,wineSort,wineArea,wineVariety,region);
+    private MemberRequest createMemberRequest(String name, Boolean isNewbie, Long monthPrice, List<String> wineSort, List<String> wineArea, List<String> wineVariety){
+        return new MemberRequest(name,isNewbie,monthPrice,wineSort,wineArea,wineVariety);
     }
 
 }
