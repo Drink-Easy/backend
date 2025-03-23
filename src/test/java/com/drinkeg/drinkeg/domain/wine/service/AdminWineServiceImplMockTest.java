@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 @TestPropertySource(properties = {
         "default.wine.url=https://mock-bucket.s3.amazonaws.com/default-image.jpg"
 })
-public class AdminWineServiceImplImplTest extends IntegrationTestSupport {
+public class AdminWineServiceImplMockTest extends IntegrationTestSupport {
     @InjectMocks
     private AdminWineServiceImpl adminWineService;
     @Mock
