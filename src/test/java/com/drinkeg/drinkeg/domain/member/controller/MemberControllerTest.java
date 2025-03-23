@@ -235,8 +235,7 @@ public class MemberControllerTest extends MemberControllerTestSupport{
                 50000L,
                 wineSort,
                 wineArea,
-                wineVariety,
-                "testRegion"
+                wineVariety
         );
 
 
@@ -272,8 +271,7 @@ public class MemberControllerTest extends MemberControllerTestSupport{
                 50000L,
                 wineSort,
                 wineArea,
-                wineVariety,
-                "testRegion"
+                wineVariety
         );
 
         String username = "user";
@@ -391,7 +389,7 @@ public class MemberControllerTest extends MemberControllerTestSupport{
         // given
         String username = "user";
 
-        MemberUpdateRequest updateRequest = createMemberUpdateRequest("newName","서울");
+        MemberUpdateRequest updateRequest = createMemberUpdateRequest("newName");
         doNothing().when(memberService).updateMemberInfo(refEq(updateRequest), eq(username));
 
         // when & then
@@ -415,7 +413,7 @@ public class MemberControllerTest extends MemberControllerTestSupport{
     void updateMemberInfo_ThrowException() throws Exception {
         // given
         String username = "user";
-        MemberUpdateRequest updateRequest = createMemberUpdateRequest("newName","서울");
+        MemberUpdateRequest updateRequest = createMemberUpdateRequest("newName");
         doThrow(new GeneralException(ErrorStatus.MEMBER_NOT_FOUND))
                 .when(memberService).updateMemberInfo(refEq(updateRequest),eq(username));
 
@@ -441,12 +439,12 @@ public class MemberControllerTest extends MemberControllerTestSupport{
                 .build();
     }
 
-    private MemberRequest createMemberRequest(String name, Boolean isNewbie, Long monthPrice, List<String> wineSort,  List<String> wineArea,List<String> wineVariety,String region){
-        return new MemberRequest(name,isNewbie,monthPrice,wineSort,wineArea,wineVariety,region);
+    private MemberRequest createMemberRequest(String name, Boolean isNewbie, Long monthPrice, List<String> wineSort,  List<String> wineArea,List<String> wineVariety){
+        return new MemberRequest(name,isNewbie,monthPrice,wineSort,wineArea,wineVariety);
     }
 
-    private MemberUpdateRequest createMemberUpdateRequest(String name, String city){
-        return new MemberUpdateRequest(name,city);
+    private MemberUpdateRequest createMemberUpdateRequest(String name){
+        return new MemberUpdateRequest(name);
     }
 
     private MemberResponseDTO createMemberResponse(){
@@ -470,7 +468,6 @@ public class MemberControllerTest extends MemberControllerTestSupport{
                 .imageUrl("http://test.image.url")
                 .username("user")
                 .email("user@test.com")
-                .city("Seoul")
                 .authType("ROLE_USER")
                 .isAdult(false) // 성인 여부 설정
                 .build();

@@ -57,7 +57,7 @@ public class MemberServiceTest extends IntegrationTestSupport {
                 .extracting(
                         MemberInfoResponse::getUsername, // memberInfoResponse.getUsername() 호출
                         MemberInfoResponse::getEmail,    // memberInfoResponse.getEmail() 호출
-                        MemberInfoResponse::getCity,     // memberInfoResponse.getCity() 호출
+//                        MemberInfoResponse::getCity,     // memberInfoResponse.getCity() 호출
                         MemberInfoResponse::getAuthType, // memberInfoResponse.getAuthType() 호출
                         MemberInfoResponse::isAdult,
                         MemberInfoResponse::getImageUrl
@@ -100,7 +100,7 @@ public class MemberServiceTest extends IntegrationTestSupport {
                 .extracting(
                         MemberInfoResponse::getUsername, // memberInfoResponse.getUsername() 호출
                         MemberInfoResponse::getEmail,    // memberInfoResponse.getEmail() 호출
-                        MemberInfoResponse::getCity,     // memberInfoResponse.getCity() 호출
+//                        MemberInfoResponse::getCity,     // memberInfoResponse.getCity() 호출
                         MemberInfoResponse::getAuthType, // memberInfoResponse.getAuthType() 호출
                         MemberInfoResponse::isAdult,
                         MemberInfoResponse::getImageUrl
@@ -149,7 +149,7 @@ public class MemberServiceTest extends IntegrationTestSupport {
 
         // given
         Member member = memberRepository.save(createMember("user1","주민영","44azaz@naver.com","광주","Kakao", true ,null));
-        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName", "newRegion");
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName");
 
         // when
         memberService.updateMemberInfo(updateRequest, member.getUsername());
@@ -160,7 +160,7 @@ public class MemberServiceTest extends IntegrationTestSupport {
         Member updatedMember = OptimalMember.get();
         assertThat(updatedMember)
                 .extracting(Member::getName, Member::getRegion)
-                .containsExactly(updateRequest.getName(), updateRequest.getRegion());
+                .containsExactly(updateRequest.getName());
     }
 
     @DisplayName("존재하지 않는 회원의 정보를 업데이트하려고 하면 예외가 발생한다.")
@@ -169,7 +169,7 @@ public class MemberServiceTest extends IntegrationTestSupport {
 
         // given
         String username = "nonexistentUser";
-        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName", "newRegion");
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName");
 
         // when & then
         assertThatThrownBy(() -> memberService.updateMemberInfo(updateRequest,username))
@@ -182,7 +182,7 @@ public class MemberServiceTest extends IntegrationTestSupport {
     void updateMemberInfo_is_null_Test() {
         // given
         Member member = memberRepository.save(createMember("user1","주민영","44azaz@naver.com","광주","Kakao", true ,null));
-        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName",null);
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest("newName");
 
         // when
         memberService.updateMemberInfo(updateRequest, member.getUsername());

@@ -318,11 +318,11 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         TastingNoteSortCountResponse sortCount = allTastingNote.getSortCount();
 
         assertThat(notePriviewList).hasSize(3)
-                .extracting("noteId", "wineName", "imageUrl", "sort")
+                .extracting("noteId", "wineName", "imageUrl", "sort", "createdAt")
                 .containsExactly(
-                        tuple(note6.getId(), "와인6", "http://default.image6", "기타"),
-                        tuple(note5.getId(), "와인5", "http://default.image5", "주정강화"),
-                        tuple(note4.getId(), "와인4", "http://default.image4", "주정강화"));
+                        tuple(note6.getId(), "와인6", "http://default.image6", "기타", note6.getCreatedAt().toLocalDate()),
+                        tuple(note5.getId(), "와인5", "http://default.image5", "주정강화", note5.getCreatedAt().toLocalDate()),
+                        tuple(note4.getId(), "와인4", "http://default.image4", "주정강화", note4.getCreatedAt().toLocalDate()));
 
         assertThat(sortCount)
                 .extracting(

@@ -14,14 +14,17 @@ public class TastingNotePreviewResponse {
         private String wineName;
         private String imageUrl;
         private String sort;
+        private LocalDate createdAt;
 
         @Builder
-        public TastingNotePreviewResponse(Long noteId, LocalDate tasteDate, String wineName, String imageUrl, String sort){
+        public TastingNotePreviewResponse(Long noteId, LocalDate tasteDate, String wineName,
+                                          String imageUrl, String sort, LocalDate createdAt) {
                 this.noteId = noteId;
                 this.tasteDate = tasteDate;
                 this.wineName = wineName;
                 this.imageUrl = imageUrl;
                 this.sort = sort;
+                this.createdAt = createdAt;
         }
 
         public static TastingNotePreviewResponse of(TastingNote tastingNote){
@@ -31,6 +34,7 @@ public class TastingNotePreviewResponse {
                         .wineName(tastingNote.getWine().getName())
                         .imageUrl(tastingNote.getWine().getImageUrl())
                         .sort(tastingNote.getWine().getSort())
+                        .createdAt(LocalDate.from(tastingNote.getCreatedAt()))
                         .build();
         }
 

@@ -406,12 +406,12 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
                         .pageResponse(new PageResponse<>(
                                 List.of(
-                                        createTastingNotePreviewResponse(1L, "2025-01-01", "wine", "레드"),
-                                        createTastingNotePreviewResponse(2L, "2025-01-02", "wine2", "화이트"),
-                                        createTastingNotePreviewResponse(3L, "2025-01-03", "wine3", "스파클링"),
-                                        createTastingNotePreviewResponse(4L, "2025-01-04", "wine4", "로제"),
-                                        createTastingNotePreviewResponse(5L, "2025-01-05", "wine5", "주정강화"),
-                                        createTastingNotePreviewResponse(6L, "2025-01-06", "wine6", "기타")
+                                        createTastingNotePreviewResponse(1L, "2025-01-01", "wine", "레드", "2025-01-01"),
+                                        createTastingNotePreviewResponse(2L, "2025-01-02", "wine2", "화이트", "2025-01-02"),
+                                        createTastingNotePreviewResponse(3L, "2025-01-03", "wine3", "스파클링", "2025-01-03"),
+                                        createTastingNotePreviewResponse(4L, "2025-01-04", "wine4", "로제", "2025-01-04"),
+                                        createTastingNotePreviewResponse(5L, "2025-01-05", "wine5", "주정강화", "2025-01-05"),
+                                        createTastingNotePreviewResponse(6L, "2025-01-06", "wine6", "기타", "2025-01-06")
                                 ), 0, 1)).build()
                         );
 
@@ -424,12 +424,12 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 1L, "2025-01-01", "wine", "레드");
-        assertJsonNotePreviewList(resultActions, 1, 2L, "2025-01-02", "wine2", "화이트");
-        assertJsonNotePreviewList(resultActions, 2, 3L, "2025-01-03", "wine3", "스파클링");
-        assertJsonNotePreviewList(resultActions, 3, 4L, "2025-01-04", "wine4", "로제");
-        assertJsonNotePreviewList(resultActions, 4, 5L, "2025-01-05", "wine5", "주정강화");
-        assertJsonNotePreviewList(resultActions, 5, 6L, "2025-01-06", "wine6", "기타");
+        assertJsonNotePreviewList(resultActions, 0, 1L, "2025-01-01", "wine", "레드", "2025-01-01");
+        assertJsonNotePreviewList(resultActions, 1, 2L, "2025-01-02", "wine2", "화이트", "2025-01-02");
+        assertJsonNotePreviewList(resultActions, 2, 3L, "2025-01-03", "wine3", "스파클링", "2025-01-03");
+        assertJsonNotePreviewList(resultActions, 3, 4L, "2025-01-04", "wine4", "로제", "2025-01-04");
+        assertJsonNotePreviewList(resultActions, 4, 5L, "2025-01-05", "wine5", "주정강화", "2025-01-05");
+        assertJsonNotePreviewList(resultActions, 5, 6L, "2025-01-06", "wine6", "기타", "2025-01-06");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(레드) 기준으로 조회한다.")
@@ -443,7 +443,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
                         .pageResponse(new PageResponse<>(
                                 List.of(
-                                        createTastingNotePreviewResponse(1L, "2025-01-01", "wine", "레드")
+                                        createTastingNotePreviewResponse(1L, "2025-01-01", "wine", "레드", "2025-01-01")
                                 ), 0, 1)).build()
                 );
 
@@ -456,7 +456,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 1L, "2025-01-01","wine", "레드");
+        assertJsonNotePreviewList(resultActions, 0, 1L, "2025-01-01","wine", "레드", "2025-01-01");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(화이트) 기준으로 조회한다.")
@@ -470,7 +470,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
                         .pageResponse(new PageResponse<>(
                                 List.of(
-                                        createTastingNotePreviewResponse(2L, "2025-01-01", "wine2", "화이트")
+                                        createTastingNotePreviewResponse(2L, "2025-01-01", "wine2", "화이트", "2025-01-01")
                                 ), 0, 1)).build()
                 );
 
@@ -483,7 +483,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 2L, "2025-01-01", "wine2", "화이트");
+        assertJsonNotePreviewList(resultActions, 0, 2L, "2025-01-01", "wine2", "화이트", "2025-01-01");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(스파클링) 기준으로 조회한다.")
@@ -497,7 +497,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
                         .pageResponse(new PageResponse<>(
                                 List.of(
-                                        createTastingNotePreviewResponse(3L, "2025-01-01", "wine3", "스파클링")
+                                        createTastingNotePreviewResponse(3L, "2025-01-01", "wine3", "스파클링", "2025-01-01")
                                 ), 0, 1)).build());
 
         // when // then
@@ -509,7 +509,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 3L, "2025-01-01","wine3", "스파클링");
+        assertJsonNotePreviewList(resultActions, 0, 3L, "2025-01-01","wine3", "스파클링", "2025-01-01");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(로제) 기준으로 조회한다.")
@@ -523,7 +523,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
                         .pageResponse(new PageResponse<>(
                                 List.of(
-                                        createTastingNotePreviewResponse(4L, "2025-01-01","wine4", "로제")
+                                        createTastingNotePreviewResponse(4L, "2025-01-01","wine4", "로제", "2025-01-01")
                                 ), 0, 1)).build());
 
         // when // then
@@ -535,7 +535,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 4L, "2025-01-01","wine4", "로제");
+        assertJsonNotePreviewList(resultActions, 0, 4L, "2025-01-01","wine4", "로제", "2025-01-01");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(기타) 기준으로 조회한다.")
@@ -549,8 +549,8 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                         .sortCount(new TastingNoteSortCountResponse(6, 1, 1, 1, 1, 2))
                         .pageResponse(new PageResponse<>(
                                 List.of(
-                                        createTastingNotePreviewResponse(5L, "2025-01-01","wine5", "주정강화"),
-                                        createTastingNotePreviewResponse(6L, "2025-01-03","wine6", "기타")
+                                        createTastingNotePreviewResponse(5L, "2025-01-01","wine5", "주정강화", "2025-01-01"),
+                                        createTastingNotePreviewResponse(6L, "2025-01-03","wine6", "기타", "2025-01-03")
                                 ), 0, 1)).build());
 
         // when // then
@@ -562,8 +562,8 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
         assertJsonSortCount(resultActions, 6, 1, 1, 1, 1, 2);
-        assertJsonNotePreviewList(resultActions, 0, 5L, "2025-01-01","wine5", "주정강화");
-        assertJsonNotePreviewList(resultActions, 1, 6L, "2025-01-03","wine6", "기타");
+        assertJsonNotePreviewList(resultActions, 0, 5L, "2025-01-01","wine5", "주정강화", "2025-01-01");
+        assertJsonNotePreviewList(resultActions, 1, 6L, "2025-01-03","wine6", "기타", "2025-01-03");
     }
 
     @DisplayName("사용자의 모든 테이스팅 노트를 sort(전체) 기준으로 조회할 때 테이스팅 노트가 없으면 빈 리스트를 반환한다.")
@@ -846,12 +846,12 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
         String wineName = "와인";
         when(tastingNoteService.searchTastingNoteByWineName(eq(wineName), eq("user"), any(Pageable.class)))
                 .thenReturn(new PageResponse(
-                        List.of(createTastingNotePreviewResponse(6L, "2025-01-06", "와인6", "기타"),
-                                createTastingNotePreviewResponse(5L, "2025-01-05", "와인5", "주정강화"),
-                                createTastingNotePreviewResponse(4L, "2025-01-04", "와인4", "로제"),
-                                createTastingNotePreviewResponse(3L, "2025-01-03", "와인3", "스파클링"),
-                                createTastingNotePreviewResponse(2L, "2025-01-02", "와인2", "화이트"),
-                                createTastingNotePreviewResponse(1L, "2025-01-01", "와인1", "레드")
+                        List.of(createTastingNotePreviewResponse(6L, "2025-01-06", "와인6", "기타", "2025-01-06"),
+                                createTastingNotePreviewResponse(5L, "2025-01-05", "와인5", "주정강화", "2025-01-05"),
+                                createTastingNotePreviewResponse(4L, "2025-01-04", "와인4", "로제", "2025-01-04"),
+                                createTastingNotePreviewResponse(3L, "2025-01-03", "와인3", "스파클링", "2025-01-03"),
+                                createTastingNotePreviewResponse(2L, "2025-01-02", "와인2", "화이트", "2025-01-02"),
+                                createTastingNotePreviewResponse(1L, "2025-01-01", "와인1", "레드", "2025-01-01")
                         ), 0, 1));
 
         // when // then
@@ -860,12 +860,12 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"));
-        assertJsonSearchNotePreviewList(resultActions, 0, 6L, "2025-01-06", "와인6", "기타");
-        assertJsonSearchNotePreviewList(resultActions, 1, 5L, "2025-01-05", "와인5", "주정강화");
-        assertJsonSearchNotePreviewList(resultActions, 2, 4L, "2025-01-04", "와인4", "로제");
-        assertJsonSearchNotePreviewList(resultActions, 3, 3L, "2025-01-03", "와인3", "스파클링");
-        assertJsonSearchNotePreviewList(resultActions, 4, 2L, "2025-01-02", "와인2", "화이트");
-        assertJsonSearchNotePreviewList(resultActions, 5, 1L, "2025-01-01", "와인1", "레드");
+        assertJsonSearchNotePreviewList(resultActions, 0, 6L, "2025-01-06", "와인6", "기타", "2025-01-06");
+        assertJsonSearchNotePreviewList(resultActions, 1, 5L, "2025-01-05", "와인5", "주정강화", "2025-01-05");
+        assertJsonSearchNotePreviewList(resultActions, 2, 4L, "2025-01-04", "와인4", "로제", "2025-01-04");
+        assertJsonSearchNotePreviewList(resultActions, 3, 3L, "2025-01-03", "와인3", "스파클링", "2025-01-03");
+        assertJsonSearchNotePreviewList(resultActions, 4, 2L, "2025-01-02", "와인2", "화이트", "2025-01-02");
+        assertJsonSearchNotePreviewList(resultActions, 5, 1L, "2025-01-01", "와인1", "레드", "2025-01-01");
     }
 
     @DisplayName("와인 이름으로 사용자의 테이스팅 노트를 검색할 때 테이스팅 노트가 없으면 빈 리스트를 반환한다.")
@@ -878,7 +878,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .thenReturn(new PageResponse<>(List.of(), 0, 0));
 
         // when // then
-        ResultActions resultActions = mockMvc.perform(get("/tasting-note?searchName={searchName}", wineName))
+        mockMvc.perform(get("/tasting-note?searchName={searchName}", wineName))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.content").isEmpty())
@@ -897,13 +897,14 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
         return new TastingNoteRequest(wineId, color, tasteDate, sweetness, acidity, tannin, body, alcohol, noseList, rating, review);
     }
 
-    TastingNotePreviewResponse createTastingNotePreviewResponse(Long noteId, String tasteDate, String wineName, String sort) {
+    TastingNotePreviewResponse createTastingNotePreviewResponse(Long noteId, String tasteDate, String wineName, String sort, String createdAt) {
         return TastingNotePreviewResponse.builder()
                 .noteId(noteId)
                 .tasteDate(LocalDate.parse(tasteDate))
                 .wineName(wineName)
                 .imageUrl("https://DEFAULT_IMAGE_URL")
                 .sort(sort)
+                .createdAt(LocalDate.parse(createdAt))
                 .build();
     }
 
@@ -929,6 +930,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                         TastingNoteNose.builder().noseElement("nose3").build()))
                 .rating(4.5F)
                 .review("good")
+                .createdAt(LocalDate.parse("2025-01-01"))
                 .build();
     }
 
@@ -948,20 +950,22 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.result.sortCount.etcCount").value(etcCount));
     }
 
-    private void assertJsonNotePreviewList(ResultActions resultActions, int index, long noteId, String tasteDate, String wineName, String sort) throws Exception {
+    private void assertJsonNotePreviewList(ResultActions resultActions, int index, long noteId, String tasteDate, String wineName, String sort, String createdAt) throws Exception {
         resultActions.andExpect(jsonPath("$.result.pageResponse.content[" + index + "].noteId").value(noteId))
                 .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].tasteDate").value(tasteDate))
                 .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].wineName").value(wineName))
                 .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].sort").value(sort))
-                .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].imageUrl").value("https://DEFAULT_IMAGE_URL"));
+                .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].imageUrl").value("https://DEFAULT_IMAGE_URL"))
+                .andExpect(jsonPath("$.result.pageResponse.content[" + index + "].createdAt").value(createdAt));
     }
 
-    private void assertJsonSearchNotePreviewList(ResultActions resultActions, int index, long noteId, String tasteDate, String wineName, String sort) throws Exception {
+    private void assertJsonSearchNotePreviewList(ResultActions resultActions, int index, long noteId, String tasteDate, String wineName, String sort, String createdAt) throws Exception {
         resultActions.andExpect(jsonPath("$.result.content[" + index + "].noteId").value(noteId))
                 .andExpect(jsonPath("$.result.content[" + index + "].tasteDate").value(tasteDate))
                 .andExpect(jsonPath("$.result.content[" + index + "].wineName").value(wineName))
                 .andExpect(jsonPath("$.result.content[" + index + "].sort").value(sort))
-                .andExpect(jsonPath("$.result.content[" + index + "].imageUrl").value("https://DEFAULT_IMAGE_URL"));
+                .andExpect(jsonPath("$.result.content[" + index + "].imageUrl").value("https://DEFAULT_IMAGE_URL"))
+                .andExpect(jsonPath("$.result.content[" + index + "].createdAt").value(createdAt));
     }
 
 }
