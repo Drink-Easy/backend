@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.wine.controller;
 
 import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
 import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
-import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.service.AdminWineService;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
@@ -28,14 +28,14 @@ public class AdminWineController {
     @GetMapping
     @Operation(summary = "와인 검색", description = "와인 이름 또는 영어 이름으로 검색하여 와인의 기본 정보를 조회한다. " +
             "paging 기능의 sort는 디폴트 값(name)을 사용하는 것을 권장한다.")
-    public ApiResponse<PageResponse<AdminWineResponse>> searchWine(
+    public ApiResponse<PageResponse<AdminWinePreviewResponse>> searchWine(
             @RequestParam(defaultValue = "") String searchName,
             @RequestParam(defaultValue = "") String wineSort,
             @RequestParam(defaultValue = "") String wineVariety,
             @RequestParam(defaultValue = "") String wineCountry,
             @ParameterObject @PageableDefault(size = 10, sort = "name") Pageable pageable) {
 
-        PageResponse<AdminWineResponse> pageResponse = adminWineService
+        PageResponse<AdminWinePreviewResponse> pageResponse = adminWineService
                 .searchWinesAdmin(searchName, wineSort, wineVariety, wineCountry, pageable);
 
         return ApiResponse.onSuccess(pageResponse);

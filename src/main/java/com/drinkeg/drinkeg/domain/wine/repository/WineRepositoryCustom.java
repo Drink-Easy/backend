@@ -16,4 +16,6 @@ public interface WineRepositoryCustom {
     List<Wine> searchByNameSortVarietyAndArea(String searchName, String wineSort, String wineVariety, String wineArea, Pageable pageable);
 
     long countSearchWine(String searchName);
+
+    long countSearchWineSortVarietyAndArea(String searchName, String wineSort, String wineVariety, String wineCountry);
 }

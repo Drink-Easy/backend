@@ -13,11 +13,35 @@ import org.springframework.mock.web.MockMultipartFile;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AdminWineControllerTest extends AdminWineControllerSupport{
+
+    @DisplayName("와인 검색 요청이 들어오면 와인을 검색한다.")
+    @Test
+    @MockMember(role = Role.ROLE_ADMIN)
+    void searchWine() throws Exception {
+        // given
+        String searchName = "와인";
+        String wineSort = "레드";
+        String wineVariety = "메를로";
+        String wineCountry = "프랑스";
+
+        // when // then
+        mockMvc.perform(get("/admin/wine")
+                        .param("searchName", searchName)
+                        .param("wineSort", wineSort)
+                        .param("wineVariety", wineVariety)
+                        .param("wineCountry", wineCountry)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"));
+        verify(adminWineService).searchWinesAdmin(eq(searchName), eq(wineSort), eq(wineVariety), eq(wineCountry), any());
+    }
 
     @DisplayName("올바른 와인 등록 DTO와 이미지로 와인 등록 요청이 들어오면 와인을 등록한다.")
     @Test

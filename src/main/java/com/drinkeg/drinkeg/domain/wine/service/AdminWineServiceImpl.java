@@ -3,8 +3,7 @@ package com.drinkeg.drinkeg.domain.wine.service;
 import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
 import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;
-import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
@@ -33,15 +32,17 @@ public class AdminWineServiceImpl implements AdminWineService {
     private String defaultImageUrl;
 
     @Override
-    public PageResponse<AdminWineResponse> searchWinesAdmin(String searchName, String wineSort, String wineVariety, String wineArea, Pageable pageable) {
+    public PageResponse<AdminWinePreviewResponse> searchWinesAdmin(String searchName, String wineSort, String wineVariety, String wineCountry, Pageable pageable) {
 
-        String cleanSearchName = searchName.replace(" ", "").toLowerCase();
-        List<AdminWineResponse> winePreviewList =
-                wineRepository.searchByName(cleanSearchName, pageable)
+        if(searchName != null) {
+            searchName = searchName.replace(" ", "").toLowerCase();
+        }
+        List<AdminWinePreviewResponse> winePreviewList =
+                wineRepository.searchByNameSortVarietyAndArea(searchName, wineSort, wineVariety, wineCountry, pageable)
                         .stream()
-                        .map(AdminWineResponse::of)
+                        .map(AdminWinePreviewResponse::of)
                         .toList();
-        long total = wineRepository.countSearchWine(cleanSearchName);
+        long total = wineRepository.countSearchWineSortVarietyAndArea(searchName, wineSort, wineVariety, wineCountry);
         return PageResponse.of(new PageImpl<>(winePreviewList, pageable, total));
     }
 
