@@ -30,6 +30,13 @@ public class MemberController {
     private final TokenService tokenService;
 
 
+    @PostMapping("/api/auth/request-verification")
+    public ResponseEntity<?> requestEmailVerification(@RequestBody EmailRequest emailRequest) {
+
+
+        return ResponseEntity.ok("이메일을 확인해주세요");
+    }
+
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "username과 password를 입력받아 회원가입을 진행합니다.")
     public ApiResponse<?> joinProcess(@Valid @RequestBody JoinRequest joinRequest) {

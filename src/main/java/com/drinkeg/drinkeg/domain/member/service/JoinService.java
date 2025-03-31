@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.domain.member.service;
 
+import com.drinkeg.drinkeg.domain.member.domain.VerificationToken;
 import com.drinkeg.drinkeg.domain.member.dto.*;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
@@ -10,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,17 @@ public class JoinService {
         memberRepository.save(member);
 
     }
+
+    public  void sendVerificationEmail(EmailRequest emailRequest) {
+        String email = emailRequest.getEmail();
+
+        String token = UUID.randomUUID().toString();
+
+        VerificationToken verificationToken = VerificationToken.builder().
+                token(token).email(email).expiryDate(LocalDateTime.now().plusMinutes(30)).build();
+
+    }
+
 
     public MemberResponseDTO addMemberDetail(MemberRequest memberRequest, String username) {
 
