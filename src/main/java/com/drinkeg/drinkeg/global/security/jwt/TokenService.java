@@ -35,7 +35,7 @@ public class TokenService {
                 .httpOnly(true)
                 .secure(true) // HTTPS만 허용
                 .path("/")
-                .sameSite("Strict") // SameSite 설정
+                .sameSite("None") // SameSite 설정
                 .maxAge(expierd/1000)
                 .build();
         response.addHeader("Set-Cookie", cookie.toString());
