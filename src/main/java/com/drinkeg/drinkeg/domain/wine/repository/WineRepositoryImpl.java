@@ -44,11 +44,39 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     }
 
     @Override
+    public List<Wine> searchByNameSortVarietyAndArea(String searchName, String wineSort, String wineVariety, String wineCountry, Pageable pageable) {
+        return queryFactory.selectFrom(wine)
+                .where(
+                        checkWineSearchName(searchName),
+                        checkWineSort(wineSort),
+                        checkWineVariety(wineVariety),
+                        checkWineCountry(wineCountry)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(wine.name.asc())
+                .fetch();
+    }
+
+    @Override
     public long countSearchWine(String searchName) {
         return queryFactory.select(wine.count())
                 .from(wine)
                 .where(
                         wine.searchName.contains(searchName)
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public long countSearchWineSortVarietyAndArea(String searchName, String wineSort, String wineVariety, String wineCountry) {
+        return queryFactory.select(wine.count())
+                .from(wine)
+                .where(
+                        checkWineSearchName(searchName),
+                        checkWineSort(wineSort),
+                        checkWineVariety(wineVariety),
+                        checkWineCountry(wineCountry)
                 )
                 .fetchOne();
     }
@@ -77,5 +105,21 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
 
     private BooleanExpression winePriceLessThan(Long price) {
         return price == null || price < 50000 ? wine.price.loe(50000L) : wine.price.loe(price);
+    }
+
+    private BooleanExpression checkWineSearchName(String searchName) {
+        return searchName == null || searchName.isEmpty() ? null : wine.searchName.contains(searchName);
+    }
+
+    private BooleanExpression checkWineSort(String wineSort) {
+        return wineSort == null || wineSort.isEmpty() ? null : wine.sort.eq(wineSort);
+    }
+
+    private BooleanExpression checkWineVariety(String wineVariety) {
+        return wineVariety == null || wineVariety.isEmpty() ? null : wine.variety.contains(wineVariety);
+    }
+
+    private BooleanExpression checkWineCountry(String wineCountry) {
+        return wineCountry == null || wineCountry.isEmpty() ? null : wine.country.contains(wineCountry);
     }
 }

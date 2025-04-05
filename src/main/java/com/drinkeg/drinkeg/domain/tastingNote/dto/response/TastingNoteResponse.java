@@ -34,12 +34,13 @@ public class TastingNoteResponse {
     private List<String> noseList = new ArrayList<>();
     private float rating;
     private String review;
+    private LocalDate createdAt;
 
     @Builder
     public TastingNoteResponse(Long noteId, Long wineId, String wineName, String sort,
                                String country, String region, String variety, String imageUrl, String color, LocalDate tasteDate,
                                int sweetness, int acidity, int tannin, int body, int alcohol,
-                               List<TastingNoteNose> noseList, float rating, String review){
+                               List<TastingNoteNose> noseList, float rating, String review, LocalDate createdAt) {
         this.noteId = noteId;
         this.wineId = wineId;
         this.wineName = wineName;
@@ -60,6 +61,7 @@ public class TastingNoteResponse {
                 .collect(Collectors.toList());
         this.rating = rating;
         this.review = review;
+        this.createdAt = createdAt;
     }
 
     public static TastingNoteResponse of(TastingNote tastingNote) {
@@ -82,6 +84,7 @@ public class TastingNoteResponse {
                 .noseList(tastingNote.getNoseList())
                 .rating(tastingNote.getRating())
                 .review(tastingNote.getReview())
+                .createdAt(LocalDate.from(tastingNote.getCreatedAt()))
                 .build();
     }
 }

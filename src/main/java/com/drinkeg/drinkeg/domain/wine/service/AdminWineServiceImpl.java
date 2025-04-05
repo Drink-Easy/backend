@@ -3,16 +3,23 @@ package com.drinkeg.drinkeg.domain.wine.service;
 import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
 import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
+import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import com.drinkeg.drinkeg.infra.storage.StoragePathName;
 import com.drinkeg.drinkeg.infra.storage.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @Service
@@ -24,6 +31,28 @@ public class AdminWineServiceImpl implements AdminWineService {
 
     @Value("${default.wine.url}")
     private String defaultImageUrl;
+
+    @Override
+    public PageResponse<AdminWinePreviewResponse> searchWinesAdmin(String searchName, String wineSort, String wineVariety, String wineCountry, Pageable pageable) {
+
+        if(searchName != null) {
+            searchName = searchName.replace(" ", "").toLowerCase();
+        }
+        List<AdminWinePreviewResponse> winePreviewList =
+                wineRepository.searchByNameSortVarietyAndArea(searchName, wineSort, wineVariety, wineCountry, pageable)
+                        .stream()
+                        .map(AdminWinePreviewResponse::of)
+                        .toList();
+        long total = wineRepository.countSearchWineSortVarietyAndArea(searchName, wineSort, wineVariety, wineCountry);
+        return PageResponse.of(new PageImpl<>(winePreviewList, pageable, total));
+    }
+
+    @Override
+    public AdminWineResponse getWine(Long wineId) {
+        Wine wine = wineRepository.findById(wineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
+        return AdminWineResponse.of(wine);
+    }
 
     @Override
     public void saveWine(WineRegisterRequest wineRegisterRequest, MultipartFile imageFile) {

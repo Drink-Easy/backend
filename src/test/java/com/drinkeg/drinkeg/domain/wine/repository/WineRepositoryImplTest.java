@@ -299,6 +299,239 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
         assertThat(count).isEqualTo(0);
     }
 
+    @DisplayName("와인 이름, 종류, 품종, 국가 정보를 받아 해당하는 와인을 조회한다.")
+    @Test
+    void searchWineAdmin(){
+        //given
+        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2","wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3","wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4","wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5","wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6","wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7","wine7", "레드", "미국", 15000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8","wine8", "화이트", "독일", 25000, "리슬링", 4.3f);
+        Wine wine9 = createWine("와인9","wine9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = createWine("와인10","wine10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = createWine("와인11","wine11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = createWine("와인12","wine12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10, wine11, wine12));
+        Pageable pageable = PageRequest.of(0, 7);
+
+        //when
+        List<Wine> wineList1 = wineRepository.searchByNameSortVarietyAndArea("와인","레드", "피노누아", "프랑스", pageable);
+
+        //then
+        assertThat(wineList1).hasSize(2)
+                .isEqualTo(List.of(wine1, wine4));
+    }
+
+    @DisplayName("와인 종류로 와인을 조회한다.")
+    @Test
+    void searchWineAdminBySort(){
+        //given
+        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2","wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3","wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4","wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5","wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6","wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7","wine7", "레드", "미국", 15000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8","wine8", "화이트", "독일", 25000, "리슬링", 4.3f);
+        Wine wine9 = createWine("와인9","wine9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = createWine("와인10","wine10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = createWine("와인11","wine11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = createWine("와인12","wine12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10, wine11, wine12));
+        Pageable pageable = PageRequest.of(0, 7);
+
+        //when
+        List<Wine> wineList1 = wineRepository.searchByNameSortVarietyAndArea(null,"레드", null, null, pageable);
+
+        //then
+        assertThat(wineList1).hasSize(4)
+                .isEqualTo(List.of(wine1, wine11, wine4, wine7));
+    }
+
+    @DisplayName("와인 품종으로 와인을 조회한다.")
+    @Test
+    void searchWineAdminByVariety(){
+        //given
+        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2","wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3","wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4","wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5","wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6","wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7","wine7", "레드", "미국", 15000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8","wine8", "화이트", "독일", 25000, "리슬링", 4.3f);
+        Wine wine9 = createWine("와인9","wine9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = createWine("와인10","wine10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = createWine("와인11","wine11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = createWine("와인12","wine12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10, wine11, wine12));
+        Pageable pageable = PageRequest.of(0, 7);
+
+        //when
+        List<Wine> wineList1 = wineRepository.searchByNameSortVarietyAndArea(null,null, "피노누아", null, pageable);
+
+        //then
+        assertThat(wineList1).hasSize(4)
+                .isEqualTo(List.of(wine1, wine3, wine4, wine6));
+    }
+
+    @DisplayName("와인 국가로 와인을 조회한다.")
+    @Test
+    void searchWineAdminByArea(){
+        //given
+        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2","wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3","wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4","wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5","wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6","wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7","wine7", "레드", "미국", 15000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8","wine8", "화이트", "독일", 25000, "리슬링", 4.3f);
+        Wine wine9 = createWine("와인9","wine9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = createWine("와인10","wine10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = createWine("와인11","wine11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = createWine("와인12","wine12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10, wine11, wine12));
+        Pageable pageable = PageRequest.of(0, 7);
+
+        //when
+        List<Wine> wineList1 = wineRepository.searchByNameSortVarietyAndArea(null,null, null, "프랑스", pageable);
+
+        //then
+        assertThat(wineList1).hasSize(3)
+                .isEqualTo(List.of(wine1, wine4, wine9));
+    }
+
+    @DisplayName("와인 이름, 종류, 품종, 국가 정보를 받아 해당하는 와인의 총 개수를 조회한다.")
+    @Test
+    void countSearchWineBySortVarietyAndArea(){
+        //given
+        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2","wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3","wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4","wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5","wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6","wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7","wine7", "레드", "미국", 15000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8","wine8", "화이트", "독일", 25000, "리슬링", 4.3f);
+        Wine wine9 = createWine("와인9","wine9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = createWine("와인10","wine10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = createWine("와인11","wine11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = createWine("와인12","wine12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10, wine11, wine12));
+
+        //when
+        long count = wineRepository.countSearchWineSortVarietyAndArea("1","레드", "피노누아", "프랑스");
+
+        //then
+        assertThat(count).isEqualTo(1);
+    }
+
+    @DisplayName("와인 이름으로 와인의 총 개수를 조회한다.")
+    @Test
+    void countSearchWineByName(){
+        //given
+        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2","wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3","wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4","wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5","wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6","wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7","wine7", "레드", "미국", 15000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8","wine8", "화이트", "독일", 25000, "리슬링", 4.3f);
+        Wine wine9 = createWine("와인9","wine9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = createWine("와인10","wine10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = createWine("와인11","wine11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = createWine("와인12","wine12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10, wine11, wine12));
+
+        //when
+        long count = wineRepository.countSearchWineSortVarietyAndArea("1",null, null, null);
+
+        //then
+        assertThat(count).isEqualTo(4);
+    }
+
+    @DisplayName("와인 종류로 와인의 총 개수를 조회한다.")
+    @Test
+    void countSearchWineBySort(){
+        //given
+        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2","wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3","wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4","wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5","wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6","wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7","wine7", "레드", "미국", 15000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8","wine8", "화이트", "독일", 25000, "리슬링", 4.3f);
+        Wine wine9 = createWine("와인9","wine9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = createWine("와인10","wine10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = createWine("와인11","wine11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = createWine("와인12","wine12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10, wine11, wine12));
+
+        //when
+        long count = wineRepository.countSearchWineSortVarietyAndArea(null,"레드", null, "");
+
+        //then
+        assertThat(count).isEqualTo(4);
+    }
+
+    @DisplayName("와인 품종으로 와인의 총 개수를 조회한다.")
+    @Test
+    void countSearchWineByVariety(){
+        //given
+        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2","wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3","wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4","wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5","wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6","wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7","wine7", "레드", "미국", 15000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8","wine8", "화이트", "독일", 25000, "리슬링", 4.3f);
+        Wine wine9 = createWine("와인9","wine9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = createWine("와인10","wine10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = createWine("와인11","wine11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = createWine("와인12","wine12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10, wine11, wine12));
+
+        //when
+        long count = wineRepository.countSearchWineSortVarietyAndArea(null,null, "피노누아", "");
+
+        //then
+        assertThat(count).isEqualTo(4);
+    }
+
+    @DisplayName("와인 국가로 와인의 총 개수를 조회한다.")
+    @Test
+    void countSearchWineByArea(){
+        //given
+        Wine wine1 = createWine("와인1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7", "레드", "미국", 15000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8", "화이트", "독일", 25000, "리슬링", 4.3f);
+        Wine wine9 = createWine("와인9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = createWine("와인10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = createWine("와인11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = createWine("와인12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10, wine11, wine12));
+
+        //when
+        long count = wineRepository.countSearchWineSortVarietyAndArea(null,null, null, "프랑스");
+
+        //then
+        assertThat(count).isEqualTo(3);
+    }
+
     private Member creatMember(String username) {
         return Member.builder()
                 .username(username)
@@ -347,6 +580,21 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
                 .country(country)
                 .variety(variety)
                 .vivinoRating(vivinoRating)
+                .wineNoteStatistics(WineNoteStatistics.builder().build())
+                .price(price).build();
+    }
+
+    private Wine createWine(String name, String nameEng, String sort, String country, int price, String variety, float vivinoRating) {
+        return Wine.builder()
+                .name(name)
+                .nameEng(nameEng)
+                .imageUrl("http://default.image")
+                .sort(sort)
+                .country(country)
+                .variety(variety)
+                .vivinoRating(vivinoRating)
+                .searchName(name.replaceAll("[ ,.'\\\\]", "").toLowerCase()
+                        .concat(nameEng.replaceAll("[ ,.'\\\\]", "").toLowerCase()))
                 .wineNoteStatistics(WineNoteStatistics.builder().build())
                 .price(price).build();
     }
