@@ -1,7 +1,5 @@
-# Repo Action 페이지에 나타날 이름
 name: Spring Boot & Gradle CI
 
-# Event Trigger
 # dev branch에 pull request가 발생할 경우 동작
 on:
   pull_request:
@@ -12,7 +10,6 @@ jobs:
     # 실행 환경 지정
     runs-on: ubuntu-24.04
 
-    # Task의 sequence를 명시한다.
     steps:
       - uses: actions/checkout@v2
 
