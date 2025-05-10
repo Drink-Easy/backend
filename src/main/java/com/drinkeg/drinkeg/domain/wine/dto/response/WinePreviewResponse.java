@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.wine.dto.response;
 
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 @Getter
