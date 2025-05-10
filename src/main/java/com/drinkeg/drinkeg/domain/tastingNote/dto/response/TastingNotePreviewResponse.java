@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -27,13 +28,18 @@ public class TastingNotePreviewResponse {
                 this.createdAt = createdAt;
         }
 
-        public static TastingNotePreviewResponse of(TastingNote tastingNote){
+        public static TastingNotePreviewResponse from(TastingNote tastingNote){
+                WineVintage wineVintage = tastingNote.getWineVintage();
+                int vintageYear = wineVintage.getVintageYear();
+                String wineName = wineVintage.getWine().getName();
+                if(vintageYear != 0) wineName = wineName + " " + vintageYear;
+
                 return TastingNotePreviewResponse.builder()
                         .noteId(tastingNote.getId())
                         .tasteDate(tastingNote.getTasteDate())
-                        .wineName(tastingNote.getWine().getName())
-                        .imageUrl(tastingNote.getWine().getImageUrl())
-                        .sort(tastingNote.getWine().getSort())
+                        .wineName(wineName)
+                        .imageUrl(wineVintage.getWine().getImageUrl())
+                        .sort(wineVintage.getWine().getSort())
                         .createdAt(LocalDate.from(tastingNote.getCreatedAt()))
                         .build();
         }

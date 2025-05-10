@@ -2,6 +2,7 @@ package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
+import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import lombok.Builder;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,7 +38,7 @@ public class TastingNoteResponse {
     private LocalDate createdAt;
 
     @Builder
-    public TastingNoteResponse(Long noteId, Long wineId, String wineName, String sort,
+    private TastingNoteResponse(Long noteId, Long wineId, String wineName, String sort,
                                String country, String region, String variety, String imageUrl, String color, LocalDate tasteDate,
                                int sweetness, int acidity, int tannin, int body, int alcohol,
                                List<TastingNoteNose> noseList, float rating, String review, LocalDate createdAt) {
@@ -64,16 +65,17 @@ public class TastingNoteResponse {
         this.createdAt = createdAt;
     }
 
-    public static TastingNoteResponse of(TastingNote tastingNote) {
+    public static TastingNoteResponse from(TastingNote tastingNote) {
+        Wine wine = tastingNote.getWineVintage().getWine();
         return TastingNoteResponse.builder()
                 .noteId(tastingNote.getId())
-                .wineId(tastingNote.getWine().getId())
-                .wineName(tastingNote.getWine().getName())
-                .sort(tastingNote.getWine().getSort())
-                .country(tastingNote.getWine().getCountry())
-                .region(tastingNote.getWine().getRegion())
-                .variety(tastingNote.getWine().getVariety())
-                .imageUrl(tastingNote.getWine().getImageUrl())
+                .wineId(wine.getId())
+                .wineName(wine.getName())
+                .sort(wine.getSort())
+                .country(wine.getCountry())
+                .region(wine.getRegion())
+                .variety(wine.getVariety())
+                .imageUrl(wine.getImageUrl())
                 .color(tastingNote.getColor())
                 .tasteDate(tastingNote.getTasteDate())
                 .sweetness(tastingNote.getSweetness())

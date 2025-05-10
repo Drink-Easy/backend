@@ -64,8 +64,7 @@ public class WineServiceImpl implements WineService {
 
     @Override
     public WineWithThreeReviewsResponse getWineInfoWithThreeReviews(Long wineId, String username) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = findMemberByUsername(username);
 
         Wine wine = wineRepository.findById(wineId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
@@ -90,8 +89,7 @@ public class WineServiceImpl implements WineService {
 
     @Override
     public List<HomeWineResponse> getRecommendWineList(String username) {
-        Member member = memberRepository.findByUsername(username).orElseThrow(
-                () -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = findMemberByUsername(username);
 
         List<Wine> recommendWines = wineRepository.findRecommendWinesBy(member.getWineArea(), member.getWineSort(), member.getMonthPriceMax());
 
@@ -109,5 +107,15 @@ public class WineServiceImpl implements WineService {
         return mostLikedWines.stream()
                 .map(HomeWineResponse::of)
                 .toList();
+    }
+
+    private Member findMemberByUsername(String username) {
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+    }
+
+    private Wine findWineById(Long wineId) {
+        return wineRepository.findById(wineId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
     }
 }

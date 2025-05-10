@@ -1,15 +1,13 @@
 package com.drinkeg.drinkeg.domain.tastingNote.service;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
-import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 
 public interface TastingNoteService {
