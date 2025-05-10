@@ -1,15 +1,14 @@
 package com.drinkeg.drinkeg.domain.tastingNote.repository;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
+import com.drinkeg.drinkeg.domain.wine.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.dto.WineNoteStatisticsAvgDto;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TastingNoteRepositoryCustom {
 
@@ -17,9 +16,11 @@ public interface TastingNoteRepositoryCustom {
 
     long countTastingNoteByWineId(Long wineId);
 
-    WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId);
+    WineNoteStatisticsAvgDto findWineStatisticsByWineId(Long wineId);
+    WineNoteStatisticsAvgDto findWineVintageStatisticsByWineVintageId(Long wineVintageId);
 
     List<String> findTopThreeNoseByWineId(Long wineId);
+    List<String> findTopThreeNoseByWineVintageId(Long wineVintageId);
 
     List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username, Pageable pageable);
 
