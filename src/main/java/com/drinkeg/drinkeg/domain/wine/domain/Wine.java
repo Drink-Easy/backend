@@ -72,7 +72,7 @@ public class Wine extends BaseEntity {
     }
 
     @Builder
-    public Wine(String name, String nameEng, String imageUrl, String sort, String country, String region, String variety, float vivinoRating, int price, WineNoteStatistics wineNoteStatistics, String searchName) {
+    private Wine(String name, String nameEng, String imageUrl, String sort, String country, String region, String variety, float vivinoRating, int price, WineNoteStatistics wineNoteStatistics, String searchName) {
         this.name = name;
         this.nameEng = nameEng;
         this.imageUrl = imageUrl;

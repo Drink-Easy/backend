@@ -46,7 +46,7 @@ public class TastingNote extends BaseEntity {
     private String review;
 
     @Builder
-    public TastingNote(Member member, Wine wine, String color, LocalDate tasteDate,
+    private TastingNote(Member member, Wine wine, String color, LocalDate tasteDate,
                        int sweetness, int acidity, int tannin, int body, int alcohol,
                        List<TastingNoteNose> noseList, float rating, String review) {
         this.member = member;

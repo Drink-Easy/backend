@@ -25,7 +25,7 @@ public class TastingNoteNose {
     }
 
     @Builder
-    public TastingNoteNose(TastingNote tastingNote, String noseElement) {
+    private TastingNoteNose(TastingNote tastingNote, String noseElement) {
         this.tastingNote = tastingNote;
         this.noseElement = noseElement;
     }

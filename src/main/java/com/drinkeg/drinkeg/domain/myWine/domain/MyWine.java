@@ -30,7 +30,7 @@ public class MyWine extends BaseEntity {
     private Integer purchasePrice;
 
     @Builder
-    public MyWine(Member member, Wine wine, LocalDate purchaseDate, int purchasePrice){
+    private MyWine(Member member, Wine wine, LocalDate purchaseDate, int purchasePrice){
         this.member = member;
         this.wine = wine;
 

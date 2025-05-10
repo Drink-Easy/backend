@@ -26,7 +26,7 @@ public class WineWishlist extends BaseEntity {
     private Wine wine;
 
     @Builder
-    public WineWishlist(Member member, Wine wine){
+    private WineWishlist(Member member, Wine wine){
         this.member = member;
         this.wine = wine;
     }
