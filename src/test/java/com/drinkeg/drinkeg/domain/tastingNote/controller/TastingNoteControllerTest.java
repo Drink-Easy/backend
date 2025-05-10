@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.domain.tastingNote.controller;
 
 import com.drinkeg.drinkeg.MockMember;
-import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
