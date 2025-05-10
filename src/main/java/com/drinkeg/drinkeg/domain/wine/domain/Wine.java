@@ -1,12 +1,10 @@
 package com.drinkeg.drinkeg.domain.wine.domain;
 
 import com.drinkeg.drinkeg.domain.model.BaseEntity;
-import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.request.WineRegisterRequest;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.parameters.P;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,33 +41,10 @@ public class Wine extends BaseEntity {
     @Embedded
     private WineNoteStatistics wineNoteStatistics;
 
-    @OneToMany
-    @JoinColumn(name = "wine_id")
-    private final List<TastingNote> tastingNoteList = new ArrayList<>();
 
-    public void updateWine(String name, String nameEng, Integer price, String sort, String country, String region, String variety, Float vivinoRating) {
-        if(name != null) this.name = name;
-        if(nameEng != null) this.nameEng = nameEng;
-        if(price != null) this.price = price;
-        if(sort != null) this.sort = sort;
-        if(country != null) this.country = country;
-        if(region != null) this.region = region;
-        if(variety != null) this.variety = variety;
-        if(vivinoRating != null) this.vivinoRating = vivinoRating;
-        if(name != null || nameEng != null) {
-            String cleanedName = name.replaceAll("[ ,.'\\\\]", "").toLowerCase();
-            String cleanedNameEng = nameEng.replaceAll("[ ,.'\\\\]", "").toLowerCase();
-            this.searchName = cleanedName.concat(cleanedNameEng);
-        }
-    }
+    @OneToMany(mappedBy = "wine", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<WineVintage> wineVintageList = new ArrayList<>();
 
-    public void updateImageUrl(String imageUrl){
-        this.imageUrl = imageUrl;
-    }
-
-    public void updateSearchName(String searchName){
-        this.searchName = searchName;
-    }
 
     @Builder
     private Wine(String name, String nameEng, String imageUrl, String sort, String country, String region, String variety, float vivinoRating, int price, WineNoteStatistics wineNoteStatistics, String searchName) {
@@ -98,6 +73,30 @@ public class Wine extends BaseEntity {
                 .price(wineRegisterRequest.getPrice())
                 .wineNoteStatistics(WineNoteStatistics.create())
                 .build();
+    }
+
+    public void updateWine(String name, String nameEng, Integer price, String sort, String country, String region, String variety, Float vivinoRating) {
+        if(name != null) this.name = name;
+        if(nameEng != null) this.nameEng = nameEng;
+        if(price != null) this.price = price;
+        if(sort != null) this.sort = sort;
+        if(country != null) this.country = country;
+        if(region != null) this.region = region;
+        if(variety != null) this.variety = variety;
+        if(vivinoRating != null) this.vivinoRating = vivinoRating;
+        if(name != null || nameEng != null) {
+            String cleanedName = name.replaceAll("[ ,.'\\\\]", "").toLowerCase();
+            String cleanedNameEng = nameEng.replaceAll("[ ,.'\\\\]", "").toLowerCase();
+            this.searchName = cleanedName.concat(cleanedNameEng);
+        }
+    }
+
+    public void updateImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateSearchName(String searchName){
+        this.searchName = searchName;
     }
 }
 
