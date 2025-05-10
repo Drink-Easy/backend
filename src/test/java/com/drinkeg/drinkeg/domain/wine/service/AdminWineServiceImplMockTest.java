@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
 import com.drinkeg.drinkeg.IntegrationTestSupport;
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.request.WineRegisterRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.request.WineUpdateRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;

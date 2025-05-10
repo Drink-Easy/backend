@@ -7,11 +7,11 @@ import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.dto.SortType;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
+import com.drinkeg.drinkeg.domain.wine.dto.WineNoteStatisticsAvgDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
         // when
-        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineNoteStatisticsByWineId(wine.getId());
+        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineStatisticsByWineId(wine.getId());
         // then
         assertThat(wineNoteStatisticsAvgDto).extracting(
                         "avgSweetness", "avgAcidity", "avgTannin",
@@ -68,7 +68,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("레드 와인"));
         // when
-        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineNoteStatisticsByWineId(wine.getId());
+        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineStatisticsByWineId(wine.getId());
         // then
         assertThat(wineNoteStatisticsAvgDto).extracting(
                         "avgSweetness", "avgAcidity", "avgTannin",

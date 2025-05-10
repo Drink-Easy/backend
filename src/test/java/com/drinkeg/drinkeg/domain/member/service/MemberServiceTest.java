@@ -8,7 +8,6 @@ import com.drinkeg.drinkeg.domain.member.enums.Provider;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;

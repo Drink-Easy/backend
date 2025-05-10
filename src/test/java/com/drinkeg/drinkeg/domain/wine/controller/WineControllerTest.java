@@ -1,9 +1,9 @@
 package com.drinkeg.drinkeg.domain.wine.controller;
 
 import com.drinkeg.drinkeg.MockMember;
-import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.*;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.wine.dto.SortType;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;

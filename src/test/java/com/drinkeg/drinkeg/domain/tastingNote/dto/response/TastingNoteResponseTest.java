@@ -16,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class TastingNoteResponseTest extends IntegrationTestSupport {
 
     @Autowired
@@ -29,14 +27,14 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
 
     @DisplayName("TastingNotePreviewResponse of 메서드 매개변수로 TastingNote가 들어가면 TastingNotePreviewResponse로 변환한다.")
     @Test
-    void TastingNotePreviewResponseOf() {
+    void TastingNotePreviewResponseFrom() {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("와인"));
         TastingNote tastingNote = saveTastingNote(member, wine, 10, 20, 30, 40, 50, 4.5f);
 
         // when
-        TastingNotePreviewResponse tastingNotePreviewResponse = TastingNotePreviewResponse.of(tastingNote);
+        TastingNotePreviewResponse tastingNotePreviewResponse = TastingNotePreviewResponse.from(tastingNote);
 
         // then
         Assertions.assertThat(tastingNotePreviewResponse)
@@ -47,7 +45,7 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
 
     @DisplayName("TastingNoteResponseTest of 메서드에 매개변수로 TastingNote가 들어가면 TastingNoteResponse로 변환한다.")
     @Test
-    void TastingNoteResponseOf() {
+    void TastingNoteResponseFrom() {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("와인"));
@@ -55,7 +53,7 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
 
 
         // when
-        TastingNoteResponse tastingNoteResponse = TastingNoteResponse.of(tastingNote);
+        TastingNoteResponse tastingNoteResponse = TastingNoteResponse.from(tastingNote);
 
         // then
         Assertions.assertThat(tastingNoteResponse)
