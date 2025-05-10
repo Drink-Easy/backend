@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.request.WineRegisterRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.request.WineUpdateRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;

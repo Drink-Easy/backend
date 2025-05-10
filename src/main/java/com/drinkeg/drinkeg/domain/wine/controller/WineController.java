@@ -1,8 +1,11 @@
 package com.drinkeg.drinkeg.domain.wine.controller;
 
 
-import com.drinkeg.drinkeg.domain.wine.dto.response.*;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.domain.wine.service.WineService;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;

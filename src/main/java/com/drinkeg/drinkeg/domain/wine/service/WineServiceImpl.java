@@ -2,10 +2,13 @@ package com.drinkeg.drinkeg.domain.wine.service;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
-import com.drinkeg.drinkeg.domain.wine.dto.response.*;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
+import com.drinkeg.drinkeg.domain.wine.dto.WineNoteStatisticsAvgDto;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
@@ -51,7 +54,7 @@ public class WineServiceImpl implements WineService {
         Wine wine = wineRepository.findById(wineId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
-        WineNoteStatisticsAvgDto avgDto = tastingNoteRepository.findWineNoteStatisticsByWineId(wineId);
+        WineNoteStatisticsAvgDto avgDto = tastingNoteRepository.findWineStatisticsByWineId(wineId);
         List<String> topThreeNose = tastingNoteRepository.findTopThreeNoseByWineId(wineId);
 
         wine.getWineNoteStatistics()
