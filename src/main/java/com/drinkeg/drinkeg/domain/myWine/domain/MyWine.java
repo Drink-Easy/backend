@@ -26,29 +26,33 @@ public class MyWine extends BaseEntity {
     @JoinColumn(name = "wine_id", nullable = false)
     private Wine wine;
 
+    private Integer vintageYear;
+
     private LocalDate purchaseDate;
     private Integer purchasePrice;
 
     @Builder
-    private MyWine(Member member, Wine wine, LocalDate purchaseDate, int purchasePrice){
+    private MyWine(Member member, Wine wine, Integer vintageYear, LocalDate purchaseDate, int purchasePrice){
         this.member = member;
         this.wine = wine;
-
+        this.vintageYear = vintageYear;
         this.purchaseDate = purchaseDate;
         this.purchasePrice = purchasePrice;
     }
 
-    public static MyWine create(Member member, Wine wine, LocalDate purchaseDate, int purchasePrice){
+    public static MyWine create(Member member, Wine wine, Integer vintageYear, LocalDate purchaseDate, int purchasePrice){
         return MyWine.builder()
                 .member(member)
                 .wine(wine)
+                .vintageYear(vintageYear)
                 .purchaseDate(purchaseDate)
                 .purchasePrice(purchasePrice)
                 .build();
     }
 
     // 보유 와인 정보 수정
-    public void update(LocalDate purchaseDate, Integer purchasePrice) {
+    public void update(Integer vintageYear,LocalDate purchaseDate, Integer purchasePrice) {
+        this.vintageYear = vintageYear;
         if(purchaseDate != null) this.purchaseDate = purchaseDate;
         if(purchasePrice != null) this.purchasePrice = purchasePrice;
     }

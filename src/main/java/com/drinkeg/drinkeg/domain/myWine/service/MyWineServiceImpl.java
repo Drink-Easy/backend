@@ -3,8 +3,8 @@ package com.drinkeg.drinkeg.domain.myWine.service;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.domain.myWine.repository.MyWineRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
@@ -37,7 +37,13 @@ public class MyWineServiceImpl implements MyWineService{
         Wine wine = wineRepository.findById(wineId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
-        MyWine myWine = MyWine.create(member, wine, myWineRequest.getPurchaseDate(), myWineRequest.getPurchasePrice());
+        MyWine myWine = MyWine.create(
+                member,
+                wine,
+                myWineRequest.getVintageYear(),
+                myWineRequest.getPurchaseDate(),
+                myWineRequest.getPurchasePrice()
+        );
 
         MyWine savedMyWine = myWineRepository.save(myWine);
         return savedMyWine.getId();
@@ -84,7 +90,11 @@ public class MyWineServiceImpl implements MyWineService{
             throw new GeneralException(ErrorStatus.MY_WINE_UNAUTHORIZED);
         }
 
-        myWine.update(myWineUpdateRequest.getPurchaseDate(), myWineUpdateRequest.getPurchasePrice());
+        myWine.update(
+                myWineUpdateRequest.getVintageYear(),
+                myWineUpdateRequest.getPurchaseDate(),
+                myWineUpdateRequest.getPurchasePrice()
+        );
 
         myWineRepository.save(myWine);
     }
