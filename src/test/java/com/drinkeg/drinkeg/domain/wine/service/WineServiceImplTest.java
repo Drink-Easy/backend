@@ -14,6 +14,7 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
@@ -113,18 +114,19 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
         List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
 
-        TastingNote tastingNote1 = createTastingNote(member, wine,
+        TastingNote tastingNote1 = createTastingNote(member, wineVintage,
                 50, 30, 20, 40, 30, 10)
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote2 = createTastingNote(member, wine,
+        TastingNote tastingNote2 = createTastingNote(member, wineVintage,
                 60, 35, 30, 40, 0, 4)
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(1))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote3 = createTastingNote(member, wine,
+        TastingNote tastingNote3 = createTastingNote(member, wineVintage,
                 40, 40, 40, 40, 60, 7)
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2))
@@ -149,26 +151,27 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
         List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
         wineWishlistRepository.save(WineWishlist.create(member, wine));
 
-        TastingNote tastingNote1 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote1 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 0, "가성비 좋아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote2 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote2 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 5, "나쁘지 않아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(1))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote3 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote3 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "맛있어요!")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2))
                 .addNoseElement(noseList.get(4));
-        TastingNote tastingNote4 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote4 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "고기랑 먹기 좋아요!");
-        TastingNote tastingNote5 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote5 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "다시 구매할 것 같아요");
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
         wineService.updateWineNoteStatics(wine.getId());
@@ -229,25 +232,26 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
         List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
 
-        TastingNote tastingNote1 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote1 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 0, "가성비 좋아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote2 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote2 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 5, "나쁘지 않아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(1))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote3 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote3 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "맛있어요!")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2))
                 .addNoseElement(noseList.get(4));
-        TastingNote tastingNote4 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote4 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "고기랑 먹기 좋아요!");
-        TastingNote tastingNote5 = createTastingNote(member, wine, "빨간색",
+        TastingNote tastingNote5 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "다시 구매할 것 같아요");
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
 
@@ -388,21 +392,21 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .price(price).build();
     }
 
-    private TastingNote createTastingNote(Member member, Wine wine,
+    private TastingNote createTastingNote(Member member, WineVintage wineVintage,
                                           int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating) {
-        return createTastingNote(member, wine, "빨간색",
+        return createTastingNote(member, wineVintage, "빨간색",
                 sweetness, acidity, tannin, body, alcohol,
                 rating, "나쁘지 않아요");
     }
 
 
-    private TastingNote createTastingNote(Member member, Wine wine, String color,
+    private TastingNote createTastingNote(Member member, WineVintage wineVintage, String color,
                                           int sweetness, int acidity, int tannin, int body, int alcohol,
                                           float rating, String review) {
         return TastingNote.builder()
                 .member(member)
-                .wine(wine)
+                .wineVintage(wineVintage)
                 .color(color)
                 .tasteDate(LocalDate.of(2025, 1, 6))
                 .sweetness(sweetness)
@@ -430,6 +434,13 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .username(username)
                 .role(Role.ROLE_USER)
                 .isFirst(false)
+                .build();
+    }
+
+    private WineVintage createWineVintage(Wine wine, int vintageYear) {
+        return WineVintage.builder()
+                .wine(wine)
+                .vintageYear(vintageYear)
                 .build();
     }
 

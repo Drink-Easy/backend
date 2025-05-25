@@ -9,6 +9,7 @@ import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -104,7 +105,8 @@ class WineResponseTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember());
         Wine wine = wineRepository.save(createWine());
-        TastingNote tastingNote = tastingNoteRepository.save(createTastingNote(member, wine, "와인이 맛있어요."));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(createTastingNote(member, wineVintage, "와인이 맛있어요."));
 
         // when
         WineReviewResponse wineReviewResponse = WineReviewResponse.of(tastingNote);
@@ -121,7 +123,8 @@ class WineResponseTest extends IntegrationTestSupport {
     void WineReviewResponseOfException() {
         // given
         Wine wine = wineRepository.save(createWine());
-        TastingNote tastingNote = tastingNoteRepository.save(createTastingNote(null, wine, "와인이 맛있어요."));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(createTastingNote(null, wineVintage, "와인이 맛있어요."));
 
         // when
         WineReviewResponse wineReviewResponse = WineReviewResponse.of(tastingNote);
@@ -140,9 +143,10 @@ class WineResponseTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember());
         Wine wine = wineRepository.save(createWine());
-        TastingNote tastingNote1 = tastingNoteRepository.save(createTastingNote(member, wine, "와인이 맛있어요1."));
-        TastingNote tastingNote2 = tastingNoteRepository.save(createTastingNote(member, wine, "와인이 맛있어요2."));
-        TastingNote tastingNote3 = tastingNoteRepository.save(createTastingNote(member, wine, "와인이 맛있어요3."));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+        TastingNote tastingNote1 = tastingNoteRepository.save(createTastingNote(member, wineVintage, "와인이 맛있어요1."));
+        TastingNote tastingNote2 = tastingNoteRepository.save(createTastingNote(member, wineVintage, "와인이 맛있어요2."));
+        TastingNote tastingNote3 = tastingNoteRepository.save(createTastingNote(member, wineVintage, "와인이 맛있어요3."));
         List<TastingNote> tastingNotes = List.of(tastingNote3, tastingNote2, tastingNote1);
 
         // when
@@ -210,10 +214,17 @@ class WineResponseTest extends IntegrationTestSupport {
                 .price(100).build();
     }
 
-    private TastingNote createTastingNote(Member member, Wine wine, String review) {
+    private WineVintage createWineVintage(Wine wine, int vintageYear) {
+        return WineVintage.builder()
+                .wine(wine)
+                .vintageYear(vintageYear)
+                .build();
+    }
+
+    private TastingNote createTastingNote(Member member, WineVintage wineVintage, String review) {
         return TastingNote.builder()
                 .member(member)
-                .wine(wine)
+                .wineVintage(wineVintage)
                 .color("0x000000")
                 .tasteDate(LocalDate.parse("2025-01-01"))
                 .sweetness(30)
