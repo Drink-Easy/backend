@@ -22,17 +22,17 @@ public class WineVintageServiceImpl implements WineVintageService{
 
     @Override
     public void updateWineVintageNoteStatics(Long wineVintageId) {
-        WineVintage wineVintage = getWineVintageById(wineVintageId);
+        WineVintage wineVintage = findWineVintageById(wineVintageId);
 
         WineNoteStatisticsAvgDto avgDto = tastingNoteRepository.findWineVintageStatisticsByWineVintageId(wineVintageId);
-        List<String> topThreeNose = tastingNoteRepository.findTopThreeNoseByWineId(wineVintageId);
+        List<String> topThreeNose = tastingNoteRepository.findTopThreeNoseByWineVintageId(wineVintageId);
 
-        wineVintage.getWine().getWineNoteStatistics()
+        wineVintage.getWineNoteStatistics()
                 .updateAvgStatistics(avgDto)
                 .updateNose(topThreeNose);
     }
 
-    private WineVintage getWineVintageById(Long wineVintageId) {
+    private WineVintage findWineVintageById(Long wineVintageId) {
         return wineVintageRepository.findById(wineVintageId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_VINTAGE_NOT_FOUND));
     }
