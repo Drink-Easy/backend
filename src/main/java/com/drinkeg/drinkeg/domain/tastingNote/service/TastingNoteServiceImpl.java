@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.domain.tastingNote.service;
 import com.drinkeg.drinkeg.domain.tastingNote.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
-import com.drinkeg.drinkeg.domain.tastingNote.event.WineStatisticsEvent;
+import com.drinkeg.drinkeg.domain.tastingNote.event.WineVintageNoteEvent;
 import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
@@ -50,6 +50,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         );
 
         TastingNote save = tastingNoteRepository.save(TastingNote.create(member, wineVintage, tastingNoteRequest));
+        tastingNoteRepository.flush();
         Long wineId = wineVintage.getWine().getId();
 
         publishWineAndWineVintageNoteUpdateEvent(wineVintage.getId(), wineId);
@@ -150,7 +151,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     }
 
     private void publishWineAndWineVintageNoteUpdateEvent(Long wineVintageId, Long wineId) {
-        eventPublisher.publishEvent(new WineStatisticsEvent(wineVintageId));
+        eventPublisher.publishEvent(new WineVintageNoteEvent(wineVintageId));
         eventPublisher.publishEvent(new WineNoteUpdateEvent(wineId));
     }
 }

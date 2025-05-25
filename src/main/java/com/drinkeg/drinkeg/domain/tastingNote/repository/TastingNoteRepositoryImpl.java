@@ -25,6 +25,7 @@ import java.util.List;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNoteNose.tastingNoteNose;
 import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
+import static com.drinkeg.drinkeg.domain.wine.wineVintage.domain.QWineVintage.wineVintage;
 
 @Repository
 @RequiredArgsConstructor
@@ -90,10 +91,15 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
         return queryFactory
                 .select(tastingNoteNose.noseElement)
                 .from(tastingNoteNose)
-                .where(tastingNoteNose.tastingNote.wineVintage.wine.id.eq(wineId))
+                .join(tastingNoteNose.tastingNote, tastingNote)
+                .join(tastingNote.wineVintage, wineVintage)
+                .join(wineVintage.wine, wine)
+                .where(wine.id.eq(wineId)) // 안전하게 접근 가능
                 .groupBy(tastingNoteNose.noseElement)
-                .orderBy(tastingNoteNose.noseElement.count().desc())
-                .orderBy(tastingNoteNose.noseElement.asc())
+                .orderBy(
+                        tastingNoteNose.noseElement.count().desc(),
+                        tastingNoteNose.noseElement.asc()
+                )
                 .limit(3)
                 .fetch();
     }
