@@ -30,16 +30,17 @@ public class WineVintage {
     private Wine wine;
 
     @Builder
-    private WineVintage(int vintageYear, Wine wine) {
+    private WineVintage(int vintageYear, Wine wine, WineNoteStatistics wineNoteStatistics) {
         this.vintageYear = vintageYear;
         this.wine = wine;
-        this.wineNoteStatistics = WineNoteStatistics.create();
+        this.wineNoteStatistics = wineNoteStatistics != null ? wineNoteStatistics : WineNoteStatistics.create();
     }
 
     public static WineVintage create(int vintageYear, Wine wine) {
         return WineVintage.builder()
                 .vintageYear(vintageYear)
                 .wine(wine)
+                .wineNoteStatistics(WineNoteStatistics.create())
                 .build();
     }
 
