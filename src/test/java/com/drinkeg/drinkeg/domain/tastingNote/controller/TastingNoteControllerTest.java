@@ -117,7 +117,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithoutColor() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, null, LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, null, LocalDate.parse("2025-01-01"),
                 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 4F, "good");
 
         //when //then
@@ -136,7 +136,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithoutTasteDate() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", null,
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", null,
                 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, "good");
 
         //when //then
@@ -155,7 +155,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithoutSweetness() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 null, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, "good");
 
         //when //then
@@ -174,7 +174,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithSweetnessUnder0() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 -1, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, "good");
 
         //when //then
@@ -193,7 +193,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithSweetnessOver100() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 101, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, "good");
 
         //when //then
@@ -212,7 +212,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithAllZero() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 0, 0, 0, 0, 0, List.of("nose1", "nose2", "nose3"), 5F, "good");
 
         when(tastingNoteService.saveTastingNote(refEq(tastingNoteRequest), eq("user")))
@@ -235,7 +235,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithAllHundred() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 100, 100, 100, 100, 100, List.of("nose1", "nose2", "nose3"), 5F, "good");
 
         when(tastingNoteService.saveTastingNote(refEq(tastingNoteRequest), eq("user")))
@@ -258,7 +258,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithoutRating() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), null, "good");
 
         //when //then
@@ -277,7 +277,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithRatingUnder0() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), -0.5F, "good");
 
         //when //then
@@ -296,7 +296,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithRatingOver5() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5.5F, "good");
 
         //when //then
@@ -315,7 +315,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithRatingEquals5() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, "good");
 
         //when //then
@@ -335,7 +335,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithoutNose() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 10, 10, 10, 10, 10, null, 5F, "good");
 
         when(tastingNoteService.saveTastingNote(refEq(tastingNoteRequest), eq("user")))
@@ -358,7 +358,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     @MockMember
     void saveTastingNoteWithoutReview() throws Exception {
         //given
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, "red", LocalDate.parse("2025-01-01"),
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequestDetail(1L, 2017, "red", LocalDate.parse("2025-01-01"),
                 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, null);
 
         when(tastingNoteService.saveTastingNote(refEq(tastingNoteRequest), eq("user")))
@@ -607,7 +607,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.message").value("OK"))
                 .andExpect(jsonPath("$.result.noteId").value(1L))
                 .andExpect(jsonPath("$.result.wineId").value(1L))
-                .andExpect(jsonPath("$.result.wineName").value("wine"))
+                .andExpect(jsonPath("$.result.wineName").value("wine 2017"))
                 .andExpect(jsonPath("$.result.sort").value("레드"))
                 .andExpect(jsonPath("$.result.country").value("프랑스"))
                 .andExpect(jsonPath("$.result.region").value("보르도"))
@@ -888,13 +888,13 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
 
 
     TastingNoteRequest createTastingNoteRequest(Long wineId) {
-        return new TastingNoteRequest(wineId, "red", LocalDate.parse("2025-01-01"), 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, "good");
+        return new TastingNoteRequest(wineId, 2017, "red", LocalDate.parse("2025-01-01"), 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, "good");
     }
 
-    TastingNoteRequest createTastingNoteRequestDetail(Long wineId, String color, LocalDate tasteDate,
+    TastingNoteRequest createTastingNoteRequestDetail(Long wineId, Integer wineVintage, String color, LocalDate tasteDate,
                                                 Integer sweetness, Integer acidity, Integer tannin, Integer body, Integer alcohol,
                                                 List<String> noseList, Float rating, String review) {
-        return new TastingNoteRequest(wineId, color, tasteDate, sweetness, acidity, tannin, body, alcohol, noseList, rating, review);
+        return new TastingNoteRequest(wineId, wineVintage, color, tasteDate, sweetness, acidity, tannin, body, alcohol, noseList, rating, review);
     }
 
     TastingNotePreviewResponse createTastingNotePreviewResponse(Long noteId, String tasteDate, String wineName, String sort, String createdAt) {
@@ -912,7 +912,7 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
         return TastingNoteResponse.builder()
                 .noteId(1L)
                 .wineId(1L)
-                .wineName("wine")
+                .wineName("wine 2017")
                 .sort("레드")
                 .country("프랑스")
                 .region("보르도")

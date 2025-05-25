@@ -9,6 +9,7 @@ import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,8 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("와인"));
-        TastingNote tastingNote = saveTastingNote(member, wine, 10, 20, 30, 40, 50, 4.5f);
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+        TastingNote tastingNote = saveTastingNote(member, wineVintage, 10, 20, 30, 40, 50, 4.5f);
 
         // when
         TastingNotePreviewResponse tastingNotePreviewResponse = TastingNotePreviewResponse.from(tastingNote);
@@ -49,7 +51,8 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("와인"));
-        TastingNote tastingNote = saveTastingNote(member, wine, 10, 20, 30, 40, 50, 4.5f);
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+        TastingNote tastingNote = saveTastingNote(member, wineVintage, 10, 20, 30, 40, 50, 4.5f);
 
 
         // when
@@ -81,12 +84,19 @@ class TastingNoteResponseTest extends IntegrationTestSupport {
                 .price(100).build();
     }
 
-    private TastingNote saveTastingNote(Member member, Wine wine,
+    private WineVintage createWineVintage(Wine wine, int vintageYear) {
+        return WineVintage.builder()
+                .wine(wine)
+                .vintageYear(vintageYear)
+                .build();
+    }
+
+    private TastingNote saveTastingNote(Member member, WineVintage wineVintage,
                                           int sweetness, int acidity, int tannin, int body, int alcohol, float rating) {
         return tastingNoteRepository.save(
                 TastingNote.builder()
                         .member(member)
-                        .wine(wine)
+                        .wineVintage(wineVintage)
                         .color("빨간색")
                         .tasteDate(LocalDate.of(2025, 1, 6))
                         .sweetness(sweetness)
