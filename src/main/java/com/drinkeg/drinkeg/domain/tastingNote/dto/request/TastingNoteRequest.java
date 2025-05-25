@@ -15,8 +15,7 @@ public class TastingNoteRequest {
     @NotNull(message = "와인 ID는 필수입니다.")
     private Long wineId;
 
-    @NotNull(message = "빈티지 선택은 필수입니다.")
-    @Range(min = 0, max = 2024, message = "빈티지는 1970 이상 2024 이하의 정수 값이어야 합니다.")
+    @Range(min = 1970, max = 2024, message = "빈티지는 1970 이상 2024 이하의 정수 값이어야 합니다.")
     private Integer vintageYear;
 
     @NotBlank(message = "색상 선택 필수입니다.")
@@ -60,10 +59,11 @@ public class TastingNoteRequest {
     private String review;
 
     @Builder
-    public TastingNoteRequest(Long wineId, String color, LocalDate tasteDate,
+    public TastingNoteRequest(Long wineId, Integer wineVintage, String color, LocalDate tasteDate,
                               Integer sweetness, Integer acidity, Integer tannin,
                               Integer body, Integer alcohol, List<String> nose, Float rating, String review) {
         this.wineId = wineId;
+        this.vintageYear = wineVintage;
         this.color = color;
         this.tasteDate = tasteDate;
         this.sweetness = sweetness;

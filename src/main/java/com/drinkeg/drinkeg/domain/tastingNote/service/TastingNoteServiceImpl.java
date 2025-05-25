@@ -45,7 +45,9 @@ public class TastingNoteServiceImpl implements TastingNoteService {
 
         Member member = findMemberByUsername(username);
         WineVintage wineVintage = findWineVintageByWineIdAndVintageYear(
-                tastingNoteRequest.getWineId(), tastingNoteRequest.getVintageYear());
+                tastingNoteRequest.getWineId(),
+                tastingNoteRequest.getVintageYear() == null ? 0 : tastingNoteRequest.getVintageYear()
+        );
 
         TastingNote save = tastingNoteRepository.save(TastingNote.create(member, wineVintage, tastingNoteRequest));
         Long wineId = wineVintage.getWine().getId();
