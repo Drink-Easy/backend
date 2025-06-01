@@ -51,13 +51,11 @@ public class KakaoLoginService {
 
             member = Member.createOAuthMember(kakaoname,kakaoEmail,"Kakao");
             memberRepository.save(member);
-            System.out.println("첫 로그인임");
             tokenService.jwtProvider(member, response);
 
         }
         else {
             member = existData.get();
-            System.out.println("첫 로그인아님");
             tokenService.jwtProvider(member, response);
         }
 
