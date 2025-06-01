@@ -7,6 +7,8 @@ import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,19 +29,20 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
     MemberRepository memberRepository;
     @Autowired
     WineRepository wineRepository;
+    @Autowired
+    private WineVintageRepository wineVintageRepository;
 
     @DisplayName("특정 멤버와 와인으로 위시리스트를 조회한다.")
     @Test
-    void findWineWishlistByMemberAndWine() {
+    void findWineWishlistByMemberAndWineVintage() {
         //given
-        Member member = createMember("user");
-        memberRepository.save(member);
-        Wine wine = createWine("와인");
-        wineRepository.save(wine);
-        WineWishlist wineWishlist = wineWishlistRepository.save(WineWishlist.create(member, wine));
+        Member member = saveMember("user");
+        Wine wine = saveWine("와인");
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        WineWishlist wineWishlist = wineWishlistRepository.save(WineWishlist.create(member, wineVintage));
 
         //when
-        Optional<WineWishlist> findWineWishlist = wineWishlistRepository.findWineWishlistByMemberAndWine(member, wine);
+        Optional<WineWishlist> findWineWishlist = wineWishlistRepository.findWineWishlistByMemberAndWineVintage(member, wineVintage);
 
         //then
         assertThat(findWineWishlist.get()).isEqualTo(wineWishlist);
@@ -48,32 +51,33 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("특정 멤버와 와인에 대한 위시리스트가 없는 경우 Optional Empty를 반환한다.")
     @Test
-    void findWineWishlistByMemberAndWine_notExists() {
+    void findWineWishlistByMemberAndWine_Vintage_notExists() {
         //given
-        Member member = createMember("user");
-        memberRepository.save(member);
-        Wine wine = createWine("와인");
-        wineRepository.save(wine);
+        Member member = saveMember("user");
+        Wine wine = saveWine("와인");
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
 
         //when
-        Optional<WineWishlist> findWineWishlist = wineWishlistRepository.findWineWishlistByMemberAndWine(member, wine);
+        Optional<WineWishlist> findWineWishlist = wineWishlistRepository.findWineWishlistByMemberAndWineVintage(member, wineVintage);
 
         //then
-        assertThatThrownBy(findWineWishlist::get).isInstanceOf(NoSuchElementException.class);
+        assertThat(findWineWishlist).isEmpty();
     }
 
     @DisplayName("특정 멤버와 와인으로 위시리스트가 존재하는지 확인한다.")
     @Test
-    void existsByMemberAndWine() {
+    void existsByMemberAndWineVintage() {
         //given
-        Member member = createMember("user");
-        memberRepository.save(member);
-        Wine wine = createWine("와인");
-        wineRepository.save(wine);
-        wineWishlistRepository.save(WineWishlist.create(member, wine));
+        Member member = saveMember("user");
+        Wine wine = saveWine("와인");
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        WineWishlist wineWishlist = wineWishlistRepository.save(WineWishlist.create(member, wineVintage));
 
         //when
-        boolean existsByMemberAndWine = wineWishlistRepository.existsByMemberAndWine(member, wine);
+        Optional<WineWishlist> findWineWishlist = wineWishlistRepository.findWineWishlistByMemberAndWineVintage(member, wineVintage);
+
+        //when
+        boolean existsByMemberAndWine = wineWishlistRepository.existsByMemberAndWineVintage(member, wineVintage);
 
         //then
         assertThat(existsByMemberAndWine).isTrue();
@@ -82,15 +86,14 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("특정 멤버와 와인으로 위시리스트가 존재하지 않는지 확인한다.")
     @Test
-    void existsByMemberAndWine_notExists() {
+    void existsByMemberAndWine_notExistsVintage() {
         //given
-        Member member = createMember("user");
-        memberRepository.save(member);
-        Wine wine = createWine("와인");
-        wineRepository.save(wine);
+        Member member = saveMember("user");
+        Wine wine = saveWine("와인");
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
 
         //when
-        boolean existsByMemberAndWine = wineWishlistRepository.existsByMemberAndWine(member, wine);
+        boolean existsByMemberAndWine = wineWishlistRepository.existsByMemberAndWineVintage(member, wineVintage);
 
         //then
         assertThat(existsByMemberAndWine).isFalse();
@@ -100,17 +103,17 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
     @Test
     void findByMemberOrderByCreatedAtDesc() {
         //given
-        Member member = createMember("user");
-        memberRepository.save(member);
-        Wine wine1 = createWine("와인1");
-        Wine wine2 = createWine("와인2");
-        Wine wine3 = createWine("와인3");
-        wineRepository.saveAll(List.of(wine1, wine2, wine3));
+        Member member = saveMember("user");
+        Wine wine1 = saveWine("와인1");
+        Wine wine2 = saveWine("와인2");
+        Wine wine3 = saveWine("와인3");
+        WineVintage wineVintage1 = saveWineVintage(wine1, 2017);
+        WineVintage wineVintage2 = saveWineVintage(wine2, 2018);
+        WineVintage wineVintage3 = saveWineVintage(wine3, 2019);
 
-        WineWishlist wineWishlist1 = createWineWishlist(member, wine1);
-        WineWishlist wineWishlist2 = createWineWishlist(member, wine2);
-        WineWishlist wineWishlist3 = createWineWishlist(member, wine3);
-        wineWishlistRepository.saveAll(List.of(wineWishlist1, wineWishlist2, wineWishlist3));
+        WineWishlist wineWishlist1 = saveWineWishlist(member, wineVintage1);
+        WineWishlist wineWishlist2 = saveWineWishlist(member, wineVintage2);
+        WineWishlist wineWishlist3 = saveWineWishlist(member, wineVintage3);
 
         //when
         List<WineWishlist> wineWishlistsByMemberOrderByCreatedAtDesc = wineWishlistRepository.findByMemberOrderByCreatedAtDesc(member);
@@ -124,8 +127,7 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
     @Test
     void findByMemberOrderByCreatedAtDesc_empty() {
         //given
-        Member member = createMember("user");
-        memberRepository.save(member);
+        Member member = saveMember("user");
 
         //when
         List<WineWishlist> wineWishlistsByMemberOrderByCreatedAtDesc = wineWishlistRepository.findByMemberOrderByCreatedAtDesc(member);
@@ -134,16 +136,16 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
         assertThat(wineWishlistsByMemberOrderByCreatedAtDesc).isEmpty();
     }
 
-    private Member createMember(String username) {
-        return Member.builder()
+    private Member saveMember(String username) {
+        return memberRepository.save(Member.builder()
                 .username(username)
                 .role(Role.ROLE_USER)
                 .isFirst(false)
-                .build();
+                .build());
     }
 
-    private Wine createWine(String name) {
-        return Wine.builder()
+    private Wine saveWine(String name) {
+        return wineRepository.save(Wine.builder()
                 .name(name)
                 .imageUrl("http://default.image")
                 .sort("레드")
@@ -151,11 +153,17 @@ class WineWishlistRepositoryTest extends IntegrationTestSupport {
                 .variety("샤도네이")
                 .vivinoRating(4.1f)
                 .wineNoteStatistics(WineNoteStatistics.builder().build())
-                .price(10000).build();
+                .price(10000).build());
     }
 
-    private WineWishlist createWineWishlist(Member member, Wine wine) {
-        return WineWishlist.create(member, wine);
+    private WineVintage saveWineVintage(Wine wine, int vintageYear) {
+        return wineVintageRepository.save(WineVintage.create(vintageYear, wine));
+    }
+
+
+
+    private WineWishlist saveWineWishlist(Member member, WineVintage wineVintage) {
+        return wineWishlistRepository.save(WineWishlist.create(member, wineVintage));
     }
 
 }
