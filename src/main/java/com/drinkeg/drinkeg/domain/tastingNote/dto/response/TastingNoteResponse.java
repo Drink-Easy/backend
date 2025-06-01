@@ -77,9 +77,7 @@ public class TastingNoteResponse {
         return TastingNoteResponse.builder()
                 .noteId(tastingNote.getId())
                 .wineId(wine.getId())
-                .wineName(
-                        vintageYear != 0 ? wine.getName() + " " + vintageYear : wine.getName()
-                )
+                .wineName(wine.getName())
                 .vintageYear(vintageYear)
                 .sort(wine.getSort())
                 .country(wine.getCountry())
