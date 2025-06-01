@@ -81,10 +81,10 @@ public class TastingNoteController {
 
     @GetMapping
     @Operation(summary = "와인 이름으로 테이스팅 노트 검색", description = "와인 이름으로 테이스팅 노트 검색")
-    public ApiResponse<PageResponse<TastingNotePreviewResponse>> searchTastingNoteByWineName(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                                                                             @RequestParam("searchName") String searchName,
-                                                                                             @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
-
+    public ApiResponse<PageResponse<TastingNotePreviewResponse>> searchTastingNoteByWineName(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @RequestParam("searchName") String searchName,
+            @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
         PageResponse<TastingNotePreviewResponse> result = tastingNoteService.searchTastingNoteByWineName(searchName, principalDetail.getUsername(), pageable);
         return ApiResponse.onSuccess(result);
     }

@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface TastingNoteRepositoryCustom {
 
+    TastingNote findTastingNoteWithWineById(Long tastingNoteId);
+
     List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable);
 
     long countTastingNoteByWineId(Long wineId);

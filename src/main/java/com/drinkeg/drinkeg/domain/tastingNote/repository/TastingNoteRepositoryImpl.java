@@ -35,6 +35,17 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public TastingNote findTastingNoteWithWineById(Long tastingNoteId) {
+        return queryFactory
+                .selectFrom(tastingNote)
+                .leftJoin(tastingNote.wineVintage, wineVintage).fetchJoin()
+                .leftJoin(wineVintage.wine, wine).fetchJoin()
+                .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
+                .where(tastingNote.id.eq(tastingNoteId))
+                .fetchOne();
+    }
+
+    @Override
     public List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable) {
         return queryFactory.selectFrom(tastingNote)
                 .where(tastingNote.wineVintage.wine.id.eq(wineId))
@@ -94,7 +105,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .join(tastingNoteNose.tastingNote, tastingNote)
                 .join(tastingNote.wineVintage, wineVintage)
                 .join(wineVintage.wine, wine)
-                .where(wine.id.eq(wineId)) // 안전하게 접근 가능
+                .where(wine.id.eq(wineId))
                 .groupBy(tastingNoteNose.noseElement)
                 .orderBy(
                         tastingNoteNose.noseElement.count().desc(),
@@ -170,6 +181,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     public List<TastingNote> searchTastingNoteByWineName(String searchName, String username, Pageable pageable) {
         return queryFactory
                 .selectFrom(tastingNote)
+                .leftJoin(tastingNote.wineVintage, wineVintage).fetchJoin()
                 .leftJoin(tastingNote.wineVintage.wine, wine).fetchJoin()
                 .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
                 .where(

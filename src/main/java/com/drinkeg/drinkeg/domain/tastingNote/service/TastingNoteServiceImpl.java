@@ -61,7 +61,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     @Override
     public TastingNoteResponse showTastingNoteByIdAndUsername(Long noteId, String username) {
         Member member = findMemberByUsername(username);
-        TastingNote tastingNote = findTastingNoteById(noteId);
+        TastingNote tastingNote = findTastingNoteWithWineById(noteId);
         validateTastingNoteOwnership(tastingNote, member);
         return TastingNoteResponse.from(tastingNote);
     }
@@ -85,7 +85,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public void updateTastingNote(Long noteId, TastingNoteUpdateRequest t, String username) {
 
         Member member = findMemberByUsername(username);
-        TastingNote foundNote = findTastingNoteById(noteId);
+        TastingNote foundNote = findTastingNoteWithWineById(noteId);
         validateTastingNoteOwnership(foundNote, member);
 
         foundNote.updateTastingNote(t.getColor(), t.getTastingDate(),
@@ -100,7 +100,7 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public Long deleteTastingNote(Long noteId, String username) {
 
         Member member = findMemberByUsername(username);
-        TastingNote foundNote = findTastingNoteById(noteId);
+        TastingNote foundNote = findTastingNoteWithWineById(noteId);
         validateTastingNoteOwnership(foundNote, member);
 
         WineVintage wineVintage = foundNote.getWineVintage();
@@ -140,9 +140,12 @@ public class TastingNoteServiceImpl implements TastingNoteService {
         return wineVintage;
     }
 
-    private TastingNote findTastingNoteById(Long noteId) {
-        return tastingNoteRepository.findById(noteId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND));
+    private TastingNote findTastingNoteWithWineById(Long tastingNoteId) {
+        TastingNote tastingNoteWithWineById = tastingNoteRepository.findTastingNoteWithWineById(tastingNoteId);
+        if( tastingNoteWithWineById == null) {
+            throw new GeneralException(ErrorStatus.TASTING_NOTE_NOT_FOUND);
+        }
+        return tastingNoteWithWineById;
     }
 
     private void validateTastingNoteOwnership(TastingNote tastingNote, Member member) {
