@@ -44,13 +44,13 @@ public class TastingNoteServiceImpl implements TastingNoteService {
     public Long saveTastingNote(TastingNoteRequest tastingNoteRequest, String username) {
 
         Member member = findMemberByUsername(username);
+        int vintageYear =  tastingNoteRequest.getVintageYear() != null ? tastingNoteRequest.getVintageYear() : 0;
         WineVintage wineVintage = findWineVintageByWineIdAndVintageYear(
                 tastingNoteRequest.getWineId(),
-                tastingNoteRequest.getVintageYear() == null ? 0 : tastingNoteRequest.getVintageYear()
+                vintageYear
         );
 
         TastingNote save = tastingNoteRepository.save(TastingNote.create(member, wineVintage, tastingNoteRequest));
-        tastingNoteRepository.flush();
         Long wineId = wineVintage.getWine().getId();
 
         publishWineAndWineVintageNoteUpdateEvent(wineVintage.getId(), wineId);
@@ -134,9 +134,10 @@ public class TastingNoteServiceImpl implements TastingNoteService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
     }
 
-    private WineVintage findWineVintageByWineIdAndVintageYear(Long wineId, int vintageYear) {
-        return wineVintageRepository.findByWineIdAndVintageYear(wineId, vintageYear)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.WINE_VINTAGE_NOT_FOUND));
+    private WineVintage findWineVintageByWineIdAndVintageYear(Long wineId, Integer vintageYear) {
+        WineVintage wineVintage = wineVintageRepository.findByWineIdAndVintageYear(wineId, vintageYear);
+        if (wineVintage == null) throw new GeneralException(ErrorStatus.WINE_VINTAGE_NOT_FOUND);
+        return wineVintage;
     }
 
     private TastingNote findTastingNoteById(Long noteId) {

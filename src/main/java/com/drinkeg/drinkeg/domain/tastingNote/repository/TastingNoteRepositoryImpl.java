@@ -121,7 +121,8 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     public List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username, Pageable pageable) {
         return queryFactory
                 .selectFrom(tastingNote)
-                .leftJoin(tastingNote.wineVintage.wine, wine).fetchJoin()
+                .leftJoin(tastingNote.wineVintage, wineVintage).fetchJoin()
+                .leftJoin(wineVintage.wine, wine).fetchJoin()
                 .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
                 .where(
                         tastingNote.member.username.eq(username),
