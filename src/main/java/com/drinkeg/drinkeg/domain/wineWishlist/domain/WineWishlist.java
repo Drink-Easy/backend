@@ -3,6 +3,7 @@ package com.drinkeg.drinkeg.domain.wineWishlist.domain;
 import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,19 +22,19 @@ public class WineWishlist extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "wine_id", nullable = false)
-    private Wine wine;
+    @JoinColumn(name = "wine_vintage_id", nullable = false)
+    private WineVintage wineVintage;
 
     @Builder
-    private WineWishlist(Member member, Wine wine){
+    private WineWishlist(Member member, WineVintage wineVintage){
         this.member = member;
-        this.wine = wine;
+        this.wineVintage = wineVintage;
     }
 
-    public static WineWishlist create(Member member, Wine wine) {
+    public static WineWishlist create(Member member, WineVintage wineVintage) {
         return WineWishlist.builder()
                 .member(member)
-                .wine(wine)
+                .wineVintage(wineVintage)
                 .build();
     }
 
