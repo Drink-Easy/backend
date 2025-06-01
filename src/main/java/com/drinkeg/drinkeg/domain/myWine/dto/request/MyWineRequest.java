@@ -27,8 +27,9 @@ public class MyWineRequest {
     private Integer purchasePrice;
 
     @Builder
-    public MyWineRequest(Long wineId, LocalDate purchaseDate, int purchasePrice) {
+    public MyWineRequest(Long wineId, Integer vintageYear, LocalDate purchaseDate, int purchasePrice) {
         this.wineId = wineId;
+        this.vintageYear = vintageYear;
         this.purchaseDate = purchaseDate;
         this.purchasePrice = purchasePrice;
     }
