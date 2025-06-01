@@ -61,7 +61,7 @@ public class Wine extends BaseEntity {
         this.searchName = searchName;
     }
 
-    public static Wine of(WineRegisterRequest wineRegisterRequest) {
+    public static Wine create(WineRegisterRequest wineRegisterRequest) {
         return Wine.builder()
                 .name(wineRegisterRequest.getName())
                 .nameEng(wineRegisterRequest.getNameEng())

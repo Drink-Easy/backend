@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -72,10 +73,9 @@ public class AdminWineServiceImpl implements AdminWineService {
         wine.updateImageUrl(imageUrl);
         wineRepository.save(wine);
 
-        List<WineVintage> vintages = IntStream.rangeClosed(1970, 2024)
-                .mapToObj(y -> WineVintage.create(y, wine))
-                .toList();
+        List<WineVintage> vintages = new ArrayList<>();
         vintages.add(WineVintage.create(0, wine));
+        for(int i = 1970; i <= 2024; i++) vintages.add(WineVintage.create(i, wine));
 
         wineVintageRepository.saveAll(vintages);
     }

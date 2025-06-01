@@ -17,7 +17,7 @@ public class WineVintageRepositoryImpl implements WineVintageRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public WineVintage findByWineIdAndVintageYearFetch(Long wineId, int vintageYear) {
+    public WineVintage findByWineIdAndVintageYear(Long wineId, Integer vintageYear) {
         return queryFactory.selectFrom(wineVintage)
                 .join(wineVintage.wine, wine).fetchJoin()
                 .where(wineVintage.wine.id.eq(wineId)

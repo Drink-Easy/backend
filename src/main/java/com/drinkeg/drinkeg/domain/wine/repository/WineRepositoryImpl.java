@@ -23,7 +23,7 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     @Override
     public List<Wine> findMostLikedWines() {
         return queryFactory.selectFrom(wine)
-                .leftJoin(wineWishlist).on(wineWishlist.wine.eq(wine))
+                .leftJoin(wineWishlist).on(wineWishlist.wineVintage.wine.eq(wine))
                 .groupBy(wine.id)
                 .orderBy(wineWishlist.count().desc(), wine.vivinoRating.desc())
                 .limit(10)

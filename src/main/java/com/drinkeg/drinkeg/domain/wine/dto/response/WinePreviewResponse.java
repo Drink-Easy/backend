@@ -1,6 +1,7 @@
 package com.drinkeg.drinkeg.domain.wine.dto.response;
 
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import lombok.*;
 
 @Getter
@@ -9,7 +10,7 @@ public class WinePreviewResponse {
 
     private Long wineId;
     private String name;
-    private String nameEng;
+    private Integer vintageYear;
     private String imageUrl;
     private String sort;
     private String country;
@@ -19,12 +20,12 @@ public class WinePreviewResponse {
     private int price;
 
     @Builder
-    public WinePreviewResponse(Long wineId, String name, String nameEng, String imageUrl,
+    public WinePreviewResponse(Long wineId, String name, Integer vintageYear, String imageUrl,
                                String sort, String country, String region,  String variety,
                                float vivinoRating, int price) {
         this.wineId = wineId;
         this.name = name;
-        this.nameEng = nameEng;
+        this.vintageYear = vintageYear;
         this.imageUrl = imageUrl;
         this.sort = sort;
         this.country = country;
@@ -37,8 +38,27 @@ public class WinePreviewResponse {
     public static WinePreviewResponse of(Wine wine) {
         return WinePreviewResponse.builder()
                 .wineId(wine.getId())
+                .vintageYear(null)
                 .name(wine.getName())
-                .nameEng(wine.getNameEng())
+                .imageUrl(wine.getImageUrl())
+                .sort(wine.getSort())
+                .country(wine.getCountry())
+                .region(wine.getRegion())
+                .variety(wine.getVariety())
+                .vivinoRating(wine.getVivinoRating())
+                .price(wine.getPrice())
+                .build();
+    }
+
+    public static WinePreviewResponse of(WineVintage wineVintage) {
+        Wine wine = wineVintage.getWine();
+        Integer vintageYear = wineVintage.getVintageYear() == 0 ? null
+                : wineVintage.getVintageYear();
+
+        return WinePreviewResponse.builder()
+                .wineId(wine.getId())
+                .name(wine.getName())
+                .vintageYear(vintageYear)
                 .imageUrl(wine.getImageUrl())
                 .sort(wine.getSort())
                 .country(wine.getCountry())

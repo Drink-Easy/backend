@@ -14,10 +14,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/wine")
+@Validated
 public class WineController {
     private final WineService wineService;
 
@@ -45,10 +48,13 @@ public class WineController {
     @Operation(summary = "와인 상세정보 조회", description = "와인의 상세정보를 최근 리뷰 3개와 함께 반환한다. nose1,2,3 값은 존재하지 않으면 null이 들어간다.")
     public ApiResponse<WineWithThreeReviewsResponse> findWineById(
             @AuthenticationPrincipal PrincipalDetail principalDetail,
-            @PathVariable("wineId") Long wineId) {
+            @PathVariable("wineId") Long wineId,
+            @RequestParam(required = false)
+            @Range(min = 1970, max = 2024, message = "빈티지는 1970~2024 사이여야 합니다.")
+            Integer vintageYear) {
 
         WineWithThreeReviewsResponse wineWithThreeReviewsResponse =
-                wineService.getWineInfoWithThreeReviews(wineId, principalDetail.getUsername());
+                wineService.getWineInfoWithThreeReviews(wineId, vintageYear, principalDetail.getUsername());
 
         return ApiResponse.onSuccess(wineWithThreeReviewsResponse);
     }
@@ -59,12 +65,16 @@ public class WineController {
     +"paging 기능의 sort는 사용하지 않고 sortType을 사용한다.")
     public ApiResponse<PageResponse<WineReviewResponse>> showWineReview(
             @PathVariable("wineId") Long wineId,
+            @Range(min = 1970, max = 2024, message = "빈티지는 1970~2024 사이여야 합니다.")
+            Integer vintageYear,
             @RequestParam String sortType,
             @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
 
-        PageResponse<WineReviewResponse> wineReviewsAndIsLikedPageResponse = wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType), pageable);
+        PageResponse<WineReviewResponse> wineReviewsPageResponse = wineService
+                .getWineReviewsByWineIdAndVintageYear(
+                        wineId, vintageYear, SortType.of(sortType), pageable);
 
-        return ApiResponse.onSuccess(wineReviewsAndIsLikedPageResponse);
+        return ApiResponse.onSuccess(wineReviewsPageResponse);
     }
 
     @GetMapping("/recommend")

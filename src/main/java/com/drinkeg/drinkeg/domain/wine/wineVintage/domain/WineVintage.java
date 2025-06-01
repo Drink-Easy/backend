@@ -20,7 +20,7 @@ public class WineVintage {
     private Long id;
 
     @Column(updatable = false)
-    private int vintageYear;
+    private Integer vintageYear;
 
     @Embedded
     private WineNoteStatistics wineNoteStatistics;
@@ -36,7 +36,7 @@ public class WineVintage {
         this.wineNoteStatistics = wineNoteStatistics != null ? wineNoteStatistics : WineNoteStatistics.create();
     }
 
-    public static WineVintage create(int vintageYear, Wine wine) {
+    public static WineVintage create(Integer vintageYear, Wine wine) {
         return WineVintage.builder()
                 .vintageYear(vintageYear)
                 .wine(wine)

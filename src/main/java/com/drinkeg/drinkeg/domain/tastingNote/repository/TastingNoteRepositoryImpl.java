@@ -46,9 +46,19 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     }
 
     @Override
-    public List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable) {
+    public List<TastingNote> findAllTastingNoteByWineId(Long wineId, SortType sort, Pageable pageable) {
         return queryFactory.selectFrom(tastingNote)
                 .where(tastingNote.wineVintage.wine.id.eq(wineId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(orderCondition(sort), tastingNote.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<TastingNote> findAllTastingNoteByWineVintageId(Long wineId, SortType sort, Pageable pageable) {
+        return queryFactory.selectFrom(tastingNote)
+                .where(tastingNote.wineVintage.id.eq(wineId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(orderCondition(sort), tastingNote.id.desc())
@@ -61,6 +71,15 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                 .select(tastingNote.count())
                 .from(tastingNote)
                 .where(tastingNote.wineVintage.wine.id.eq(wineId))
+                .fetchOne();
+    }
+
+    @Override
+    public long countTastingNoteByWineVintageId(Long wineVintageId) {
+        return queryFactory
+                .select(tastingNote.count())
+                .from(tastingNote)
+                .where(tastingNote.wineVintage.id.eq(wineVintageId))
                 .fetchOne();
     }
 

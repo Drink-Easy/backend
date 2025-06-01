@@ -16,9 +16,9 @@ public interface WineService {
 
     void updateWineNoteStatics(Long wineId);
 
-    WineWithThreeReviewsResponse getWineInfoWithThreeReviews(Long windId, String username);
+    WineWithThreeReviewsResponse getWineInfoWithThreeReviews(Long windId, Integer vintageYear, String username);
 
-    PageResponse<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType orderByLatest, Pageable pageable);
+    PageResponse<WineReviewResponse> getWineReviewsByWineIdAndVintageYear(Long wineId, Integer vintageYear, SortType orderByLatest, Pageable pageable);
 
     List<HomeWineResponse> getRecommendWineList(String username);
 

@@ -14,9 +14,12 @@ public interface TastingNoteRepositoryCustom {
 
     TastingNote findTastingNoteWithWineById(Long tastingNoteId);
 
-    List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable);
+    List<TastingNote> findAllTastingNoteByWineId(Long wineId, SortType sort, Pageable pageable);
+
+    List<TastingNote> findAllTastingNoteByWineVintageId(Long wineId, SortType sort, Pageable pageable);
 
     long countTastingNoteByWineId(Long wineId);
+    long countTastingNoteByWineVintageId(Long wineVintageId);
 
     WineNoteStatisticsAvgDto findWineStatisticsByWineId(Long wineId);
     WineNoteStatisticsAvgDto findWineVintageStatisticsByWineVintageId(Long wineVintageId);
