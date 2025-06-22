@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.domain.myWine.controller;
 
 import com.drinkeg.drinkeg.MockMember;
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
@@ -30,7 +30,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void saveMyWine() throws Exception {
         // given
-        MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), 100000);
+        MyWineRequest myWineRequest = createMyWineRequest(1L, 2017, LocalDate.parse("2025-01-01"), 100000);
         when(myWineService.saveMyWine(myWineRequest, "user"))
                 .thenReturn(1L);
 
@@ -46,12 +46,34 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.result").value("보유 와인 저장 성공"));
     }
 
+    @DisplayName("보유 와인 추가 요청이 들어오면 빈티지 연도가 없으면 null로 저장한다.")
+    @Test
+    @MockMember
+    void saveMyWineWithoutVintageYear() throws Exception {
+        // given
+        MyWineRequest myWineRequest = createMyWineRequest(1L, null, LocalDate.parse("2025-01-01"), 100000);
+        when(myWineService.saveMyWine(myWineRequest, "user"))
+                .thenReturn(1L);
+
+        // when // then
+        mockMvc.perform(MockMvcRequestBuilders.post("/my-wine")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(myWineRequest))
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("OK"))
+                .andExpect(jsonPath("$.result").value("보유 와인 저장 성공"));
+
+    }
+
     @DisplayName("와인 아이디 없이 보유 와인 추가 요청이 들어오면 예외가 발생한다.")
     @Test
     @MockMember
     void saveMyWineWithoutWineId() throws Exception {
         // given
-        MyWineRequest myWineRequest = createMyWineRequest(null, LocalDate.parse("2025-01-01"), 100000);
+        MyWineRequest myWineRequest = createMyWineRequest(null, 2017, LocalDate.parse("2025-01-01"), 100000);
 
         // when // then
         mockMvc.perform(MockMvcRequestBuilders.post("/my-wine")
@@ -69,7 +91,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void saveMyWineWithoutPurchaseDate() throws Exception {
         // given
-        MyWineRequest myWineRequest = createMyWineRequest(1L, null, 100000);
+        MyWineRequest myWineRequest = createMyWineRequest(1L, 2017, null, 100000);
 
         // when // then
         mockMvc.perform(MockMvcRequestBuilders.post("/my-wine")
@@ -87,7 +109,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void saveMyWineWithNegativePurchasePrice() throws Exception {
         // given
-        MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), -1);
+        MyWineRequest myWineRequest = createMyWineRequest(1L, 2017, LocalDate.parse("2025-01-01"), -1);
 
         // when // then
         mockMvc.perform(MockMvcRequestBuilders.post("/my-wine")
@@ -105,7 +127,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void saveMyWineWithOverPurchasePrice() throws Exception {
         // given
-        MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), 1000000001);
+        MyWineRequest myWineRequest = createMyWineRequest(1L, 2017, LocalDate.parse("2025-01-01"), 1000000001);
 
         // when // then
         mockMvc.perform(MockMvcRequestBuilders.post("/my-wine")
@@ -124,7 +146,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void saveMyWineWithoutPurchasePrice() throws Exception {
         // given
-        MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), null);
+        MyWineRequest myWineRequest = createMyWineRequest(1L, 2017, LocalDate.parse("2025-01-01"), null);
         when(myWineService.saveMyWine(myWineRequest, "user"))
                 .thenReturn(1L);
 
@@ -145,7 +167,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void saveMyWineWithWrongUser() throws Exception {
         // given
-        MyWineRequest myWineRequest = createMyWineRequest(1L, LocalDate.parse("2025-01-01"), 100000);
+        MyWineRequest myWineRequest = createMyWineRequest(1L, 2017, LocalDate.parse("2025-01-01"), 100000);
         when(myWineService.saveMyWine(refEq(myWineRequest), eq("user")))
                 .thenThrow(new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
@@ -165,7 +187,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void saveMyWineWithWrongWine() throws Exception {
         // given
-        MyWineRequest myWineRequest = createMyWineRequest(-1L, LocalDate.parse("2025-01-01"), 100000);
+        MyWineRequest myWineRequest = createMyWineRequest(-1L,2017, LocalDate.parse("2025-01-01"), 100000);
         when(myWineService.saveMyWine(refEq(myWineRequest), eq("user")))
                 .thenThrow(new GeneralException(ErrorStatus.WINE_NOT_FOUND));
 
@@ -419,10 +441,11 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
                 .andExpect(jsonPath("$.message").value(ErrorStatus.MY_WINE_UNAUTHORIZED.getMessage()));
     }
 
-    private MyWineRequest createMyWineRequest(Long wineId, LocalDate purchaseDate, Integer purchasePrice) {
+    private MyWineRequest createMyWineRequest(Long wineId, Integer vintageYear, LocalDate purchaseDate, Integer purchasePrice) {
         if(purchasePrice == null) {
             return MyWineRequest.builder()
                     .wineId(wineId)
+                    .vintageYear(vintageYear)
                     .purchaseDate(purchaseDate)
                     .build();
         }
