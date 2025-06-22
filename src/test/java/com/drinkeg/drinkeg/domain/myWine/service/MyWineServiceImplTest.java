@@ -4,8 +4,8 @@ import com.drinkeg.drinkeg.IntegrationTestSupport;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.domain.MyWine;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.domain.myWine.repository.MyWineRepository;
@@ -45,7 +45,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         memberRepository.save(member);
         Wine wine = createWine("와인");
         wineRepository.save(wine);
-        MyWineRequest myWineRequest = createMyWineRequest(wine.getId(), LocalDate.parse("2025-01-11"), 100000);
+        MyWineRequest myWineRequest = createMyWineRequest(wine.getId(), 2017, LocalDate.parse("2025-01-11"), 100000);
 
         // when
         Long myWineId = myWineService.saveMyWine(myWineRequest, member.getUsername());
@@ -53,8 +53,8 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         // then
         Optional<MyWine> myWine = myWineRepository.findById(myWineId);
         assertThat(myWine.get())
-                .extracting("id", "member", "wine", "purchaseDate", "purchasePrice")
-                .containsExactly(myWineId, member, wine, LocalDate.parse("2025-01-11"), 100000);
+                .extracting("id", "member", "wine", "vintageYear", "purchaseDate", "purchasePrice")
+                .containsExactly(myWineId, member, wine, 2017 ,LocalDate.parse("2025-01-11"), 100000);
     }
 
     @DisplayName("없는 멤버가 보유와인 추가하려고 하면 MEMBER_NOT_FOUND 예외 발생")
@@ -64,7 +64,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Member member = createMember("wrongMember");
         Wine wine = createWine("와인");
         wineRepository.save(wine);
-        MyWineRequest myWineRequest = createMyWineRequest(wine.getId(), LocalDate.parse("2025-01-11"), 100000);
+        MyWineRequest myWineRequest = createMyWineRequest(wine.getId(), 2017, LocalDate.parse("2025-01-11"), 100000);
 
         // when
         assertThatThrownBy(() -> myWineService.saveMyWine(myWineRequest, "wrongMember "))
@@ -78,7 +78,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = createMember("user");
         memberRepository.save(member);
-        MyWineRequest myWineRequest = createMyWineRequest(-1L, LocalDate.parse("2025-01-11"), 100000);
+        MyWineRequest myWineRequest = createMyWineRequest(-1L, 2017, LocalDate.parse("2025-01-11"), 100000);
 
         // when
         assertThatThrownBy(() -> myWineService.saveMyWine(myWineRequest, member.getUsername()))
@@ -212,7 +212,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Wine wine = createWine("와인");
         wineRepository.save(wine);
         Long myWineId = saveMyWine(member, wine, LocalDate.parse("2024-12-11"), 100000);
-        MyWineUpdateRequest myWineUpdateRequest = createMyWineUpdateRequest(LocalDate.parse("2025-01-11"), 200000);
+        MyWineUpdateRequest myWineUpdateRequest = createMyWineUpdateRequest(2017, LocalDate.parse("2025-01-11"), 200000);
 
         // when
         myWineService.updateMyWine(myWineId, myWineUpdateRequest, member.getUsername());
@@ -220,8 +220,8 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         // then
         Optional<MyWine> updatedMyWine = myWineRepository.findById(myWineId);
         assertThat(updatedMyWine.get())
-                .extracting("id", "member", "wine", "purchaseDate", "purchasePrice")
-                .containsExactly(myWineId, member, wine, LocalDate.parse("2025-01-11"), 200000);
+                .extracting("id", "member", "wine", "vintageYear", "purchaseDate", "purchasePrice")
+                .containsExactly(myWineId, member, wine, 2017, LocalDate.parse("2025-01-11"), 200000);
     }
 
     @DisplayName("없는 보유와인을 수정하려고 하면 MY_WINE_NOT_FOUND 예외 발생")
@@ -230,7 +230,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = createMember("user");
         memberRepository.save(member);
-        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(LocalDate.parse("2025-01-11"), 200000);
+        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(2017, LocalDate.parse("2025-01-11"), 200000);
 
         // when & then
         assertThatThrownBy(() -> myWineService.updateMyWine(-1L, myWineUpdate, member.getUsername()))
@@ -247,7 +247,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Wine wine = createWine("와인");
         wineRepository.save(wine);
         Long myWineId = saveMyWine(member, wine, LocalDate.parse("2024-12-11"), 100000);
-        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(LocalDate.parse("2025-01-11"), 200000);
+        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(2017, LocalDate.parse("2025-01-11"), 200000);
 
         // when & then
         assertThatThrownBy(() -> myWineService.updateMyWine(myWineId, myWineUpdate, "wrongMember"))
@@ -266,7 +266,7 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
         Wine wine = createWine("와인");
         wineRepository.save(wine);
         Long myWineId = saveMyWine(member1, wine, LocalDate.parse("2024-12-11"), 100000);
-        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(LocalDate.parse("2025-01-11"), 200000);
+        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(2017, LocalDate.parse("2025-01-11"), 200000);
 
         // when & then
         assertThatThrownBy(() -> myWineService.updateMyWine(myWineId, myWineUpdate, member2.getUsername()))
@@ -368,16 +368,18 @@ class MyWineServiceImplTest extends IntegrationTestSupport {
                 .build()).getId();
     }
 
-    private MyWineRequest createMyWineRequest(Long wineId, LocalDate purchaseDate, int purchasePrice) {
+    private MyWineRequest createMyWineRequest(Long wineId, Integer vintageYear, LocalDate purchaseDate, int purchasePrice) {
         return MyWineRequest.builder()
                 .wineId(wineId)
+                .vintageYear(vintageYear)
                 .purchaseDate(purchaseDate)
                 .purchasePrice(purchasePrice)
                 .build();
     }
 
-    private MyWineUpdateRequest createMyWineUpdateRequest(LocalDate purchaseDate, int purchasePrice) {
+    private MyWineUpdateRequest createMyWineUpdateRequest(Integer vintageYear, LocalDate purchaseDate, int purchasePrice) {
         return MyWineUpdateRequest.builder()
+                .vintageYear(vintageYear)
                 .purchaseDate(purchaseDate)
                 .purchasePrice(purchasePrice)
                 .build();
