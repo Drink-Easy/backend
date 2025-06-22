@@ -100,19 +100,17 @@ class WineControllerTest extends WineControllerTestSupport {
     void findWineInfoByWineId() throws Exception {
         // given
         WineWithThreeReviewsResponse wineWithThreeReviewsResponse = createWineWithThreeReviewsResponse();
-        when(wineService.getWineInfoWithThreeReviews(any(Long.class), any(String.class)))
+        when(wineService.getWineInfoWithThreeReviews(any(Long.class), any(Integer.class), any(String.class)))
                 .thenReturn(wineWithThreeReviewsResponse);
 
         // when // then
         mockMvc.perform(get("/wine/{wineId}", 1L)
-                        .principal(() -> "user"))  // principal을 통한 인증 정보 전달
+                        .param("vintageYear", "2020")
+                        .principal(() -> "user"))
                 .andDo(print())
-                // 응답 코드(HTTP Status) 검증
                 .andExpect(status().isOk())
-                // 공통 응답 스펙 (code, message 등) 검증
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"))
-                // 실제 result 내 데이터 검증 (WineInfoResponse)
                 .andExpect(jsonPath("$.result.wineInfoResponse.wineId").value(1L))
                 .andExpect(jsonPath("$.result.wineInfoResponse.name").value("테스트 와인"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.imageUrl").value("https://test-image-url.png"))
@@ -130,9 +128,8 @@ class WineControllerTest extends WineControllerTestSupport {
                 .andExpect(jsonPath("$.result.wineInfoResponse.nose2").value("초콜릿"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.nose3").value("바닐라"))
                 .andExpect(jsonPath("$.result.wineInfoResponse.avgMemberRating").value(4.5))
-                // isLiked는 Java 명명 규칙에 의해서 liked로 자동 변환된다.
                 .andExpect(jsonPath("$.result.wineInfoResponse.liked").value(true))
-                // 최근 리뷰 3개 검증
+
                 .andExpect(jsonPath("$.result.recentReviews[0].review").value("첫 번째 리뷰 내용"))
                 .andExpect(jsonPath("$.result.recentReviews[0].name").value("user1"))
                 .andExpect(jsonPath("$.result.recentReviews[0].rating").value(5))
@@ -150,11 +147,12 @@ class WineControllerTest extends WineControllerTestSupport {
     void findWineInfoWithWrongWineId() throws Exception {
         // given
         GeneralException generalException = new GeneralException(ErrorStatus.WINE_NOT_FOUND);
-        when(wineService.getWineInfoWithThreeReviews(any(Long.class), any(String.class)))
+        when(wineService.getWineInfoWithThreeReviews(any(Long.class), any(Integer.class), any(String.class)))
                 .thenThrow(generalException);
 
         // when // then
-        mockMvc.perform(get("/wine/{wineId}", 1L)
+        mockMvc.perform(get("/wine/{wineId}", -1L)
+                        .param("vintageYear", "2020")
                         .principal(() -> "user"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -175,11 +173,12 @@ class WineControllerTest extends WineControllerTestSupport {
                 createReviewResponse("두 번째 리뷰 내용", "user2", 4, LocalDateTime.of(2025, 1, 6, 0, 0)),
                 createReviewResponse("세 번째 리뷰 내용", "user3", 5, LocalDateTime.of(2025, 1, 6, 0, 0)));
 
-        when(wineService.getWineReviewsAndIsLikedByWineId(wineId, SortType.of(sortType), pageable))
+        when(wineService.getWineReviewsByWineIdAndVintageYear(wineId, 2017, SortType.of(sortType), pageable))
                 .thenReturn(new PageResponse<>(wineReviewResponses, 0, 1));
 
         // when // then
-        mockMvc.perform(get("/wine/review/{wineId}?sortType={sortType}&page=0&size=10", wineId, sortType))
+        mockMvc.perform(get("/wine/review/{wineId}?sortType={sortType}&page=0&size=10", wineId, sortType)
+                        .param("vintageYear", "2017"))
                 .andDo(print())
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("OK"))
