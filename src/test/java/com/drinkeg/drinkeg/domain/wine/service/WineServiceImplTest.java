@@ -15,8 +15,11 @@ import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.service.WineVintageService;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
+import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import org.assertj.core.groups.Tuple;
@@ -39,11 +42,15 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Autowired
     WineService wineService;
     @Autowired
+    WineVintageService wineVintageService;
+    @Autowired
     MemberRepository memberRepository;
     @Autowired
     TastingNoteRepository tastingNoteRepository;
     @Autowired
     WineWishlistRepository wineWishlistRepository;
+    @Autowired
+    WineVintageRepository wineVintageRepository;
 
     @DisplayName("와인 이름을 받아서 이름을 포함하는 모든 와인을 조회한다.")
     @Test
@@ -145,7 +152,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
                         "건포도", "오렌지", "시트러스");
     }
 
-    @DisplayName("와인 아이디를 받아서 와인의 상세 정보를 최근 리뷰 3개와 함꼐 반환한다.")
+    @DisplayName("와인 아이디와 빈티지 년도를 받아서 와인의 상세 정보를 최근 리뷰 3개와 함꼐 반환한다.")
     @Test
     void findWineInfoWithThreeLatestReviews() {
         // given
@@ -153,7 +160,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine = wineRepository.save(createWine("레드 와인"));
         WineVintage wineVintage = createWineVintage(wine, 2017);
         List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
-        wineWishlistRepository.save(WineWishlist.create(member, wine));
+        wineWishlistRepository.save(WineWishlist.create(member, wineVintage));
 
         TastingNote tastingNote1 = createTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 0, "가성비 좋아요")
@@ -175,16 +182,19 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 50, 30, 20, 40, 30, 10, "다시 구매할 것 같아요");
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
         wineService.updateWineNoteStatics(wine.getId());
+        wineVintageService.updateWineVintageNoteStatics(wineVintage.getId());
+
         // when
-        WineWithThreeReviewsResponse wineInfo = wineService.getWineInfoWithThreeReviews(wine.getId(), member.getUsername());
+        WineWithThreeReviewsResponse wineInfo = wineService.getWineInfoWithThreeReviews(wine.getId(), wineVintage.getVintageYear(), member.getUsername());
+
         // then
         assertThat(wineInfo.getWineInfoResponse())
                 .extracting(
-                        "wineId", "name", "imageUrl", "price", "sort", "country", "variety", "vivinoRating",
+                        "wineId", "name", "vintageYear", "imageUrl", "price", "sort", "country", "variety", "vivinoRating",
                         "avgSweetness", "avgAcidity", "avgTannin", "avgBody", "avgAlcohol",
                         "nose1", "nose2", "nose3", "avgMemberRating", "liked"
                 )
-                .containsExactly(wine.getId(), wine.getName(), wine.getImageUrl(), wine.getPrice(), wine.getSort(),
+                .containsExactly(wine.getId(), wine.getName(), wineVintage.getVintageYear(), wine.getImageUrl(), wine.getPrice(), wine.getSort(),
                         wine.getCountry(), wine.getVariety(), wine.getVivinoRating(),
                         50.0f, 30.0f, 20.0f, 40.0f, 30.0f,
                         "건포도", "오렌지", "시트러스", 7.0f, true
@@ -205,11 +215,11 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("레드 와인"));
-        wineWishlistRepository.save(WineWishlist.create(member, wine));
-        wineService.updateWineNoteStatics(wine.getId());
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+        wineWishlistRepository.save(WineWishlist.create(member, wineVintage));
 
         // when
-        WineWithThreeReviewsResponse wineInfo = wineService.getWineInfoWithThreeReviews(wine.getId(), member.getUsername());
+        WineWithThreeReviewsResponse wineInfo = wineService.getWineInfoWithThreeReviews(wine.getId(), 2017, member.getUsername());
         // then
         assertThat(wineInfo.getWineInfoResponse())
                 .extracting(
@@ -226,7 +236,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         assertThat(wineInfo.getRecentReviews()).isEmpty();
     }
 
-    @DisplayName("와인 아이디로 와인 리뷰를 전체 조회한다. 정렬 순서는 최신순이다.")
+    @DisplayName("와인 아이디와 빈티지로 와인 리뷰를 전체 조회한다. 정렬 순서는 최신순이다.")
     @Test
     void findWineReviewByWineId() {
         // given
@@ -258,7 +268,7 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        PageResponse<WineReviewResponse> wineReviewsAndIsLikedPage = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST, pageable);
+        PageResponse<WineReviewResponse> wineReviewsAndIsLikedPage = wineService.getWineReviewsByWineIdAndVintageYear(wine.getId(), 2017 ,SortType.LATEST, pageable);
 
         // then
         assertWineReviewPageResponse(wineReviewsAndIsLikedPage, 0, 1,
@@ -271,10 +281,11 @@ class WineServiceImplTest extends IntegrationTestSupport {
     void findWineReviewByWineIdWithNoReview() {
         // given
         Wine wine = wineRepository.save(createWine("레드 와인"));
+        createWineVintage(wine, 2017);
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        PageResponse<WineReviewResponse> wineReviewsAndIsLikedPage = wineService.getWineReviewsAndIsLikedByWineId(wine.getId(), SortType.LATEST, pageable);
+        PageResponse<WineReviewResponse> wineReviewsAndIsLikedPage = wineService.getWineReviewsByWineIdAndVintageYear(wine.getId(), 2017, SortType.LATEST, pageable);
 
         // then
         assertWineReviewPageResponse(wineReviewsAndIsLikedPage, 0, 0, new ArrayList<>());
@@ -286,9 +297,9 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // given
         Pageable pageable = PageRequest.of(0, 10);
         // when // then
-        assertThatThrownBy(() -> wineService.getWineReviewsAndIsLikedByWineId(-1L, SortType.LATEST, pageable))
+        assertThatThrownBy(() -> wineService.getWineReviewsByWineIdAndVintageYear(-1L, 2017, SortType.LATEST, pageable))
                 .isInstanceOf(GeneralException.class)
-                .hasMessage("와인이 없습니다.");
+                .hasMessage(ErrorStatus.WINE_VINTAGE_NOT_FOUND.getMessage());
     }
 
     @DisplayName("사용자의 취향으로 추천 와인을 반환한다.")
@@ -340,13 +351,19 @@ class WineServiceImplTest extends IntegrationTestSupport {
         Wine wine20 = createWine("와인20", "화이트", "뉴질랜드", 140000, "피노 그리", 4.3f);
         wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10,
                 wine11, wine12, wine13, wine14, wine15, wine16, wine17, wine18, wine19, wine20));
-        List<WineWishlist> wishlists = List.of(
-                createWineWishlist(wine1, member), createWineWishlist(wine1, member), createWineWishlist(wine2, member), createWineWishlist(wine2, member), createWineWishlist(wine2, member),
-                createWineWishlist(wine3, member), createWineWishlist(wine3, member), createWineWishlist(wine3, member), createWineWishlist(wine4, member), createWineWishlist(wine4, member),
-                createWineWishlist(wine5, member), createWineWishlist(wine5, member), createWineWishlist(wine6, member), createWineWishlist(wine6, member), createWineWishlist(wine7, member),
-                createWineWishlist(wine8, member), createWineWishlist(wine8, member), createWineWishlist(wine9, member), createWineWishlist(wine9, member), createWineWishlist(wine10, member),
-                createWineWishlist(wine11, member), createWineWishlist(wine12, member), createWineWishlist(wine13, member), createWineWishlist(wine14, member), createWineWishlist(wine15, member),
-                createWineWishlist(wine16, member), createWineWishlist(wine17, member), createWineWishlist(wine18, member), createWineWishlist(wine19, member), createWineWishlist(wine20, member));
+        List<WineWishlist> wishlists = new ArrayList<>();
+
+        for(
+                Wine wine : List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10,
+                        wine11, wine12, wine13, wine14, wine15, wine16, wine17, wine18, wine19, wine20)) {
+            WineVintage wineVintage = createWineVintage(wine, 2017);
+
+            for (int i = 0;
+                 i < Integer.parseInt(wine.getName().replaceAll("\\D+", ""));
+                 i++) {
+                wishlists.add(createWineWishlist(wineVintage, member));
+            }
+        }
         wineWishlistRepository.saveAll(wishlists);
 
         // when
@@ -354,15 +371,15 @@ class WineServiceImplTest extends IntegrationTestSupport {
         // then
         assertThat(mostLikedWineList).hasSize(10)
                 .extracting("wineName")
-                .containsExactly("와인2", "와인3", "와인9", "와인1", "와인4", "와인8", "와인5", "와인6", "와인10", "와인19");
+                .containsExactly("와인20", "와인19", "와인18", "와인17", "와인16", "와인15", "와인14", "와인13", "와인12", "와인11");
 
     }
     // 편의 메서드
 
-    private WineWishlist createWineWishlist(Wine wine, Member member) {
+    private WineWishlist createWineWishlist(WineVintage wineVintage, Member member) {
         return WineWishlist.builder()
                 .member(member)
-                .wine(wine)
+                .wineVintage(wineVintage)
                 .build();
     }
 
@@ -438,19 +455,20 @@ class WineServiceImplTest extends IntegrationTestSupport {
     }
 
     private WineVintage createWineVintage(Wine wine, int vintageYear) {
-        return WineVintage.builder()
-                .wine(wine)
-                .vintageYear(vintageYear)
-                .build();
+        return wineVintageRepository.save(
+                WineVintage.builder()
+                        .wine(wine)
+                        .vintageYear(vintageYear)
+                        .build());
     }
 
     private void assertWinePreviewPageResponse(PageResponse<WinePreviewResponse> winePreviewResponsePageResponse, int pageNumber, int totalPages, List<WinePreviewResponse> winePreviewContents) {
         assertThat(winePreviewResponsePageResponse.getContent())
                 .hasSize(winePreviewContents.size())
-                .extracting("wineId", "name", "nameEng", "imageUrl", "sort", "country", "variety", "vivinoRating", "price")
+                .extracting("wineId", "name", "imageUrl", "sort", "country", "variety", "vivinoRating", "price")
                 .containsExactly(
                         winePreviewContents.stream()
-                                .map(content -> tuple(content.getWineId(), content.getName(), content.getNameEng(), content.getImageUrl(),
+                                .map(content -> tuple(content.getWineId(), content.getName(), content.getImageUrl(),
                                         content.getSort(), content.getCountry(), content.getVariety(), content.getVivinoRating(), content.getPrice()))
                                 .toArray(Tuple[]::new)
                 );
@@ -473,4 +491,6 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .extracting("pageNumber", "totalPages")
                 .containsExactly(pageNumber, totalPages);
     }
+
+
 }
