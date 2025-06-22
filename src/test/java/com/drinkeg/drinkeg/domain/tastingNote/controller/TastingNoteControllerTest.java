@@ -607,7 +607,8 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.message").value("OK"))
                 .andExpect(jsonPath("$.result.noteId").value(1L))
                 .andExpect(jsonPath("$.result.wineId").value(1L))
-                .andExpect(jsonPath("$.result.wineName").value("wine 2017"))
+                .andExpect(jsonPath("$.result.wineName").value("wine"))
+                .andExpect(jsonPath("$.result.vintageYear").value(2017))
                 .andExpect(jsonPath("$.result.sort").value("레드"))
                 .andExpect(jsonPath("$.result.country").value("프랑스"))
                 .andExpect(jsonPath("$.result.region").value("보르도"))
@@ -887,17 +888,17 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
     }
 
 
-    TastingNoteRequest createTastingNoteRequest(Long wineId) {
+    private TastingNoteRequest createTastingNoteRequest(Long wineId) {
         return new TastingNoteRequest(wineId, 2017, "red", LocalDate.parse("2025-01-01"), 10, 10, 10, 10, 10, List.of("nose1", "nose2", "nose3"), 5F, "good");
     }
 
-    TastingNoteRequest createTastingNoteRequestDetail(Long wineId, Integer wineVintage, String color, LocalDate tasteDate,
+    private TastingNoteRequest createTastingNoteRequestDetail(Long wineId, Integer wineVintage, String color, LocalDate tasteDate,
                                                 Integer sweetness, Integer acidity, Integer tannin, Integer body, Integer alcohol,
                                                 List<String> noseList, Float rating, String review) {
         return new TastingNoteRequest(wineId, wineVintage, color, tasteDate, sweetness, acidity, tannin, body, alcohol, noseList, rating, review);
     }
 
-    TastingNotePreviewResponse createTastingNotePreviewResponse(Long noteId, String tasteDate, String wineName, String sort, String createdAt) {
+    private TastingNotePreviewResponse createTastingNotePreviewResponse(Long noteId, String tasteDate, String wineName, String sort, String createdAt) {
         return TastingNotePreviewResponse.builder()
                 .noteId(noteId)
                 .tasteDate(LocalDate.parse(tasteDate))
@@ -912,7 +913,8 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
         return TastingNoteResponse.builder()
                 .noteId(1L)
                 .wineId(1L)
-                .wineName("wine 2017")
+                .wineName("wine")
+                .vintageYear(2017)
                 .sort("레드")
                 .country("프랑스")
                 .region("보르도")
@@ -967,5 +969,4 @@ public class TastingNoteControllerTest extends TastingNoteControllerTestSupport 
                 .andExpect(jsonPath("$.result.content[" + index + "].imageUrl").value("https://DEFAULT_IMAGE_URL"))
                 .andExpect(jsonPath("$.result.content[" + index + "].createdAt").value(createdAt));
     }
-
 }
