@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-        ## create application.yaml
+
       - name: make application.yml
         run: |
           ## create application.yml
@@ -26,7 +26,7 @@ jobs:
           # application.yml 파일 생성
           touch ./application.yml
           # GitHub-Actions 에서 설정한 값을 application.yaml 파일에 쓰기
-          echo "${{ secrets.APPLICATION }}" >> ./application.yml
+          echo "${{ secrets.APPLICATION_PROD }}" >> ./application.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
@@ -40,8 +40,8 @@ jobs:
       - name: web docker build and push
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_REPO }}/drinkeg-server .
-          docker push ${{ secrets.DOCKER_REPO }}/drinkeg-server
+          docker build -t ${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_PROD }} .
+          docker push ${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_PROD }}
       ## docker compose up
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.3
@@ -50,7 +50,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            sudo docker-compose down
-            sudo docker pull ${{ secrets.DOCKER_REPO }}/drinkeg-server
-            sudo docker-compose up -d
+            sudo docker-compose -f ${{ secrets.DOCKER_COMPOSE_PROD }} down
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_PROD }}
+            sudo docker-compose -f ${{ secrets.DOCKER_COMPOSE_PROD }} up -p prod -d
             sudo docker image prune -f
