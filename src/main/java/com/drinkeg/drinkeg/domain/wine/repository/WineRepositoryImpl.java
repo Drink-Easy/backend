@@ -25,7 +25,9 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
         return queryFactory.selectFrom(wine)
                 .leftJoin(wineWishlist).on(wineWishlist.wineVintage.wine.eq(wine))
                 .groupBy(wine.id)
-                .orderBy(wineWishlist.count().desc(), wine.vivinoRating.desc())
+                .orderBy(wineWishlist.count().desc(),
+                        wine.vivinoRating.desc(),
+                        wine.id.asc())
                 .limit(10)
                 .fetch();
     }
