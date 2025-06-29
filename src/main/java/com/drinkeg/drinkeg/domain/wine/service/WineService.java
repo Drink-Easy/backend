@@ -1,7 +1,10 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
-import com.drinkeg.drinkeg.domain.wine.dto.response.*;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.dto.response.HomeWineResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WinePreviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineReviewResponse;
+import com.drinkeg.drinkeg.domain.wine.dto.response.WineWithThreeReviewsResponse;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
 import org.springframework.data.domain.Pageable;
 
@@ -13,9 +16,9 @@ public interface WineService {
 
     void updateWineNoteStatics(Long wineId);
 
-    WineWithThreeReviewsResponse getWineInfoWithThreeReviews(Long windId, String username);
+    WineWithThreeReviewsResponse getWineInfoWithThreeReviews(Long windId, Integer vintageYear, String username);
 
-    PageResponse<WineReviewResponse> getWineReviewsAndIsLikedByWineId(Long wineId, SortType orderByLatest, Pageable pageable);
+    PageResponse<WineReviewResponse> getWineReviewsByWineIdAndVintageYear(Long wineId, Integer vintageYear, SortType orderByLatest, Pageable pageable);
 
     List<HomeWineResponse> getRecommendWineList(String username);
 

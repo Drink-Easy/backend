@@ -1,6 +1,6 @@
 package com.drinkeg.drinkeg.domain.wine.event;
 
-import com.drinkeg.drinkeg.domain.tastingNote.event.TastingNoteUpdateEvent;
+import com.drinkeg.drinkeg.domain.tastingNote.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.domain.wine.service.WineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -12,7 +12,7 @@ public class WineEventHandler {
     private final WineService wineService;
 
     @EventListener
-    public void handleTastingNoteUpdateEvent(TastingNoteUpdateEvent event) {
-        wineService.updateWineNoteStatics(event.getWineId());
+    public void handleTastingNoteUpdateEvent(WineNoteUpdateEvent event) {
+        wineService.updateWineNoteStatics(event.wineId());
     }
 }

@@ -2,6 +2,8 @@ package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
+import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import lombok.Builder;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,6 +21,7 @@ public class TastingNoteResponse {
     private Long noteId;
     private Long wineId;
     private String wineName;
+    private Integer vintageYear;
     private String sort;
     private String country;
     private String region;
@@ -37,13 +40,15 @@ public class TastingNoteResponse {
     private LocalDate createdAt;
 
     @Builder
-    public TastingNoteResponse(Long noteId, Long wineId, String wineName, String sort,
-                               String country, String region, String variety, String imageUrl, String color, LocalDate tasteDate,
-                               int sweetness, int acidity, int tannin, int body, int alcohol,
-                               List<TastingNoteNose> noseList, float rating, String review, LocalDate createdAt) {
+    private TastingNoteResponse(Long noteId, Long wineId, String wineName, Integer vintageYear,
+                                String sort, String country, String region, String variety,
+                                String imageUrl, String color, LocalDate tasteDate,
+                                int sweetness, int acidity, int tannin, int body, int alcohol,
+                                List<TastingNoteNose> noseList, float rating, String review, LocalDate createdAt) {
         this.noteId = noteId;
         this.wineId = wineId;
         this.wineName = wineName;
+        this.vintageYear = vintageYear;
         this.sort = sort;
         this.country = country;
         this.region = region;
@@ -64,16 +69,21 @@ public class TastingNoteResponse {
         this.createdAt = createdAt;
     }
 
-    public static TastingNoteResponse of(TastingNote tastingNote) {
+    public static TastingNoteResponse from(TastingNote tastingNote) {
+        WineVintage wineVintage = tastingNote.getWineVintage();
+        Wine wine = wineVintage.getWine();
+        int vintageYear = wineVintage.getVintageYear();
+
         return TastingNoteResponse.builder()
                 .noteId(tastingNote.getId())
-                .wineId(tastingNote.getWine().getId())
-                .wineName(tastingNote.getWine().getName())
-                .sort(tastingNote.getWine().getSort())
-                .country(tastingNote.getWine().getCountry())
-                .region(tastingNote.getWine().getRegion())
-                .variety(tastingNote.getWine().getVariety())
-                .imageUrl(tastingNote.getWine().getImageUrl())
+                .wineId(wine.getId())
+                .wineName(wine.getName())
+                .vintageYear(vintageYear)
+                .sort(wine.getSort())
+                .country(wine.getCountry())
+                .region(wine.getRegion())
+                .variety(wine.getVariety())
+                .imageUrl(wine.getImageUrl())
                 .color(tastingNote.getColor())
                 .tasteDate(tastingNote.getTasteDate())
                 .sweetness(tastingNote.getSweetness())

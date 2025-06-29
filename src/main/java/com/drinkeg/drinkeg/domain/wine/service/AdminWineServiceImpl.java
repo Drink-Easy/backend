@@ -1,11 +1,13 @@
 package com.drinkeg.drinkeg.domain.wine.service;
 
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.request.WineRegisterRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.request.WineUpdateRequest;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
@@ -19,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 
 @Service
@@ -27,6 +31,7 @@ import java.util.List;
 @Transactional
 public class AdminWineServiceImpl implements AdminWineService {
     private final WineRepository wineRepository;
+    private final WineVintageRepository wineVintageRepository;
     private final StorageService storageService;
 
     @Value("${default.wine.url}")
@@ -56,7 +61,7 @@ public class AdminWineServiceImpl implements AdminWineService {
 
     @Override
     public void saveWine(WineRegisterRequest wineRegisterRequest, MultipartFile imageFile) {
-        Wine wine = Wine.of(wineRegisterRequest);
+        Wine wine = Wine.create(wineRegisterRequest);
         String cleanedName = wineRegisterRequest.getName().replaceAll("[ ,.'\\\\]", "").toLowerCase();
         String cleanedNameEng = wineRegisterRequest.getNameEng().replaceAll("[ ,.'\\\\]", "").toLowerCase();
         wine.updateSearchName(cleanedName.concat(cleanedNameEng));
@@ -67,6 +72,12 @@ public class AdminWineServiceImpl implements AdminWineService {
 
         wine.updateImageUrl(imageUrl);
         wineRepository.save(wine);
+
+        List<WineVintage> vintages = new ArrayList<>();
+        vintages.add(WineVintage.create(0, wine));
+        for(int i = 1970; i <= 2024; i++) vintages.add(WineVintage.create(i, wine));
+
+        wineVintageRepository.saveAll(vintages);
     }
 
     @Override

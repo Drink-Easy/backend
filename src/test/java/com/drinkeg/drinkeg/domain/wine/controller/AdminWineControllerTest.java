@@ -2,8 +2,8 @@ package com.drinkeg.drinkeg.domain.wine.controller;
 
 import com.drinkeg.drinkeg.MockMember;
 import com.drinkeg.drinkeg.domain.member.enums.Role;
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineRegisterRequest;
-import com.drinkeg.drinkeg.domain.wine.controller.request.WineUpdateRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.request.WineRegisterRequest;
+import com.drinkeg.drinkeg.domain.wine.dto.request.WineUpdateRequest;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineDetailResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;

@@ -1,7 +1,6 @@
 package com.drinkeg.drinkeg.domain.wine.domain;
 
 import com.drinkeg.drinkeg.IntegrationTestSupport;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

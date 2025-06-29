@@ -1,11 +1,10 @@
 package com.drinkeg.drinkeg.domain.tastingNote.controller;
 
-import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
-import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
@@ -20,8 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -42,7 +39,7 @@ public class TastingNoteController {
     }
 
     @GetMapping("/all")
-    @Operation(summary = "전체 테이스팅 노트 확인", description = "sort(전체, 레드, 화이트, 스파클링, 로제, 기타) 를 RequestParam 으로 조회")
+    @Operation(summary = "전체 테이스팅 노트 조회", description = "sort(전체, 레드, 화이트, 스파클링, 로제, 기타) 를 RequestParam 으로 조회")
     public ApiResponse<AllTastingNoteResponse> showAllTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                                   @RequestParam("sort") String sort,
                                                                   @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
@@ -53,7 +50,7 @@ public class TastingNoteController {
     }
 
     @GetMapping("/{noteId}")
-    @Operation(summary = "선택 테이스팅 노트 열람", description = "선택한 테이스팅 노트의 noteId로 노트 열람")
+    @Operation(summary = "선택 테이스팅 노트 조회", description = "선택한 테이스팅 노트의 noteId로 노트 조회")
 
     public ApiResponse<TastingNoteResponse> showTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                             @PathVariable("noteId") Long noteId) {
@@ -84,10 +81,10 @@ public class TastingNoteController {
 
     @GetMapping
     @Operation(summary = "와인 이름으로 테이스팅 노트 검색", description = "와인 이름으로 테이스팅 노트 검색")
-    public ApiResponse<PageResponse<TastingNotePreviewResponse>> searchTastingNoteByWineName(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                                                                             @RequestParam("searchName") String searchName,
-                                                                                             @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
-
+    public ApiResponse<PageResponse<TastingNotePreviewResponse>> searchTastingNoteByWineName(
+            @AuthenticationPrincipal PrincipalDetail principalDetail,
+            @RequestParam("searchName") String searchName,
+            @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
         PageResponse<TastingNotePreviewResponse> result = tastingNoteService.searchTastingNoteByWineName(searchName, principalDetail.getUsername(), pageable);
         return ApiResponse.onSuccess(result);
     }

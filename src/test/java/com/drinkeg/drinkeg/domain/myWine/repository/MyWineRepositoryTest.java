@@ -40,9 +40,9 @@ class MyWineRepositoryTest extends IntegrationTestSupport {
         Wine wine3 = createWine("wine3");
         wineRepository.saveAll(Arrays.asList(wine1, wine2, wine3));
 
-        MyWine myWine1 = createMyWine(member, wine1, LocalDate.parse("2025-01-01"), 10000);
-        MyWine myWine2 = createMyWine(member, wine2, LocalDate.parse("2025-01-02"), 20000);
-        MyWine myWine3 = createMyWine(member, wine3, LocalDate.parse("2025-01-03"), 30000);
+        MyWine myWine1 = createMyWine(member, wine1,null, LocalDate.parse("2025-01-01"), 10000);
+        MyWine myWine2 = createMyWine(member, wine2,2017, LocalDate.parse("2025-01-02"), 20000);
+        MyWine myWine3 = createMyWine(member, wine3,2017, LocalDate.parse("2025-01-03"), 30000);
         myWineRepository.saveAll(Arrays.asList(myWine1, myWine2, myWine3));
 
 
@@ -88,7 +88,7 @@ class MyWineRepositoryTest extends IntegrationTestSupport {
                 .price(10000).build();
     }
 
-    private MyWine createMyWine(Member member, Wine wine, LocalDate purchaseDate, int purchasePrice) {
-        return MyWine.create(member, wine, purchaseDate, purchasePrice);
+    private MyWine createMyWine(Member member, Wine wine, Integer vintageYear, LocalDate purchaseDate, int purchasePrice) {
+        return MyWine.create(member, wine, vintageYear, purchaseDate, purchasePrice);
     }
 }

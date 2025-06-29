@@ -1,10 +1,8 @@
 package com.drinkeg.drinkeg.domain.wine.dto.response;
 
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

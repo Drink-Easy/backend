@@ -51,7 +51,6 @@ public class JWTFilter extends OncePerRequestFilter {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
 
-                System.out.println("cookie = " + cookie.getName() + "= " + cookie.getValue());
                 if (cookie.getName().equals("accessToken")) {
                     accessToken = cookie.getValue();
                 }
@@ -89,7 +88,6 @@ public class JWTFilter extends OncePerRequestFilter {
                 .role(Role.fromValue(role))
                 .build();
 
-        System.out.println(userDTO);
 
         //UserDetails에 회원 정보 객체 담기
         PrincipalDetail principalDetail = new PrincipalDetail(userDTO);

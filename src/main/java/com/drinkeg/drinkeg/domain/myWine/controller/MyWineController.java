@@ -1,8 +1,8 @@
 package com.drinkeg.drinkeg.domain.myWine.controller;
 
 import com.drinkeg.drinkeg.domain.member.dto.loginDTO.commonDTO.PrincipalDetail;
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 import com.drinkeg.drinkeg.domain.myWine.service.MyWineService;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;

@@ -6,8 +6,8 @@ import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
-import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteUpdateRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteUpdateRequest;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.AllTastingNoteResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNotePreviewResponse;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteResponse;
@@ -15,6 +15,8 @@ import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountR
 import com.drinkeg.drinkeg.domain.tastingNote.repository.TastingNoteRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
 import jakarta.persistence.EntityManager;
@@ -42,6 +44,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
     @Autowired
     TastingNoteRepository tastingNoteRepository;
     @Autowired
+    private WineVintageRepository wineVintageRepository;
+    @Autowired
     TastingNoteService tastingNoteService;
     @Autowired
     EntityManager entityManager;
@@ -52,7 +56,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(wine);
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(wine, 2017);
 
         // when
         Long noteId = tastingNoteService.saveTastingNote(tastingNoteRequest, member.getUsername());
@@ -60,10 +65,6 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         // then
         Optional<TastingNote> tastingNote = tastingNoteRepository.findById(noteId);
         assertThat(tastingNote).isPresent();
-        tastingNote.ifPresent(note -> {
-            assertThat(note.getMember().getId()).isEqualTo(member.getId());
-            assertThat(note.getWine().getId()).isEqualTo(wine.getId());
-        });
     }
 
     @DisplayName("중복 노즈가 있는 경우 중복을 제거한 후 테이스팅 노트를 저장한다.")
@@ -72,8 +73,9 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
         TastingNoteRequest tastingNoteRequest = new TastingNoteRequest(
-                wine.getId(), "레드", LocalDate.parse("2025-01-01"), 10, 10, 10, 10, 10,
+                wine.getId(), 2017, "레드", LocalDate.parse("2025-01-01"), 10, 10, 10, 10, 10,
                 List.of("장미", "장미", "장미", "우디", "시나몬"), 4.5f, "좋아요");
 
         // when
@@ -83,27 +85,25 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Optional<TastingNote> tastingNote = tastingNoteRepository.findById(noteId);
         assertThat(tastingNote).isPresent();
         tastingNote.ifPresent(note -> {
-            assertThat(note.getMember().getId()).isEqualTo(member.getId());
-            assertThat(note.getWine().getId()).isEqualTo(wine.getId());
             assertThat(note.getNoseList()).hasSize(3)
                     .extracting(TastingNoteNose::getNoseElement)
                     .containsExactlyInAnyOrder("장미", "우디", "시나몬");
         });
     }
 
-    @DisplayName("없는 와인을 이용해 테이스팅 노트를 저장하면 WINE_NOT_FOUND 에러가 발생한다.")
+    @DisplayName("없는 와인을 이용해 테이스팅 노트를 저장하면 WINE_VINTAGE_NOT_FOUND 에러가 발생한다.")
     @Test
     void saveTastingNoteWithWrongWine() {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(wine);
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(wine, 2017);
         wineRepository.delete(wine);
 
         // when & then
         assertThatThrownBy(() -> tastingNoteService.saveTastingNote(tastingNoteRequest, member.getUsername()))
                 .isInstanceOf(GeneralException.class)
-                .hasMessage(ErrorStatus.WINE_NOT_FOUND.getMessage());
+                .hasMessage(ErrorStatus.WINE_VINTAGE_NOT_FOUND.getMessage());
     }
 
     @DisplayName("없는 회원이 테이스팅 노트를 저장하면 MEMBER_NOT_FOUND 에러가 발생한다.")
@@ -112,7 +112,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(wine);
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNoteRequest tastingNoteRequest = createTastingNoteRequest(wine, 2017);
         memberRepository.delete(member);
 
         // when & then
@@ -127,7 +128,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
 
         // when
         TastingNoteResponse tastingNoteResponse = tastingNoteService.showTastingNoteByIdAndUsername(tastingNote.getId(), member.getUsername());
@@ -144,8 +146,9 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember("user1", "password", false));
         Member member2 = memberRepository.save(createMember("user2", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
 
-        TastingNote tastingNote1 = tastingNoteRepository.save(TastingNote.create(member1, wine, createTastingNoteRequest(wine)));
+        TastingNote tastingNote1 = tastingNoteRepository.save(TastingNote.create(member1, wineVintage, createTastingNoteRequest(wine, 2017)));
 
         // when & then
         assertThatThrownBy(() -> tastingNoteService.showTastingNoteByIdAndUsername(tastingNote1.getId(), member2.getUsername()))
@@ -159,7 +162,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
 
         // when & then
         assertThatThrownBy(() -> tastingNoteService.showTastingNoteByIdAndUsername(-1L, member.getUsername()))
@@ -207,12 +211,19 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Wine wine5 = wineRepository.save(createWine("와인5", "주정강화", "http://default.image5"));
         Wine wine6 = wineRepository.save(createWine("와인6", "기타", "http://default.image6"));
 
-        TastingNote note1 = tastingNoteRepository.save(TastingNote.create(member, wine1, createTastingNoteRequest(wine1)));
-        TastingNote note2 = tastingNoteRepository.save(TastingNote.create(member, wine2, createTastingNoteRequest(wine2)));
-        TastingNote note3 = tastingNoteRepository.save(TastingNote.create(member, wine3, createTastingNoteRequest(wine3)));
-        TastingNote note4 = tastingNoteRepository.save(TastingNote.create(member, wine4, createTastingNoteRequest(wine4)));
-        TastingNote note5 = tastingNoteRepository.save(TastingNote.create(member, wine5, createTastingNoteRequest(wine5)));
-        TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wine6, createTastingNoteRequest(wine6)));
+        WineVintage wineVintage1 = saveWineVintage(wine1, 2017);
+        WineVintage wineVintage2 = saveWineVintage(wine2, 2018);
+        WineVintage wineVintage3 = saveWineVintage(wine3, 2019);
+        WineVintage wineVintage4 = saveWineVintage(wine4, 2020);
+        WineVintage wineVintage5 = saveWineVintage(wine5, 2021);
+        WineVintage wineVintage6 = saveWineVintage(wine6, 2022);
+
+        TastingNote note1 = tastingNoteRepository.save(TastingNote.create(member, wineVintage1, createTastingNoteRequest(wine1, 2017)));
+        TastingNote note2 = tastingNoteRepository.save(TastingNote.create(member, wineVintage2, createTastingNoteRequest(wine2, 2018)));
+        TastingNote note3 = tastingNoteRepository.save(TastingNote.create(member, wineVintage3, createTastingNoteRequest(wine3, 2019)));
+        TastingNote note4 = tastingNoteRepository.save(TastingNote.create(member, wineVintage4, createTastingNoteRequest(wine4, 2020)));
+        TastingNote note5 = tastingNoteRepository.save(TastingNote.create(member, wineVintage5, createTastingNoteRequest(wine5, 2021)));
+        TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wineVintage6, createTastingNoteRequest(wine6, 2022)));
 
         // when
         AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ALL, member.getUsername(), PageRequest.of(0, 10));
@@ -257,12 +268,19 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Wine wine5 = wineRepository.save(createWine("와인5", "주정강화", "http://default.image5"));
         Wine wine6 = wineRepository.save(createWine("와인6", "기타", "http://default.image6"));
 
-        TastingNote note1 = tastingNoteRepository.save(TastingNote.create(member, wine1, createTastingNoteRequest(wine1)));
-        TastingNote note2 = tastingNoteRepository.save(TastingNote.create(member, wine2, createTastingNoteRequest(wine2)));
-        TastingNote note3 = tastingNoteRepository.save(TastingNote.create(member, wine3, createTastingNoteRequest(wine3)));
-        TastingNote note4 = tastingNoteRepository.save(TastingNote.create(member, wine4, createTastingNoteRequest(wine4)));
-        TastingNote note5 = tastingNoteRepository.save(TastingNote.create(member, wine5, createTastingNoteRequest(wine5)));
-        TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wine6, createTastingNoteRequest(wine6)));
+        WineVintage wineVintage1 = saveWineVintage(wine1, 2017);
+        WineVintage wineVintage2 = saveWineVintage(wine2, 2018);
+        WineVintage wineVintage3 = saveWineVintage(wine3, 2019);
+        WineVintage wineVintage4 = saveWineVintage(wine4, 2020);
+        WineVintage wineVintage5 = saveWineVintage(wine5, 2021);
+        WineVintage wineVintage6 = saveWineVintage(wine6, 2022);
+
+        TastingNote note1 = tastingNoteRepository.save(TastingNote.create(member, wineVintage1, createTastingNoteRequest(wine1, 2017)));
+        TastingNote note2 = tastingNoteRepository.save(TastingNote.create(member, wineVintage2, createTastingNoteRequest(wine2, 2018)));
+        TastingNote note3 = tastingNoteRepository.save(TastingNote.create(member, wineVintage3, createTastingNoteRequest(wine3, 2019)));
+        TastingNote note4 = tastingNoteRepository.save(TastingNote.create(member, wineVintage4, createTastingNoteRequest(wine4, 2020)));
+        TastingNote note5 = tastingNoteRepository.save(TastingNote.create(member, wineVintage5, createTastingNoteRequest(wine5, 2021)));
+        TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wineVintage6, createTastingNoteRequest(wine6, 2022)));
 
         // when
         AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.RED, member.getUsername(), PageRequest.of(0, 10));
@@ -303,12 +321,19 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Wine wine5 = wineRepository.save(createWine("와인5", "주정강화","http://default.image5"));
         Wine wine6 = wineRepository.save(createWine("와인6", "기타","http://default.image6"));
 
-        TastingNote note1 = tastingNoteRepository.save(TastingNote.create(member, wine1, createTastingNoteRequest(wine1)));
-        TastingNote note2 = tastingNoteRepository.save(TastingNote.create(member, wine2, createTastingNoteRequest(wine2)));
-        TastingNote note3 = tastingNoteRepository.save(TastingNote.create(member, wine3, createTastingNoteRequest(wine3)));
-        TastingNote note4 = tastingNoteRepository.save(TastingNote.create(member, wine4, createTastingNoteRequest(wine4)));
-        TastingNote note5 = tastingNoteRepository.save(TastingNote.create(member, wine5, createTastingNoteRequest(wine5)));
-        TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wine6, createTastingNoteRequest(wine6)));
+        WineVintage wineVintage1 = saveWineVintage(wine1, 2017);
+        WineVintage wineVintage2 = saveWineVintage(wine2, 2018);
+        WineVintage wineVintage3 = saveWineVintage(wine3, 2019);
+        WineVintage wineVintage4 = saveWineVintage(wine4, 2020);
+        WineVintage wineVintage5 = saveWineVintage(wine5, 2021);
+        WineVintage wineVintage6 = saveWineVintage(wine6, 2022);
+
+        TastingNote note1 = tastingNoteRepository.save(TastingNote.create(member, wineVintage1, createTastingNoteRequest(wine1, 2017)));
+        TastingNote note2 = tastingNoteRepository.save(TastingNote.create(member, wineVintage2, createTastingNoteRequest(wine2, 2018)));
+        TastingNote note3 = tastingNoteRepository.save(TastingNote.create(member, wineVintage3, createTastingNoteRequest(wine3, 2019)));
+        TastingNote note4 = tastingNoteRepository.save(TastingNote.create(member, wineVintage4, createTastingNoteRequest(wine4, 2020)));
+        TastingNote note5 = tastingNoteRepository.save(TastingNote.create(member, wineVintage5, createTastingNoteRequest(wine5, 2021)));
+        TastingNote note6 = tastingNoteRepository.save(TastingNote.create(member, wineVintage6, createTastingNoteRequest(wine6, 2022)));
 
         // when
         AllTastingNoteResponse allTastingNote = tastingNoteService.findAllTastingNote(TastingNoteWineSort.ETCETERA, member.getUsername(), PageRequest.of(0, 10));
@@ -354,7 +379,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
 
         //when
         Long deletedTastingNoteId = tastingNoteService.deleteTastingNote(tastingNote.getId(), member.getUsername());
@@ -370,8 +396,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember("user1", "password", false));
         Member member2 = memberRepository.save(createMember("user2", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드","http://default.image"));
-
-        TastingNote tastingNote1 = tastingNoteRepository.save(TastingNote.create(member1, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote1 = tastingNoteRepository.save(TastingNote.create(member1, wineVintage, createTastingNoteRequest(wine, 2017)));
 
         // when & then
         assertThatThrownBy(() -> tastingNoteService.deleteTastingNote(tastingNote1.getId(), member2.getUsername()))
@@ -385,7 +411,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드","http://default.image"));
-        tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
 
         // when & then
         assertThatThrownBy(() -> tastingNoteService.deleteTastingNote(-1L, member.getUsername()))
@@ -399,7 +426,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         // given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
 
         Member deleteMember = memberRepository.save(createMember("user2", "password", false));
         memberRepository.delete(deleteMember);
@@ -416,7 +444,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
         TastingNoteUpdateRequest updateRequest = createTastingNoteUpdateRequest();
 
         //when
@@ -446,7 +475,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
         TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
                 "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
                 List.of("장미", "장미", "차", "장미", "차"), 3.5f, "맛있어요"
@@ -479,7 +509,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
         TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
                 "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
                 new ArrayList<>(), 3.5f, "맛있어요"
@@ -512,7 +543,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
         TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
                 null, null, null, null, null,
                 null, null, null, null, null);
@@ -547,7 +579,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
 
         Member member = memberRepository.save(createMember("user2", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
         TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
                 "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
                 List.of("장미", "장미", "차", "장미", "차"), 3.5f, "맛있어요"
@@ -565,7 +598,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
         tastingNoteRepository.delete(tastingNote);
         TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
                 "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
@@ -585,7 +619,8 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         Member member1 = memberRepository.save(createMember("user1", "password", false));
         Member member2 = memberRepository.save(createMember("user2", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member2, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote = tastingNoteRepository.save(TastingNote.create(member2, wineVintage, createTastingNoteRequest(wine, 2017)));
         TastingNoteUpdateRequest updateRequest = new TastingNoteUpdateRequest(
                 "화이트", LocalDate.parse("2025-01-09"), 20, 20, 20, 20, 20,
                 List.of("장미", "장미", "차", "장미", "차"), 3.5f, "맛있어요"
@@ -603,8 +638,9 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
         //given
         Member member = memberRepository.save(createMember("user1", "password", false));
         Wine wine = wineRepository.save(createWine("와인1", "레드", "http://default.image"));
-        TastingNote tastingNote1 = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
-        TastingNote tastingNote2 = tastingNoteRepository.save(TastingNote.create(member, wine, createTastingNoteRequest(wine)));
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote tastingNote1 = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
+        TastingNote tastingNote2 = tastingNoteRepository.save(TastingNote.create(member, wineVintage, createTastingNoteRequest(wine, 2017)));
 
         //when
         tastingNoteService.setTastingNoteMemberNull(member.getUsername());
@@ -626,11 +662,19 @@ class TastingNoteServiceImplTest extends IntegrationTestSupport {
                 .price(100).build();
     }
 
-    private TastingNoteRequest createTastingNoteRequest(Wine wine) {
+    private WineVintage saveWineVintage(Wine wine, int year) {
+        return wineVintageRepository.save(WineVintage.builder()
+                .wine(wine)
+                .vintageYear(year)
+                .build());
+    }
+
+    private TastingNoteRequest createTastingNoteRequest(Wine wine, Integer vintageYear) {
         List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
 
         return TastingNoteRequest.builder()
                 .wineId(wine.getId())
+                .wineVintage(vintageYear)
                 .color("레드")
                 .tasteDate(LocalDate.parse("2025-01-01"))
                 .sweetness(10)

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.wine.repository.dto;
+package com.drinkeg.drinkeg.domain.wine.dto;
 
 import lombok.Builder;
 import lombok.Getter;

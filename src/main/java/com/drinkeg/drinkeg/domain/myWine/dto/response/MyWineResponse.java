@@ -15,6 +15,7 @@ public class MyWineResponse {
     private Long myWineId;
     private Long wineId;
     private String wineName;
+    private Integer vintageYear;
     private String wineSort;
     private String wineCountry;
     private String wineRegion;
@@ -36,6 +37,7 @@ public class MyWineResponse {
                 .myWineId(myWine.getId())
                 .wineId(wine.getId())
                 .wineName(wine.getName())
+                .vintageYear(myWine.getVintageYear())
                 .wineSort(wine.getSort())
                 .wineCountry(wine.getCountry())
                 .wineRegion(wine.getRegion())

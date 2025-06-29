@@ -2,8 +2,8 @@ package com.drinkeg.drinkeg.domain.tastingNote.domain;
 
 import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
-import com.drinkeg.drinkeg.domain.tastingNote.controller.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.wine.domain.Wine;
+import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -24,8 +24,8 @@ public class TastingNote extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "wine_id", nullable = false)
-    private Wine wine;
+    @JoinColumn(name = "wine_vintage_id", nullable = false)
+    private WineVintage wineVintage;
 
     private String color;
 
@@ -46,11 +46,11 @@ public class TastingNote extends BaseEntity {
     private String review;
 
     @Builder
-    public TastingNote(Member member, Wine wine, String color, LocalDate tasteDate,
-                       int sweetness, int acidity, int tannin, int body, int alcohol,
-                       List<TastingNoteNose> noseList, float rating, String review) {
+    private TastingNote(Member member, WineVintage wineVintage, String color, LocalDate tasteDate,
+                        int sweetness, int acidity, int tannin, int body, int alcohol,
+                        List<TastingNoteNose> noseList, float rating, String review) {
         this.member = member;
-        this.wine = wine;
+        this.wineVintage = wineVintage;
         this.color = color;
         this.tasteDate = tasteDate;
         this.sweetness = sweetness;
@@ -64,10 +64,10 @@ public class TastingNote extends BaseEntity {
     }
 
     // TastingNote 생성 매서드
-    public static TastingNote create(Member member, Wine wine, TastingNoteRequest tastingNoteRequest) {
+    public static TastingNote create(Member member, WineVintage wineVintage, TastingNoteRequest tastingNoteRequest) {
         TastingNote tastingNote = TastingNote.builder()
                 .member(member)
-                .wine(wine)
+                .wineVintage(wineVintage)
                 .color(tastingNoteRequest.getColor())
                 .tasteDate(tastingNoteRequest.getTasteDate())
                 .sweetness(tastingNoteRequest.getSweetness())

@@ -1,7 +1,7 @@
 package com.drinkeg.drinkeg.domain.myWine.service;
 
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineRequest;
-import com.drinkeg.drinkeg.domain.myWine.controller.request.MyWineUpdateRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineRequest;
+import com.drinkeg.drinkeg.domain.myWine.dto.request.MyWineUpdateRequest;
 import com.drinkeg.drinkeg.domain.myWine.dto.response.MyWineResponse;
 
 import java.time.LocalDate;

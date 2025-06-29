@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.wine.dto.response;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.querydsl.core.annotations.QueryProjection;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,8 +22,8 @@ public class WineWithThreeReviewsResponse {
         this.recentReviews = recentReviews;
     }
 
-    public static WineWithThreeReviewsResponse of(Wine wine, List<TastingNote> recentTastingNotes, boolean isLiked) {
-        WineInfoResponse wineInfoResponse = WineInfoResponse.of(wine, isLiked);
+    public static WineWithThreeReviewsResponse of(WineVintage wineVintage, List<TastingNote> recentTastingNotes, boolean isLiked) {
+        WineInfoResponse wineInfoResponse = WineInfoResponse.of(wineVintage, isLiked);
 
         List<WineReviewResponse> wineReviewResponses = recentTastingNotes.stream()
                 .map(WineReviewResponse::of)

@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.tastingNote.controller.request;
+package com.drinkeg.drinkeg.domain.tastingNote.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Builder;

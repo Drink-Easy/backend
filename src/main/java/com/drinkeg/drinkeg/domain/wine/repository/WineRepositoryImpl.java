@@ -3,7 +3,6 @@ package com.drinkeg.drinkeg.domain.wine.repository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +23,11 @@ public class WineRepositoryImpl implements WineRepositoryCustom {
     @Override
     public List<Wine> findMostLikedWines() {
         return queryFactory.selectFrom(wine)
-                .leftJoin(wineWishlist).on(wineWishlist.wine.eq(wine))
+                .leftJoin(wineWishlist).on(wineWishlist.wineVintage.wine.eq(wine))
                 .groupBy(wine.id)
-                .orderBy(wineWishlist.count().desc(), wine.vivinoRating.desc())
+                .orderBy(wineWishlist.count().desc(),
+                        wine.vivinoRating.desc(),
+                        wine.id.asc())
                 .limit(10)
                 .fetch();
     }

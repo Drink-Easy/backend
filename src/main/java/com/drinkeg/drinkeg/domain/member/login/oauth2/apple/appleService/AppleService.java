@@ -65,7 +65,6 @@ public class AppleService {
 
             member = Member.createOAuthMember(username, (String) claims.get("email"),"Apple");
             memberRepository.save(member);
-            System.out.println("첫 로그인임");
             tokenService.jwtProvider(member, response);
 
         }
@@ -73,7 +72,6 @@ public class AppleService {
 
             member = existData.get();
             member.updateEmail(claims.get("email", String.class));
-            System.out.println("첫 로그인아님");
             memberRepository.save(member);
             tokenService.jwtProvider(member, response);
 
@@ -87,7 +85,6 @@ public class AppleService {
 
         try {
             String clientSecret = appleClientSecretGenerator.generateClientSecret();
-            System.out.println(clientSecret);
             String refreshToken = appleProvider.getAppleRefreshToken(code, clientSecret);
             appleProvider.requestRevoke(refreshToken, clientSecret);
         } catch (Exception e) {

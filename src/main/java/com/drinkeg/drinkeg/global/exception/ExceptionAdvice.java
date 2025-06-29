@@ -3,6 +3,8 @@ package com.drinkeg.drinkeg.global.exception;
 import com.drinkeg.drinkeg.global.apipayLoad.ApiResponse;
 import com.drinkeg.drinkeg.global.apipayLoad.code.ReasonDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,24 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorReason);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
+        String errorMessage = e.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .findFirst()
+                .orElse("잘못된 요청입니다.");
+
+        ReasonDTO errorReason = ReasonDTO.builder()
+                .isSuccess(false)
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(errorMessage)
+                .code("CONSTRAINT_VIOLATION")
+                .build();
+
+        return handleExceptionInternal(e, errorReason, null, request);
     }
 
     @ExceptionHandler(InvalidContentTypeException.class)

@@ -10,8 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TastingNoteRepository extends JpaRepository<TastingNote, Long>, TastingNoteRepositoryCustom {
 
-    @Query("SELECT t FROM TastingNote t WHERE t.wine.id = :wineId ORDER BY t.updatedAt DESC LIMIT 3")
-    List<TastingNote> findRecentThreeTastingNoteBy(Long wineId);
+    @Query("SELECT t FROM TastingNote t " +
+            "WHERE t.wineVintage.wine.id = :wineId " +
+            "AND t.wineVintage.vintageYear = :vintageYear " +
+            "ORDER BY t.updatedAt DESC LIMIT 3")
+    List<TastingNote> findRecentThreeTastingNoteByWineId(Long wineId, Integer vintageYear);
+
+    @Query("SELECT t FROM TastingNote t WHERE t.wineVintage.wine.id = :wineId ORDER BY t.updatedAt DESC LIMIT 3")
+    List<TastingNote> findRecentThreeTastingNoteByWineId(Long wineId);
 
     @Modifying
     @Query("UPDATE TastingNote t SET t.member = null WHERE t.member.username = :username")

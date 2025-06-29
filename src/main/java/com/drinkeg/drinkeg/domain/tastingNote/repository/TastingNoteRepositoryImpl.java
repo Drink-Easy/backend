@@ -2,8 +2,8 @@ package com.drinkeg.drinkeg.domain.tastingNote.repository;
 
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.QTastingNoteSortCountResponse;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.SortType;
-import com.drinkeg.drinkeg.domain.wine.repository.dto.WineNoteStatisticsAvgDto;
+import com.drinkeg.drinkeg.domain.wine.dto.SortType;
+import com.drinkeg.drinkeg.domain.wine.dto.WineNoteStatisticsAvgDto;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -25,6 +25,7 @@ import java.util.List;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNoteNose.tastingNoteNose;
 import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
+import static com.drinkeg.drinkeg.domain.wine.wineVintage.domain.QWineVintage.wineVintage;
 
 @Repository
 @RequiredArgsConstructor
@@ -34,9 +35,30 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<TastingNote> findAllTastingNoteBy(Long wineId, SortType sort, Pageable pageable) {
+    public TastingNote findTastingNoteWithWineById(Long tastingNoteId) {
+        return queryFactory
+                .selectFrom(tastingNote)
+                .leftJoin(tastingNote.wineVintage, wineVintage).fetchJoin()
+                .leftJoin(wineVintage.wine, wine).fetchJoin()
+                .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
+                .where(tastingNote.id.eq(tastingNoteId))
+                .fetchOne();
+    }
+
+    @Override
+    public List<TastingNote> findAllTastingNoteByWineId(Long wineId, SortType sort, Pageable pageable) {
         return queryFactory.selectFrom(tastingNote)
-                .where(tastingNote.wine.id.eq(wineId))
+                .where(tastingNote.wineVintage.wine.id.eq(wineId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(orderCondition(sort), tastingNote.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<TastingNote> findAllTastingNoteByWineVintageId(Long wineId, SortType sort, Pageable pageable) {
+        return queryFactory.selectFrom(tastingNote)
+                .where(tastingNote.wineVintage.id.eq(wineId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(orderCondition(sort), tastingNote.id.desc())
@@ -48,12 +70,21 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
         return queryFactory
                 .select(tastingNote.count())
                 .from(tastingNote)
-                .where(tastingNote.wine.id.eq(wineId))
+                .where(tastingNote.wineVintage.wine.id.eq(wineId))
                 .fetchOne();
     }
 
     @Override
-    public WineNoteStatisticsAvgDto findWineNoteStatisticsByWineId(Long wineId) {
+    public long countTastingNoteByWineVintageId(Long wineVintageId) {
+        return queryFactory
+                .select(tastingNote.count())
+                .from(tastingNote)
+                .where(tastingNote.wineVintage.id.eq(wineVintageId))
+                .fetchOne();
+    }
+
+    @Override
+    public WineNoteStatisticsAvgDto findWineStatisticsByWineId(Long wineId) {
         return queryFactory
                 .select(Projections.fields(WineNoteStatisticsAvgDto.class,
                         tastingNote.sweetness.avg().coalesce(0.0).floatValue().as("avgSweetness"),
@@ -64,8 +95,25 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
                         tastingNote.rating.avg().coalesce(0.0).floatValue().as("avgMemberRating")
                 ))
                 .from(tastingNote)
-                .where(tastingNote.wine.id.eq(wineId))
+                .where(tastingNote.wineVintage.wine.id.eq(wineId))
                 .fetchOne();
+    }
+
+    @Override
+    public WineNoteStatisticsAvgDto findWineVintageStatisticsByWineVintageId(Long wineVintageId){
+        return queryFactory
+                .select(Projections.fields(WineNoteStatisticsAvgDto.class,
+                        tastingNote.sweetness.avg().coalesce(0.0).floatValue().as("avgSweetness"),
+                        tastingNote.acidity.avg().coalesce(0.0).floatValue().as("avgAcidity"),
+                        tastingNote.tannin.avg().coalesce(0.0).floatValue().as("avgTannin"),
+                        tastingNote.body.avg().coalesce(0.0).floatValue().as("avgBody"),
+                        tastingNote.alcohol.avg().coalesce(0.0).floatValue().as("avgAlcohol"),
+                        tastingNote.rating.avg().coalesce(0.0).floatValue().as("avgMemberRating")
+                ))
+                .from(tastingNote)
+                .where(tastingNote.wineVintage.id.eq(wineVintageId))
+                .fetchOne();
+
     }
 
     @Override
@@ -73,7 +121,25 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
         return queryFactory
                 .select(tastingNoteNose.noseElement)
                 .from(tastingNoteNose)
-                .where(tastingNoteNose.tastingNote.wine.id.eq(wineId))
+                .join(tastingNoteNose.tastingNote, tastingNote)
+                .join(tastingNote.wineVintage, wineVintage)
+                .join(wineVintage.wine, wine)
+                .where(wine.id.eq(wineId))
+                .groupBy(tastingNoteNose.noseElement)
+                .orderBy(
+                        tastingNoteNose.noseElement.count().desc(),
+                        tastingNoteNose.noseElement.asc()
+                )
+                .limit(3)
+                .fetch();
+    }
+
+    @Override
+    public List<String> findTopThreeNoseByWineVintageId(Long wineVintageId) {
+        return queryFactory
+                .select(tastingNoteNose.noseElement)
+                .from(tastingNoteNose)
+                .where(tastingNoteNose.tastingNote.wineVintage.id.eq(wineVintageId))
                 .groupBy(tastingNoteNose.noseElement)
                 .orderBy(tastingNoteNose.noseElement.count().desc())
                 .orderBy(tastingNoteNose.noseElement.asc())
@@ -85,7 +151,8 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     public List<TastingNote> findTastingNoteBySortAndUsername(TastingNoteWineSort wineSort, String username, Pageable pageable) {
         return queryFactory
                 .selectFrom(tastingNote)
-                .leftJoin(tastingNote.wine, wine).fetchJoin()
+                .leftJoin(tastingNote.wineVintage, wineVintage).fetchJoin()
+                .leftJoin(wineVintage.wine, wine).fetchJoin()
                 .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
                 .where(
                         tastingNote.member.username.eq(username),
@@ -102,7 +169,7 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
         return queryFactory
                 .select(tastingNote.count())
                 .from(tastingNote)
-                .leftJoin(tastingNote.wine, wine)
+                .leftJoin(tastingNote.wineVintage.wine, wine)
                 .where(
                         tastingNote.member.username.eq(username),
                         wineSortIn(wineSort)
@@ -133,11 +200,12 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
     public List<TastingNote> searchTastingNoteByWineName(String searchName, String username, Pageable pageable) {
         return queryFactory
                 .selectFrom(tastingNote)
-                .leftJoin(tastingNote.wine, wine).fetchJoin()
+                .leftJoin(tastingNote.wineVintage, wineVintage).fetchJoin()
+                .leftJoin(tastingNote.wineVintage.wine, wine).fetchJoin()
                 .leftJoin(tastingNote.noseList, tastingNoteNose).fetchJoin()
                 .where(
                         tastingNote.member.username.eq(username),
-                        tastingNote.wine.searchName.contains(searchName)
+                        tastingNote.wineVintage.wine.searchName.contains(searchName)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -150,10 +218,10 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
         return queryFactory
                 .select(tastingNote.count())
                 .from(tastingNote)
-                .leftJoin(tastingNote.wine, wine)
+                .leftJoin(tastingNote.wineVintage.wine, wine)
                 .where(
                         tastingNote.member.username.eq(username),
-                        tastingNote.wine.searchName.contains(searchName)
+                        tastingNote.wineVintage.wine.searchName.contains(searchName)
                 )
                 .fetchOne();
     }
@@ -176,8 +244,8 @@ public class TastingNoteRepositoryImpl implements TastingNoteRepositoryCustom{
 
     private NumberExpression<Integer> getWineCount(String wineSort) {
         Predicate condition = wineSort
-                .equals("기타") ? tastingNote.wine.sort.in("주정강화", "기타")
-                : tastingNote.wine.sort.eq(wineSort);
+                .equals("기타") ? tastingNote.wineVintage.wine.sort.in("주정강화", "기타")
+                : tastingNote.wineVintage.wine.sort.eq(wineSort);
 
         return new CaseBuilder()
                 .when(condition).then(1).otherwise(0)
