@@ -52,5 +52,5 @@ jobs:
           script: |
             sudo docker-compose -f ${{ secrets.DOCKER_COMPOSE_DEV }} -p dev down
             sudo docker pull ${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_DEV }}
-            sudo docker-compose -f ${{ secrets.DOCKER_COMPOSE_DEV }} up -p dev -d
+            sudo docker-compose -f ${{ secrets.DOCKER_COMPOSE_DEV }} -p dev up -d
             sudo docker image prune -f
