@@ -9,12 +9,12 @@ import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -26,13 +26,15 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
     private MemberRepository memberRepository;
     @Autowired
     private WineRepository wineRepository;
+    @Autowired
+    private WineVintageRepository wineVintageRepository;
 
     @Autowired
     private EntityManager entityManager;
 
-    @DisplayName("와인 아이디를 받아서 최근 3개의 테이스팅 노트를 조회한다.")
+    @DisplayName("와인 아이디와 빈티지 년도를 받아서 최근 3개의 테이스팅 노트를 조회한다.")
     @Test
-    void findRecentThreeTastingNoteByWineId() {
+    void findRecentThreeTastingNoteByWineIdAndVintageYearWineId() {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("맛있는 와인"));
@@ -46,9 +48,8 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
         tastingNoteRepository.save(note3);
         tastingNoteRepository.save(note4);
 
-
         // when
-        List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteBy(wine.getId());
+        List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteByWineId(wine.getId(), wineVintage.getVintageYear());
 
         // then
         assertThat(recentNotes)
@@ -59,7 +60,7 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("와인 아이디를 받아서 최근 3개의 테이스팅 노트를 리뷰가 null인 리뷰를 포함하여 조회한다.")
     @Test
-    void findRecentThreeTastingNoteByWineIdWithNullReview() {
+    void findRecentThreeTastingNoteByWineIdAndVintageYearWineIdWithNullReview() {
         // given
         Member member = memberRepository.save(createMember("user"));
         Wine wine = wineRepository.save(createWine("맛있는 와인"));
@@ -73,9 +74,8 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
         tastingNoteRepository.save(note3);
         tastingNoteRepository.save(note4);
 
-
         // when
-        List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteBy(wine.getId());
+        List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteByWineId(wine.getId());
 
         // then
         assertThat(recentNotes)
@@ -95,7 +95,7 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
         tastingNoteRepository.save(note1);
 
         // when
-        List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteBy(wine.getId());
+        List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteByWineId(wine.getId());
 
         // then
         assertThat(recentNotes)
@@ -169,10 +169,14 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private WineVintage createWineVintage(Wine wine, int vintageYear) {
-        return WineVintage.builder()
-                .wine(wine)
-                .vintageYear(vintageYear)
-                .build();
+    private WineVintage createWineVintage(Wine wine, int year) {
+        WineVintage wineVintage=
+                WineVintage.builder()
+                        .wine(wine)
+                        .vintageYear(year)
+                        .build();
+
+        wineVintageRepository.save(wineVintage);
+        return wineVintage;
     }
 }

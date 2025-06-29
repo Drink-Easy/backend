@@ -13,6 +13,7 @@ import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
 import com.drinkeg.drinkeg.domain.wine.dto.WineNoteStatisticsAvgDto;
 import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
     WineRepository wineRepository;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    private WineVintageRepository wineVintageRepository;
 
     @DisplayName("와인 아이디를 통해서 테이스팅 노트에 저장된 수치들의 평균치를 조회한다.")
     @Test
@@ -148,7 +151,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.LATEST, pageable);
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteByWineId(wine.getId(), SortType.LATEST, pageable);
 
         // then
         assertThat(tastingNotes).hasSize(3)
@@ -176,7 +179,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.OLDEST, pageable);
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteByWineId(wine.getId(), SortType.OLDEST, pageable);
 
         // then
         assertThat(tastingNotes).hasSize(3)
@@ -204,7 +207,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.HIGH_RATING, pageable);
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteByWineId(wine.getId(), SortType.HIGH_RATING, pageable);
 
         // then
         assertThat(tastingNotes).hasSize(3)
@@ -232,7 +235,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.LOW_RATING, pageable);
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteByWineId(wine.getId(), SortType.LOW_RATING, pageable);
 
         // then
         assertThat(tastingNotes).hasSize(3)
@@ -365,7 +368,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(tastingNotes).hasSize(6)
-                .extracting("wine.sort")
+                .extracting("wineVintage.wine.sort")
                 .containsExactly("기타", "주정강화", "로제", "스파클링", "화이트", "레드");
     }
 
@@ -428,7 +431,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(tastingNotes).hasSize(1)
-                .extracting("wine.sort")
+                .extracting("wineVintage.wine.sort")
                 .containsExactly("레드");
     }
     @DisplayName("회원이 보유한 테이스트를 와인 종류별로 조회한다.")
@@ -464,7 +467,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(tastingNotes).hasSize(2)
-                .extracting("wine.sort")
+                .extracting("wineVintage.wine.sort")
                 .containsExactly("기타", "주정강화");
     }
 
@@ -484,7 +487,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         Pageable pageable = PageRequest.of(0, 2);
         // when
-        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteBy(wine.getId(), SortType.HIGH_RATING, pageable);
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteByWineId(wine.getId(), SortType.HIGH_RATING, pageable);
 
         // then
         assertThat(tastingNotes).hasSize(2)
@@ -519,7 +522,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(tastingNotes).hasSize(3)
-                .extracting("wine.name")
+                .extracting("wineVintage.wine.name")
                 .containsExactly("와인3", "와인2", "와인1");
     }
 
@@ -623,10 +626,14 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private WineVintage createWineVintage(Wine wine, int vintageYear) {
-        return WineVintage.builder()
-                .wine(wine)
-                .vintageYear(vintageYear)
-                .build();
+    private WineVintage createWineVintage(Wine wine, int year) {
+        WineVintage wineVintage=
+                WineVintage.builder()
+                        .wine(wine)
+                        .vintageYear(year)
+                        .build();
+
+        wineVintageRepository.save(wineVintage);
+        return wineVintage;
     }
 }
