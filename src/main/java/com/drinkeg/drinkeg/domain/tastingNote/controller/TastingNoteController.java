@@ -39,7 +39,7 @@ public class TastingNoteController {
     }
 
     @GetMapping("/all")
-    @Operation(summary = "전체 테이스팅 노트 확인", description = "sort(전체, 레드, 화이트, 스파클링, 로제, 기타) 를 RequestParam 으로 조회")
+    @Operation(summary = "전체 테이스팅 노트 조회", description = "sort(전체, 레드, 화이트, 스파클링, 로제, 기타) 를 RequestParam 으로 조회")
     public ApiResponse<AllTastingNoteResponse> showAllTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                                   @RequestParam("sort") String sort,
                                                                   @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
@@ -50,7 +50,7 @@ public class TastingNoteController {
     }
 
     @GetMapping("/{noteId}")
-    @Operation(summary = "선택 테이스팅 노트 열람", description = "선택한 테이스팅 노트의 noteId로 노트 열람")
+    @Operation(summary = "선택 테이스팅 노트 조회", description = "선택한 테이스팅 노트의 noteId로 노트 조회")
 
     public ApiResponse<TastingNoteResponse> showTastingNote(@AuthenticationPrincipal PrincipalDetail principalDetail,
                                                             @PathVariable("noteId") Long noteId) {

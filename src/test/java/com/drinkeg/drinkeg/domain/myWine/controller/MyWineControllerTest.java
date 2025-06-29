@@ -310,7 +310,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void updateMyWine() throws Exception {
         // given
-        MyWineUpdateRequest myWineUpdateRequest = createMyWineUpdateRequest(LocalDate.parse("2025-01-01"), 100000);
+        MyWineUpdateRequest myWineUpdateRequest = createMyWineUpdateRequest(2020, LocalDate.parse("2025-01-01"), 100000);
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.patch("/my-wine/{id}", 1L)
@@ -332,7 +332,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void updateMyWineWithWrongMyWine() throws Exception {
         // given
-        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(LocalDate.parse("2025-01-01"), 100000);
+        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(2020, LocalDate.parse("2025-01-01"), 100000);
         doThrow(new GeneralException(ErrorStatus.MY_WINE_NOT_FOUND))
                 .when(myWineService).updateMyWine(eq(1L), refEq(myWineUpdate), eq("user"));
 
@@ -353,7 +353,7 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
     @MockMember
     void updateMyWineWithUnauthorized() throws Exception {
         // given
-        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(LocalDate.parse("2025-01-01"), 100000);
+        MyWineUpdateRequest myWineUpdate = createMyWineUpdateRequest(2020, LocalDate.parse("2025-01-01"), 100000);
         doThrow(new GeneralException(ErrorStatus.MY_WINE_UNAUTHORIZED))
                 .when(myWineService).updateMyWine(eq(1L), refEq(myWineUpdate), eq("user"));
 
@@ -465,8 +465,9 @@ class MyWineControllerTest extends MyWineControllerTestSupport {
                 .build();
     }
 
-    private MyWineUpdateRequest createMyWineUpdateRequest(LocalDate purchaseDate, Integer purchasePrice) {
+    private MyWineUpdateRequest createMyWineUpdateRequest(Integer vintageYear, LocalDate purchaseDate, Integer purchasePrice) {
         return MyWineUpdateRequest.builder()
+                .vintageYear(vintageYear)
                 .purchaseDate(purchaseDate)
                 .purchasePrice(purchasePrice)
                 .build();
