@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.tastingNote.event;
+package com.drinkeg.drinkeg.domain.wineVintage.event;
 
 public record WineVintageNoteEvent(Long wineVintageId) {
 }

@@ -1,7 +1,6 @@
-package com.drinkeg.drinkeg.domain.wine.wineVintage.event;
+package com.drinkeg.drinkeg.domain.wineVintage.event;
 
-import com.drinkeg.drinkeg.domain.tastingNote.event.WineVintageNoteEvent;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.service.WineVintageService;
+import com.drinkeg.drinkeg.domain.wineVintage.service.WineVintageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

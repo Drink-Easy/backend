@@ -8,8 +8,8 @@ import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
+import com.drinkeg.drinkeg.domain.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wineVintage.repository.WineVintageRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,17 +36,13 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
     @Test
     void findRecentThreeTastingNoteByWineIdAndVintageYearWineId() {
         // given
-        Member member = memberRepository.save(createMember("user"));
-        Wine wine = wineRepository.save(createWine("맛있는 와인"));
-        WineVintage wineVintage = createWineVintage(wine, 2017);
-        TastingNote note1 = createTastingNote(wineVintage, member, "가성비 좋아요");
-        TastingNote note2 = createTastingNote(wineVintage, member, "나쁘지 않아요");
-        TastingNote note3 = createTastingNote(wineVintage, member, "맛있어요!");
-        TastingNote note4 = createTastingNote(wineVintage, member, "좋아요!");
-        tastingNoteRepository.save(note1);
-        tastingNoteRepository.save(note2);
-        tastingNoteRepository.save(note3);
-        tastingNoteRepository.save(note4);
+        Member member = saveMember("user");
+        Wine wine = createWine("맛있는 와인");
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        saveTastingNote(wineVintage, member, "가성비 좋아요");
+        saveTastingNote(wineVintage, member, "나쁘지 않아요");
+        saveTastingNote(wineVintage, member, "맛있어요!");
+        saveTastingNote(wineVintage, member, "좋아요!");
 
         // when
         List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteByWineId(wine.getId(), wineVintage.getVintageYear());
@@ -58,21 +54,32 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
                 .containsExactly("좋아요!", "맛있어요!", "나쁘지 않아요");
     }
 
+    @DisplayName("테이스팅 노트가 없는 경우 빈 리스트를 반환한다.")
+    @Test
+    void findRecentThreeTastingNoteByWineIdAndVintageYearWineIdWithNoNotes() {
+        // given
+        saveMember("user");
+        Wine wine = createWine("맛있는 와인");
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+
+        // when
+        List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteByWineId(wine.getId(), wineVintage.getVintageYear());
+
+        // then
+        assertThat(recentNotes).isEmpty();
+    }
+
     @DisplayName("와인 아이디를 받아서 최근 3개의 테이스팅 노트를 리뷰가 null인 리뷰를 포함하여 조회한다.")
     @Test
     void findRecentThreeTastingNoteByWineIdAndVintageYearWineIdWithNullReview() {
         // given
-        Member member = memberRepository.save(createMember("user"));
-        Wine wine = wineRepository.save(createWine("맛있는 와인"));
-        WineVintage wineVintage = createWineVintage(wine, 2017);
-        TastingNote note1 = createTastingNote(wineVintage, member, "가성비 좋아요");
-        TastingNote note2 = createTastingNote(wineVintage, member, null);
-        TastingNote note3 = createTastingNote(wineVintage, member, "맛있어요!");
-        TastingNote note4 = createTastingNote(wineVintage, member, "좋아요!");
-        tastingNoteRepository.save(note1);
-        tastingNoteRepository.save(note2);
-        tastingNoteRepository.save(note3);
-        tastingNoteRepository.save(note4);
+        Member member = saveMember("user");
+        Wine wine = createWine("맛있는 와인");
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        saveTastingNote(wineVintage, member, "가성비 좋아요");
+        saveTastingNote(wineVintage, member, null);
+        saveTastingNote(wineVintage, member, "맛있어요!");
+        saveTastingNote(wineVintage, member, "좋아요!");
 
         // when
         List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteByWineId(wine.getId());
@@ -88,10 +95,10 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
     @Test
     void findRecentOneTastingNoteByWineId() {
         // given
-        Member member = memberRepository.save(createMember("user"));
-        Wine wine = wineRepository.save(createWine("맛있는 와인"));
-        WineVintage wineVintage = createWineVintage(wine, 2017);
-        TastingNote note1 = createTastingNote(wineVintage, member, "가성비 좋아요");
+        Member member = saveMember("user");
+        Wine wine = createWine("맛있는 와인");
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        TastingNote note1 = saveTastingNote(wineVintage, member, "가성비 좋아요");
         tastingNoteRepository.save(note1);
 
         // when
@@ -108,17 +115,13 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
     @Test
     void updateTastingNoteMemberNull(){
         // given
-        Member member = memberRepository.save(createMember("user"));
-        Wine wine = wineRepository.save(createWine("맛있는 와인"));
-        WineVintage wineVintage = createWineVintage(wine, 2017);
-        TastingNote note1 = createTastingNote(wineVintage, member, "가성비 좋아요");
-        TastingNote note2 = createTastingNote(wineVintage, member, "나쁘지 않아요");
-        TastingNote note3 = createTastingNote(wineVintage, member, "맛있어요!");
-        TastingNote note4 = createTastingNote(wineVintage, member, "좋아요!");
-        tastingNoteRepository.save(note1);
-        tastingNoteRepository.save(note2);
-        tastingNoteRepository.save(note3);
-        tastingNoteRepository.save(note4);
+        Member member = saveMember("user");
+        Wine wine = createWine("맛있는 와인");
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
+        saveTastingNote(wineVintage, member, "가성비 좋아요");
+        saveTastingNote(wineVintage, member, "나쁘지 않아요");
+        saveTastingNote(wineVintage, member, "맛있어요!");
+        saveTastingNote(wineVintage, member, "좋아요!");
 
         // when
         tastingNoteRepository.updateTastingNoteMemberNull(member.getUsername());
@@ -134,8 +137,8 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
 
 
 
-    private TastingNote createTastingNote(WineVintage wineVintage, Member member, String review) {
-        return TastingNote.builder()
+    private TastingNote saveTastingNote(WineVintage wineVintage, Member member, String review) {
+        return tastingNoteRepository.save(TastingNote.builder()
                 .wineVintage(wineVintage)
                 .member(member)
                 .review(review)
@@ -146,11 +149,11 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
                 .body(40)
                 .alcohol(13)
                 .rating(4.5f)
-                .build();
+                .build());
     }
 
     private Wine createWine(String name) {
-        return Wine.builder()
+        return wineRepository.save(Wine.builder()
                 .name(name)
                 .imageUrl("http://default.image")
                 .sort("레드")
@@ -158,25 +161,21 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
                 .variety("샤도네이")
                 .vivinoRating(4.1f)
                 .wineNoteStatistics(WineNoteStatistics.builder().build())
-                .price(100).build();
+                .price(100).build());
     }
 
-    private Member createMember(String username) {
-        return Member.builder()
+    private Member saveMember(String username) {
+        return memberRepository.save(Member.builder()
                 .username(username)
                 .role(Role.ROLE_USER)
                 .isFirst(false)
-                .build();
+                .build());
     }
 
-    private WineVintage createWineVintage(Wine wine, int year) {
-        WineVintage wineVintage=
-                WineVintage.builder()
-                        .wine(wine)
-                        .vintageYear(year)
-                        .build();
-
-        wineVintageRepository.save(wineVintage);
-        return wineVintage;
+    private WineVintage saveWineVintage(Wine wine, int year) {
+        return wineVintageRepository.save(WineVintage.builder()
+                .wine(wine)
+                .vintageYear(year)
+                .build());
     }
 }

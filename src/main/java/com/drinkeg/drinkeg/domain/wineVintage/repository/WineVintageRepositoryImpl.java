@@ -1,13 +1,13 @@
-package com.drinkeg.drinkeg.domain.wine.wineVintage.repository;
+package com.drinkeg.drinkeg.domain.wineVintage.repository;
 
-import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wineVintage.domain.WineVintage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
-import static com.drinkeg.drinkeg.domain.wine.wineVintage.domain.QWineVintage.wineVintage;
+import static com.drinkeg.drinkeg.domain.wineVintage.domain.QWineVintage.wineVintage;
 
 @Repository
 @RequiredArgsConstructor

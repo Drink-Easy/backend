@@ -7,15 +7,14 @@ import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
+import com.drinkeg.drinkeg.domain.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wineVintage.repository.WineVintageRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;

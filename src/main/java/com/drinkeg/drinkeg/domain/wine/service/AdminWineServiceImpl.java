@@ -6,8 +6,8 @@ import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWinePreviewResponse;
 import com.drinkeg.drinkeg.domain.wine.dto.response.AdminWineResponse;
 import com.drinkeg.drinkeg.domain.wine.repository.WineRepository;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
+import com.drinkeg.drinkeg.domain.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wineVintage.repository.WineVintageRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;
 import com.drinkeg.drinkeg.global.dto.PageResponse;
 import com.drinkeg.drinkeg.global.exception.GeneralException;
@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 
 @Service

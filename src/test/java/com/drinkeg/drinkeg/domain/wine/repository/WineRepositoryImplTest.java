@@ -6,8 +6,8 @@ import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.member.repostitory.MemberRepository;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
+import com.drinkeg.drinkeg.domain.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wineVintage.repository.WineVintageRepository;
 import com.drinkeg.drinkeg.domain.wineWishlist.domain.WineWishlist;
 import com.drinkeg.drinkeg.domain.wineWishlist.repository.WineWishlistRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void findRecommendWinesByMemberPreferSortAndAreaAndPrice() {
         // given
-        saveExampleWines();
+        save12ExampleWines();
 
         // when
          List<Wine> recommendWines = wineRepository.findRecommendWinesBy(List.of("프랑스", "이탈리아"), List.of("레드", "화이트"), 60000L);
@@ -59,7 +59,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void findRecommendWinesByMemberPreferSortAndPrice() {
         // given
-        saveExampleWines();
+        save12ExampleWines();
 
         // when
         List<Wine> recommendWines = wineRepository.findRecommendWinesBy(List.of(), List.of("레드", "화이트"), 60000L);
@@ -75,7 +75,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void findRecommendWinesByMemberPreferPrice() {
         // given
-        saveExampleWines();
+        save12ExampleWines();
 
         // when
         List<Wine> recommendWines = wineRepository.findRecommendWinesBy(List.of(), List.of(), 60000L);
@@ -91,7 +91,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void findRecommendWinesByMember() {
         // given
-        saveExampleWines();
+        save12ExampleWines();
 
         // when
         List<Wine> recommendWines = wineRepository.findRecommendWinesBy(List.of(), List.of(), null);
@@ -108,7 +108,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     void findMostLikedWines() {
         // given
         Member member = saveMember("testUser");
-        Map<Wine, WineVintage> wineWineVintageMap = saveExampleWines();
+        Map<Wine, WineVintage> wineWineVintageMap = save12ExampleWines();
         List<WineVintage> wineVintages = new ArrayList<>(wineWineVintageMap.values());
 
         wineWishlistRepository.saveAll(
@@ -161,11 +161,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void searchWineByName() {
         // given
-        Wine wine1 = createWine("대중적인 레드 와인 10년");
-        Wine wine2 = createWine("대중적인 화이트 와인 13년");
-        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
-        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        List<Wine> wineList = save4ExampleWines();
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
@@ -174,16 +170,17 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(wineList1).hasSize(3)
-                .isEqualTo(List.of(wine1, wine3, wine4));
+                .isEqualTo(List.of(wineList.get(0), wineList.get(2), wineList.get(3)));
         assertThat(wineList2).hasSize(3)
-                .isEqualTo(List.of(wine1, wine3, wine2));
+                .isEqualTo(List.of(wineList.get(0), wineList.get(2), wineList.get(1)
+                ));
     }
 
     @DisplayName("와인 이름을 영어로 받으면 영어로 된 와인 이름을 포함하는 모든 와인을 조회한다.")
     @Test
     void searchWineByNameEng() {
         // given
-        Map<Wine, WineVintage> wineWineVintageMap = saveExampleWines();
+        Map<Wine, WineVintage> wineWineVintageMap = save12ExampleWines();
         Set<Wine> wines = wineWineVintageMap.keySet();
         Pageable pageable = PageRequest.of(0, 10);
         // when
@@ -203,11 +200,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void searchWineByNotExistingName() {
         // given
-        Wine wine1 = createWine("대중적인 레드 와인 10년");
-        Wine wine2 = createWine("대중적인 화이트 와인 13년");
-        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
-        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        save4ExampleWines();
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
@@ -221,11 +214,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void searchWineByNameWithPaging() {
         // given
-        Wine wine1 = createWine("대중적인 레드 와인 10년");
-        Wine wine2 = createWine("대중적인 화이트 와인 13년");
-        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
-        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        List<Wine> save4ExampleWines = save4ExampleWines();
         Pageable pageable = Pageable.ofSize(2).withPage(1);
 
         // when
@@ -233,18 +222,14 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(wineList).hasSize(1)
-                .isEqualTo(List.of(wine4));
+                .isEqualTo(List.of(save4ExampleWines.get(3)));
     }
 
     @DisplayName("검색한 와인 이름을 포함하는 와인의 총 개수를 조회한다.")
     @Test
     void countSearchWine(){
         // given
-        Wine wine1 = createWine("대중적인 레드 와인 10년");
-        Wine wine2 = createWine("대중적인 화이트 와인 13년");
-        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
-        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        save4ExampleWines();
 
         // when
         long count = wineRepository.countSearchWine("0년");
@@ -257,11 +242,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void countSearchWinePageWithEmptySearchName(){
         // given
-        Wine wine1 = createWine("대중적인 레드 와인 10년");
-        Wine wine2 = createWine("대중적인 화이트 와인 13년");
-        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
-        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        save4ExampleWines();
 
         // when
         long count = wineRepository.countSearchWine("매력적인");
@@ -274,7 +255,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void searchWineAdmin(){
         //given
-        saveExampleWines();
+        save12ExampleWines();
         Pageable pageable = PageRequest.of(0, 7);
 
         //when
@@ -290,7 +271,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void searchWineAdminBySort(){
         //given
-        saveExampleWines();
+        save12ExampleWines();
         Pageable pageable = PageRequest.of(0, 7);
 
         //when
@@ -306,7 +287,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void searchWineAdminByVariety(){
         //given
-        saveExampleWines();
+        save12ExampleWines();
         Pageable pageable = PageRequest.of(0, 7);
 
         //when
@@ -322,7 +303,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void searchWineAdminByArea(){
         //given
-        saveExampleWines();
+        save12ExampleWines();
         Pageable pageable = PageRequest.of(0, 7);
 
         //when
@@ -338,7 +319,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void countSearchWineBySortVarietyAndArea(){
         //given
-        saveExampleWines();
+        save12ExampleWines();
 
         //when
         long count = wineRepository.countSearchWineSortVarietyAndArea("1","레드", "피노누아", "프랑스");
@@ -351,7 +332,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void countSearchWineByName(){
         //given
-        saveExampleWines();
+        save12ExampleWines();
 
         //when
         long count = wineRepository.countSearchWineSortVarietyAndArea("1",null, null, null);
@@ -364,7 +345,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void countSearchWineBySort(){
         //given
-        saveExampleWines();
+        save12ExampleWines();
 
         //when
         long count = wineRepository.countSearchWineSortVarietyAndArea(null,"레드", null, "");
@@ -377,7 +358,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void countSearchWineByVariety(){
         //given
-        saveExampleWines();
+        save12ExampleWines();
 
         //when
         long count = wineRepository.countSearchWineSortVarietyAndArea(null,null, "피노누아", "");
@@ -390,7 +371,7 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
     @Test
     void countSearchWineByArea(){
         //given
-        saveExampleWines();
+        save12ExampleWines();
 
         //when
         long count = wineRepository.countSearchWineSortVarietyAndArea(null,null, null, "프랑스");
@@ -410,27 +391,6 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
                 .wineVintage(wineVintage)
                 .member(member)
                 .build();
-    }
-
-
-    private Wine createWine(String name) {
-        return createWine(name, "default nameEng");
-    }
-
-    private Wine createWine(String name, String nameEng) {
-        String cleanName = name.replaceAll("[ ,.'\\\\]", "").toLowerCase();
-        String cleanNameEng = nameEng.replaceAll("[ ,.'\\\\]", "").toLowerCase();
-        return Wine.builder()
-                .name(name)
-                .nameEng(nameEng)
-                .imageUrl("http://default.image")
-                .sort("레드")
-                .country("프랑스")
-                .variety("피노누아")
-                .vivinoRating(4.5f)
-                .searchName(cleanName.concat(cleanNameEng))
-                .wineNoteStatistics(WineNoteStatistics.builder().build())
-                .price(10000).build();
     }
 
 
@@ -458,7 +418,15 @@ class WineRepositoryImplTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private Map<Wine, WineVintage> saveExampleWines() {
+    private List<Wine> save4ExampleWines() {
+        Wine wine1 = createWine("대중적인 레드 와인 10년", "famous red wine 10 years", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("대중적인 화이트 와인 13년", "famous white wine 13 years", "화이트", "이탈리아", 15000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년", "famous white sparkling wine 20 years", "스파클링", "스페인", 20000, "모스카토", 4.2f);
+        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년", "wine for enthusiasts red wine 30 years", "레드", "프랑스", 25000, "메를로", 4.8f);
+        return wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+    }
+
+    private Map<Wine, WineVintage> save12ExampleWines() {
         Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
         Wine wine2 = createWine("와인2","wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
         Wine wine3 = createWine("와인3","wine3", "로제", "스페인", 30000, "피노누아", 3.5f);

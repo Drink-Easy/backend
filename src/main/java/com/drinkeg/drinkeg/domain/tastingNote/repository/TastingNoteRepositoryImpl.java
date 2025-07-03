@@ -25,7 +25,7 @@ import java.util.List;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNote.tastingNote;
 import static com.drinkeg.drinkeg.domain.tastingNote.domain.QTastingNoteNose.tastingNoteNose;
 import static com.drinkeg.drinkeg.domain.wine.domain.QWine.wine;
-import static com.drinkeg.drinkeg.domain.wine.wineVintage.domain.QWineVintage.wineVintage;
+import static com.drinkeg.drinkeg.domain.wineVintage.domain.QWineVintage.wineVintage;
 
 @Repository
 @RequiredArgsConstructor
