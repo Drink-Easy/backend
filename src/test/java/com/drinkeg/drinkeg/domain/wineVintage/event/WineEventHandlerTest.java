@@ -1,8 +1,6 @@
 package com.drinkeg.drinkeg.domain.wineVintage.event;
 
-import com.drinkeg.drinkeg.domain.wine.wineVintage.event.WineVintageEventHandler;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.event.WineVintageNoteEvent;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.service.WineVintageService;
+import com.drinkeg.drinkeg.domain.wineVintage.service.WineVintageService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
