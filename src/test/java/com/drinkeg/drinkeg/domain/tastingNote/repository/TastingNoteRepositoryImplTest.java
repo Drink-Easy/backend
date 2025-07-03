@@ -35,6 +35,25 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
     @Autowired
     private WineVintageRepository wineVintageRepository;
 
+    @DisplayName("테이스팅 노트 아이디로 와인과 빈티지 정보를 같이 조회한다.")
+    @Test
+    void findTastingNoteWithWineById() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+        TastingNote tastingNote = createTastingNote(member, wineVintage, 50, 30, 20, 40, 30, 10, "Review");
+        tastingNoteRepository.save(tastingNote);
+
+        // when
+        TastingNote foundTastingNote = tastingNoteRepository.findTastingNoteWithWineById(tastingNote.getId());
+
+        // then
+        assertThat(foundTastingNote)
+                .extracting("wineVintage.wine.name", "wineVintage.vintageYear", "review")
+                .containsExactly("레드 와인", 2017, "Review");
+    }
+
     @DisplayName("와인 아이디를 통해서 테이스팅 노트에 저장된 수치들의 평균치를 조회한다.")
     @Test
     void findAvgByWineId() {
@@ -44,15 +63,15 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         WineVintage wineVintage = createWineVintage(wine, 2017);
 
         TastingNote tastingNote1 = createTastingNote(member, wineVintage,
-                50, 30, 20, 40, 30, 10
+                50, 30, 20, 40, 30, 10, "Review 1"
         );
 
         TastingNote tastingNote2 = createTastingNote(member, wineVintage,
-                60, 35, 30, 40, 0, 4
+                60, 35, 30, 40, 0, 4, "Review 2"
         );
 
         TastingNote tastingNote3 = createTastingNote(member, wineVintage,
-                40, 40, 40, 40, 60, 7
+                40, 40, 40, 40, 60, 7, "Review 3"
         );
 
         tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
@@ -80,7 +99,53 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                 .containsExactly(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     }
 
-    @DisplayName("테이스팅 노트에서 가장 많이 선택된 nose 3개를 조회해서 반환한다.")
+    @DisplayName("와인 빈티지 아이디를 통해서 테이스팅 노트에 저장된 수치들의 평균치를 조회한다.")
+    @Test
+    void findAvgByWineVintageId() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+
+        TastingNote tastingNote1 = createTastingNote(member, wineVintage,
+                50, 30, 20, 40, 30, 10, "Review 1"
+        );
+
+        TastingNote tastingNote2 = createTastingNote(member, wineVintage,
+                60, 35, 30, 40, 0, 4, "Review 2"
+        );
+
+        TastingNote tastingNote3 = createTastingNote(member, wineVintage,
+                40, 40, 40, 40, 60, 7, "Review 3"
+        );
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
+        // when
+        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineVintageStatisticsByWineVintageId(wineVintage.getId());
+        // then
+        assertThat(wineNoteStatisticsAvgDto).extracting(
+                        "avgSweetness", "avgAcidity", "avgTannin",
+                        "avgBody", "avgAlcohol", "avgMemberRating")
+                .containsExactly(50.0f, 35.0f, 30.0f, 40.0f, 30.0f, 7.0f);
+    }
+
+    @DisplayName("테이스팅 노트가 존재하지 않는 와인 빈티지의 평균 수치값은 모두 0.0f로 나온다.")
+    @Test
+    void findAvgByWineVintageIdWithNoTastingNote() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+        // when
+        WineNoteStatisticsAvgDto wineNoteStatisticsAvgDto = tastingNoteRepository.findWineVintageStatisticsByWineVintageId(wineVintage.getId());
+        // then
+        assertThat(wineNoteStatisticsAvgDto).extracting(
+                        "avgSweetness", "avgAcidity", "avgTannin",
+                        "avgBody", "avgAlcohol", "avgMemberRating")
+                .containsExactly(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    }
+
+    @DisplayName("와인에 대해 테이스팅 노트에서 가장 많이 선택된 nose 3개를 조회해서 반환한다.")
     @Test
     void findWineNoteStatisticsNoseByWineId() {
         // given
@@ -131,6 +196,59 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
         assertThat(wineTopThreeNoses)
                 .containsExactly("건포도", "오렌지");
     }
+
+    @DisplayName("와인 빈티지에 대해 테이스팅 노트에서 가장 많이 선택된 nose 3개를 조회해서 반환한다.")
+    @Test
+    void findWineVintageNoteStatisticsNoseByWineVintageId() {
+        // given
+        List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+
+        TastingNote tastingNote1 = createTastingNote(member, wineVintage)
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(2));
+
+        TastingNote tastingNote2 = createTastingNote(member, wineVintage)
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(1))
+                .addNoseElement(noseList.get(2));
+
+        TastingNote tastingNote3 = createTastingNote(member, wineVintage)
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(2))
+                .addNoseElement(noseList.get(4));
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
+        // when
+        List<String> wineVintageTopThreeNoses = tastingNoteRepository.findTopThreeNoseByWineVintageId(wineVintage.getId());
+        // then
+        assertThat(wineVintageTopThreeNoses)
+                .containsExactly("건포도", "오렌지", "시트러스");
+    }
+
+    @DisplayName("테이스팅 노트의 와인 빈티지 nose가 3개 보다 적다면 존재하는 만큼만 반환한다.")
+    @Test
+    void findWineVintageNoseStaticsNoseByWineVintageIdLessThanThree() {
+        // given
+        List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+
+        TastingNote tastingNote1 = createTastingNote(member, wineVintage)
+                .addNoseElement(noseList.get(0))
+                .addNoseElement(noseList.get(2));
+
+        tastingNoteRepository.save(tastingNote1);
+        // when
+        List<String> wineVintageTopThreeNoses = tastingNoteRepository.findTopThreeNoseByWineVintageId(wineVintage.getId());
+        // then
+        assertThat(wineVintageTopThreeNoses)
+                .containsExactly("건포도", "오렌지");
+    }
+
 
     @DisplayName("와인 아이디로 테이스팅 노트를 최신순 정렬 조회한다.")
     @Test
@@ -245,6 +363,132 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                         tuple(2.0f, "Review 1"),
                         tuple(3.0f, "Review 3")
                 );
+    }
+
+    @DisplayName("와인 빈티지 아이디로 테이스팅 노트를 최신순 정렬 조회한다.")
+    @Test
+    void findTastingNoteByWineVintageId() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 50, 30, 20, 40, 30, 10, "Review 1"));
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 60, 35, 30, 40, 0, 4, "Review 2"));
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 40, 40, 40, 40, 60, 7, "Review 3"));
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // when
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteByWineVintageId(wineVintage.getId(), SortType.LATEST, pageable);
+
+        // then
+        assertThat(tastingNotes).hasSize(3)
+                .extracting("review")
+                .containsExactly("Review 3",
+                        "Review 2",
+                        "Review 1"
+                );
+    }
+
+    @DisplayName("와인 빈티지 아이디로 테이스팅 노트를 오래된 순 정렬 조회한다.")
+    @Test
+    void findTastingNoteByWineVintageIdOldest() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 50, 30, 20, 40, 30, 10, "Review 1"));
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 60, 35, 30, 40, 0, 4, "Review 2"));
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 40, 40, 40, 40, 60, 7, "Review 3"));
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // when
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteByWineVintageId(wineVintage.getId(), SortType.OLDEST, pageable);
+
+        // then
+        assertThat(tastingNotes).hasSize(3)
+                .extracting("review")
+                .containsExactly(
+                        "Review 1",
+                        "Review 2",
+                        "Review 3"
+                );
+    }
+
+    @DisplayName("와인 빈티지 아이디로 테이스팅 노트를 별점 높은순 정렬 조회한다.")
+    @Test
+    void findTastingNoteByWineVintageIdHighestRating() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 50, 30, 20, 40, 30, 4.0f, "Review 1"));
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 60, 35, 30, 40, 0, 3.0f, "Review 2"));
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 40, 40, 40, 40, 60, 5.0f, "Review 3"));
+
+        Pageable pageable = PageRequest.of(0, 10);
+        // when
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteByWineVintageId(wineVintage.getId(), SortType.HIGH_RATING, pageable);
+
+        // then
+        assertThat(tastingNotes).hasSize(3)
+                .extracting("rating", "review")
+                .containsExactly(
+                        tuple(5.0f, "Review 3"),
+                        tuple(4.0f, "Review 1"),
+                        tuple(3.0f, "Review 2")
+                );
+    }
+
+    @DisplayName("와인 빈티지 아이디로 테이스팅 노트를 별점 낮은순 정렬 조회한다.")
+    @Test
+    void findTastingNoteByWineVintageIdLowestRating() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 50, 30, 20, 40, 30, 2.0f, "Review 1"));
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 60, 35, 30, 40, 0, 1.0f, "Review 2"));
+        tastingNoteRepository.save(createTastingNote(member, wineVintage, 40, 40, 40, 40, 60, 3.0f, "Review 3"));
+
+        Pageable pageable = PageRequest.of(0, 10);
+        // when
+        List<TastingNote> tastingNotes = tastingNoteRepository.findAllTastingNoteByWineVintageId(wineVintage.getId(), SortType.LOW_RATING, pageable);
+
+        // then
+        assertThat(tastingNotes).hasSize(3)
+                .extracting("rating", "review")
+                .containsExactly(
+                        tuple(1.0f, "Review 2"),
+                        tuple(2.0f, "Review 1"),
+                        tuple(3.0f, "Review 3")
+                );
+    }
+
+    @DisplayName("와인 빈티지 아이디로 테이스팅 노트의 수를 조회한다.")
+    @Test
+    void countTastingNoteByWineVintageId() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("레드 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+
+        TastingNote tastingNote1 = createTastingNote(member, wineVintage);
+        TastingNote tastingNote2 = createTastingNote(member, wineVintage);
+        TastingNote tastingNote3 = createTastingNote(member, wineVintage);
+
+        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
+
+        // when
+        long count = tastingNoteRepository.countTastingNoteByWineVintageId(wineVintage.getId());
+
+        // then
+        assertThat(count).isEqualTo(3);
     }
 
     @DisplayName("와인 아이디로 테이스팅 노트의 수를 조회한다.")
@@ -497,6 +741,7 @@ class TastingNoteRepositoryImplTest extends IntegrationTestSupport {
                         tuple(4.0f, "Review 1")
                 );
     }
+
 
     @DisplayName("와인 이름으로 테이스팅 노트를 검색한다.")
     @Test

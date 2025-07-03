@@ -58,6 +58,21 @@ class TastingNoteRepositoryTest extends IntegrationTestSupport {
                 .containsExactly("좋아요!", "맛있어요!", "나쁘지 않아요");
     }
 
+    @DisplayName("테이스팅 노트가 없는 경우 빈 리스트를 반환한다.")
+    @Test
+    void findRecentThreeTastingNoteByWineIdAndVintageYearWineIdWithNoNotes() {
+        // given
+        Member member = memberRepository.save(createMember("user"));
+        Wine wine = wineRepository.save(createWine("맛있는 와인"));
+        WineVintage wineVintage = createWineVintage(wine, 2017);
+
+        // when
+        List<TastingNote> recentNotes = tastingNoteRepository.findRecentThreeTastingNoteByWineId(wine.getId(), wineVintage.getVintageYear());
+
+        // then
+        assertThat(recentNotes).isEmpty();
+    }
+
     @DisplayName("와인 아이디를 받아서 최근 3개의 테이스팅 노트를 리뷰가 null인 리뷰를 포함하여 조회한다.")
     @Test
     void findRecentThreeTastingNoteByWineIdAndVintageYearWineIdWithNullReview() {
