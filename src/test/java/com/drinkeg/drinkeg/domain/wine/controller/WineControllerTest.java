@@ -318,16 +318,4 @@ class WineControllerTest extends WineControllerTestSupport {
                 .createdAt(createdAt)
                 .build();
     }
-
-    private WinePreviewResponse creatWinePreviewResponse(Long wineId, String name) {
-        return WinePreviewResponse.builder()
-                .wineId(wineId)
-                .name(name)
-                .imageUrl("default")
-                .sort("default")
-                .country("default")
-                .variety("default")
-                .vivinoRating(4.1f)
-                .price(100).build();
-    }
 }

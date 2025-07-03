@@ -56,11 +56,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void searchWineByName() {
         // given
-        Wine wine1 = createWine("대중적인 레드 와인 10년");
-        Wine wine2 = createWine("대중적인 화이트 와인 13년");
-        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
-        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        Wine wine1 = saveWine("대중적인 레드 와인 10년", "wine popular red 10 years", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = saveWine("대중적인 화이트 와인 13년", "wine popular white 13 years", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = saveWine("대중적인 화이트 스파클링 와인 20년", "wine popular white sparkling 20 years", "스파클링", "스페인", 30000, "샴페인", 4.2f);
+        Wine wine4 = saveWine("매니아들이 찾는 레드 와인 30년", "wine red that manias find 30 years", "레드", "미국", 40000, "메를로", 4.8f);
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
@@ -78,11 +77,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void searchWineByNameEng() {
         // given
-        Wine wine1 = createWine("대중적인 레드 와인 10년", "popular red wine 10 years");
-        Wine wine2 = createWine("대중적인 화이트 와인 13년", "popular white wine 13 years");
-        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년", "popular white sparkling wine 20 years");
-        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년", "red wine that manias find 30 years");
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        Wine wine1 = saveWine("대중적인 레드 와인 10년", "popular red wine 10 years", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = saveWine("대중적인 화이트 와인 13년", "popular white wine 13 years", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = saveWine("대중적인 화이트 스파클링 와인 20년", "popular white sparkling wine 20 years", "스파클링", "스페인", 30000, "샴페인", 4.2f);
+        Wine wine4 = saveWine("매니아들이 찾는 레드 와인 30년", "red wine that manias find 30 years", "레드", "미국", 40000, "메를로", 4.8f);
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
@@ -101,11 +99,10 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void searchWineByNotExistingName() {
         // given
-        Wine wine1 = createWine("대중적인 레드 와인 10년");
-        Wine wine2 = createWine("대중적인 화이트 와인 13년");
-        Wine wine3 = createWine("대중적인 화이트 스파클링 와인 20년");
-        Wine wine4 = createWine("매니아들이 찾는 레드 와인 30년");
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4));
+        saveWine("대중적인 레드 와인 10년", "popular red wine 10 years", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        saveWine("대중적인 화이트 와인 13년", "popular white wine 13 years", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        saveWine("대중적인 화이트 스파클링 와인 20년", "popular white sparkling wine 20 years", "스파클링", "스페인", 30000, "샴페인", 4.2f);
+        saveWine("매니아들이 찾는 레드 와인 30년", "red wine that manias find 30 years", "레드", "미국", 40000, "메를로", 4.8f);
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
@@ -119,27 +116,26 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void updateWineStatisticsByWineId() {
         // given
-        Member member = memberRepository.save(createMember("user"));
-        Wine wine = wineRepository.save(createWine("레드 와인"));
-        WineVintage wineVintage = createWineVintage(wine, 2017);
+        Member member = saveMember("user", List.of("레드", "화이트"), List.of("프랑스", "이탈리아"), 60000L);
+        Wine wine = saveWine("레드 와인", "Red Wine", "레드", "프랑스", 15000, "메를로", 4.5f);
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
         List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
 
-        TastingNote tastingNote1 = createTastingNote(member, wineVintage,
-                50, 30, 20, 40, 30, 10)
+        saveTastingNote(member, wineVintage, "FFFFFF",
+                50, 30, 20, 40, 30, 10, "가성비 좋아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote2 = createTastingNote(member, wineVintage,
-                60, 35, 30, 40, 0, 4)
+        saveTastingNote(member, wineVintage, "FFFFFF",
+                60, 35, 30, 40, 0, 4, "나쁘지 않아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(1))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote3 = createTastingNote(member, wineVintage,
-                40, 40, 40, 40, 60, 7)
+        saveTastingNote(member, wineVintage,"FFFFFF",
+                40, 40, 40, 40, 60, 7, "맛있어요!")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2))
                 .addNoseElement(noseList.get(4));
 
-        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3));
         // when
         wineService.updateWineNoteStatics(wine.getId());
         // then
@@ -156,31 +152,30 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void findWineInfoWithThreeLatestReviews() {
         // given
-        Member member = memberRepository.save(createMember("user"));
-        Wine wine = wineRepository.save(createWine("레드 와인"));
-        WineVintage wineVintage = createWineVintage(wine, 2017);
+        Member member = saveMember("user", List.of("레드", "화이트"), List.of("프랑스", "이탈리아"), 60000L);
+        Wine wine = saveWine("레드 와인", "Red Wine", "레드", "프랑스", 15000, "메를로", 4.5f);
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
         List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
         wineWishlistRepository.save(WineWishlist.create(member, wineVintage));
 
-        TastingNote tastingNote1 = createTastingNote(member, wineVintage, "빨간색",
+        saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 0, "가성비 좋아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote2 = createTastingNote(member, wineVintage, "빨간색",
+        saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 5, "나쁘지 않아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(1))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote3 = createTastingNote(member, wineVintage, "빨간색",
+        saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "맛있어요!")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2))
                 .addNoseElement(noseList.get(4));
-        TastingNote tastingNote4 = createTastingNote(member, wineVintage, "빨간색",
+        saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "고기랑 먹기 좋아요!");
-        TastingNote tastingNote5 = createTastingNote(member, wineVintage, "빨간색",
+        saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "다시 구매할 것 같아요");
-        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
         wineService.updateWineNoteStatics(wine.getId());
         wineVintageService.updateWineVintageNoteStatics(wineVintage.getId());
 
@@ -213,9 +208,9 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void findWineInfoWithNoLatestReviews() {
         // given
-        Member member = memberRepository.save(createMember("user"));
-        Wine wine = wineRepository.save(createWine("레드 와인"));
-        WineVintage wineVintage = createWineVintage(wine, 2017);
+        Member member = saveMember("user", List.of("레드", "화이트"), List.of("프랑스", "이탈리아"), 60000L);
+        Wine wine = saveWine("레드 와인", "Red Wine", "레드", "프랑스", 15000, "메를로", 4.5f);
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
         wineWishlistRepository.save(WineWishlist.create(member, wineVintage));
 
         // when
@@ -240,30 +235,29 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void findWineReviewByWineId() {
         // given
-        Member member = memberRepository.save(createMember("user"));
-        Wine wine = wineRepository.save(createWine("레드 와인"));
-        WineVintage wineVintage = createWineVintage(wine, 2017);
+        Member member = saveMember("user", List.of("레드", "화이트"), List.of("프랑스", "이탈리아"), 60000L);
+        Wine wine = saveWine("레드 와인", "Red Wine", "레드", "프랑스", 15000, "메를로", 4.5f);
+        WineVintage wineVintage = saveWineVintage(wine, 2017);
         List<String> noseList = List.of("오렌지", "시트러스", "건포도", "흙", "아몬드");
 
-        TastingNote tastingNote1 = createTastingNote(member, wineVintage, "빨간색",
+        TastingNote tastingNote1 = saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 0, "가성비 좋아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote2 = createTastingNote(member, wineVintage, "빨간색",
+        TastingNote tastingNote2 = saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 5, "나쁘지 않아요")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(1))
                 .addNoseElement(noseList.get(2));
-        TastingNote tastingNote3 = createTastingNote(member, wineVintage, "빨간색",
+        TastingNote tastingNote3 = saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "맛있어요!")
                 .addNoseElement(noseList.get(0))
                 .addNoseElement(noseList.get(2))
                 .addNoseElement(noseList.get(4));
-        TastingNote tastingNote4 = createTastingNote(member, wineVintage, "빨간색",
+        TastingNote tastingNote4 = saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "고기랑 먹기 좋아요!");
-        TastingNote tastingNote5 = createTastingNote(member, wineVintage, "빨간색",
+        TastingNote tastingNote5 = saveTastingNote(member, wineVintage, "빨간색",
                 50, 30, 20, 40, 30, 10, "다시 구매할 것 같아요");
-        tastingNoteRepository.saveAll(List.of(tastingNote1, tastingNote2, tastingNote3, tastingNote4, tastingNote5));
 
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -280,8 +274,8 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void findWineReviewByWineIdWithNoReview() {
         // given
-        Wine wine = wineRepository.save(createWine("레드 와인"));
-        createWineVintage(wine, 2017);
+        Wine wine = saveWine("레드 와인", "Red Wine", "레드", "프랑스", 15000, "메를로", 4.5f);
+        saveWineVintage(wine, 2017);
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
@@ -306,16 +300,15 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void findRecommendWineByMemberPreferences() {
         // given
-        Member member = memberRepository.save(createMember("user", List.of("레드", "화이트"), List.of("프랑스", "이탈리아"), 60000L));
-        Wine wine1 = createWine("와인1", "레드", "프랑스", 10000, "피노누아", 4.5f);
-        Wine wine2 = createWine("와인2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
-        Wine wine3 = createWine("와인3", "로제", "스페인", 30000, "피노누아", 3.5f);
-        Wine wine4 = createWine("와인4", "레드", "프랑스", 40000, "피노누아", 4.5f);
-        Wine wine5 = createWine("와인5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
-        Wine wine6 = createWine("와인6", "로제", "스페인", 60000, "피노누아", 3.5f);
-        Wine wine7 = createWine("와인7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
-        Wine wine8 = createWine("와인8", "화이트", "독일", 250000, "리슬링", 4.3f);
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8));
+        Member member = memberRepository.save(saveMember("user", List.of("레드", "화이트"), List.of("프랑스", "이탈리아"), 60000L));
+        saveWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        saveWine("와인2", "wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        saveWine("와인3", "wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        saveWine("와인4", "wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        saveWine("와인5", "wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        saveWine("와인6", "wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        saveWine("와인7", "wine7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
+        saveWine("와인8", "wine8", "화이트", "독일", 250000, "리슬링", 4.3f);
         // when
         List<HomeWineResponse> recommendWineList = wineService.getRecommendWineList(member.getUsername());
         // then
@@ -328,43 +321,39 @@ class WineServiceImplTest extends IntegrationTestSupport {
     @Test
     void findMostLikedWine() {
         // given
-        Member member = memberRepository.save(createMember("user"));
-        Wine wine1 = createWine("와인1", "레드", "프랑스", 10000, "피노누아", 4.5f);
-        Wine wine2 = createWine("와인2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
-        Wine wine3 = createWine("와인3", "로제", "스페인", 30000, "피노누아", 3.5f);
-        Wine wine4 = createWine("와인4", "레드", "프랑스", 40000, "피노누아", 4.5f);
-        Wine wine5 = createWine("와인5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
-        Wine wine6 = createWine("와인6", "로제", "스페인", 60000, "피노누아", 3.5f);
-        Wine wine7 = createWine("와인7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
-        Wine wine8 = createWine("와인8", "화이트", "독일", 250000, "리슬링", 4.3f);
-        Wine wine9 = createWine("와인9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
-        Wine wine10 = createWine("와인10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
-        Wine wine11 = createWine("와인11", "레드", "스페인", 55000, "템프라니요", 4.1f);
-        Wine wine12 = createWine("와인12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
-        Wine wine13 = createWine("와인13", "레드", "칠레", 70000, "메를로", 4.3f);
-        Wine wine14 = createWine("와인14", "화이트", "호주", 80000, "샤르도네", 4.1f);
-        Wine wine15 = createWine("와인15", "로제", "프랑스", 90000, "그르나슈", 4.2f);
-        Wine wine16 = createWine("와인16", "레드", "이탈리아", 100000, "산지오베제", 4.4f);
-        Wine wine17 = createWine("와인17", "화이트", "스페인", 110000, "알바리뇨", 4.0f);
-        Wine wine18 = createWine("와인18", "로제", "미국", 120000, "진판델", 4.5f);
-        Wine wine19 = createWine("와인19", "레드", "아르헨티나", 130000, "말벡", 4.6f);
-        Wine wine20 = createWine("와인20", "화이트", "뉴질랜드", 140000, "피노 그리", 4.3f);
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10,
-                wine11, wine12, wine13, wine14, wine15, wine16, wine17, wine18, wine19, wine20));
-        List<WineWishlist> wishlists = new ArrayList<>();
+        Member member = saveMember("user", List.of("레드", "화이트"), List.of("프랑스", "이탈리아"), 60000L);
+        Wine wine1 = saveWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = saveWine("와인2", "wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = saveWine("와인3", "wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = saveWine("와인4", "wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = saveWine("와인5", "wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = saveWine("와인6", "wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = saveWine("와인7", "wine7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = saveWine("와인8", "wine8", "화이트", "독일", 250000, "리슬링", 4.3f);
+        Wine wine9 = saveWine("와인9", "wine9", "스파클링", "프랑스", 35000, "샴페인", 4.6f);
+        Wine wine10 = saveWine("와인10", "wine10", "디저트", "포르투갈", 45000, "포트 와인", 4.7f);
+        Wine wine11 = saveWine("와인11", "wine11", "레드", "스페인", 55000, "템프라니요", 4.1f);
+        Wine wine12 = saveWine("와인12", "wine12", "화이트", "뉴질랜드", 65000, "소비뇽 블랑", 4.4f);
+        Wine wine13 = saveWine("와인13", "wine13", "레드", "칠레", 70000, "메를로", 4.3f);
+        Wine wine14 = saveWine("와인14", "wine14", "화이트", "호주", 80000, "샤르도네", 4.1f);
+        Wine wine15 = saveWine("와인15", "wine15", "로제", "프랑스", 90000, "그르나슈", 4.2f);
+        Wine wine16 = saveWine("와인16", "wine16", "레드", "이탈리아", 100000, "산지오베제", 4.4f);
+        Wine wine17 = saveWine("와인17", "wine17", "화이트", "스페인", 110000, "알바리뇨", 4.0f);
+        Wine wine18 = saveWine("와인18", "wine18", "로제", "미국", 120000, "진판델", 4.5f);
+        Wine wine19 = saveWine("와인19", "wine19", "레드", "아르헨티나", 130000, "말벡", 4.6f);
+        Wine wine20 = saveWine("와인20", "wine20", "화이트", "뉴질랜드", 140000, "피노 그리", 4.3f);
 
         for(
                 Wine wine : List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8, wine9, wine10,
                         wine11, wine12, wine13, wine14, wine15, wine16, wine17, wine18, wine19, wine20)) {
-            WineVintage wineVintage = createWineVintage(wine, 2017);
+            WineVintage wineVintage = saveWineVintage(wine, 2017);
 
             for (int i = 0;
                  i < Integer.parseInt(wine.getName().replaceAll("\\D+", ""));
                  i++) {
-                wishlists.add(createWineWishlist(wineVintage, member));
+                saveWineWishlist(wineVintage, member);
             }
         }
-        wineWishlistRepository.saveAll(wishlists);
 
         // when
         List<HomeWineResponse> mostLikedWineList = wineService.getMostLikedWineList();
@@ -374,28 +363,16 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .containsExactly("와인20", "와인19", "와인18", "와인17", "와인16", "와인15", "와인14", "와인13", "와인12", "와인11");
 
     }
-    // 편의 메서드
 
-    private WineWishlist createWineWishlist(WineVintage wineVintage, Member member) {
-        return WineWishlist.builder()
+    private WineWishlist saveWineWishlist(WineVintage wineVintage, Member member) {
+        return wineWishlistRepository.save(WineWishlist.builder()
                 .member(member)
                 .wineVintage(wineVintage)
-                .build();
+                .build());
     }
 
-    private Wine createWine(String name) {
-        return createWine(name, "영어", "레드","프랑스",10000, "샤도네이",4.1f);
-    }
-
-    private Wine createWine(String name, String nameEng) {
-        return createWine(name, nameEng, "레드","프랑스",10000, "샤도네이",4.1f);
-    }
-    private Wine createWine(String name, String sort, String country, int price, String variety, float vivinoRating) {
-        return createWine(name, "영어", sort, country, price, variety, vivinoRating);
-    }
-
-    private Wine createWine(String name, String nameEng, String sort, String country, int price, String variety, float vivinoRating) {
-        return Wine.builder()
+    private Wine saveWine(String name, String nameEng, String sort, String country, int price, String variety, float vivinoRating) {
+        return wineRepository.save(Wine.builder()
                 .name(name)
                 .nameEng(nameEng)
                 .imageUrl("http://default.image")
@@ -406,22 +383,14 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .searchName(name.replaceAll("[ ,.'\\\\]", "").toLowerCase()
                         .concat(nameEng.replaceAll("[ ,.'\\\\]", "").toLowerCase()))
                 .wineNoteStatistics(WineNoteStatistics.builder().build())
-                .price(price).build();
-    }
-
-    private TastingNote createTastingNote(Member member, WineVintage wineVintage,
-                                          int sweetness, int acidity, int tannin, int body, int alcohol,
-                                          float rating) {
-        return createTastingNote(member, wineVintage, "빨간색",
-                sweetness, acidity, tannin, body, alcohol,
-                rating, "나쁘지 않아요");
+                .price(price).build());
     }
 
 
-    private TastingNote createTastingNote(Member member, WineVintage wineVintage, String color,
-                                          int sweetness, int acidity, int tannin, int body, int alcohol,
-                                          float rating, String review) {
-        return TastingNote.builder()
+    private TastingNote saveTastingNote(Member member, WineVintage wineVintage, String color,
+                                        int sweetness, int acidity, int tannin, int body, int alcohol,
+                                        float rating, String review) {
+        return tastingNoteRepository.save(TastingNote.builder()
                 .member(member)
                 .wineVintage(wineVintage)
                 .color(color)
@@ -432,29 +401,21 @@ class WineServiceImplTest extends IntegrationTestSupport {
                 .body(body)
                 .alcohol(alcohol)
                 .rating(rating)
-                .review(review).build();
+                .review(review).build());
     }
 
-    private Member createMember(String username, List<String> wineSort, List<String> wineArea, Long monthPriceMax) {
-        return Member.builder()
+    private Member saveMember(String username, List<String> wineSort, List<String> wineArea, Long monthPriceMax) {
+        return memberRepository.save(Member.builder()
                 .username(username)
                 .role(Role.ROLE_USER)
                 .isFirst(false)
                 .wineSort(wineSort)
                 .wineArea(wineArea)
                 .monthPriceMax(monthPriceMax)
-                .build();
+                .build());
     }
 
-    private Member createMember(String username) {
-        return Member.builder()
-                .username(username)
-                .role(Role.ROLE_USER)
-                .isFirst(false)
-                .build();
-    }
-
-    private WineVintage createWineVintage(Wine wine, int vintageYear) {
+    private WineVintage saveWineVintage(Wine wine, int vintageYear) {
         return wineVintageRepository.save(
                 WineVintage.builder()
                         .wine(wine)

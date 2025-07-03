@@ -33,15 +33,7 @@ public class AdminWineServiceImplTest extends IntegrationTestSupport {
     @Test
     void searchWinesAdmin() {
         // Given
-        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
-        Wine wine2 = createWine("와인2", "wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
-        Wine wine3 = createWine("와인3", "wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
-        Wine wine4 = createWine("와인4", "wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
-        Wine wine5 = createWine("와인5", "wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
-        Wine wine6 = createWine("와인6", "wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
-        Wine wine7 = createWine("와인7", "wine7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
-        Wine wine8 = createWine("와인8", "wine8", "화이트", "독일", 250000, "리슬링", 4.3f);
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8));
+        List<Wine> wineList = save8Wines();
         Pageable pageable = PageRequest.of(0, 7);
 
         // when
@@ -49,8 +41,8 @@ public class AdminWineServiceImplTest extends IntegrationTestSupport {
 
         // then
         assertWinePreviewPageResponse(adminWineResponsePageResponse, 0, 1, List.of(
-                AdminWinePreviewResponse.of(wine1),
-                AdminWinePreviewResponse.of(wine4)
+                AdminWinePreviewResponse.of(wineList.get(0)),
+                AdminWinePreviewResponse.of(wineList.get(3))
         ));
     }
 
@@ -58,15 +50,7 @@ public class AdminWineServiceImplTest extends IntegrationTestSupport {
     @Test
     void searchWinesAdminByName() {
         // Given
-        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
-        Wine wine2 = createWine("와인2", "wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
-        Wine wine3 = createWine("와인3", "wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
-        Wine wine4 = createWine("와인4", "wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
-        Wine wine5 = createWine("와인5", "wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
-        Wine wine6 = createWine("와인6", "wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
-        Wine wine7 = createWine("와인7", "wine7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
-        Wine wine8 = createWine("와인8", "wine8", "화이트", "독일", 250000, "리슬링", 4.3f);
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8));
+        List<Wine> wineList = save8Wines();
         Pageable pageable = PageRequest.of(0, 7);
 
         // when
@@ -74,13 +58,13 @@ public class AdminWineServiceImplTest extends IntegrationTestSupport {
 
         // then
         assertWinePreviewPageResponse(adminWineResponsePageResponse, 0, 2, List.of(
-                AdminWinePreviewResponse.of(wine1),
-                AdminWinePreviewResponse.of(wine2),
-                AdminWinePreviewResponse.of(wine3),
-                AdminWinePreviewResponse.of(wine4),
-                AdminWinePreviewResponse.of(wine5),
-                AdminWinePreviewResponse.of(wine6),
-                AdminWinePreviewResponse.of(wine7)
+                AdminWinePreviewResponse.of(wineList.get(0)),
+                AdminWinePreviewResponse.of(wineList.get(1)),
+                AdminWinePreviewResponse.of(wineList.get(2)),
+                AdminWinePreviewResponse.of(wineList.get(3)),
+                AdminWinePreviewResponse.of(wineList.get(4)),
+                AdminWinePreviewResponse.of(wineList.get(5)),
+                AdminWinePreviewResponse.of(wineList.get(6))
         ));
     }
 
@@ -88,15 +72,7 @@ public class AdminWineServiceImplTest extends IntegrationTestSupport {
     @Test
     void searchWinesAdminBySort() {
         // Given
-        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
-        Wine wine2 = createWine("와인2", "wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
-        Wine wine3 = createWine("와인3", "wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
-        Wine wine4 = createWine("와인4", "wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
-        Wine wine5 = createWine("와인5", "wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
-        Wine wine6 = createWine("와인6", "wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
-        Wine wine7 = createWine("와인7", "wine7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
-        Wine wine8 = createWine("와인8", "wine8", "화이트", "독일", 250000, "리슬링", 4.3f);
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8));
+        List<Wine> wineList = save8Wines();
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
@@ -104,25 +80,17 @@ public class AdminWineServiceImplTest extends IntegrationTestSupport {
 
         // then
         assertWinePreviewPageResponse(adminWineResponsePageResponse, 0, 1, List.of(
-                AdminWinePreviewResponse.of(wine1),
-                AdminWinePreviewResponse.of(wine4),
-                AdminWinePreviewResponse.of(wine7)
-        ));
+                AdminWinePreviewResponse.of(wineList.get(0)),
+                AdminWinePreviewResponse.of(wineList.get(3)),
+                AdminWinePreviewResponse.of(wineList.get(6)
+                )));
     }
 
     @DisplayName("와인 품종으로 와인 검색 테스트")
     @Test
     void searchWinesAdminByVariety() {
         // Given
-        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
-        Wine wine2 = createWine("와인2", "wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
-        Wine wine3 = createWine("와인3", "wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
-        Wine wine4 = createWine("와인4", "wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
-        Wine wine5 = createWine("와인5", "wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
-        Wine wine6 = createWine("와인6", "wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
-        Wine wine7 = createWine("와인7", "wine7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
-        Wine wine8 = createWine("와인8", "wine8", "화이트", "독일", 250000, "리슬링", 4.3f);
-        wineRepository.saveAll(List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8));
+        List<Wine> wineList = save8Wines();
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
@@ -130,10 +98,10 @@ public class AdminWineServiceImplTest extends IntegrationTestSupport {
 
         // then
         assertWinePreviewPageResponse(adminWineResponsePageResponse, 0, 1, List.of(
-                AdminWinePreviewResponse.of(wine1),
-                AdminWinePreviewResponse.of(wine3),
-                AdminWinePreviewResponse.of(wine4),
-                AdminWinePreviewResponse.of(wine6)
+                AdminWinePreviewResponse.of(wineList.get(0)),
+                AdminWinePreviewResponse.of(wineList.get(2)),
+                AdminWinePreviewResponse.of(wineList.get(3)),
+                AdminWinePreviewResponse.of(wineList.get(5))
         ));
     }
 
@@ -163,6 +131,20 @@ public class AdminWineServiceImplTest extends IntegrationTestSupport {
         assertThatThrownBy(() -> adminWineService.getWine(0L))
                 .isInstanceOf(GeneralException.class)
                 .hasMessage("와인이 없습니다.");
+    }
+
+    private List<Wine> save8Wines() {
+        Wine wine1 = createWine("와인1", "wine1", "레드", "프랑스", 10000, "피노누아", 4.5f);
+        Wine wine2 = createWine("와인2", "wine2", "화이트", "이탈리아", 20000, "샤르도네", 4.0f);
+        Wine wine3 = createWine("와인3", "wine3", "로제", "스페인", 30000, "피노누아", 3.5f);
+        Wine wine4 = createWine("와인4", "wine4", "레드", "프랑스", 40000, "피노누아", 4.5f);
+        Wine wine5 = createWine("와인5", "wine5", "화이트", "이탈리아", 50000, "샤르도네", 4.0f);
+        Wine wine6 = createWine("와인6", "wine6", "로제", "스페인", 60000, "피노누아", 3.5f);
+        Wine wine7 = createWine("와인7", "wine7", "레드", "미국", 150000, "카베르네 소비뇽", 4.2f);
+        Wine wine8 = createWine("와인8", "wine8", "화이트", "독일", 250000, "리슬링", 4.3f);
+        List<Wine> wineList = List.of(wine1, wine2, wine3, wine4, wine5, wine6, wine7, wine8);
+        wineRepository.saveAll(wineList);
+        return wineList;
     }
 
     private Wine createWine(String name, String nameEng, String sort, String country, int price, String variety, float vivinoRating) {
