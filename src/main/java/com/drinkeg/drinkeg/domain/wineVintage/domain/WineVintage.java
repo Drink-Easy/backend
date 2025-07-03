@@ -1,4 +1,4 @@
-package com.drinkeg.drinkeg.domain.wine.wineVintage.domain;
+package com.drinkeg.drinkeg.domain.wineVintage.domain;
 
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
 import com.drinkeg.drinkeg.domain.wine.domain.WineNoteStatistics;

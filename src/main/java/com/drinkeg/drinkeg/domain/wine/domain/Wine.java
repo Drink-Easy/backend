@@ -2,7 +2,7 @@ package com.drinkeg.drinkeg.domain.wine.domain;
 
 import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.wine.dto.request.WineRegisterRequest;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wineVintage.domain.WineVintage;
 import jakarta.persistence.*;
 import lombok.*;
 

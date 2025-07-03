@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.domain.tastingNote.dto.response;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNote;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteNose;
 import com.drinkeg.drinkeg.domain.wine.domain.Wine;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wineVintage.domain.WineVintage;
 import lombok.Builder;
 import lombok.AccessLevel;
 import lombok.Getter;

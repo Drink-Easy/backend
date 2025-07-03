@@ -3,7 +3,7 @@ package com.drinkeg.drinkeg.domain.tastingNote.domain;
 import com.drinkeg.drinkeg.domain.model.BaseEntity;
 import com.drinkeg.drinkeg.domain.member.domain.Member;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.request.TastingNoteRequest;
-import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
+import com.drinkeg.drinkeg.domain.wineVintage.domain.WineVintage;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
