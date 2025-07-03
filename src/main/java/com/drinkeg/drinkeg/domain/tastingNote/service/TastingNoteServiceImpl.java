@@ -1,9 +1,9 @@
 package com.drinkeg.drinkeg.domain.tastingNote.service;
 
-import com.drinkeg.drinkeg.domain.tastingNote.event.WineNoteUpdateEvent;
+import com.drinkeg.drinkeg.domain.wine.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.domain.tastingNote.domain.TastingNoteWineSort;
 import com.drinkeg.drinkeg.domain.tastingNote.dto.response.TastingNoteSortCountResponse;
-import com.drinkeg.drinkeg.domain.tastingNote.event.WineVintageNoteEvent;
+import com.drinkeg.drinkeg.domain.wine.wineVintage.event.WineVintageNoteEvent;
 import com.drinkeg.drinkeg.domain.wine.wineVintage.domain.WineVintage;
 import com.drinkeg.drinkeg.domain.wine.wineVintage.repository.WineVintageRepository;
 import com.drinkeg.drinkeg.global.apipayLoad.code.status.ErrorStatus;

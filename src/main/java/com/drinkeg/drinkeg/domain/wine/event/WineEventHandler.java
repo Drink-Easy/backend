@@ -1,6 +1,5 @@
 package com.drinkeg.drinkeg.domain.wine.event;
 
-import com.drinkeg.drinkeg.domain.tastingNote.event.WineNoteUpdateEvent;
 import com.drinkeg.drinkeg.domain.wine.service.WineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
