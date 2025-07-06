@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.global.config;
 
+import com.drinkeg.drinkeg.global.logging.filter.HttpLoggingFilter;
 import com.drinkeg.drinkeg.global.security.jwt.*;
 import com.drinkeg.drinkeg.infra.redis.RedisClient;
 import jakarta.servlet.http.HttpServletRequest;
@@ -104,6 +105,8 @@ public class SecurityConfig {
         //HTTP Basic 인증 방식 disable
         http
                 .httpBasic((auth) -> auth.disable());
+
+        http.addFilterBefore(new HttpLoggingFilter(), UsernamePasswordAuthenticationFilter.class);
 
         //JWT 필터 추가
         http

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty scope="context" name="LOKI_URL" source="logging.loki.url"/>
+    <springProperty scope="context" name="APP_ENV" source="app.env"/>
+
+    <!-- Loki 동기 Appender -->
+    <appender name="LOKI_SYNC" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>${LOKI_URL}</url>
+        </http>
+        <format>
+            <label>
+                <pattern>app=drinkig,service=backend,env=${APP_ENV},level=%level</pattern>
+            </label>
+            <message>
+                <pattern>%msg%n</pattern>
+            </message>
+        </format>
+    </appender>
+
+    <!-- 비동기 Loki Appender -->
+    <appender name="LOKI" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="LOKI_SYNC"/>
+        <queueSize>512</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <neverBlock>true</neverBlock> <!-- 큐가 꽉 차도 메인 스레드를 막지 않음 -->
+    </appender>
+
+    <!-- 콘솔 로그 Appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %X{traceId}%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 루트 로그 설정 -->
+    <root level="INFO">
+        <appender-ref ref="LOKI"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
