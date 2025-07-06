@@ -21,17 +21,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        Optional<Member> existData = memberRepository.findByUsername(username);
-        Member userData = existData.get();
-
-        UserDTO userDTO = UserDTO.create(userData);
-
-        if (userDTO != null) {
-
-            return new PrincipalDetail(userDTO);
-        }
-
-        return null;
+        return memberRepository.findByUsername(username)
+                .map(userData -> {
+                    UserDTO userDTO = UserDTO.create(userData);
+                    return new PrincipalDetail(userDTO);
+                })
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 }
