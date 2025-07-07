@@ -40,6 +40,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -53,16 +55,13 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-
 	implementation 'org.bouncycastle:bcpkix-jdk15on:1.69'
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
-
 
 	//jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
-
 
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
@@ -82,7 +81,14 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"		// 어노테이션 프로세서 설정
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"	// 어노테이션 프로세서 설정
 
-	implementation 'com.opencsv:opencsv:5.7.1'  // OpenCSV 의존성 추가
+	// OpenCSV
+	implementation 'com.opencsv:opencsv:5.7.1'
+
+	// Prometheus
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
+	// Loki
+	implementation 'com.github.loki4j:loki-logback-appender:1.5.1'
 }
 
 // gradle clean 시에 QClass 디렉토리 삭제
