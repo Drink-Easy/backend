@@ -58,21 +58,21 @@ dependencies {
 	implementation 'org.bouncycastle:bcpkix-jdk15on:1.69'
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 
-	//jwt
+	// jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
-	//swagger
+	// swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
-	//redis
+	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	// S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
-	//fegin client
+	// fegin client
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	// QueryDsl
@@ -89,6 +89,9 @@ dependencies {
 
 	// Loki
 	implementation 'com.github.loki4j:loki-logback-appender:1.5.1'
+
+	// AOP
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 // gradle clean 시에 QClass 디렉토리 삭제
