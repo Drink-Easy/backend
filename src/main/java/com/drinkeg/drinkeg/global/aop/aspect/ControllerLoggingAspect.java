@@ -36,6 +36,8 @@ public class ControllerLoggingAspect {
             Object result = joinPoint.proceed();
             log.info("[CONTROLLER] Method: {}, Duration: {}ms", methodName, calculateDuration(start));
             return result;
+        } catch (GeneralException e) {
+            throw e;
         } catch (Exception e) {
             log.error(
                     "[UnhandledException] Method: {}, Exception: {}, Message: {}, Duration: {}ms",
