@@ -1,15 +1,7 @@
 package com.drinkeg.drinkeg.global.aop.util;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoggingUtil {
 
@@ -40,33 +32,8 @@ public class LoggingUtil {
         return value != null && !value.isEmpty();
     }
 
-    public static HttpServletRequest getCurrentHttpRequest() {
-        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
-        if (attributes instanceof ServletRequestAttributes servletRequestAttributes) {
-            return servletRequestAttributes.getRequest();
-        }
-        return null;
-    }
-
-    public static String getRequestUriWithQuery(HttpServletRequest request) {
-        if (request == null) return null;
-        String query = request.getQueryString();
-        return request.getRequestURI() + (query == null ? "" : "?" + query);
-    }
-
     public static String getMethodSignature(Method method) {
         return method.getDeclaringClass().getSimpleName() + "." + method.getName();
-    }
-
-    public static Map<String, Object> extractParams(Method method, Object[] args) {
-        Map<String, Object> paramMap = new HashMap<>();
-        if (args == null || args.length == 0) return paramMap;
-
-        Parameter[] parameters = method.getParameters();
-        for (int i = 0; i < parameters.length; i++) {
-            paramMap.put(parameters[i].getName(), args[i]);
-        }
-        return paramMap;
     }
 
     public static long calculateDuration(long startTime) {
