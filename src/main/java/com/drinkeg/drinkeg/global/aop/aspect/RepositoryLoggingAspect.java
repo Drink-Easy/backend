@@ -18,7 +18,7 @@ import static com.drinkeg.drinkeg.global.aop.util.LoggingUtil.calculateDuration;
 @Slf4j
 public class RepositoryLoggingAspect {
 
-    @Pointcut("execution(public * com.drinkeg..repository..*.*(..))")
+    @Pointcut("execution(public * com.drinkeg..repository..*RepositoryImpl.*(..))")
     public void allRepository() {}
 
     @Around("allRepository()")
