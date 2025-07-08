@@ -1,9 +1,12 @@
 package com.drinkeg.drinkeg.global.logging.dto;
 
+import com.drinkeg.drinkeg.global.aop.util.LoggingUtil;
 import com.drinkeg.drinkeg.global.logging.filter.wrapper.RequestWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.MDC;
+
+import static com.drinkeg.drinkeg.global.aop.util.LoggingUtil.*;
 
 public record HttpRequestLogInfo(
         String traceId,
@@ -15,7 +18,7 @@ public record HttpRequestLogInfo(
 
     public static HttpRequestLogInfo from(RequestWrapper requestWrapper) {
         String queryString = requestWrapper.getQueryString();
-        String traceId = MDC.get("traceId");
+        String traceId = getTraceId();
         String requestMethod = requestWrapper.getMethod();
         String requestUri =
                 requestWrapper.getRequestURI() + (queryString == null ? "" : "?" + queryString);
