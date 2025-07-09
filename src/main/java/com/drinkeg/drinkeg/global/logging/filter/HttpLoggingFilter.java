@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.global.logging.filter;
 
+import com.drinkeg.drinkeg.global.aop.util.LoggingUtil;
 import com.drinkeg.drinkeg.global.logging.dto.HttpRequestLogInfo;
 import com.drinkeg.drinkeg.global.logging.dto.HttpResponseLogInfo;
 import com.drinkeg.drinkeg.global.logging.filter.wrapper.RequestWrapper;
@@ -16,6 +17,7 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 import java.io.IOException;
 import java.util.UUID;
 
+import static com.drinkeg.drinkeg.global.aop.util.LoggingUtil.*;
 import static org.springframework.web.multipart.support.MultipartResolutionDelegate.isMultipartRequest;
 
 @Slf4j
@@ -30,7 +32,7 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        MDC.put("traceId", UUID.randomUUID().toString());
+        setTraceId(UUID.randomUUID().toString());
 
         String uri = request.getRequestURI();
         if (uri.startsWith("/actuator/")) {
@@ -47,7 +49,7 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
             doFilterWrapped(
                     new RequestWrapper(request), new ResponseWrapper(response), filterChain);
         }
-        MDC.clear();
+        clearMDC();
     }
 
     protected void doFilterWrapped(

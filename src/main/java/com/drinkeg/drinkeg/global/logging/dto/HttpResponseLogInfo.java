@@ -1,5 +1,6 @@
 package com.drinkeg.drinkeg.global.logging.dto;
 
+import com.drinkeg.drinkeg.global.aop.util.LoggingUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.MDC;
@@ -12,12 +13,14 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.drinkeg.drinkeg.global.aop.util.LoggingUtil.*;
+
 public record HttpResponseLogInfo(String traceId, Object responseBody, Integer responseStatus) {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static HttpResponseLogInfo from(ContentCachingResponseWrapper response)
             throws IOException {
-        String traceId = MDC.get("traceId");
+        String traceId = getTraceId();
         String rawBody = getContent(response.getContentType(), response.getContentInputStream());
         Integer responseStatus = response.getStatus();
 
