@@ -58,14 +58,7 @@ public class EventLoggingAspect {
         try {
             return joinPoint.proceed();
         } catch (GeneralException generalException) {
-            log.info(
-                    "[EVENT-LISTENER-CUSTOM] Method: {}, Code: {}, Message: {}, Duration: {}ms",
-                    methodName,
-                    generalException.getErrorStatus().getCode(),
-                    generalException.getMessage(),
-                    calculateDuration(start));
             throw generalException;
-
         } catch (Exception e) {
             log.error(
                     "[EVENT-LISTENER-ERROR] Method: {}, Exception: {}, Message: {}, Duration: {}ms",
