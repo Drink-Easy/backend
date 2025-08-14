@@ -42,6 +42,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_PROD }} .
           docker push ${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_PROD }}
+
       ## docker compose up
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.3
