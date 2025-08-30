@@ -10,6 +10,7 @@ public class WinePreviewResponse {
 
     private Long wineId;
     private String name;
+    private String nameEng;
     private Integer vintageYear;
     private String imageUrl;
     private String sort;
@@ -20,11 +21,12 @@ public class WinePreviewResponse {
     private int price;
 
     @Builder
-    public WinePreviewResponse(Long wineId, String name, Integer vintageYear, String imageUrl,
+    public WinePreviewResponse(Long wineId, String name, String nameEng, Integer vintageYear, String imageUrl,
                                String sort, String country, String region,  String variety,
                                float vivinoRating, int price) {
         this.wineId = wineId;
         this.name = name;
+        this.nameEng = nameEng;
         this.vintageYear = vintageYear;
         this.imageUrl = imageUrl;
         this.sort = sort;
@@ -40,6 +42,7 @@ public class WinePreviewResponse {
                 .wineId(wine.getId())
                 .vintageYear(null)
                 .name(wine.getName())
+                .nameEng(wine.getNameEng())
                 .imageUrl(wine.getImageUrl())
                 .sort(wine.getSort())
                 .country(wine.getCountry())
@@ -58,6 +61,7 @@ public class WinePreviewResponse {
         return WinePreviewResponse.builder()
                 .wineId(wine.getId())
                 .name(wine.getName())
+                .nameEng(wine.getNameEng())
                 .vintageYear(vintageYear)
                 .imageUrl(wine.getImageUrl())
                 .sort(wine.getSort())
